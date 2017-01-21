@@ -7,7 +7,7 @@
 #include <string>
 #include "Game.hpp"
 #include "GameStateMatch.hpp"
-#include "Frame.hpp"
+#include "Window.hpp"
 
 void Game::run()
 {
@@ -40,10 +40,8 @@ bool Game::init()
 		}
 
 		//Create window
-		this->window = SDL_CreateWindow( "4981 Linux Game",
-								   SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-								   SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-		if( this->window == NULL )
+		this->window = new Window();
+		if( !this->window->init() )
 		{
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
@@ -51,7 +49,7 @@ bool Game::init()
 		else
 		{
 			//Create renderer for window
-			this->renderer = SDL_CreateRenderer( this->window, -1, SDL_RENDERER_ACCELERATED );
+			this->renderer = this->window->createRenderer();
 			if( this->renderer  == NULL )
 			{
 				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -103,8 +101,8 @@ void Game::close()
 	
 	//Destroy window	
 	SDL_DestroyRenderer( this->renderer );
-	SDL_DestroyWindow( this->window  );
-	this->window  = NULL;
+	this->window->free();
+	this->window = NULL;
 	this->renderer = NULL;
 
 	//Quit SDL subsystems

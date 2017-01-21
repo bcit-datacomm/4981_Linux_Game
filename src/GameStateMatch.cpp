@@ -9,7 +9,7 @@
 #include "GameStateMatch.hpp"
 #include "LTimer.hpp"
 #include "LTexture.hpp"
-#include "Frame.hpp"
+#include "Window.hpp"
 
 bool GameStateMatch::load()
 {
@@ -80,14 +80,16 @@ void GameStateMatch::sync()
 
 void GameStateMatch::handle()
 {
-	//Handle events on queue
+	//Handle events on queue 
 	while( SDL_PollEvent( &this->event ))
 	{
 		/* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
    		switch( this->event.type ){
+		case SDL_WINDOWEVENT:
+       		this->game->window->handleEvent(this->event);
+        	break;
       	case SDL_KEYDOWN:
         	printf( "Key press detected\n" );
-				SDL_Delay(100);
         	break;
       	case SDL_KEYUP:
         	printf( "Key release detected\n" );
@@ -108,26 +110,29 @@ void GameStateMatch::update()
 
 void GameStateMatch::render()
 {
-	SDL_Color textColor = { 0, 0, 0, 255 };
-	
-	//Render text
-	if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
-											  textColor, this->game->renderer, this->frameFont ) )
+	//Only draw when not minimized
+	if( !this->game->window->isMinimized() )
 	{
-		printf( "Unable to render FPS texture!\n" );
+		SDL_Color textColor = { 0, 0, 0, 255 };
+	
+		//Render text
+		if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
+											  textColor, this->game->renderer, this->frameFont ) )
+		{
+			printf( "Unable to render FPS texture!\n" );
+		}
+
+		//Clear screen
+		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		SDL_RenderClear( this->game->renderer );
+
+		//Render textures
+		this->frameFPSTextTexture.render(this->game->renderer, 
+								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0 );
+	
+		//Update screen
+		SDL_RenderPresent( this->game->renderer );
 	}
-
-	//Clear screen
-	SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear( this->game->renderer );
-
-	//Render textures
-	this->frameFPSTextTexture.render(this->game->renderer, 
-									 ( SCREEN_WIDTH - this->frameFPSTextTexture.getWidth() ), 0 );
-	
-	//Update screen
-	SDL_RenderPresent( this->game->renderer );
-	
 }
 
 	

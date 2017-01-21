@@ -3,6 +3,7 @@
 #include<SDL2/SDL.h>
 #include <SDL2/SDL_image.h> 
 #include <SDL2/SDL_ttf.h>
+#include "Window.hpp"
 
 class GameState;
 
@@ -13,7 +14,7 @@ private:
 	
 public:
 	
-	SDL_Window* window = NULL;
+	Window* window = NULL;
 	SDL_Surface* screenSurface = NULL;
 	SDL_Renderer* renderer = NULL;
 	
