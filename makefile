@@ -1,7 +1,5 @@
 CXXFLAGS := -Wall -pedantic -pipe -std=c++14
-#when we need the extra flags add them below
-#-lSDL_mixer -lSDL_image -lSDL_ttf
-CLIBS := -pthread -lSDL2
+CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
