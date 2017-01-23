@@ -17,10 +17,10 @@ bool GameStateMatch::load()
 	bool success = true;
 	
 	//Open the font
-	this->frameFont = TTF_OpenFont( "assets/kenpixelsquare.ttf", 28 );
+	this->frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
 	if( this->frameFont == NULL )
 	{
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
 	
@@ -35,10 +35,12 @@ void GameStateMatch::loop()
 	//The frames per second cap timer
 	LTimer capTimer;
 	
-	float avgFPS = 0;
-
+	//Keeps track of time between steps
+	LTimer stepTimer;
+	
 	//Start counting frames per second
 	unsigned long countedFrames = 0;
+	float avgFPS = 0;
 	fpsTimer.start();
 	
 	// State Loop
@@ -55,10 +57,11 @@ void GameStateMatch::loop()
 		this->frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS; 
 		
 		// Process frame
-		this->sync();
-		this->handle();
-		this->update();
-		this->render();
+		this->handle();	// Handle user input
+		this->update(stepTimer.getTicks() / 1000.f); // Update state values
+		stepTimer.start(); //Restart step timer
+		this->sync();	// Sync game to server
+		this->render();	// Render game state to window
 		
 		++countedFrames;
 
@@ -83,16 +86,27 @@ void GameStateMatch::handle()
 	//Handle events on queue 
 	while( SDL_PollEvent( &this->event ))
 	{
-		/* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
-   		switch( this->event.type ){
+   		switch( this->event.type )
+		{
 		case SDL_WINDOWEVENT:
        		this->game->window->handleEvent(this->event);
         	break;
       	case SDL_KEYDOWN:
-        	printf( "Key press detected\n" );
+        	switch( this->event.key.keysym.sym )
+			{
+			case SDLK_ESCAPE:
+				play = false;
+				break;
+			default:
+                break;
+			}
         	break;
       	case SDL_KEYUP:
-        	printf( "Key release detected\n" );
+       		switch( this->event.key.keysym.sym )
+			{
+			default:
+               	break;
+			}
         	break;
 		case SDL_QUIT:
 			play = false;
@@ -103,9 +117,10 @@ void GameStateMatch::handle()
 	}
 }
 
-void GameStateMatch::update()
+void GameStateMatch::update(const float& delta)
 {
-
+	
+	
 }
 
 void GameStateMatch::render()
@@ -133,6 +148,14 @@ void GameStateMatch::render()
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
 	}
+}
+
+GameStateMatch::~GameStateMatch()
+{
+	// Free texture and font
+	this->frameFPSTextTexture.free();
+	TTF_CloseFont(this->frameFont);
+	this->frameFont = NULL;
 }
 
 	

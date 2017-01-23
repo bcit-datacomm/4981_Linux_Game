@@ -11,14 +11,8 @@ private:
 
 	virtual void sync();
 	virtual void handle();
-	virtual void update();
+	virtual void update(const float& delta);
 	virtual void render();
-	
-	//Main loop flag
-	bool play = true;
-	
-	//Event handler
-	SDL_Event event;
 	
 public:
 
@@ -26,7 +20,7 @@ public:
 	virtual void loop();
 	
 	GameStateMatch(Game* g) : GameState(g) {};
-	virtual ~GameStateMatch() {};
+	virtual ~GameStateMatch();
 	
 	std::stringstream frameTimeText;
 	TTF_Font* frameFont = NULL;
