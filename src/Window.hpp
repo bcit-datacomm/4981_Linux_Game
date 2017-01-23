@@ -16,9 +16,6 @@ class Window
 
 		//Creates window
 		bool init();
-	
-		// Set icon
-		void setIcon(SDL_Surface* newIcon);
 
 		//Creates renderer from internal window
 		SDL_Renderer* createRenderer();
