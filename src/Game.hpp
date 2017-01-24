@@ -10,16 +10,19 @@ class GameState;
 class Game {
 private:
 	
+	// Current game state
 	GameState* state = NULL;
 	
 public:
 	
+	// Game window
 	Window* window = NULL;
-	SDL_Surface* screenSurface = NULL;
 	SDL_Renderer* renderer = NULL;
+	SDL_Surface* screenSurface = NULL;
 	
 	bool init();
 	bool loadMedia();
+	SDL_Surface* loadSurface( std::string path );
 	void run();
 	void close();
 	

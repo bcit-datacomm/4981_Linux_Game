@@ -8,6 +8,8 @@ int main()
 {
 	Game* game = new Game();
 	
+	printf( "loading...\n");
+	
 	//Start up SDL and create window
 	if(game->init() && game->loadMedia())
 	{

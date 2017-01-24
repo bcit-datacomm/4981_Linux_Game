@@ -19,6 +19,9 @@ class Window
 
 		//Creates renderer from internal window
 		SDL_Renderer* createRenderer();
+	
+		// Gets the scrren surface of the window
+		SDL_Surface* getScreenSurface();
 
 		//Handles window events
 		void handleEvent( SDL_Event& e );

@@ -30,6 +30,11 @@ bool Window::init()
 	return mWindow != NULL;
 }
 
+SDL_Surface* Window::getScreenSurface()
+{
+	return  SDL_GetWindowSurface( this->mWindow );
+}
+
 SDL_Renderer* Window::createRenderer()
 {
 	return SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
