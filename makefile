@@ -1,5 +1,5 @@
 CXXFLAGS := -Wall -pedantic -pipe -std=c++14
-CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
+CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -fopenmp
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
