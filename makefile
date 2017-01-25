@@ -1,7 +1,5 @@
 CXXFLAGS := -Wall -pedantic -pipe -std=c++14
-#when we need the extra flags add them below
-#-lSDL_mixer -lSDL_image -lSDL_ttf
-CLIBS := -pthread -lSDL2
+CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
@@ -13,11 +11,7 @@ HEADWILD := $(wildcard $(HEAD)/*.h)
 EXEC := $(ODIR)/$(APPNAME)
 DEPS := $(EXEC).d
 
-# Add flags for release mode binary
-release: CXXFLAGS += -O3 -march=native -flto -DNDEBUG
-release: debug
-
-debug: $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))
+all: $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))
 # Command takes all bin .o files and creates an executable called chess in the bin folder
 	$(CXX) $^ $(CFLAGS) $(CXXFLAGS) $(CLIBS) -o $(EXEC)
 
@@ -42,15 +36,29 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(DEPS)
 endif
 
+ifneq (,$(findstring debug,$(MAKECMDGOALS)))
+	CXXFLAGS += -g -pg
+else
+	CXXFLAGS += -O3 -march=native -flto -DNDEBUG
+endif
+
+release: all
+debug: all
+
 # Target is any bin .o file, prereq is the equivalent src .cpp file
 $(OBJS): $(SRCOBJS)
 # Command compiles the src .cpp file with the listed flags and turns it into a bin .o file
-	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $(patsubst $(SRCOBJS), $(OBJS), $<) $(CLIBS)
+	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $(patsubst $(SRCOBJS), $(OBJS), $<)
+
+server:
+ifneq (, $(wildcard $(SRC)/server/*.c))
+	gcc $(subst c++14,c11,$(CXXFLAGS)) $(wildcard $(SRC)/server/*.c) $(CLIBS) -o $(CURDIR)/$(ODIR)/server
+endif
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean
 
 # Deletes the executable and all .o and .d files in the bin folder
 clean: |$(ODIR)
-	$(RM) $(EXEC) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
+	$(RM) $(EXEC) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
 
