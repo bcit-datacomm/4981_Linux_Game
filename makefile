@@ -32,7 +32,7 @@ $(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR)
 
 # Add the dependencies into make and don't throw an error if it doesn't exist
 # Also don't generate dependency file during a clean
-ifneq ($(MAKECMDGOALS),clean)
+ifeq (,$(filter server clean, $(MAKECMDGOALS)))
 -include $(DEPS)
 endif
 
