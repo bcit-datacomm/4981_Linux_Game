@@ -13,19 +13,18 @@ private:
 	virtual void handle();
 	virtual void update(const float& delta);
 	virtual void render();
-	
+
 public:
 
 	virtual bool load();
 	virtual void loop();
-	
+
 	GameStateMatch(Game* g) : GameState(g) {};
 	virtual ~GameStateMatch();
-	
+
 	std::stringstream frameTimeText;
 	TTF_Font* frameFont = NULL;
 	LTexture frameFPSTextTexture;
-	
 };
 
 #endif

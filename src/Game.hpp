@@ -6,6 +6,7 @@
 #include "Window.hpp"
 #include "headers/Player.h"
 #include "headers/Level.h"
+#include "LTexture.hpp"
 
 class GameState;
 
@@ -14,7 +15,6 @@ private:
 
 	// Current game state
 	GameState* state = NULL;
-	Player player;
 	Level level;
 
 public:
@@ -24,6 +24,13 @@ public:
 	SDL_Renderer* renderer = NULL;
 	SDL_Surface* screenSurface = NULL;
 	SDL_Texture* levelTexture = NULL;
+
+	Player player;
+
+
+	LTexture playerTexture;
+	SDL_Rect playerSpriteClips[1];
+
 
 	bool init();
 	bool loadMedia();

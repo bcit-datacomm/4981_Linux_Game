@@ -147,6 +147,7 @@ void GameStateMatch::render()
 
 		SDL_RenderCopy(this->game->renderer, this->game->levelTexture, NULL, NULL);
 
+		this->game->playerTexture.render(this->game->renderer,this->game->player.getX(), this->game->player.getY(), 0);
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
 	}
