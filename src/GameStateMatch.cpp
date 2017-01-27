@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h> 
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "GameStateMatch.hpp"
 #include "LTimer.hpp"
@@ -13,9 +13,9 @@
 
 bool GameStateMatch::load()
 {
-	
+
 	bool success = true;
-	
+
 	//Open the font
 	this->frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
 	if( this->frameFont == NULL )
@@ -23,7 +23,7 @@ bool GameStateMatch::load()
 		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
-	
+
 	return success;
 }
 
@@ -34,35 +34,35 @@ void GameStateMatch::loop()
 
 	//The frames per second cap timer
 	LTimer capTimer;
-	
+
 	//Keeps track of time between steps
 	LTimer stepTimer;
-	
+
 	//Start counting frames per second
 	unsigned long countedFrames = 0;
 	float avgFPS = 0;
 	fpsTimer.start();
-	
+
 	// State Loop
 	while (this->play)
 	{
 		//Start cap timer
 		capTimer.start();
-		
+
 		//Calculate and correct fps
 		avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
-		
+
 		//Set FPS text to be rendered
 		this->frameTimeText.str( "" );
-		this->frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS; 
-		
+		this->frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
+
 		// Process frame
 		this->handle();	// Handle user input
 		this->update(stepTimer.getTicks() / 1000.f); // Update state values
 		stepTimer.start(); //Restart step timer
 		this->sync();	// Sync game to server
 		this->render();	// Render game state to window
-		
+
 		++countedFrames;
 
 		//If frame finished early
@@ -72,7 +72,7 @@ void GameStateMatch::loop()
 			//Wait remaining time
 			SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
 		}
-		
+
 	}
 }
 
@@ -83,7 +83,7 @@ void GameStateMatch::sync()
 
 void GameStateMatch::handle()
 {
-	//Handle events on queue 
+	//Handle events on queue
 	while( SDL_PollEvent( &this->event ))
 	{
    		switch( this->event.type )
@@ -110,7 +110,7 @@ void GameStateMatch::handle()
         	break;
 		case SDL_QUIT:
 			play = false;
-			break;	
+			break;
       	default:
         	break;
     	}
@@ -119,8 +119,8 @@ void GameStateMatch::handle()
 
 void GameStateMatch::update(const float& delta)
 {
-	
-	
+
+
 }
 
 void GameStateMatch::render()
@@ -129,7 +129,7 @@ void GameStateMatch::render()
 	if( !this->game->window->isMinimized() )
 	{
 		SDL_Color textColor = { 0, 0, 0, 255 };
-	
+
 		//Render text
 		if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
 											  textColor, this->game->renderer, this->frameFont ) )
@@ -142,9 +142,11 @@ void GameStateMatch::render()
 		SDL_RenderClear( this->game->renderer );
 
 		//Render textures
-		this->frameFPSTextTexture.render(this->game->renderer, 
+		this->frameFPSTextTexture.render(this->game->renderer,
 								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0 );
-	
+
+		SDL_RenderCopy(this->game->renderer, this->game->levelTexture, NULL, NULL);
+
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
 	}
@@ -157,5 +159,3 @@ GameStateMatch::~GameStateMatch()
 	TTF_CloseFont(this->frameFont);
 	this->frameFont = NULL;
 }
-
-	

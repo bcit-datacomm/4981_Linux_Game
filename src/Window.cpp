@@ -62,7 +62,7 @@ void Window::handleEvent( SDL_Event& e )
 			case SDL_WINDOWEVENT_ENTER:
 			mMouseFocus = true;
 			break;
-			
+
 			//Mouse left window
 			case SDL_WINDOWEVENT_LEAVE:
 			mMouseFocus = false;
@@ -87,7 +87,7 @@ void Window::handleEvent( SDL_Event& e )
 			case SDL_WINDOWEVENT_MAXIMIZED:
 			mMinimized = false;
             break;
-			
+
 			//Window restored
 			case SDL_WINDOWEVENT_RESTORED:
 			mMinimized = false;
