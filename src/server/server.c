@@ -17,6 +17,7 @@
 
 int main(int argc, char **argv) {
     int opt;
+#pragma omp parallel
     while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
         switch(opt) {
             case 'a':
@@ -73,7 +74,6 @@ void alarmHandler(int signo) {
     struct itimerval duration;
     memset(&duration, 0, sizeof(duration));
     duration.it_interval.tv_usec = microSecPerTick;
-
     setitimer(ITIMER_REAL, &duration, NULL);
     genOutputPacket();
     sendSyncPacket(sendSocket);
@@ -82,6 +82,7 @@ void alarmHandler(int signo) {
 void listenForPackets(const struct sockaddr_in servaddr) {
     int epollfd;
     struct epoll_event ev;
+    socklen_t servAddrLen = sizeof(servaddr);
 
     if ((epollfd = epoll_create1(0)) == -1) {
         perror("Epoll create");
@@ -97,15 +98,14 @@ void listenForPackets(const struct sockaddr_in servaddr) {
     }
 
     char buff[IN_PACKET_SIZE];
+#pragma omp parallel shared(epollfd, ev) private(buff)
     for (;;) {
         if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
             perror("epoll_wait");
             exit(1);
         }
-
-        socklen_t servAddrLen = sizeof(servaddr);
         ssize_t read = recvfrom(listenSocket, buff, IN_PACKET_SIZE, 0, (struct sockaddr *) &servaddr, &servAddrLen);
-
+        
         if (read == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 continue;
@@ -114,6 +114,7 @@ void listenForPackets(const struct sockaddr_in servaddr) {
             exit(1);
         }
         if (read == IN_PACKET_SIZE) {
+#pragma omp task
             processPacket(buff);
         }
     }
@@ -129,6 +130,7 @@ void genOutputPacket() {
 }
 
 void sendSyncPacket(int sock) {
+#pragma omp parallel for
     for (size_t i = 0; i < CLIENT_COUNT; ++i) {
         sendto(sock, outputPacket, OUT_PACKET_SIZE, 0, (const struct sockaddr *) &clientAddrs[i], sizeof(clientAddrs[i]));
     }
