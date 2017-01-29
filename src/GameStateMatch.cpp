@@ -24,6 +24,22 @@ bool GameStateMatch::load()
 		success = false;
 	}
 
+	this->level = new Level();
+	if(!this->level->levelTexture.loadFromFile("assets/texture/checkerboard.png", this->game->renderer))
+	{
+		printf("Failed to load the level texture!\n");
+	}
+	else
+	{
+		this->level->levelTexture.setDimensions(2000, 2000);	
+	}
+	
+	this->player = new Player();
+	if(!this->player->playerTexture.loadFromFile(this->player->getSpritePath(), this->game->renderer))
+	{
+		printf("Failed to load the player texture!\n");
+	}
+
 	return success;
 }
 
@@ -142,12 +158,13 @@ void GameStateMatch::render()
 		SDL_RenderClear( this->game->renderer );
 
 		//Render textures
+		
+		this->level->levelTexture.render(this->game->renderer, 0, 0);
+		this->player->playerTexture.render(this->game->renderer,this->player->getX(), this->player->getY(), 0);
+		
 		this->frameFPSTextTexture.render(this->game->renderer,
-								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0 );
-
-		SDL_RenderCopy(this->game->renderer, this->game->levelTexture, NULL, NULL);
-
-		this->game->playerTexture.render(this->game->renderer,this->game->player.getX(), this->game->player.getY(), 0);
+								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
+		
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
 	}
@@ -156,6 +173,8 @@ void GameStateMatch::render()
 GameStateMatch::~GameStateMatch()
 {
 	// Free texture and font
+	delete this->player;
+	delete this->level;
 	this->frameFPSTextTexture.free();
 	TTF_CloseFont(this->frameFont);
 	this->frameFont = NULL;

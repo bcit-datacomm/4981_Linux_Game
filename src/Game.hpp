@@ -4,9 +4,6 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "Window.hpp"
-#include "headers/Player.h"
-#include "headers/Level.h"
-#include "LTexture.hpp"
 
 class GameState;
 
@@ -15,7 +12,6 @@ private:
 
 	// Current game state
 	GameState* state = NULL;
-	Level level;
 
 public:
 
@@ -23,13 +19,6 @@ public:
 	Window* window = NULL;
 	SDL_Renderer* renderer = NULL;
 	SDL_Surface* screenSurface = NULL;
-	SDL_Texture* levelTexture = NULL;
-
-	Player player;
-
-
-	LTexture playerTexture;
-	SDL_Rect playerSpriteClips[1];
 
 
 	bool init();

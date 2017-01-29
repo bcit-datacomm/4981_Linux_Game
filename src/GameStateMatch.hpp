@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include "Player.hpp"
+#include "Level.hpp"
 #include "LTexture.hpp"
 
 class GameStateMatch : public GameState {
@@ -21,6 +23,9 @@ public:
 
 	GameStateMatch(Game* g) : GameState(g) {};
 	virtual ~GameStateMatch();
+	
+	Player* player = NULL;
+	Level* level = NULL;
 
 	std::stringstream frameTimeText;
 	TTF_Font* frameFont = NULL;

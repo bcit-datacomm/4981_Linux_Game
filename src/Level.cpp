@@ -1,12 +1,13 @@
+#include "Level.hpp"
 
-
-#include "headers/Level.h"
-
-
-using namespace std;
-
-//returns path to png that is the level texture
-string Level::getTexturePath()
+Level::Level() 
 {
-    return texturePath;
+	
 }
+
+Level::~Level()
+{
+	this->levelTexture.free();
+}
+
+

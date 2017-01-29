@@ -101,24 +101,7 @@ bool Game::loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	levelTexture = loadTexture(level.getTexturePath());//gets path to levels texture
-	if(levelTexture == NULL)
-	{
-		printf( "Failed to load  level texture image!\n" );
-		success = false;
-	}
-
-	if(!playerTexture.loadFromFile(this->player.getSpritePath(), this->renderer))
-	{
-		printf("Failed to load the player texture!\n");
-	}
-	else
-	{
-		playerSpriteClips[0].x = 0;
-		playerSpriteClips[0].y = 0;
-		playerSpriteClips[0].w = 100;
-		playerSpriteClips[0].h = 100;
-	}
+	
 	// Load graphics, audio, and fonts here
 
 	return success;

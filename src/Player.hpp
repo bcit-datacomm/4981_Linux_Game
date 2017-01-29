@@ -1,6 +1,7 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 #include <string>
+#include "LTexture.hpp"
 
 class Player
 {
@@ -25,6 +26,12 @@ public:
 
     std::string getSpritePath(){return spritePath;};//returns path of players sprite
 
+	Player();
+	~Player();
+	
+	LTexture playerTexture;
+	SDL_Rect playerSpriteClips[1];
+	
 private:
     float x = 200; //x coordinate
     float y = 200; //y coordinate
@@ -33,6 +40,7 @@ private:
     int health;
     int state; //used to select sprite to display
     std::string spritePath = "assets/texture/arrow.png";
+	
 
 };
 

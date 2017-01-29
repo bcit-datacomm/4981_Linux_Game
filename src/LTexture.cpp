@@ -145,6 +145,12 @@ void LTexture::render(SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip, dou
 	SDL_RenderCopyEx( gRenderer, mTexture, clip, &renderQuad, angle, center, flip );
 }
 
+void LTexture::setDimensions(int w, int h)
+{
+	mWidth = w;
+	mHeight = h;
+}
+
 int LTexture::getWidth()
 {
 	return mWidth;
