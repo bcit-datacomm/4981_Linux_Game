@@ -48,10 +48,25 @@ void Window::handleEvent( SDL_Event& e )
 
 		switch( e.window.event )
 		{
-			//Get new dimensions and repaint on window size change
+			//Get new dimensions
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-			mWidth = e.window.data1;
-			mHeight = e.window.data2;
+			if (e.window.data1 < MIN_SCREEN_WIDTH) 
+			{
+				SDL_SetWindowSize(this->mWindow, MIN_SCREEN_WIDTH, e.window.data2);
+				mWidth = MIN_SCREEN_WIDTH;
+			}
+			else {
+				mWidth = e.window.data1;
+			}
+			if (e.window.data2 < MIN_SCREEN_HEIGHT) 
+			{
+				SDL_SetWindowSize(this->mWindow, e.window.data1, MIN_SCREEN_HEIGHT);
+				mHeight = MIN_SCREEN_HEIGHT;
+			}
+			else 
+			{
+				mHeight = e.window.data2;		
+			}
 			break;
 
 			//Repaint on exposure
@@ -62,7 +77,7 @@ void Window::handleEvent( SDL_Event& e )
 			case SDL_WINDOWEVENT_ENTER:
 			mMouseFocus = true;
 			break;
-			
+
 			//Mouse left window
 			case SDL_WINDOWEVENT_LEAVE:
 			mMouseFocus = false;
@@ -87,7 +102,7 @@ void Window::handleEvent( SDL_Event& e )
 			case SDL_WINDOWEVENT_MAXIMIZED:
 			mMinimized = false;
             break;
-			
+
 			//Window restored
 			case SDL_WINDOWEVENT_RESTORED:
 			mMinimized = false;
