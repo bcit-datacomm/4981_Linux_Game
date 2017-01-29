@@ -1,5 +1,6 @@
 CXXFLAGS := -Wall -pedantic -pipe -std=c++14
-CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -fopenmp
+CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
+CLIBSSERVER := -pthread -fopenmp
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
@@ -52,7 +53,7 @@ $(OBJS): $(SRCOBJS)
 
 server:
 ifneq (, $(wildcard $(SRC)/server/*.c))
-	gcc $(subst c++14,c11,$(CXXFLAGS)) $(wildcard $(SRC)/server/*.c) $(CLIBS) -o $(CURDIR)/$(ODIR)/server
+	gcc $(subst c++14,c11,$(CXXFLAGS)) $(wildcard $(SRC)/server/*.c) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
 endif
 
 # Prevent clean from trying to do anything with a file called clean
