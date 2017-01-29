@@ -8,21 +8,21 @@ class Player
 public:
     void create(); //function displays character
 
-    void setX(); //set x coordinate
+    void setX(float px){x=px;} //set x coordinate
 
-    void setY(); //set y coordinate
+    void setY(float py){y=py;} //set y coordinate
 
-    void setDX(); //set delta x coordinate
+    void setDX(float px){dx=px;} //set delta x coordinate
 
-    void setDY(); //set delta y coordinate
+    void setDY(float py){dy=py;} //set delta y coordinate
 
     float getX(){return x;}; // get x coordinate
 
     float getY(){return y;}; // get y coordinate
 
-    float getDX(); // get delta x coordinate
+    float getDX(){return dx;} // get delta x coordinate
 
-    float getDY(); //get delta y coordinate
+    float getDY(){return dy;} //get delta y coordinate
 
     std::string getSpritePath(){return spritePath;};//returns path of players sprite
 

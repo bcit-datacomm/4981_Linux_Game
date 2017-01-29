@@ -11,6 +11,8 @@
 #include "LTexture.hpp"
 #include "Window.hpp"
 
+const int MOVE_VEL = 100;
+
 bool GameStateMatch::load()
 {
 
@@ -113,6 +115,19 @@ void GameStateMatch::handle()
 			case SDLK_ESCAPE:
 				play = false;
 				break;
+			case SDLK_UP:
+				this->player->setDY(this->player->getDY()-MOVE_VEL);
+				break;
+			case SDLK_DOWN:
+				this->player->setDY(this->player->getDY()+MOVE_VEL);
+				break;
+			case SDLK_LEFT:
+				this->player->setDX(this->player->getDX()-MOVE_VEL);
+				break;
+			case SDLK_RIGHT:
+				this->player->setDX(this->player->getDX()+MOVE_VEL);
+				break;
+
 			default:
                 break;
 			}
@@ -120,6 +135,19 @@ void GameStateMatch::handle()
       	case SDL_KEYUP:
        		switch( this->event.key.keysym.sym )
 			{
+			case SDLK_UP:
+				this->player->setDY(0);
+				break;
+			case SDLK_DOWN:
+				this->player->setDY(0);
+				break;
+			case SDLK_LEFT:
+				this->player->setDX(0);
+				break;
+			case SDLK_RIGHT:
+				this->player->setDX(0);
+				break;
+
 			default:
                	break;
 			}
@@ -135,6 +163,27 @@ void GameStateMatch::handle()
 
 void GameStateMatch::update(const float& delta)
 {
+	//Move the player left or right
+	this->player->setX(this->player->getX()+(this->player->getDX()*delta));
+	
+	//If the player went too far to the left or right
+	if(this->player->getX() < 0){
+		this->player->setX(0);
+	}
+	else if(this->player->getX() > this->game->window->getWidth() - this->player->playerTexture.getWidth()){
+		this->player->setX(this->game->window->getWidth() - this->player->playerTexture.getWidth());
+	}
+
+	//Move the player up or down
+	this->player->setY(this->player->getY()+(this->player->getDY()*delta));
+	
+	//If the player went too far up or down
+	if(this->player->getY()<0){
+		this->player->setY(0);
+	}
+	else if(this->player->getY() > this->game->window->getHeight() - this->player->playerTexture.getHeight()){
+		this->player->setY(this->game->window->getHeight() - this->player->playerTexture.getHeight());
+	}
 
 
 }
