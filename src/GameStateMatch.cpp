@@ -99,14 +99,15 @@ void GameStateMatch::sync()
 
 void GameStateMatch::handle()
 {
+	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
+	// Handle movement input
+	this->player->handleInput(state);
 	//Handle events on queue
 	while( SDL_PollEvent( &this->event ))
 	{
+		this->game->window->handleEvent(this->event);
    		switch( this->event.type )
 		{
-		case SDL_WINDOWEVENT:
-       		this->game->window->handleEvent(this->event);
-        	break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym )
 			{
@@ -135,8 +136,10 @@ void GameStateMatch::handle()
 
 void GameStateMatch::update(const float& delta)
 {
-
-
+	
+	// Move player
+	this->player->move((this->player->getDX()*delta),(this->player->getDY()*delta));
+	
 }
 
 void GameStateMatch::render()
@@ -144,14 +147,6 @@ void GameStateMatch::render()
 	//Only draw when not minimized
 	if( !this->game->window->isMinimized() )
 	{
-		SDL_Color textColor = { 0, 0, 0, 255 };
-
-		//Render text
-		if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
-											  textColor, this->game->renderer, this->frameFont ) )
-		{
-			printf( "Unable to render FPS texture!\n" );
-		}
 
 		//Clear screen
 		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -161,6 +156,15 @@ void GameStateMatch::render()
 		
 		this->level->levelTexture.render(this->game->renderer, 0, 0);
 		this->player->playerTexture.render(this->game->renderer,this->player->getX(), this->player->getY(), 0);
+	
+		SDL_Color textColor = { 0, 0, 0, 255 };
+
+		//Render text
+		if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
+											  textColor, this->game->renderer, this->frameFont ) )
+		{
+			printf( "Unable to render FPS texture!\n" );
+		}
 		
 		this->frameFPSTextTexture.render(this->game->renderer,
 								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
