@@ -17,7 +17,6 @@
 
 int main(int argc, char **argv) {
     int opt;
-#pragma omp parallel
     while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
         switch(opt) {
             case 'a':
@@ -31,21 +30,12 @@ int main(int argc, char **argv) {
         }
     }
 
-    if ((listenSocket = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+    if ((listenSocket = socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, 0)) == -1) {
         perror("ListenSocket");
         exit(1);
     }
-    if ((sendSocket = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+    if ((sendSocket = socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, 0)) == -1) {
         perror("sendSocket");
-        exit(1);
-    }
-
-    if ((fcntl(listenSocket, F_SETFL, O_NONBLOCK)) == -1) {
-        perror("ListenSocket fcntl");
-        exit(1);
-    }
-    if ((fcntl(sendSocket, F_SETFL, O_NONBLOCK)) == -1) {
-        perror("sendSocket fcntl");
         exit(1);
     }
     struct sockaddr_in servaddr;
@@ -98,7 +88,7 @@ void listenForPackets(const struct sockaddr_in servaddr) {
     }
 
     char buff[IN_PACKET_SIZE];
-#pragma omp parallel shared(epollfd, ev) private(buff)
+#pragma omp parallel shared(epollfd, ev) private(buff) 
     for (;;) {
         if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
             perror("epoll_wait");
@@ -130,7 +120,7 @@ void genOutputPacket() {
 }
 
 void sendSyncPacket(int sock) {
-#pragma omp parallel for
+#pragma omp parallel for 
     for (size_t i = 0; i < CLIENT_COUNT; ++i) {
         sendto(sock, outputPacket, OUT_PACKET_SIZE, 0, (const struct sockaddr *) &clientAddrs[i], sizeof(clientAddrs[i]));
     }
