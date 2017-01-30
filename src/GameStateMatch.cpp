@@ -11,8 +11,6 @@
 #include "LTexture.hpp"
 #include "Window.hpp"
 
-const int MOVE_VEL = 100;
-
 bool GameStateMatch::load()
 {
 
@@ -116,16 +114,16 @@ void GameStateMatch::handle()
 				play = false;
 				break;
 			case SDLK_UP:
-				this->player->setDY(this->player->getDY()-MOVE_VEL);
+				this->player->setDY(this->player->getDY() - this->player->getVelocity());
 				break;
 			case SDLK_DOWN:
-				this->player->setDY(this->player->getDY()+MOVE_VEL);
+				this->player->setDY(this->player->getDY() + this->player->getVelocity());
 				break;
 			case SDLK_LEFT:
-				this->player->setDX(this->player->getDX()-MOVE_VEL);
+				this->player->setDX(this->player->getDX() - this->player->getVelocity());
 				break;
 			case SDLK_RIGHT:
-				this->player->setDX(this->player->getDX()+MOVE_VEL);
+				this->player->setDX(this->player->getDX() + this->player->getVelocity());
 				break;
 
 			default:
