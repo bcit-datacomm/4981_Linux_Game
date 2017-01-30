@@ -13,6 +13,44 @@ Player::~Player()
 	this->playerTexture.free();	
 }
 
+void Player::handleInput(const Uint8 *state)
+{
+	float x = 0;
+	float y = 0;
+	float velocity = this->getVelocity();
+	
+	// Check for move inputs
+	if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) 
+	{
+		y -= velocity;
+	}
+	if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) 
+	{
+		y += velocity;
+	}
+	if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) 
+	{
+		x -= velocity;
+	}
+	if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) 
+	{
+		x += velocity;
+	}
+
+	this->setDY(y);
+	this->setDX(x);
+}
+
+void Player::move(float moveX, float moveY)
+{
+	//Move the player left or right
+	this->setX(this->getX()+moveX);
+
+	//Move the player up or down
+	this->setY(this->getY()+moveY);
+	
+}
+
 void Player::setX(float px)
 {
 	x=px;

@@ -99,33 +99,21 @@ void GameStateMatch::sync()
 
 void GameStateMatch::handle()
 {
+	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
+	// Handle movement input
+	this->player->handleInput(state);
 	//Handle events on queue
 	while( SDL_PollEvent( &this->event ))
 	{
+		this->game->window->handleEvent(this->event);
    		switch( this->event.type )
 		{
-		case SDL_WINDOWEVENT:
-       		this->game->window->handleEvent(this->event);
-        	break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym )
 			{
 			case SDLK_ESCAPE:
 				play = false;
 				break;
-			case SDLK_UP:
-				this->player->setDY(this->player->getDY() - this->player->getVelocity());
-				break;
-			case SDLK_DOWN:
-				this->player->setDY(this->player->getDY() + this->player->getVelocity());
-				break;
-			case SDLK_LEFT:
-				this->player->setDX(this->player->getDX() - this->player->getVelocity());
-				break;
-			case SDLK_RIGHT:
-				this->player->setDX(this->player->getDX() + this->player->getVelocity());
-				break;
-
 			default:
                 break;
 			}
@@ -133,19 +121,6 @@ void GameStateMatch::handle()
       	case SDL_KEYUP:
        		switch( this->event.key.keysym.sym )
 			{
-			case SDLK_UP:
-				this->player->setDY(0);
-				break;
-			case SDLK_DOWN:
-				this->player->setDY(0);
-				break;
-			case SDLK_LEFT:
-				this->player->setDX(0);
-				break;
-			case SDLK_RIGHT:
-				this->player->setDX(0);
-				break;
-
 			default:
                	break;
 			}
@@ -161,29 +136,10 @@ void GameStateMatch::handle()
 
 void GameStateMatch::update(const float& delta)
 {
-	//Move the player left or right
-	this->player->setX(this->player->getX()+(this->player->getDX()*delta));
 	
-	//If the player went too far to the left or right
-	if(this->player->getX() < 0){
-		this->player->setX(0);
-	}
-	else if(this->player->getX() > this->game->window->getWidth() - this->player->playerTexture.getWidth()){
-		this->player->setX(this->game->window->getWidth() - this->player->playerTexture.getWidth());
-	}
-
-	//Move the player up or down
-	this->player->setY(this->player->getY()+(this->player->getDY()*delta));
+	// Move player
+	this->player->move((this->player->getDX()*delta),(this->player->getDY()*delta));
 	
-	//If the player went too far up or down
-	if(this->player->getY()<0){
-		this->player->setY(0);
-	}
-	else if(this->player->getY() > this->game->window->getHeight() - this->player->playerTexture.getHeight()){
-		this->player->setY(this->game->window->getHeight() - this->player->playerTexture.getHeight());
-	}
-
-
 }
 
 void GameStateMatch::render()
@@ -191,14 +147,6 @@ void GameStateMatch::render()
 	//Only draw when not minimized
 	if( !this->game->window->isMinimized() )
 	{
-		SDL_Color textColor = { 0, 0, 0, 255 };
-
-		//Render text
-		if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
-											  textColor, this->game->renderer, this->frameFont ) )
-		{
-			printf( "Unable to render FPS texture!\n" );
-		}
 
 		//Clear screen
 		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -208,6 +156,15 @@ void GameStateMatch::render()
 		
 		this->level->levelTexture.render(this->game->renderer, 0, 0);
 		this->player->playerTexture.render(this->game->renderer,this->player->getX(), this->player->getY(), 0);
+	
+		SDL_Color textColor = { 0, 0, 0, 255 };
+
+		//Render text
+		if( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
+											  textColor, this->game->renderer, this->frameFont ) )
+		{
+			printf( "Unable to render FPS texture!\n" );
+		}
 		
 		this->frameFPSTextTexture.render(this->game->renderer,
 								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);

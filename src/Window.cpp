@@ -110,7 +110,7 @@ void Window::handleEvent( SDL_Event& e )
 		}
 	}
 	//Enter exit full screen on return key
-	else if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN )
+	else if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB)
 	{
 		if( mFullScreen )
 		{
@@ -119,6 +119,11 @@ void Window::handleEvent( SDL_Event& e )
 		}
 		else
 		{
+			SDL_DisplayMode DM;
+			SDL_GetDesktopDisplayMode(0, &DM);
+			auto Width = DM.w;
+			auto Height = DM.h;
+			SDL_SetWindowSize(this->mWindow, Width, Height);
 			SDL_SetWindowFullscreen( mWindow, SDL_TRUE );
 			mFullScreen = true;
 			mMinimized = false;
