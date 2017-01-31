@@ -41,7 +41,7 @@ public:
 	Client();
 	~Client();
 	void handleError();
-	void TCPConnect(const char * );
+	int TCPConnect(const char * );
 	void cleanup();
 private:
 	int tcp_sockfd;

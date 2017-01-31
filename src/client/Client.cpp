@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string.h>
 #include <string>
+#include <stdlib.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -9,7 +10,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-
+#include <arpa/inet.h>
 #include "Client.h"
 
 
@@ -77,7 +78,7 @@ const char * Client::packetize(const int specifier, const char * msg)
 	}
 
 	//writeTCPSocket(/*buff*/);
-  //REMINDER : REMEMBER TO FREE CBUFF AFTER YOU ARE DONE WITH IT!!!
+    //REMINDER : REMEMBER TO FREE CBUFF AFTER YOU ARE DONE WITH IT!!!
 	//free(cbuff);
 	return cbuff;
 
@@ -103,22 +104,36 @@ void Client::handleError()
 
 }
 
-void Client::TCPConnect(const char * ip_addr)
+int Client::TCPConnect(const char * ip_addr)
 {
+	if (ip_addr == NULL || inet_addr(ip_addr) == 0 )
+	{
+		std::cerr << "Missing or Incorrect IP addr."  
+			<< "\n IP Address must be in the form x.x.x.x" 
+			<< std::endl ;
+		return -1;
+	}
+	
 	struct sockaddr_in serv_addr;
+	int nread;
 
 	memset(&serv_addr, '0', sizeof(struct sockaddr_in));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(TCP_PORT);
-
+	serv_addr.sin_addr.s_addr = inet_addr(ip_addr);
+	
 	if ( (tcp_sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-			perror("socket error");
-
-
+			perror("Error opening socket");
+			exit(1);
+	if((connect(tcp_sockfd, (struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in))) < 0)
+			perror("Error Connecting");
+			exit(1);
 }
+
 
 void Client::cleanup()
 {
 	//close fd
+	// free memory 
 	//join threads
 }
