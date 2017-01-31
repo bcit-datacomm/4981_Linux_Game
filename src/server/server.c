@@ -54,11 +54,11 @@ int main(int argc, char **argv) {
             listen_port_tcp,
             client_count);
 
-    if ((listenSocketUDP = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+    if ((listenSocketUDP = socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, 0)) == -1) {
         perror("ListenSocket UDP");
         exit(1);
     }
-    if ((sendSocketUDP = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+    if ((sendSocketUDP = socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, 0)) == -1) {
         perror("sendSocket UDP");
         exit(1);
     }
@@ -68,16 +68,6 @@ int main(int argc, char **argv) {
     }
     if ((sendSocketTCP = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("sendSocket TCP");
-        exit(1);
-    }
-
-
-    if ((fcntl(listenSocketUDP, F_SETFL, O_NONBLOCK)) == -1) {
-        perror("ListenSocket UDP fcntl");
-        exit(1);
-    }
-    if ((fcntl(sendSocketUDP, F_SETFL, O_NONBLOCK)) == -1) {
-        perror("sendSocket UDP fcntl");
         exit(1);
     }
 
@@ -223,7 +213,7 @@ void listenForPackets(const struct sockaddr_in servaddr) {
     }
 
     char buff[IN_PACKET_SIZE];
-#pragma omp parallel shared(epollfd, ev) private(buff)
+#pragma omp parallel shared(epollfd, ev) private(buff) 
     for (;;) {
         if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
             perror("epoll_wait");
