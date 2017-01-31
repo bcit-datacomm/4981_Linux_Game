@@ -1,23 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <omp.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/epoll.h>
-#include <sys/time.h>
-#include <sys/socket.h>
-#include <sys/signal.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <stdarg.h>
-
 //Temp variable to represent client count
 #define CLIENT_COUNT 10
 

@@ -1,3 +1,19 @@
+#include <omp.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <getopt.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/epoll.h>
+#include <sys/time.h>
+#include <sys/socket.h>
+#include <sys/signal.h>
+#include <sys/time.h>
+#include <netinet/in.h>
+#include <stdarg.h>
 #include "server.h"
 
 //declared here so they can be overriden with flags at run time as needed
