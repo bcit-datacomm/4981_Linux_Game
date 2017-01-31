@@ -26,15 +26,30 @@
 #define TICK_RATE 20
 #define IN_PACKET_SIZE 1024 //TBD
 #define OUT_PACKET_SIZE 1024 //TBD
+#define SYNC_IN 32 //name padded with nulls
+#define NAMELEN 32 //same as above but kept seperate for clarity of purpose
+#define SYNC_OUT 33 //name padded with nulls + id
 #define OPT_STRING "hl:L:c:v"
 #define MAX_PORT 65535
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
+
+typedef struct Players{
+    int x,y;
+    float dx,dy;
+    int id;
+    char username[NAMELEN];
+} Player;
+
+typedef struct Clients{
+    Player *player;
+    struct sockaddr_in *addr;
+} Client;
 
 const long long microSecPerTick = (1000 * 1000) / TICK_RATE;
 char outputPacket[OUT_PACKET_SIZE];
 int listenSocketUDP,listenSocketTCP;
 int sendSocketUDP, sendSocketTCP;
-struct sockaddr_in *clientAddrs;
+Client *clients;
 
 void initSync(int sock);
 
@@ -43,6 +58,8 @@ void genOutputPacket();
 void sendSyncPacket(int sock);
 void listenForPackets(const struct sockaddr_in servaddr);
 void alarmHandler(int signo);
+
+//where each client w/ both socket and user info is stored
 
 //off by default
 int verbose = 0;

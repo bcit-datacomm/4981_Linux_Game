@@ -80,17 +80,6 @@ int main(int argc, char **argv) {
         perror("sendSocket UDP fcntl");
         exit(1);
     }
-    //not sure if TCP should be non blocking
-#if 0
-    if ((fcntl(listenSocketTCP, F_SETFL, O_NONBLOCK)) == -1) {
-        perror("ListenSocket TCP fcntl");
-        exit(1);
-    }
-    if ((fcntl(sendSocketTCP, F_SETFL, O_NONBLOCK)) == -1) {
-        perror("sendSocket TCP fcntl");
-        exit(1);
-    }
-#endif
 
     //TCP Setup
     struct sockaddr_in servaddrtcp;
@@ -142,34 +131,67 @@ void initSync(int sock){
     int clientFDs[client_count];
     socklen_t clientLens[client_count];
     //make this also hold player data
-    clientAddrs = (struct sockaddr_in *)malloc(client_count * sizeof(struct sockaddr_in));
-    memset(clientAddrs,0,client_count * sizeof(struct sockaddr_in));
+    clients = (Client *)calloc(client_count, sizeof(Client));
     //accept all the connections
     //get the basic info from each
     int i = 0;
     for(;i < client_count;++i){
+        clients[i].addr = (struct sockaddr_in*)calloc(1,sizeof(struct sockaddr_in));
+        clients[i].player = (Player*)calloc(1,sizeof(Player));
+
         clientLens[i] = sizeof(struct sockaddr_in);
-        clientFDs[i] = accept(sock, (struct sockaddr *) &clientAddrs[i], &clientLens[i]);
+        clientFDs[i] = accept(sock, (struct sockaddr *) clients[i].addr, &clientLens[i]);
         int r;
-        char buff[IN_PACKET_SIZE+1];
-        r = read(clientFDs[i], buff, IN_PACKET_SIZE);
-        if(r > 0){
-            buff[r] = 0;
-            write(clientFDs[i],"waiting on further clients",27);
+        char inbuff[SYNC_IN+1],outbuff[SYNC_OUT];
+        memset(outbuff, 0, SYNC_OUT);
+        if((r = read(clientFDs[i], inbuff, SYNC_IN)) > 0){
+            inbuff[r] = '\0';
+            logv("connected:%s with id:%d\n", inbuff, i);
+            strcpy(clients[i].player->username,inbuff);
+            clients[i].player->id = i;
+            strcpy(outbuff, inbuff);
+            outbuff[SYNC_OUT-1] = i;
+            
+            //tell the client who they are
+            if(write(clientFDs[i], outbuff, SYNC_OUT) == -1){
+                perror("failed to write to client user info");
+                exit(4);
+            }
+
+            //update others of the clients addition
+            for(int j = 0; j < i; ++j){
+                if(write(clientFDs[j], outbuff, SYNC_OUT) == -1){
+                    perror("failed to write to client updated user list");
+                    exit(4);
+                }
+            }
+
+            //tell new clients previously connected clients
+            for(int j = 0; j < i; ++j){
+                strcpy(outbuff, clients[j].player->username);
+                outbuff[SYNC_OUT-1] = clients[j].player->id;
+                if(write(clientFDs[i], outbuff, SYNC_OUT) == -1){
+                    perror("failed to write to new client list of other users");
+                    exit(4);
+                }
+            }
+
+            logv("updated %d clients\n", i);
         } else if (r == 0){//file closed
             break;
         } else if (r == -1) {
             perror("Packet read failure");
             exit(1);
         }
-        logv("sync:cli[%d]:read>%s\n",i,buff);
     }
     //close all the connections
+#if 0
     while(i){
         logv("Closing TCP client %d\n",i);
         write(clientFDs[i],"start",6);
         close(clientFDs[i--]);
     }
+#endif
     logv("TCP sync complete\n");
 }
 
@@ -207,7 +229,12 @@ void listenForPackets(const struct sockaddr_in servaddr) {
             perror("epoll_wait");
             exit(1);
         }
-        ssize_t read = recvfrom(listenSocketUDP, buff, IN_PACKET_SIZE, 0, (struct sockaddr *) &servaddr, &servAddrLen);
+        ssize_t read = recvfrom(listenSocketUDP,
+                buff,
+                IN_PACKET_SIZE,
+                0,
+                (struct sockaddr *) &servaddr,
+                &servAddrLen);
 
         if (read == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -235,6 +262,11 @@ void genOutputPacket() {
 void sendSyncPacket(int sock) {
 #pragma omp parallel for
     for (size_t i = 0; i < client_count; ++i) {
-        sendto(sock, outputPacket, OUT_PACKET_SIZE, 0, (const struct sockaddr *) &clientAddrs[i], sizeof(clientAddrs[i]));
+        sendto(sock,
+                outputPacket,
+                OUT_PACKET_SIZE,
+                0,
+                (const struct sockaddr *) clients[i].addr,
+                sizeof(*clients[i].addr));
     }
 }
