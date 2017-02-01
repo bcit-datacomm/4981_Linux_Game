@@ -4,6 +4,9 @@
 #include "LTexture.hpp"
 #include <SDL2/SDL.h>
 
+const int PLAYER_HEIGHT = 100;
+const int PLAYER_WIDTH = 100;
+
 class Player
 {
 public:
