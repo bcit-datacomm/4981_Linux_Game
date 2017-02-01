@@ -109,6 +109,9 @@ void GameStateMatch::handle()
 		this->game->window->handleEvent(this->event);
    		switch( this->event.type )
 		{
+		case SDL_WINDOWEVENT:
+			this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
+			break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym )
 			{
@@ -154,7 +157,6 @@ void GameStateMatch::render()
 		//Clear screen
 		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( this->game->renderer );
-		this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
 
 		//Render textures
 		this->level->levelTexture.render(this->game->renderer, 0-this->camera->getX(), 0-this->camera->getY());
