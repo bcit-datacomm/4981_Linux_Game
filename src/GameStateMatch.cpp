@@ -39,6 +39,7 @@ bool GameStateMatch::load()
 	{
 		printf("Failed to load the player texture!\n");
 	}
+	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
 
 	return success;
 }
@@ -108,6 +109,9 @@ void GameStateMatch::handle()
 		this->game->window->handleEvent(this->event);
    		switch( this->event.type )
 		{
+		case SDL_WINDOWEVENT:
+			this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
+			break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym )
 			{
@@ -139,6 +143,8 @@ void GameStateMatch::update(const float& delta)
 	
 	// Move player
 	this->player->move((this->player->getDX()*delta),(this->player->getDY()*delta));
+	// Move Camera
+	this->camera->move(this->player->getX(), this->player->getY());
 	
 }
 
@@ -153,9 +159,8 @@ void GameStateMatch::render()
 		SDL_RenderClear( this->game->renderer );
 
 		//Render textures
-		
-		this->level->levelTexture.render(this->game->renderer, 0, 0);
-		this->player->playerTexture.render(this->game->renderer,this->player->getX(), this->player->getY(), 0);
+		this->level->levelTexture.render(this->game->renderer, 0-this->camera->getX(), 0-this->camera->getY());
+		this->player->playerTexture.render(this->game->renderer,this->player->getX()-this->camera->getX(), this->player->getY()-this->camera->getY());
 	
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
@@ -177,6 +182,7 @@ void GameStateMatch::render()
 GameStateMatch::~GameStateMatch()
 {
 	// Free texture and font
+	delete this->camera;
 	delete this->player;
 	delete this->level;
 	this->frameFPSTextTexture.free();

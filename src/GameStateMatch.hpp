@@ -7,6 +7,7 @@
 #include "Player.hpp"
 #include "Level.hpp"
 #include "LTexture.hpp"
+#include "Camera.hpp"
 
 class GameStateMatch : public GameState {
 private:
@@ -26,6 +27,7 @@ public:
 	
 	Player* player = NULL;
 	Level* level = NULL;
+	Camera* camera = NULL;
 
 	std::stringstream frameTimeText;
 	TTF_Font* frameFont = NULL;
