@@ -14,6 +14,8 @@
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <stdarg.h>
+#include <stdbool.h>
+
 #include "server.h"
 
 //declared here so they can be overriden with flags at run time as needed
@@ -56,7 +58,7 @@ int main(int argc, char **argv) {
                 }
                 break;
             case 'v':
-                verbose = 1;
+                verbose = true;
                 break;
         }
     }
@@ -70,65 +72,30 @@ int main(int argc, char **argv) {
             listen_port_tcp,
             client_count);
 
-    if ((listenSocketUDP = socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, 0)) == -1) {
+    if ((listenSocketUDP = createSocket(true, true)) == -1) {
         perror("ListenSocket UDP");
         exit(1);
     }
-    if ((sendSocketUDP = socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, 0)) == -1) {
+    if ((sendSocketUDP = createSocket(true, true)) == -1) {
         perror("sendSocket UDP");
         exit(1);
     }
-    if ((listenSocketTCP = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((listenSocketTCP = createSocket(false, false)) == -1) {
         perror("ListenSocket TCP");
         exit(1);
     }
-    if ((sendSocketTCP = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((sendSocketTCP = createSocket(false, true)) == -1) {
         perror("sendSocket TCP");
         exit(1);
     }
 
-    //TCP Setup
-    struct sockaddr_in servaddrtcp;
-    memset(&servaddrtcp, 0, sizeof(servaddrtcp));
-    servaddrtcp.sin_family = AF_INET;
-    servaddrtcp.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddrtcp.sin_port = htons(listen_port_tcp); 
-
-    //UDP Setup
-    struct sockaddr_in servaddrudp;
-    memset(&servaddrudp, 0, sizeof(servaddrudp));
-    servaddrudp.sin_family = AF_INET;
-    servaddrudp.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddrudp.sin_port = htons(listen_port_udp); 
-
-    if ((bind(listenSocketUDP, (struct sockaddr *) &servaddrudp, sizeof(servaddrudp))) == -1) {
-        perror("Bind UDP");
-        exit(1);
-    }
-
-    if ((bind(listenSocketTCP, (struct sockaddr *) &servaddrtcp, sizeof(servaddrtcp))) == -1) {
-        perror("Bind TCP");
-        exit(1);
-    }
+    listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
 
     logv("Sockets created and bound\n");
 
-    if (listen(listenSocketTCP, LISTENQ) == -1) {
-        perror("Listen TCP");
-        exit(1);
-    }
-
     initSync(listenSocketTCP);
 
-    struct itimerval duration;
-    memset(&duration, 0, sizeof(duration));
-    duration.it_interval.tv_usec = microSecPerTick;
-
-    logv("Timer started\n");
-    setitimer(ITIMER_REAL, &duration, NULL);
-    logv("UDP server started\n");
-    listenForPackets(servaddrudp);
-
+    listenUDP(listenSocketUDP, INADDR_ANY, listen_port_udp);
     return 0;
 }
 
@@ -137,20 +104,21 @@ void initSync(int sock){
     int clientFDs[client_count];
     socklen_t clientLens[client_count];
     //make this also hold player data
-    clients = (Client *)calloc(client_count, sizeof(Client));
+    clients = (Client *) calloc(client_count, sizeof(Client));
     //accept all the connections
     //get the basic info from each
-    int i = 0;
-    for(;i < client_count;++i){
-        clients[i].addr = (struct sockaddr_in*)calloc(1,sizeof(struct sockaddr_in));
-        clients[i].player = (Player*)calloc(1,sizeof(Player));
+    for(int i = 0; i < client_count; ++i) {
+        clients[i].addr = (struct sockaddr_in*) calloc(1, sizeof(struct sockaddr_in));
+        clients[i].player = (Player*) calloc(1, sizeof(Player));
 
         clientLens[i] = sizeof(struct sockaddr_in);
         clientFDs[i] = accept(sock, (struct sockaddr *) clients[i].addr, &clientLens[i]);
-        int r;
-        char inbuff[SYNC_IN+1],outbuff[SYNC_OUT];
+
+        char inbuff[SYNC_IN+1], outbuff[SYNC_OUT];
         memset(outbuff, 0, SYNC_OUT);
-        if((r = read(clientFDs[i], inbuff, SYNC_IN)) > 0){
+
+        int r;
+        if ((r = read(clientFDs[i], inbuff, SYNC_IN)) > 0){
             inbuff[r] = '\0';
             logv("connected:%s with id:%d\n", inbuff, i);
             strcpy(clients[i].player->username,inbuff);
@@ -159,24 +127,24 @@ void initSync(int sock){
             outbuff[SYNC_OUT-1] = i;
             
             //tell the client who they are
-            if(write(clientFDs[i], outbuff, SYNC_OUT) == -1){
+            if (write(clientFDs[i], outbuff, SYNC_OUT) == -1) {
                 perror("failed to write to client user info");
                 exit(4);
             }
 
             //update others of the clients addition
-            for(int j = 0; j < i; ++j){
-                if(write(clientFDs[j], outbuff, SYNC_OUT) == -1){
+            for (int j = 0; j < i; ++j){
+                if (write(clientFDs[j], outbuff, SYNC_OUT) == -1) {
                     perror("failed to write to client updated user list");
                     exit(4);
                 }
             }
 
             //tell new clients previously connected clients
-            for(int j = 0; j < i; ++j){
+            for (int j = 0; j < i; ++j) {
                 strcpy(outbuff, clients[j].player->username);
                 outbuff[SYNC_OUT-1] = clients[j].player->id;
-                if(write(clientFDs[i], outbuff, SYNC_OUT) == -1){
+                if (write(clientFDs[i], outbuff, SYNC_OUT) == -1) {
                     perror("failed to write to new client list of other users");
                     exit(4);
                 }
@@ -202,10 +170,7 @@ void initSync(int sock){
 }
 
 void alarmHandler(int signo) {
-    struct itimerval duration;
-    memset(&duration, 0, sizeof(duration));
-    duration.it_interval.tv_usec = microSecPerTick;
-    setitimer(ITIMER_REAL, &duration, NULL);
+    startTimer();
     genOutputPacket();
     sendSyncPacket(sendSocketUDP);
 }
@@ -275,4 +240,52 @@ void sendSyncPacket(int sock) {
                 (const struct sockaddr *) clients[i].addr,
                 sizeof(*clients[i].addr));
     }
+}
+
+void startTimer() {
+    struct itimerval duration;
+    memset(&duration, 0, sizeof(duration));
+    duration.it_interval.tv_usec = microSecPerTick;
+    setitimer(ITIMER_REAL, &duration, NULL);
+    logv("Timer started\n");
+}
+
+void listenTCP(int socket, unsigned long ip, unsigned short port) {
+    //TCP Setup
+    struct sockaddr_in servaddrtcp;
+    memset(&servaddrtcp, 0, sizeof(servaddrtcp));
+    servaddrtcp.sin_family = AF_INET;
+    servaddrtcp.sin_addr.s_addr = htonl(ip);
+    servaddrtcp.sin_port = htons(port); 
+
+    if ((bind(socket, (struct sockaddr *) &servaddrtcp, sizeof(servaddrtcp))) == -1) {
+        perror("Bind TCP");
+        exit(1);
+    }
+
+    if (listen(socket, LISTENQ) == -1) {
+        perror("Listen TCP");
+        exit(1);
+    }
+}
+
+void listenUDP(int socket, unsigned long ip, unsigned short port) {
+    //UDP Setup
+    struct sockaddr_in servaddrudp;
+    memset(&servaddrudp, 0, sizeof(servaddrudp));
+    servaddrudp.sin_family = AF_INET;
+    servaddrudp.sin_addr.s_addr = htonl(ip);
+    servaddrudp.sin_port = htons(port); 
+
+    if ((bind(socket, (struct sockaddr *) &servaddrudp, sizeof(servaddrudp))) == -1) {
+        perror("Bind UDP");
+        exit(1);
+    }
+    startTimer();
+    logv("UDP server started\n");
+    listenForPackets(servaddrudp);
+}
+
+int createSocket(bool useUDP, bool nonblocking) {
+    return socket(AF_INET, ((useUDP) ? SOCK_DGRAM : SOCK_STREAM) | (nonblocking * SOCK_NONBLOCK), 0);
 }

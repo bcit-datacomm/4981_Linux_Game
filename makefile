@@ -51,10 +51,13 @@ $(OBJS): $(SRCOBJS)
 # Command compiles the src .cpp file with the listed flags and turns it into a bin .o file
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $(patsubst $(SRCOBJS), $(OBJS), $<)
 
-server:
-ifneq (, $(wildcard $(SRC)/server/*.c))
-	gcc $(subst c++14,c11,$(CXXFLAGS)) $(wildcard $(SRC)/server/*.c) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
-endif
+server: rserver
+
+dserver: $(wildcard $(SRC)/server/*.c)
+	gcc -Wall -pedantic -pipe -std=c11 -g -pg $(wildcard $(SRC)/server/*.c) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+
+rserver: $(wildcard $(SRC)/server/*.c)
+	gcc -Wall -pedantic -pipe -std=c11 -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.c) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean

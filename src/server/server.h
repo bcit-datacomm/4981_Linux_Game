@@ -1,6 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <stdarg.h>
+#include <stdbool.h>
+
 //Temp variable to represent client count
 #define CLIENT_COUNT 10
 
@@ -41,11 +44,15 @@ void genOutputPacket();
 void sendSyncPacket(int sock);
 void listenForPackets(const struct sockaddr_in servaddr);
 void alarmHandler(int signo);
+void startTimer();
+void listenTCP(int socket, unsigned long ip, unsigned short port);
+void listenUDP(int socket, unsigned long ip, unsigned short port);
+int createSocket(bool useUDP, bool nonblocking);
 
 //where each client w/ both socket and user info is stored
 
 //off by default
-int verbose = 0;
+bool verbose = false;
 //logging for statuses when in verbose mode
 void logv(const char *msg, ...){
     if(!verbose)
