@@ -1,17 +1,20 @@
-
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#define TCP_PORT 				35222
-#define UDP_PORT 	   		35223
+#define TCP_PORT 		35223
+#define UDP_PORT 		35222
 #define UNAME_BUFFSIZE 	32
 #define CHAT_BUFFSIZE 	128
+#define MAX_EVENTS 		1	
+#define MAX_USERS		23
 
 #include <stdio.h>
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <atomic>
+#include "NetworkQueue.hpp"
 
 
 #ifndef PACKET_SPECIFIER_ENUMCL
@@ -38,22 +41,25 @@ enum class GAMESTATE{
 class Client
 {
 public:
-	Client();
-	~Client();
-	void handleError();
-	int TCPConnect(const char * );
-	void cleanup();
+	Client(NetworkQueue *, NetworkQueue *, const char *, const char *);
+	//~Client();
+	void run(const char *, const char *);
+	void end();
+	
+	//void handleError();
+	//void cleanup();
 private:
-	int tcp_sockfd;
-	char * username;
-	char * chat_buffer;
-	//struct sockaddr_in * serv_addr;
+	int _tcpsockfd;
+	NetworkQueue *_in;
+	NetworkQueue *_out;
+	std::atomic<bool> _running;
 
-	void initClient();
-	void readFromOutputQueue();
+	int TCPConnect(const char *);
+	int writeTCPSocket(const char *, int);
+	int readTCPSocket(char *, int);
+	
+	//unused
+	int readTCPSocket(char *, int, int);
 	const char * packetize(const int, const  char *);
-	void parseData(char *);
-	void writeTCPSocket();
-	void readTCPSocket();
 };
 #endif
