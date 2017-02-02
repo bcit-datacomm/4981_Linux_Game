@@ -1,20 +1,17 @@
-#include "Player.hpp"
+#include "Player.h"
 
-Player::Player()
-{
+Player::Player() {
 	playerSpriteClips[0].x = 0;
 	playerSpriteClips[0].y = 0;
 	playerSpriteClips[0].w = 100;
 	playerSpriteClips[0].h = 100;
 }
 
-Player::~Player()
-{
+Player::~Player() {
 	this->playerTexture.free();	
 }
 
-void Player::handleInput(const Uint8 *state)
-{
+void Player::handleInput(const Uint8 *state) {
 	float x = 0;
 	float y = 0;
 	float velocity = this->getVelocity();
@@ -41,8 +38,8 @@ void Player::handleInput(const Uint8 *state)
 	this->setDX(x);
 }
 
-void Player::move(float moveX, float moveY)
-{
+// Move player by x and y amount
+void Player::move(float moveX, float moveY) {
 	//Move the player left or right
 	this->setX(this->getX()+moveX);
 
@@ -51,57 +48,53 @@ void Player::move(float moveX, float moveY)
 	
 }
 
-void Player::setX(float px)
-{
-	x=px;
-} //set x coordinate
+// Set x coordinate
+void Player::setX(float px) {
+	x = px;
+} 
 
-void Player::setY(float py)
-{
-	y=py;
-} //set y coordinate
+// Set y coordinate
+void Player::setY(float py) {
+	y = py;
+} 
 
-void Player::setDX(float px)
-{
-	dx=px;
-} //set delta x coordinate
+// Set delta x coordinate
+void Player::setDX(float px) {
+	dx = px;
+} 
 
-void Player::setDY(float py)
-{
-	dy=py;
-} //set delta y coordinate
+// Set delta y coordinate
+void Player::setDY(float py) {
+	dy = py;
+} 
 
-void Player::setVelocity(int pvel)
-{
+// set velocity of player movement
+void Player::setVelocity(int pvel) {
 	velocity = pvel;
-} // set velocity of player movement
+} 
 
-float Player::getX()
-{
+// Get x coordinate
+float Player::getX() {
 	return x;
-} // get x coordinate
+} 
 
-float Player::getY()
-{
+// Get y coordinate
+float Player::getY() {
 	return y;
-} // get y coordinate
+} 
 
-float Player::getDX()
-{
+// Get delta x coordinate
+float Player::getDX() {
 	return dx;
-} // get delta x coordinate
+} 
 
-float Player::getDY()
-{
+// Get delta y coordinate
+float Player::getDY() {
 	return dy;
-} //get delta y coordinate
+} 
 
-int Player::getVelocity()
-{
+// Get velocity of player movement
+int Player::getVelocity() {
 	return velocity;
-} // get velocity of player movement
+} 
 
-std::string Player::getSpritePath()
-{
-	return spritePath;
-}//returns path of players sprite
