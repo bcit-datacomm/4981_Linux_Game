@@ -1,15 +1,13 @@
-#ifndef LEVEL_HPP
-#define LEVEL_HPP
-
+#ifndef LEVEL_H
+#define LEVEL_H
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <stdio.h>
 #include <string>
-#include "LTexture.hpp"
+#include "LTexture.h"
 
-class Level
-{
+class Level {
 public:
     std::string getTexturePath();
 	LTexture levelTexture;

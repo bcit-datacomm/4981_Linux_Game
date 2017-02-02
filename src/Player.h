@@ -1,14 +1,13 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <string>
-#include "LTexture.hpp"
+#include "LTexture.h"
 #include <SDL2/SDL.h>
 
 const int PLAYER_HEIGHT = 100;
 const int PLAYER_WIDTH = 100;
 
-class Player
-{
+class Player {
 public:
     void create(); //function displays character
 	
@@ -36,8 +35,6 @@ public:
 
     int	getVelocity(); // get velocity of player movement
 
-    std::string getSpritePath();//returns path of players sprite
-
 	Player();
 	~Player();
 	
@@ -52,8 +49,6 @@ private:
     int velocity = 500; // velocity of player movement
     int health;
     int state; //used to select sprite to display
-    std::string spritePath = "assets/texture/arrow.png";
-	
 
 };
 
