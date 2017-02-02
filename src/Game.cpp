@@ -1,18 +1,19 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h> 
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
-#include <stdio.h>
 #include <iostream>
+#include <stdio.h>
 #include <string>
 #include "Game.hpp"
 #include "GameStateMatch.hpp"
 #include "Window.hpp"
 
+
 void Game::run()
 {
 	this->state = new GameStateMatch(this);
-	if (this->state->load()) 
+	if (this->state->load())
 	{
 		printf( "running...\n");
 		this->state->loop();
@@ -56,7 +57,7 @@ bool Game::init()
 			}
 			else
 			{
-								
+
 				//Initialize renderer color
 				SDL_SetRenderDrawColor( this->renderer , 0xFF, 0xFF, 0xFF, 0xFF );
 
@@ -78,14 +79,16 @@ bool Game::init()
 					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
 					success = false;
 				}
-				
+
 				//Initialize SDL_mixer
-				if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) 
-				{ 
+				if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+				{
 					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
 					success = false;
 				}
-				
+
+		 		this->screenSurface = this->window->getScreenSurface();
+
 			}
 		}
 	}
@@ -93,10 +96,11 @@ bool Game::init()
 	return success;
 }
 
-bool Game::loadMedia() 
+bool Game::loadMedia()
 {
 	//Loading success flag
 	bool success = true;
+
 	
 	// Load graphics, audio, and fonts here
 
@@ -114,7 +118,7 @@ SDL_Surface* Game::loadSurface( std::string path )
 	{
 		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
 	}
-	else if (this->screenSurface == NULL) 
+	else if (this->screenSurface == NULL)
 	{
 		printf( "Unable to load image %s!\n  Window surface is NULL\n", path.c_str());
 	}
@@ -134,15 +138,40 @@ SDL_Surface* Game::loadSurface( std::string path )
 	return optimizedSurface;
 }
 
+
+//sets texture
+SDL_Texture* Game::loadTexture( std::string path ) {
+	//The final texture
+	SDL_Texture* newTexture = NULL;
+	//Load image at specified path
+	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+	if( loadedSurface == NULL )
+	{
+		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+	}
+	else
+	{
+		//Create texture from surface pixels
+		newTexture = SDL_CreateTextureFromSurface( this->renderer, loadedSurface );
+		if( newTexture == NULL )
+		{
+			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+		}
+		//Get rid of old loaded surface
+		SDL_FreeSurface( loadedSurface );
+	}
+	return newTexture;
+}
+
 void Game::close()
 {
-	
+
 	if (this->state != NULL)
 	{
 		delete this->state;
-	}	
-	
-	//Destroy window	
+	}
+
+	//Destroy window
 	SDL_DestroyRenderer( this->renderer );
 	this->window->free();
 	this->window = NULL;
@@ -153,5 +182,5 @@ void Game::close()
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
-	
+
 }

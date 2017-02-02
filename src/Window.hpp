@@ -4,7 +4,9 @@
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1280;
+const int MIN_SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 960;
+const int MIN_SCREEN_HEIGHT = 720;
 const int SCREEN_FPS = 60;
 const int SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;
 
@@ -19,7 +21,7 @@ class Window
 
 		//Creates renderer from internal window
 		SDL_Renderer* createRenderer();
-	
+
 		// Gets the scrren surface of the window
 		SDL_Surface* getScreenSurface();
 
@@ -37,6 +39,9 @@ class Window
 		bool hasMouseFocus();
 		bool hasKeyboardFocus();
 		bool isMinimized();
+
+		//gets mWindow
+		 SDL_Window* getWindow();
 
 	private:
 		//Window data
