@@ -6,12 +6,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "GameStateMatch.h"
+#include "GameStateMenu.h"
 #include "LTimer.h"
 #include "LTexture.h"
 #include "Window.h"
 
-bool GameStateMatch::load() {
+bool GameStateMenu::load() {
 
 	bool success = true;
 
@@ -22,23 +22,10 @@ bool GameStateMatch::load() {
 		success = false;
 	}
 
-	this->level = new Level();
-	if (!this->level->levelTexture.loadFromFile("assets/texture/checkerboard.png", this->game->renderer)) {
-		printf("Failed to load the level texture!\n");
-	} else {
-		this->level->levelTexture.setDimensions(2000, 2000);	
-	}
-	
-	this->player = new Player();
-	if (!this->player->playerTexture.loadFromFile("assets/texture/arrow.png", this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-	}
-	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
-
 	return success;
 }
 
-void GameStateMatch::loop() {
+void GameStateMenu::loop() {
 	//The frames per second timer
 	LTimer fpsTimer;
 
@@ -84,21 +71,15 @@ void GameStateMatch::loop() {
 	}
 }
 
-void GameStateMatch::sync() {
+void GameStateMenu::sync() {
 
 }
 
-void GameStateMatch::handle() {
-	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
-	// Handle movement input
-	this->player->handleInput(state);
+void GameStateMenu::handle() {
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
    		switch( this->event.type ) {
-		case SDL_WINDOWEVENT:
-			this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
-			break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
 			case SDLK_ESCAPE:
@@ -123,31 +104,22 @@ void GameStateMatch::handle() {
 	}
 }
 
-void GameStateMatch::update(const float& delta) {
+void GameStateMenu::update(const float& delta) {
 	
-	// Move player
-	this->player->move((this->player->getDX()*delta),(this->player->getDY()*delta));
-	// Move Camera
-	this->camera->move(this->player->getX(), this->player->getY());
+	// TEMP: Skip to GameStateMatch
+	// Remove this when working on the main menu
+	this->game->stateID = 2;
+	play = false;
 	
 }
 
-void GameStateMatch::render() {
+void GameStateMenu::render() {
 	//Only draw when not minimized
 	if ( !this->game->window->isMinimized() ) {
 
 		//Clear screen
 		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( this->game->renderer );
-
-		//Render textures
-		this->level->levelTexture.render(this->game->renderer, 
-										 0-this->camera->getX(),
-										 0-this->camera->getY());
-		
-		this->player->playerTexture.render(this->game->renderer, 
-										   this->player->getX()-this->camera->getX(), 
-										   this->player->getY()-this->camera->getY());
 	
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
@@ -165,14 +137,12 @@ void GameStateMatch::render() {
 	}
 }
 
-GameStateMatch::~GameStateMatch() {
+GameStateMenu::~GameStateMenu() {
 	
 	// Free texture and font
-	delete this->camera;
-	delete this->player;
-	delete this->level;
 	this->frameFPSTextTexture.free();
 	TTF_CloseFont(this->frameFont);
 	this->frameFont = NULL;
 
 }
+ 

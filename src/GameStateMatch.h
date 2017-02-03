@@ -1,22 +1,15 @@
-#ifndef GAMESTATE_MATCH_HPP
-#define GAMESTATE_MATCH_HPP
-#include "GameState.hpp"
+#ifndef GAMESTATE_MATCH_H
+#define GAMESTATE_MATCH_H
+#include "GameState.h"
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "Player.hpp"
-#include "Level.hpp"
-#include "LTexture.hpp"
-#include "Camera.hpp"
+#include "Player.h"
+#include "Level.h"
+#include "LTexture.h"
+#include "Camera.h"
 
 class GameStateMatch : public GameState {
-private:
-
-	virtual void sync();
-	virtual void handle();
-	virtual void update(const float& delta);
-	virtual void render();
-
 public:
 
 	virtual bool load();
@@ -29,9 +22,18 @@ public:
 	Level* level = NULL;
 	Camera* camera = NULL;
 
+	// Frame Display
 	std::stringstream frameTimeText;
 	TTF_Font* frameFont = NULL;
 	LTexture frameFPSTextTexture;
+	
+private:
+
+	virtual void sync();
+	virtual void handle();
+	virtual void update(const float& delta);
+	virtual void render();
+	
 };
 
 #endif
