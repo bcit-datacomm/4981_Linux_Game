@@ -243,6 +243,7 @@ void sendSyncPacket(int sock) {
 }
 
 void startTimer() {
+    signal(SIGALRM, &alarmHandler);
     struct itimerval duration;
     memset(&duration, 0, sizeof(duration));
     duration.it_interval.tv_usec = microSecPerTick;
