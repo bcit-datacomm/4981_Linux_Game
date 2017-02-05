@@ -8,6 +8,8 @@
 #include "Level.h"
 #include "LTexture.h"
 #include "Camera.h"
+#include "GameManager.h"
+#include "CollisionHandler.h"
 
 class GameStateMatch : public GameState {
 public:
@@ -21,6 +23,9 @@ public:
 	Player* player = NULL;
 	Level* level = NULL;
 	Camera* camera = NULL;
+	
+	GameManager* gameManager = NULL;
+	CollisionHandler* collisionHandler = NULL;
 
 	// Frame Display
 	std::stringstream frameTimeText;
