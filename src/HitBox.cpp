@@ -8,16 +8,6 @@ HitBox::HitBox() {
 HitBox::~HitBox() {
 	
 }
-	
-bool HitBox::collisionCheck(HitBox& nearHitBox) {
-	if (SDL_HasIntersection(&this->getRect(), &nearHitBox.getRect())) {
-		printf("HIT\n");
-		return true;
-	} else {
-		printf("GOOD\n");
-		return false;	
-	}
-}
 
 const SDL_Rect& HitBox::getRect() {
 	return this->rect;	
@@ -31,4 +21,12 @@ void HitBox::move(float x, float y) {
 
 void HitBox::setRect(const SDL_Rect rerect) {
 	this->rect = rerect;
+}
+
+void HitBox::setFriendly(bool isFriendly) {
+	this->playerFriendly = 	isFriendly;
+}
+
+bool HitBox::isPlayerFriendly() {
+	return 	this->playerFriendly;
 }

@@ -8,6 +8,11 @@ Marine::Marine() {
 	this->movementHitBox.setRect(marineSpriteClips[0]);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->movementHitBox.attached = this;
+	//this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
+	this->projectileHitBox.setRect(marineSpriteClips[0]);
+	this->projectileHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.attached = this;
+	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
 }
 
 Marine::~Marine() {
@@ -19,19 +24,23 @@ void Marine::move(float moveX, float moveY, CollisionHandler* ch) {
 	//Move the Marine left or right
 	this->setX(this->getX()+moveX);
 	this->movementHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.move(this->getX(), this->getY());
 	
 	if (ch->detectMovementCollision(&this->movementHitBox)) {
 		this->setX(this->getX()-moveX);
 		this->movementHitBox.move(this->getX(), this->getY());
+		this->projectileHitBox.move(this->getX(), this->getY());
 	}
 
 	//Move the Marine up or down
 	this->setY(this->getY()+moveY);
 	this->movementHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.move(this->getX(), this->getY());
 	
 	if (ch->detectMovementCollision(&this->movementHitBox)) {
 		this->setY(this->getY()-moveY);
 		this->movementHitBox.move(this->getX(), this->getY());
+		this->projectileHitBox.move(this->getX(), this->getY());
 	}
 	
 }
@@ -42,19 +51,21 @@ void Marine::setPosition(float x, float y) {
 	Entity::setPosition(x, y);
 	
 	this->movementHitBox.move(this->getX(), this->getY());
-	
+	this->projectileHitBox.move(this->getX(), this->getY());
 }
 
 // Set x coordinate
 void Marine::setX(float px) {
 	Entity::setX(px);
 	this->movementHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.move(this->getX(), this->getY());
 } 
 
 // Set y coordinate
 void Marine::setY(float py) {
 	Entity::setY(py);
 	this->movementHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.move(this->getX(), this->getY());
 } 
 
 // Set delta x coordinate
@@ -88,11 +99,11 @@ int Marine::getVelocity() {
 } 
 
 void Marine::onCollision() {
-
+	// Do nothing for now
 }
 
 void Marine::collidingProjectile(int damage) {
-		
+	this->health = health - damage;
 }
 		
 		

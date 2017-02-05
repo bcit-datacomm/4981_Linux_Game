@@ -25,7 +25,6 @@ public:
 	Camera* camera = NULL;
 	
 	GameManager* gameManager = NULL;
-	CollisionHandler* collisionHandler = NULL;
 
 	// Frame Display
 	std::stringstream frameTimeText;

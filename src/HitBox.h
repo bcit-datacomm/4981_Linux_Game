@@ -9,16 +9,20 @@ public:
 	HitBox();
 	~HitBox();
 	
-	bool collisionCheck(HitBox& nearHitBox);
 	void move(float x, float y);
 	void setRect(const SDL_Rect rect);
 	const SDL_Rect& getRect();
 	
-	Entity* attached;
+	void setFriendly(bool isFriendly);
+	bool isPlayerFriendly();
+	
+	Entity* attached; // Entity that it is linked to
+	
 	
 private:
 	
 	SDL_Rect rect;
+	bool playerFriendly = false;
 	
 };
 

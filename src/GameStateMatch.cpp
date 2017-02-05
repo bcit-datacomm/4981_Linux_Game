@@ -31,7 +31,6 @@ bool GameStateMatch::load() {
 	}
 	
 	this->gameManager = new GameManager();
-	this->collisionHandler = new CollisionHandler();
 	unsigned int playerMarineID = this->gameManager->createMarine();
 	
 	Marine* dumbMarine = this->gameManager->getMarine(this->gameManager->createMarine());
@@ -142,10 +141,12 @@ void GameStateMatch::handle() {
 }
 
 void GameStateMatch::update(const float& delta) {
-	this->gameManager->updateCollider(this->collisionHandler);
+	this->gameManager->updateCollider();
 	
 	// Move player
-	this->player->marine->move((this->player->marine->getDX()*delta),(this->player->marine->getDY()*delta), this->collisionHandler);
+	this->gameManager->updateMarines(delta);
+	
+//	this->player->marine->move((this->player->marine->getDX()*delta),(this->player->marine->getDY()*delta), this->collisionHandler);
 	// Move Camera
 	this->camera->move(this->player->marine->getX(), this->player->marine->getY());
 	
@@ -187,7 +188,6 @@ GameStateMatch::~GameStateMatch() {
 	
 	// Free texture and font
 	delete this->gameManager;
-	delete this->collisionHandler;
 	delete this->camera;
 	delete this->player;
 	delete this->level;

@@ -43,14 +43,14 @@ public:
 	virtual ~Marine();
 	
 	SDL_Rect marineSpriteClips[1];
-	HitBox movementHitBox;
-	HitBox projectileHitBox;
+	HitBox movementHitBox;	// Hit box for movement
+	HitBox projectileHitBox; // Hit box for projectile and bullets
 	
 private:
-    float dx; // delta x coordinat
-    float dy; //delta ycoordinate
+    float dx = 0; // delta x coordinat
+    float dy = 0; //delta ycoordinate
     int velocity = 500; // velocity of Marine movement
-    int health;
+    int health = 100;
     int state; //used to select sprite to display
 
 };
