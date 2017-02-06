@@ -108,13 +108,17 @@ void GameStateMatch::sync() {
 void GameStateMatch::handle() {
 	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
 	// Handle movement input
-	this->player->handleInput(state);
+	this->player->handleKeyboardInput(state);
+	this->player->handleMouseInput(this->game->window);
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
    		switch( this->event.type ) {
 		case SDL_WINDOWEVENT:
 			this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
+			break;
+		case SDL_MOUSEWHEEL:
+
 			break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
@@ -146,7 +150,6 @@ void GameStateMatch::update(const float& delta) {
 	// Move player
 	this->gameManager->updateMarines(delta);
 
-//	this->player->marine->move((this->player->marine->getDX()*delta),(this->player->marine->getDY()*delta), this->collisionHandler);
 	// Move Camera
 	this->camera->move(this->player->marine->getX(), this->player->marine->getY());
 
@@ -165,9 +168,6 @@ void GameStateMatch::render() {
 		this->level->levelTexture.render(this->game->renderer,
 										 0-this->camera->getX(),
 										 0-this->camera->getY());
-
-		//sets angle for marine sprite that is being used by player
-		this->player->marine->setAngle(this->game->window);
 
 		//renders objects in game
 		this->gameManager->renderObjects(this->game->renderer, this->camera->getX(), this->camera->getY());

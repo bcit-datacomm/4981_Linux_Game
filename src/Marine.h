@@ -5,6 +5,7 @@
 #include "HitBox.h"
 #include "Entity.h"
 #include "CollisionHandler.h"
+#include "Inventory.h"
 #include <math.h>
 #include <vector>
 #include <SDL2/SDL.h>
@@ -41,7 +42,7 @@ public:
 
     void setY(float py); //set y coordinate
 
-    void setAngle(Window* w);//sets angle of sprite to
+    void setAngle(double a);//sets angle of sprite to
 
     double getAngle(); //returns sprites angle
 
@@ -51,6 +52,8 @@ public:
 	SDL_Rect marineSpriteClips[1];
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectile and bullets
+	
+	Inventory inventory;
 
 private:
     float dx = 0; // delta x coordinat

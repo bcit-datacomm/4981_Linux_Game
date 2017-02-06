@@ -107,19 +107,8 @@ void Marine::collidingProjectile(int damage) {
 }
 
 //sets the angle of the player's marine sprite
-void Marine::setAngle(Window* w){
-    int mouseX;
-    int mouseY;
-    int mouseDeltaX;
-    int mouseDeltaY;
-    double PI = 3.1416;
-    double radianConvert = 180.0000;
-
-    SDL_GetMouseState(&mouseX, &mouseY);
-    mouseDeltaX = w->getWidth()/2 - mouseX;
-    mouseDeltaY = w->getHeight()/2 - mouseY;
-
-    angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/PI) * - 1;
+void Marine::setAngle(double a){
+    angle = a;
 }
 
 //returns the angle of the player's marine sprite
