@@ -113,13 +113,13 @@ void Marine::setAngle(Window* w){
     int mouseDeltaX;
     int mouseDeltaY;
     double PI = 3.1416;
-    double radianConvert = 180.0000
+    double radianConvert = 180.0000;
 
     SDL_GetMouseState(&mouseX, &mouseY);
     mouseDeltaX = w->getWidth()/2 - mouseX;
     mouseDeltaY = w->getHeight()/2 - mouseY;
 
-    angle = ((atan2(mouseDeltaX, mouseDeltaY)* 1radianConvert)/PI) * - 1;
+    angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/PI) * - 1;
 }
 
 //returns the angle of the player's marine sprite

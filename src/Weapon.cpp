@@ -15,11 +15,12 @@ int Weapon::getRange(){
 }
 
 void Weapon::reloadClip(){
-    int nextLoad;
+
     if(ammo >= clipMax){
         clip = clipMax;
     } if (ammo < clipMax){
-        if((nextLoad = clip + ammo) =< clipMax){
+        int nextLoad = clip + ammo;
+        if(nextLoad <= clipMax){
             clip = nextLoad;
         } else {
             clip = clipMax;
