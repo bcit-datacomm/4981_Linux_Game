@@ -31,6 +31,16 @@ void Player::handleInput(const Uint8 *state) {
 		x += velocity;
 	}
 
+	//Inventory inputs
+	if (state[SDL_SCANCODE_1]){
+		inventory.switchCurrent(0);
+	}
+	if (state[SDL_SCANCODE_2]){
+		inventory.switchCurrent(1);
+	}
+	if (state[SDL_SCANCODE_3]){
+		inventory.switchCurrent(2);
+	}
 	this->marine->setDY(y);
 	this->marine->setDX(x);
 }
