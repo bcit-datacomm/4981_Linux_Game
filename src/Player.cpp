@@ -9,14 +9,14 @@ Player::~Player() {
 }
 
 void Player::setControl(Marine* newControl) {
-	this->marine = newControl;	
+	this->marine = newControl;
 }
 
 void Player::handleInput(const Uint8 *state) {
 	float x = 0;
 	float y = 0;
 	float velocity = this->marine->getVelocity();
-	
+
 	// Check for move inputs
 	if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
 		y -= velocity;
@@ -34,4 +34,3 @@ void Player::handleInput(const Uint8 *state) {
 	this->marine->setDY(y);
 	this->marine->setDX(x);
 }
-

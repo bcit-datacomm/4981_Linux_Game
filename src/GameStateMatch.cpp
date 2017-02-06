@@ -27,12 +27,12 @@ bool GameStateMatch::load() {
 		printf("Failed to load the level texture!\n");
 		success = false;
 	} else {
-		this->level->levelTexture.setDimensions(2000, 2000);	
+		this->level->levelTexture.setDimensions(2000, 2000);
 	}
-	
+
 	this->gameManager = new GameManager();
 	unsigned int playerMarineID = this->gameManager->createMarine();
-	
+
 	Marine* dumbMarine = this->gameManager->getMarine(this->gameManager->createMarine());
 	if (!dumbMarine->texture.loadFromFile("assets/texture/arrow.png",
 																	this->game->renderer)) {
@@ -40,16 +40,16 @@ bool GameStateMatch::load() {
 		success = false;
 	}
 	dumbMarine->setPosition(500,500);
-	
+
 	this->player = new Player();
 	this->player->setControl(this->gameManager->getMarine(playerMarineID));
-	
+
 	if (!this->player->marine->texture.loadFromFile("assets/texture/arrow.png",
 																	this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
-	
+
 	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
 
 	return success;
@@ -142,15 +142,15 @@ void GameStateMatch::handle() {
 
 void GameStateMatch::update(const float& delta) {
 	this->gameManager->updateCollider();
-	
+
 	// Move player
 	this->gameManager->updateMarines(delta);
-	
+
 //	this->player->marine->move((this->player->marine->getDX()*delta),(this->player->marine->getDY()*delta), this->collisionHandler);
 	// Move Camera
 	this->camera->move(this->player->marine->getX(), this->player->marine->getY());
-	
-	
+
+
 }
 
 void GameStateMatch::render() {
@@ -162,12 +162,16 @@ void GameStateMatch::render() {
 		SDL_RenderClear( this->game->renderer );
 
 		//Render textures
-		this->level->levelTexture.render(this->game->renderer, 
+		this->level->levelTexture.render(this->game->renderer,
 										 0-this->camera->getX(),
 										 0-this->camera->getY());
-		
+
+		//sets angle for marine sprite that is being used by player
+		this->player->marine->setAngle(this->game->window);
+
+		//renders objects in game
 		this->gameManager->renderObjects(this->game->renderer, this->camera->getX(), this->camera->getY());
-	
+
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
 		//Render text
@@ -175,17 +179,17 @@ void GameStateMatch::render() {
 											  textColor, this->game->renderer, this->frameFont ) ) {
 			printf( "Unable to render FPS texture!\n" );
 		}
-		
+
 		this->frameFPSTextTexture.render(this->game->renderer,
 								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
-		
+
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
 	}
 }
 
 GameStateMatch::~GameStateMatch() {
-	
+
 	// Free texture and font
 	delete this->gameManager;
 	delete this->camera;

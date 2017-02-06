@@ -25,7 +25,7 @@ void Marine::move(float moveX, float moveY, CollisionHandler* ch) {
 	this->setX(this->getX()+moveX);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
-	
+
 	if (ch->detectMovementCollision(&this->movementHitBox)) {
 		this->setX(this->getX()-moveX);
 		this->movementHitBox.move(this->getX(), this->getY());
@@ -36,20 +36,20 @@ void Marine::move(float moveX, float moveY, CollisionHandler* ch) {
 	this->setY(this->getY()+moveY);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
-	
+
 	if (ch->detectMovementCollision(&this->movementHitBox)) {
 		this->setY(this->getY()-moveY);
 		this->movementHitBox.move(this->getX(), this->getY());
 		this->projectileHitBox.move(this->getX(), this->getY());
 	}
-	
+
 }
 
 // Set Marine by x and y amount
 void Marine::setPosition(float x, float y) {
-	
+
 	Entity::setPosition(x, y);
-	
+
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
 }
@@ -59,44 +59,44 @@ void Marine::setX(float px) {
 	Entity::setX(px);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
-} 
+}
 
 // Set y coordinate
 void Marine::setY(float py) {
 	Entity::setY(py);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
-} 
+}
 
 // Set delta x coordinate
 void Marine::setDX(float px) {
 	dx = px;
-} 
+}
 
 // Set delta y coordinate
 void Marine::setDY(float py) {
 	dy = py;
-} 
+}
 
 // set velocity of Marine movement
 void Marine::setVelocity(int pvel) {
 	velocity = pvel;
-} 
+}
 
 // Get delta x coordinate
 float Marine::getDX() {
 	return dx;
-} 
+}
 
 // Get delta y coordinate
 float Marine::getDY() {
 	return dy;
-} 
+}
 
 // Get velocity of Marine movement
 int Marine::getVelocity() {
 	return velocity;
-} 
+}
 
 void Marine::onCollision() {
 	// Do nothing for now
@@ -105,11 +105,24 @@ void Marine::onCollision() {
 void Marine::collidingProjectile(int damage) {
 	this->health = health - damage;
 }
-		
-		
-		
-		
-		
-		
-		
 
+//sets the angle of the player's marine sprite
+void Marine::setAngle(Window* w){
+    int mouseX;
+    int mouseY;
+    int mouseDeltaX;
+    int mouseDeltaY;
+    double PI = 3.1416;
+    double radianConvert = 180.0000
+
+    SDL_GetMouseState(&mouseX, &mouseY);
+    mouseDeltaX = w->getWidth()/2 - mouseX;
+    mouseDeltaY = w->getHeight()/2 - mouseY;
+
+    angle = ((atan2(mouseDeltaX, mouseDeltaY)* 1radianConvert)/PI) * - 1;
+}
+
+//returns the angle of the player's marine sprite
+double Marine::getAngle(){
+    return angle;
+}

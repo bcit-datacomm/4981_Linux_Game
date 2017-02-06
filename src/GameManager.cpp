@@ -4,7 +4,7 @@
 GameManager::GameManager() {
 	this->collisionHandler = new CollisionHandler();
 }
-	
+
 GameManager::~GameManager() {
 	delete this->collisionHandler;
 	for (const auto& m : this->marineManager) {
@@ -16,9 +16,10 @@ GameManager::~GameManager() {
 void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
 
 	for (const auto& m : this->marineManager) {
-		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY);
+		//m.second->setAngle();
+		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
 	}
-	
+
 }
 
 // Update marine movements. health, and actions
@@ -55,7 +56,7 @@ bool GameManager::addMarine(unsigned int id, Marine* newMarine) {
 		return true;
 	}
 }
-	
+
 // Get a marine by its id
 Marine* GameManager::getMarine(unsigned int id) {
 	return this->marineManager.find(id)->second;
@@ -73,5 +74,3 @@ void GameManager::updateCollider() {
 	}
 	this->collisionHandler->updateColliders(moveColliders, projectileColliders);
 }
-
-
