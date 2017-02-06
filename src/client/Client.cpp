@@ -88,7 +88,29 @@ void Client::run(const char *ip, const char *username) {
 	close(_sockTCP);
 	std::cout << "Connection closed." << std::endl;
 }
-
+/*--------------------------------------------------------------------------
+-- FUNCTION: writeTCPSocket
+--
+-- DATE: FEB. 01, 2017
+--
+-- REVISIONS: 
+-- Version 1.0 - [EY] - 2016/FEB/01 - Created Function   
+--
+-- DESIGNER: Brody Mccrone
+--
+-- PROGRAMMER: Eva Yu
+--
+-- INTERFACE: int writeTCPSocket(const char * msg, int len)
+-- const char * -- the message to write to the TCP socket
+-- int len -- the length of the message to write
+--
+-- RETURNS: 
+--  0 represents excution success
+-- -1 represents failure
+--
+-- NOTES:
+-- This function loops the writing to the TCP Socket
+--------------------------------------------------------------------------*/
 int Client::writeTCPSocket(const char * msg, int len) {
 	int res = 0;
 	int ttlsent = 0, bytesleft = len;
@@ -141,7 +163,27 @@ int Client::readTCPSocket(char *buf, int len) {
 	}
 	return res;
 }
-
+/*--------------------------------------------------------------------------
+-- FUNCTION: TCPConnect
+--
+-- DATE: FEB. 01, 2017
+--
+-- REVISIONS: 
+-- Version 1.0 - [EY] - 2016/FEB/01 - Created Function 
+--
+-- DESIGNER: Eva Yu
+--
+-- PROGRAMMER: Eva Yu
+--
+-- INTERFACE: int TCPConnect (const char *)
+-- const char * The ip_address			
+--
+-- RETURNS: 
+-- int representing state : -1 is failure ; 0 is success
+--
+-- NOTES:
+-- This is afunction that connects the user with via TCP
+--------------------------------------------------------------------------*/
 int Client::TCPConnect(const char * ip_addr) {
 	if (ip_addr == NULL || inet_addr(ip_addr) == 0 ) {
 		std::cerr << "Missing or Incorrect IP addr."
@@ -151,7 +193,7 @@ int Client::TCPConnect(const char * ip_addr) {
 	}
 
 	struct sockaddr_in serv_addr;
-
+	//set server addr struct
 	memset(&serv_addr, '0', sizeof(struct sockaddr_in));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(TCP_PORT);
