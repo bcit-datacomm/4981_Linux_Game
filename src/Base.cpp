@@ -1,8 +1,8 @@
  #include "Base.h"
 
 Base::Base() {
-	this->setX(100);
-	this->setY(100);
+	this->setX(1000);
+	this->setY(1000);
 
 	printf("Create Base\n");
 }
