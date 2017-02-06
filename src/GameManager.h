@@ -3,6 +3,7 @@
 #include<SDL2/SDL.h>
 #include "Marine.h"
 #include "CollisionHandler.h"
+#include "Object.h"
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -24,11 +25,12 @@ public:
 	void updateCollider(); // Updates CollisionHanlder
 	void updateMarines(const float& delta); // Update marine actions
 	
+	unsigned int addObject(Object*);
 private:
 	
 	CollisionHandler* collisionHandler = NULL;
 	std::map<unsigned int, Marine*> marineManager;
-	
+	std::map<unsigned int, Object*> objectManager;	
 };
 
 

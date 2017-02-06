@@ -19,6 +19,10 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 		//m.second->setAngle();
 		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
 	}
+	for (const auto& o : this->objectManager) {
+		o.second->texture.render(gRenderer, o.second->getX()-camX, o.second->getY()-camY, NULL, NULL);
+	}
+
 
 }
 
@@ -70,7 +74,22 @@ void GameManager::updateCollider() {
 	}
 	std::vector<HitBox*> projectileColliders;
 	for (const auto& m : this->marineManager) {
-		moveColliders.push_back(&m.second->projectileHitBox);
+		projectileColliders.push_back(&m.second->projectileHitBox);
 	}
+	for (const auto& o : this->objectManager) {
+		moveColliders.push_back(&o.second->movementHitBox);
+		projectileColliders.push_back(&o.second->projectileHitBox);
+	}
+
 	this->collisionHandler->updateColliders(moveColliders, projectileColliders);
 }
+
+unsigned int GameManager::addObject(Object* newObject) {
+	unsigned int id = 0;
+	if (!this->objectManager.empty()) {
+		id = this->objectManager.rbegin()->first + 1;
+	}
+	objectManager[id] = newObject;
+	return id;
+}
+

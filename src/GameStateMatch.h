@@ -8,6 +8,7 @@
 #include "Level.h"
 #include "LTexture.h"
 #include "Camera.h"
+#include "Base.h"
 #include "GameManager.h"
 #include "CollisionHandler.h"
 
@@ -23,7 +24,8 @@ public:
 	Player* player = NULL;
 	Level* level = NULL;
 	Camera* camera = NULL;
-	
+	Base* base = NULL;
+
 	GameManager* gameManager = NULL;
 
 	// Frame Display

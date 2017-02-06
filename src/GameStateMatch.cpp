@@ -52,6 +52,19 @@ bool GameStateMatch::load() {
 
 	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
 
+
+	this->base = new Base();
+	this->base->addPlayer(playerMarineID);
+	
+	if (!this->base->texture.loadFromFile("assets/texture/arrow.png",
+																	this->game->renderer)) {
+		printf("Failed to load the base texture!\n");
+		success = false;
+	}
+
+	this->gameManager->addObject(this->base);
+
+
 	return success;
 }
 
