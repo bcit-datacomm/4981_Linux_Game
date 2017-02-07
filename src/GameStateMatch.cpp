@@ -40,7 +40,7 @@ bool GameStateMatch::load() {
 		success = false;
 	}
 	dumbMarine->setPosition(500,500);
-
+    
 	this->player = new Player();
 	this->player->setControl(this->gameManager->getMarine(playerMarineID));
 
