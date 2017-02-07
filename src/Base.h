@@ -10,8 +10,15 @@
 #include <utility>
 #include <SDL2/SDL.h>
 
+//TODO :  change later.
 const int BASE_HEIGHT = 100;
 const int BASE_WIDTH = 100;
+const int MAP_HEIGHT = 2000;
+const int MAP_WIDTH = 2000;
+const int PLAYER_HEIGHT = 100;
+const int PLAYER_WIDTH = 100;
+
+typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
@@ -19,16 +26,13 @@ public:
 	
 	void collidingProjectile(int damage);
 
-	std::pair<float, float> addPlayer(unsigned int);
-
-	std::pair<float, float> getSpawnPoints(unsigned int);
+	Point getSpawnPoint();
 	
 	Base();
 	virtual ~Base();
 	
 private:
-	std::map<unsigned int, std::pair<float, float>> spawnPoints;
 	int health = 100;
-
+	
 };
 #endif

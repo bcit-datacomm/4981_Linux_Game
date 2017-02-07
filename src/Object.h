@@ -17,13 +17,14 @@ public:
 	void setWidth(int);
 	int getHeight();
 	int getWidth();
+	
 	SDL_Rect objectSpriteClips[1];
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectile and bullets
 	
 private:
-	int height;
-	int width;
+	int height; // Height of object
+	int width; // Width of object
 };
 
 #endif

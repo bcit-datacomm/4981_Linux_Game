@@ -1,8 +1,11 @@
- #include "Base.h"
+#include "Base.h"
+#include<random>
 
 Base::Base() {
-	this->setX(1000);
-	this->setY(1000);
+	this->setX((MAP_WIDTH/2)-BASE_WIDTH);
+	this->setY((MAP_HEIGHT/2)-BASE_HEIGHT);
+	this->setHeight(100);
+	this->setWidth(100);
 
 	printf("Create Base\n");
 }
@@ -17,11 +20,53 @@ void Base::collidingProjectile(int damage) {
 	this->health -= damage;
 }
 
-std::pair<float, float> Base::addPlayer(unsigned int id){
-	this->spawnPoints[id] = std::make_pair(200,200);
-	return this->spawnPoints[id];
-}
+Point Base::getSpawnPoint(){
+	
+	//random number generator 
+	std::random_device rd;
+	std::mt19937 eng(rd());
 
-std::pair<float, float> Base::getSpawnPoints(unsigned int id){
-	return this->spawnPoints[id];
+	//range 0 to 3 to be used for choosing North, South, West or East of Base
+	std::uniform_int_distribution<> distr(0,3);
+	
+	int x;
+	int y;
+	
+	//The gab between the spawn point and base.
+	int gab = 100;
+	
+
+	switch(distr(eng)){
+		case 0://North
+	
+			//y point is fixed
+			y = this->getY()-gab;
+			//x point is randomly generated;	
+			x = distr(eng, decltype(distr)::param_type(this->getX()-gab, this->getX()+this->getWidth()+gab));
+
+			break;
+		case 1://South
+			y = this->getY()+this->getHeight()+gab;
+			x = distr(eng, decltype(distr)::param_type(this->getX()-gab, this->getX()+this->getWidth()+gab));
+			break;
+		case 2://West
+			
+			//x point is fixed
+			x = this->getX()-gab;
+			//y point is randomly generated
+			y = distr(eng, decltype(distr)::param_type(this->getY()-gab, this->getY()+this->getHeight()+gab));
+			break;
+		case 3://East
+			x = this->getY()+this->getWidth()+gab;
+			y = distr(eng, decltype(distr)::param_type(this->getY()-gab, this->getY()+this->getHeight()+gab));
+			break;
+	}
+	
+	//considering the player size
+	if(x < this->getX())
+		x-=PLAYER_WIDTH;
+	if(y < this->getY())
+		y-=PLAYER_HEIGHT;
+
+	return Point(x,y);
 }

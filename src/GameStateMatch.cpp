@@ -41,20 +41,8 @@ bool GameStateMatch::load() {
 	}
 	dumbMarine->setPosition(500,500);
 
-	this->player = new Player();
-	this->player->setControl(this->gameManager->getMarine(playerMarineID));
-
-	if (!this->player->marine->texture.loadFromFile("assets/texture/arrow.png",
-																	this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-		success = false;
-	}
-
-	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
-
 
 	this->base = new Base();
-	this->base->addPlayer(playerMarineID);
 	
 	if (!this->base->texture.loadFromFile("assets/texture/arrow.png",
 																	this->game->renderer)) {
@@ -63,6 +51,20 @@ bool GameStateMatch::load() {
 	}
 
 	this->gameManager->addObject(this->base);
+
+	Point newPoint = this->base->getSpawnPoint();
+
+	this->player = new Player();
+	this->player->setControl(this->gameManager->getMarine(playerMarineID));
+	this->player->marine->setPosition(newPoint.first, newPoint.second);
+
+	if (!this->player->marine->texture.loadFromFile("assets/texture/arrow.png",
+																	this->game->renderer)) {
+		printf("Failed to load the player texture!\n");
+		success = false;
+	}
+
+	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
 
 
 	return success;
