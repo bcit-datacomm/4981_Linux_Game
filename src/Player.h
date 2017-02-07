@@ -8,11 +8,13 @@
 
 class Player {
 public:
-	
+
 	void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
 	void handleMouseInput(Window* w);
-	
+
 	void setControl(Marine* newControl);
+
+	void handleMouseWheelInput(const SDL_Event *e);
 
 	Player();
 	~Player();
