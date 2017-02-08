@@ -14,6 +14,7 @@ Base::~Base() {
 	printf("Destory Base\n");
 }	
 void Base::onCollision() {
+	printf("Base collision\n");
 }
 	
 void Base::collidingProjectile(int damage) {

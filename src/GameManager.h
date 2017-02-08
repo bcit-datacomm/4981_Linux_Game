@@ -4,6 +4,7 @@
 #include "Marine.h"
 #include "CollisionHandler.h"
 #include "Object.h"
+#include "Zombie.h"
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -24,13 +25,16 @@ public:
 	
 	void updateCollider(); // Updates CollisionHanlder
 	void updateMarines(const float& delta); // Update marine actions
+	void updateZombies(const float& delta); // Update zombie actions
 	
 	unsigned int addObject(Object*);
+	unsigned int addZombie(Zombie*);
 private:
 	
 	CollisionHandler* collisionHandler = NULL;
 	std::map<unsigned int, Marine*> marineManager;
 	std::map<unsigned int, Object*> objectManager;	
+	std::map<unsigned int, Zombie*> zombieManager;	
 };
 
 

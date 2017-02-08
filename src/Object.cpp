@@ -16,7 +16,7 @@ Object::Object() {
 }
 
 Object::~Object() {
-	printf("Destory Marine\n");
+	printf("Destory Object\n");
 }
 
 void Object::setPosition(float x, float y) {

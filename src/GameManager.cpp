@@ -10,6 +10,10 @@ GameManager::~GameManager() {
 	for (const auto& m : this->marineManager) {
 		this->deleteMarine(m.first);
 	}
+	for (const auto& z : this->zombieManager) {
+		delete z.second;
+	}
+
 }
 
 // Render all objects in level
@@ -22,6 +26,10 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 	for (const auto& o : this->objectManager) {
 		o.second->texture.render(gRenderer, o.second->getX()-camX, o.second->getY()-camY, NULL, NULL);
 	}
+	for (const auto& z : this->zombieManager) {
+		z.second->texture.render(gRenderer, z.second->getX()-camX, z.second->getY()-camY, NULL, z.second->getAngle());
+	}
+
 
 
 }
@@ -33,6 +41,13 @@ void GameManager::updateMarines(const float& delta) {
 	}
 }
 
+// Update zombie movements.
+void GameManager::updateZombies(const float& delta) {
+	for (const auto& z : this->zombieManager) {
+		z.second->generateRandomMove();
+		z.second->move((z.second->getDX()*delta), (z.second->getDY()*delta), this->collisionHandler);
+	}
+}
 // Create marine add it to manager, returns marine id
 unsigned int GameManager::createMarine() {
 	unsigned int id = 0;
@@ -76,12 +91,24 @@ void GameManager::updateCollider() {
 	for (const auto& m : this->marineManager) {
 		projectileColliders.push_back(&m.second->projectileHitBox);
 	}
+	for (const auto& z : this->zombieManager) {
+		moveColliders.push_back(&z.second->movementHitBox);
+		projectileColliders.push_back(&z.second->projectileHitBox);
+	}
 	for (const auto& o : this->objectManager) {
 		moveColliders.push_back(&o.second->movementHitBox);
 		projectileColliders.push_back(&o.second->projectileHitBox);
 	}
-
 	this->collisionHandler->updateColliders(moveColliders, projectileColliders);
+}
+
+unsigned int GameManager::addZombie(Zombie* newZombie) {
+	unsigned int id = 0;
+	if (!this->zombieManager.empty()) {
+		id = this->zombieManager.rbegin()->first + 1;
+	}
+	zombieManager[id] = newZombie;
+	return id;
 }
 
 unsigned int GameManager::addObject(Object* newObject) {

@@ -41,6 +41,22 @@ bool GameStateMatch::load() {
 	}
 	dumbMarine->setPosition(500,500);
 
+	Zombie* dumbZombie = new Zombie();
+	this->gameManager->addZombie(dumbZombie);
+	if (!dumbZombie->texture.loadFromFile("assets/texture/arrow.png",
+																	this->game->renderer)) {
+		printf("Failed to load the player texture!\n");
+		success = false;
+	}
+	dumbZombie = new Zombie();
+	this->gameManager->addZombie(dumbZombie);
+	if (!dumbZombie->texture.loadFromFile("assets/texture/arrow.png",
+																	this->game->renderer)) {
+		printf("Failed to load the player texture!\n");
+		success = false;
+	}
+	dumbZombie->setPosition(100,100);
+
 
 	this->base = new Base();
 	
@@ -164,6 +180,7 @@ void GameStateMatch::update(const float& delta) {
 
 	// Move player
 	this->gameManager->updateMarines(delta);
+	this->gameManager->updateZombies(delta);
 
 	// Move Camera
 	this->camera->move(this->player->marine->getX(), this->player->marine->getY());

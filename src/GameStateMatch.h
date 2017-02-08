@@ -9,6 +9,7 @@
 #include "LTexture.h"
 #include "Camera.h"
 #include "Base.h"
+#include "Zombie.h"
 #include "GameManager.h"
 #include "CollisionHandler.h"
 
