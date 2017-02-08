@@ -10,13 +10,15 @@ GameManager::~GameManager() {
 	for (const auto& m : this->marineManager) {
 		this->deleteMarine(m.first);
 	}
+	for (const auto& m : this->turretManager) {
+		this->deleteTurret(m.first);
+	}
 }
 
 // Render all objects in level
 void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
 
 	for (const auto& m : this->marineManager) {
-		//m.second->setAngle();
 		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
 	}
 
@@ -41,6 +43,22 @@ unsigned int GameManager::createMarine() {
 	}
 	this->marineManager[id] = new Marine();
 	return id;
+}
+
+// Create marine add it to manager, returns marine id
+bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y) {
+	unsigned int id = 0;
+	if (!this->marineManager.empty()) {
+		id = this->marineManager.rbegin()->first + 1;
+	}
+	this->marineManager[id] = new Marine();
+	if (!this->marineManager[id]->texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
+		printf("Failed to load the player texture!\n");
+		this->deleteMarine(id);
+		return false;
+	}
+	this->marineManager[id]->setPosition(x,y);
+	return true;
 }
 
 // Deletes marine from level
@@ -106,21 +124,25 @@ CollisionHandler* GameManager::getCollisionHandler() {
 
 // Update colliders to current state
 void GameManager::updateCollider() {
-	std::vector<HitBox*> moveColliders;
+
+	delete this->collisionHandler->quadtreeMov;
+	delete this->collisionHandler->quadtreePro;
+	delete this->collisionHandler->quadtreeDam;
+
+	this->collisionHandler->quadtreeMov = new Quadtree(0, {0,0,2000,2000});
+	this->collisionHandler->quadtreePro = new Quadtree(0, {0,0,2000,2000});
+	this->collisionHandler->quadtreeDam = new Quadtree(0, {0,0,2000,2000});
+	
+
 	for (const auto& m : this->marineManager) {
-		moveColliders.push_back(&m.second->movementHitBox);
+		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
-    // adding all turrets into moveColliders vector
-	for (const auto& m : this->turretManager) {
-		moveColliders.push_back(&m.second->movementHitBox);
+  	for (const auto& m : this->turretManager) {
+		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
-	std::vector<HitBox*> projectileColliders;
-	for (const auto& m : this->marineManager) {
-		moveColliders.push_back(&m.second->projectileHitBox);
-	}
-    // adding all turrets into projectileColliders vector
-	for (const auto& m : this->turretManager) {
-		moveColliders.push_back(&m.second->projectileHitBox);
-	}
-	this->collisionHandler->updateColliders(moveColliders, projectileColliders);
+  
 }

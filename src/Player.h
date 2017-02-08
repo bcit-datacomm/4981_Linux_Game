@@ -12,14 +12,14 @@ class Player {
 public:
 
 	void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-	void handleMouseInput(Window* w);
+	void handleMouseUpdate(Window* w);
 
 	void setControl(Marine* newControl);
 
 	void handleMouseWheelInput(const SDL_Event *e);
 
     // Added by Mark.C 02/07/2017
-    void handleMouseClick(SDL_Event *e, GameManager *gameManager, SDL_Renderer *renderer);
+    void handlePlacementClick(GameManager *gameManager, SDL_Renderer *renderer);
     
     // determines whether turret can be placed
     void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret

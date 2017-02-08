@@ -9,14 +9,19 @@ Turret::Turret() {
 	this->movementHitBox.setRect(turretSpriteClips[0]);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->movementHitBox.attached = this;
+	//this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
 	this->projectileHitBox.setRect(turretSpriteClips[0]);
 	this->projectileHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.attached = this;
 	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+	this->damageHitBox.setRect(turretSpriteClips[0]);
+	this->damageHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.attached = this;
+	//this->damageHitBox.setFriendly(true); Uncomment for no friendly fire
 }
 
 Turret::~Turret() {
-	
+	printf("Destroy Turret\n");
 }
 
 // checks if turret placement is within bounds, currently does nothing
