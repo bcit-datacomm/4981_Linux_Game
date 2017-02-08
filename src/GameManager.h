@@ -40,13 +40,17 @@ public:
 	
 	unsigned int addObject(Object*);
 	unsigned int addZombie(Zombie*);
+	
+	void deleteZombie(unsigned int id);
+	void deleteObject(unsigned int id);
+	
 private:
 	
 	CollisionHandler* collisionHandler = NULL;
 	std::map<unsigned int, Marine*> marineManager;
 	std::map<unsigned int, Object*> objectManager;	
 	std::map<unsigned int, Zombie*> zombieManager;	
-    	std::map<unsigned int, Turret*> turretManager;
+    std::map<unsigned int, Turret*> turretManager;
 };
 
 

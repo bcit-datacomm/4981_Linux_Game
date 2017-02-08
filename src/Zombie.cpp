@@ -3,18 +3,20 @@
 #include <random>
 #define PI 3.14159265
 
-Zombie::Zombie() : Object() {
-	this->setPosition(1200,1200);
-	this->setHeight(100);
-	this->setWidth(100);
-	this->movementHitBox.setRect(objectSpriteClips[0]);
+Zombie::Zombie()  {
+	zombieSpriteClips[0].x = 0;
+	zombieSpriteClips[0].y = 0;
+	zombieSpriteClips[0].w = 100;
+	zombieSpriteClips[0].h = 100;
+	this->movementHitBox.setRect(zombieSpriteClips[0]);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->movementHitBox.attached = this;
-	//this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-	this->projectileHitBox.setRect(objectSpriteClips[0]);
+	this->projectileHitBox.setRect(zombieSpriteClips[0]);
 	this->projectileHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.attached = this;
-	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+	this->damageHitBox.setRect(zombieSpriteClips[0]);
+	this->damageHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.attached = this;
 
 	this->setAngle(this->getRandomAngle());
 	printf("Create Zombie\n");

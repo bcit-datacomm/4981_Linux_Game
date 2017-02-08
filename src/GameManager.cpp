@@ -11,7 +11,10 @@ GameManager::~GameManager() {
 		this->deleteMarine(m.first);
 	}
 	for (const auto& z : this->zombieManager) {
-		delete z.second;
+		this->deleteZombie(z.first);
+	}
+	for (const auto& o : this->objectManager) {
+		this->deleteObject(o.first);
 	}
 	for (const auto& m : this->turretManager) {
 		this->deleteTurret(m.first);
@@ -22,20 +25,20 @@ GameManager::~GameManager() {
 void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
 
 	for (const auto& m : this->marineManager) {
-		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
+		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY,
+								 NULL, m.second->getAngle());
 	}
 	for (const auto& o : this->objectManager) {
-		o.second->texture.render(gRenderer, o.second->getX()-camX, o.second->getY()-camY, NULL, NULL);
+		o.second->texture.render(gRenderer, o.second->getX()-camX, o.second->getY()-camY);
 	}
 	for (const auto& z : this->zombieManager) {
-		z.second->texture.render(gRenderer, z.second->getX()-camX, z.second->getY()-camY, NULL, z.second->getAngle());
+		z.second->texture.render(gRenderer, z.second->getX()-camX, z.second->getY()-camY, 
+								 NULL, z.second->getAngle());
 	}
 
-
-
-    // render all turrets on the map
     for (const auto& m : this->turretManager) {
-		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
+		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, 
+								 NULL, m.second->getAngle());
 	}
 }
 
@@ -135,6 +138,40 @@ Turret* GameManager::getTurret(unsigned int id) {
     return this->turretManager.find(id)->second;
 }
 
+unsigned int GameManager::addZombie(Zombie* newZombie) {
+	unsigned int id = 0;
+	if (!this->zombieManager.empty()) {
+		id = this->zombieManager.rbegin()->first + 1;
+	}
+	zombieManager[id] = newZombie;
+	return id;
+}
+
+// Deletes zombie from level
+void GameManager::deleteZombie(unsigned int id) {
+	if (this->zombieManager.count(id)) {
+		delete this->zombieManager.find(id)->second;
+	}
+	this->zombieManager.erase(id);
+}
+
+unsigned int GameManager::addObject(Object* newObject) {
+	unsigned int id = 0;
+	if (!this->objectManager.empty()) {
+		id = this->objectManager.rbegin()->first + 1;
+	}
+	objectManager[id] = newObject;
+	return id;
+}
+
+// Deletes zombie from level
+void GameManager::deleteObject(unsigned int id) {
+	if (this->objectManager.count(id)) {
+		delete this->objectManager.find(id)->second;
+	}
+	this->objectManager.erase(id);
+}
+
 // Returns Collision Handler
 CollisionHandler* GameManager::getCollisionHandler() {
     return this->collisionHandler;
@@ -179,21 +216,4 @@ void GameManager::updateCollider() {
   
 }
 
-unsigned int GameManager::addZombie(Zombie* newZombie) {
-	unsigned int id = 0;
-	if (!this->zombieManager.empty()) {
-		id = this->zombieManager.rbegin()->first + 1;
-	}
-	zombieManager[id] = newZombie;
-	return id;
-}
-
-unsigned int GameManager::addObject(Object* newObject) {
-	unsigned int id = 0;
-	if (!this->objectManager.empty()) {
-		id = this->objectManager.rbegin()->first + 1;
-	}
-	objectManager[id] = newObject;
-	return id;
-}
 

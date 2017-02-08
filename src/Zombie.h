@@ -3,7 +3,7 @@
 #include <string>
 #include "LTexture.h"
 #include "HitBox.h"
-#include "Object.h"
+#include "Entity.h"
 #include "CollisionHandler.h"
 #include "Inventory.h"
 #include <math.h>
@@ -14,7 +14,7 @@
 const int ZOMBIE_HEIGHT = 100;
 const int ZOMBIE_WIDTH = 100;
 
-class Zombie : public Object {
+class Zombie : public Entity {
 public:
 
 	void move(float moveX, float moveY, CollisionHandler* ch); // Moves Zombie
@@ -47,8 +47,10 @@ public:
 	Zombie();
 	virtual ~Zombie();
 
+	SDL_Rect zombieSpriteClips[1];
 	HitBox movementHitBox;	// Hit box for movement
-	HitBox projectileHitBox; // Hit box for projectile and bullets
+	HitBox projectileHitBox; // Hit box for projectiles
+	HitBox damageHitBox; // Hit box for damage
 	
 private:
     float dx = 0; // delta x coordinat

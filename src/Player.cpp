@@ -29,11 +29,7 @@ void Player::handleMouseUpdate(Window* w) {
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){
-//	int y = e->wheel.y;
-//	this->marine->inventory.scrollCurrent(y);
-        	float y = 0;
-	float velocity = this->marine->getVelocity();
-        y -= velocity;
+	this->marine->inventory.scrollCurrent(e->wheel.y);
 }
 
 // function to handle mouse-click events

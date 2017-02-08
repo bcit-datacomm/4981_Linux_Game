@@ -1,11 +1,12 @@
 #include "Base.h"
+#include "Marine.h"
 #include<random>
 
 Base::Base() {
 	this->setX((MAP_WIDTH/2)-BASE_WIDTH);
 	this->setY((MAP_HEIGHT/2)-BASE_HEIGHT);
-	this->setHeight(100);
-	this->setWidth(100);
+	this->setHeight(BASE_HEIGHT);
+	this->setWidth(BASE_WIDTH);
 
 	printf("Create Base\n");
 }
@@ -65,9 +66,9 @@ Point Base::getSpawnPoint(){
 	
 	//considering the player size
 	if(x < this->getX())
-		x-=PLAYER_WIDTH;
+		x-=MARINE_WIDTH;
 	if(y < this->getY())
-		y-=PLAYER_HEIGHT;
+		y-=MARINE_HEIGHT;
 
 	return Point(x,y);
 }

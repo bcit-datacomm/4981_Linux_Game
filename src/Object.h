@@ -8,7 +8,7 @@ class Object : public Entity {
 public:	
 	
 	Object();
-	~Object();
+	virtual ~Object();
 
 	void setPosition(float, float);
 	void setX(float);

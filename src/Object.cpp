@@ -30,6 +30,7 @@ void Object::setPosition(float x, float y) {
 	
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 }
 
 // Set x coordinate
@@ -37,6 +38,7 @@ void Object::setX(float px) {
 	Entity::setX(px);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 } 
 
 // Set y coordinate
@@ -44,6 +46,7 @@ void Object::setY(float py) {
 	Entity::setY(py);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 } 
 
 void Object::setHeight(int h) {
