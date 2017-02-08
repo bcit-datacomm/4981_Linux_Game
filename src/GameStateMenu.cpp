@@ -219,12 +219,12 @@ void GameStateMenu::render() {
 			if(selected[i]) {
 				if ( !this->menuTextTextures[i].loadFromRenderedText( this->menuItems[i],
 											  fontColors[1], this->game->renderer, this->menuFont ) ) {
-					printf( "Unable to render Join texture!\n" );				
+					printf( "Unable to render menu text texture!\n" );				
 				}
 			} else {
 				if ( !this->menuTextTextures[i].loadFromRenderedText( this->menuItems[i],
 											  fontColors[0], this->game->renderer, this->menuFont ) ) {
-					printf( "Unable to render Join texture!\n" );				
+					printf( "Unable to render menu text texture!\n" );				
 				}
 			}
 			this->menuTextTextures[i].render(this->game->renderer, pos[i].x, pos[i].y);
