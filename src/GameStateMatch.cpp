@@ -33,13 +33,13 @@ bool GameStateMatch::load() {
 	this->gameManager = new GameManager();
 	unsigned int playerMarineID = this->gameManager->createMarine();
 
-	Marine* dumbMarine = this->gameManager->getMarine(this->gameManager->createMarine());
-	if (!dumbMarine->texture.loadFromFile("assets/texture/arrow.png",
-																	this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-		success = false;
-	}
-	dumbMarine->setPosition(500,500);
+	// Create Dummy Marines
+	success = this->gameManager->createMarine(this->game->renderer, 500, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 1000, 1000);
+	success = this->gameManager->createMarine(this->game->renderer, 900, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 800, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 1200, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 1400, 500);
 
 	this->player = new Player();
 	this->player->setControl(this->gameManager->getMarine(playerMarineID));

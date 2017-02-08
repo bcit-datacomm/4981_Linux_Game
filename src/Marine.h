@@ -51,7 +51,8 @@ public:
 
 	SDL_Rect marineSpriteClips[1];
 	HitBox movementHitBox;	// Hit box for movement
-	HitBox projectileHitBox; // Hit box for projectile and bullets
+	HitBox projectileHitBox; // Hit box for projectiles
+	HitBox damageHitBox; // Hit box for damage
 	
 	Inventory inventory;
 
