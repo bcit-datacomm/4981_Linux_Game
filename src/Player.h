@@ -19,12 +19,12 @@ public:
 	void handleMouseWheelInput(const SDL_Event *e);
 
     // Added by Mark.C 02/07/2017
-    void handlePlacementClick(GameManager *gameManager, SDL_Renderer *renderer);
-    
+    void handlePlacementClick(SDL_Renderer *renderer);
+
     // determines whether turret can be placed
-    void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret
-                          , GameManager* gameManager, unsigned int tid);
-    
+    void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
+                          unsigned int tid);
+
 	Player();
 	~Player();
 
