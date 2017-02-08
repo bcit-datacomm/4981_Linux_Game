@@ -9,6 +9,8 @@ const char *testData[TOTAL_TESTS] = {"defaultusername", "aname",
     "brodyMcCrone", "testytest"};
 int testIndex = 0;
 
+//Creates a socket, binds it to the UDP port Isaac specified, creates an Address
+//structure for the "server," and starts a receive loop and a send loop.
 void init(const char *servIP, int stdPort) {
     UDPSocket sockUDP;
     sockUDP.bindTo(stdPort);
@@ -26,6 +28,7 @@ void init(const char *servIP, int stdPort) {
     recvThread.join();
 }
 
+//Gets c string from retrieve, calls packetize on it, and sends it to servAddr.
 void sendloop(UDPSocket *sendSockUDP, struct sockaddr_in servAddr) {
     while(true) {
         const char *data = retrieve();
@@ -33,10 +36,14 @@ void sendloop(UDPSocket *sendSockUDP, struct sockaddr_in servAddr) {
 
         std::cout << "Sending: " << pkt.buf << std::endl;
         sendSockUDP->sendTo(pkt.buf, pkt.len, servAddr);
+
+        //usleep is microsec
         usleep(1000 * 100);
     }
 }
 
+//Just loops through a global array of c strings, every call returning the next
+//string in the array until it gets to the end and starts over.
 const char *retrieve() {
     //TEMPORARY IMPLEMENTATION
     //NEED TO KNOW HOW DATA WILL BE PASSED FROM GAME THREAD TO NETWORK THREAD
@@ -45,6 +52,7 @@ const char *retrieve() {
     return testData[testIndex];
 }
 
+//Bogus packetize. Packet is defined in SyncHandling header.
 Packet packetize(const char *data) {
     //TEMPORARY IMPLEMENTATION
     Packet pkt;
