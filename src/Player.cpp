@@ -25,7 +25,12 @@ void Player::handleMouseInput(Window* w) {
 
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
 	this->marine->setAngle(angle);
-	
+
+}
+
+void Player::handleMouseWheelInput(const SDL_Event *e){
+	int y = e->wheel.y;
+	this->marine->inventory.scrollCurrent(y);
 }
 
 void Player::handleKeyboardInput(const Uint8 *state) {
@@ -46,7 +51,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 	if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
 		x += velocity;
 	}
-	
+
 	//Inventory inputs
 	if (state[SDL_SCANCODE_1]){
 		this->marine->inventory.switchCurrent(0);

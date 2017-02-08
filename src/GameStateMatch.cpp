@@ -133,7 +133,7 @@ void GameStateMatch::handle() {
 			this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
 			break;
 		case SDL_MOUSEWHEEL:
-
+			this->player->handleMouseWheelInput(&(this->event));
 			break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
