@@ -3,8 +3,10 @@
 #include <string>
 #include "LTexture.h"
 #include "Marine.h"
+#include "Turret.h"
 #include "Inventory.h"
 #include <SDL2/SDL.h>
+#include "GameManager.h"
 
 class Player {
 public:
@@ -16,6 +18,13 @@ public:
 
 	void handleMouseWheelInput(const SDL_Event *e);
 
+    // Added by Mark.C 02/07/2017
+    void handleMouseClick(SDL_Event *e, GameManager *gameManager, SDL_Renderer *renderer);
+    
+    // determines whether turret can be placed
+    void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret
+                          , GameManager* gameManager, unsigned int tid);
+    
 	Player();
 	~Player();
 
