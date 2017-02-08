@@ -117,7 +117,7 @@ void GameStateMatch::handle() {
 	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
 	// Handle movement input
 	this->player->handleKeyboardInput(state);
-	this->player->handleMouseInput(this->game->window);
+	this->player->handleMouseUpdate(this->game->window);
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
@@ -129,7 +129,9 @@ void GameStateMatch::handle() {
 			this->player->handleMouseWheelInput(&(this->event));
 			break;
         case SDL_MOUSEBUTTONDOWN:
-            this->player->handleMouseClick(&(this->event), this->gameManager, this->game->renderer);
+			if (this->event.button.button == SDL_BUTTON_RIGHT) {
+				this->player->handlePlacementClick(this->gameManager, this->game->renderer);	
+			}
             break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {

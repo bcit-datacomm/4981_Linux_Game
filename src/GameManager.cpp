@@ -10,6 +10,9 @@ GameManager::~GameManager() {
 	for (const auto& m : this->marineManager) {
 		this->deleteMarine(m.first);
 	}
+	for (const auto& m : this->turretManager) {
+		this->deleteTurret(m.first);
+	}
 }
 
 // Render all objects in level
@@ -136,8 +139,10 @@ void GameManager::updateCollider() {
 		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
 		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
-  for (const auto& m : this->turretManager) {
-    this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
+  	for (const auto& m : this->turretManager) {
+		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
   
 }

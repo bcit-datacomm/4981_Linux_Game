@@ -5,7 +5,7 @@
 #include <vector>
 
 const unsigned int BRANCHSIZE = 4;
-const unsigned int MAX_OBJECTS = 4;
+const unsigned int MAX_OBJECTS = 10;
 const unsigned int MAX_LEVELS = 5;
 
 class Quadtree {
