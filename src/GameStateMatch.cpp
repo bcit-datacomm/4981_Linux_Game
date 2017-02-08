@@ -36,11 +36,19 @@ bool GameStateMatch::load() {
 	// Create Dummy Marines
 	success = this->gameManager->createMarine(this->game->renderer, 500, 500);
 	success = this->gameManager->createMarine(this->game->renderer, 1000, 1000);
-	success = this->gameManager->createMarine(this->game->renderer, 900, 500);
 	success = this->gameManager->createMarine(this->game->renderer, 800, 500);
 	success = this->gameManager->createMarine(this->game->renderer, 1200, 500);
 	success = this->gameManager->createMarine(this->game->renderer, 1400, 500);
 
+    
+	Turret* dumbTurret = this->gameManager->getTurret(this->gameManager->createTurret());
+	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
+																	this->game->renderer)) {
+		printf("Failed to load the player texture!\n");
+		success = false;
+	}
+	dumbTurret->setPosition(1000,500);
+    
 	this->player = new Player();
 	this->player->setControl(this->gameManager->getMarine(playerMarineID));
 
@@ -120,6 +128,9 @@ void GameStateMatch::handle() {
 		case SDL_MOUSEWHEEL:
 			this->player->handleMouseWheelInput(&(this->event));
 			break;
+        case SDL_MOUSEBUTTONDOWN:
+            this->player->handleMouseClick(&(this->event), this->gameManager, this->game->renderer);
+            break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
 			case SDLK_ESCAPE:
