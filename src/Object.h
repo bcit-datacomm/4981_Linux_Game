@@ -21,7 +21,7 @@ public:
 	SDL_Rect objectSpriteClips[1];
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectile and bullets
-	
+	HitBox damageHitBox;
 private:
 	int height; // Height of object
 	int width; // Width of object

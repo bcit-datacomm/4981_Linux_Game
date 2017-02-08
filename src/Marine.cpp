@@ -13,10 +13,14 @@ Marine::Marine() {
 	this->projectileHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.attached = this;
 	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+	this->damageHitBox.setRect(marineSpriteClips[0]);
+	this->damageHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.attached = this;
+	//this->damageHitBox.setFriendly(true); Uncomment for no friendly fire
 }
 
 Marine::~Marine() {
-	printf("Destory Marine\n");
+	printf("Destroy Marine\n");
 }
 
 // Move Marine by x and y amount
@@ -25,22 +29,26 @@ void Marine::move(float moveX, float moveY, CollisionHandler* ch) {
 	this->setX(this->getX()+moveX);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 
 	if (ch->detectMovementCollision(&this->movementHitBox)) {
 		this->setX(this->getX()-moveX);
 		this->movementHitBox.move(this->getX(), this->getY());
 		this->projectileHitBox.move(this->getX(), this->getY());
+		this->damageHitBox.move(this->getX(), this->getY());
 	}
 
 	//Move the Marine up or down
 	this->setY(this->getY()+moveY);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 
 	if (ch->detectMovementCollision(&this->movementHitBox)) {
 		this->setY(this->getY()-moveY);
 		this->movementHitBox.move(this->getX(), this->getY());
 		this->projectileHitBox.move(this->getX(), this->getY());
+		this->damageHitBox.move(this->getX(), this->getY());
 	}
 
 }

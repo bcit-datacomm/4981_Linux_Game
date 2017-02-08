@@ -33,13 +33,20 @@ bool GameStateMatch::load() {
 	this->gameManager = new GameManager();
 	unsigned int playerMarineID = this->gameManager->createMarine();
 
-	Marine* dumbMarine = this->gameManager->getMarine(this->gameManager->createMarine());
-	if (!dumbMarine->texture.loadFromFile("assets/texture/arrow.png",
+	// Create Dummy Marines
+	success = this->gameManager->createMarine(this->game->renderer, 500, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 1000, 1000);
+	success = this->gameManager->createMarine(this->game->renderer, 800, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 1200, 500);
+	success = this->gameManager->createMarine(this->game->renderer, 1400, 500);
+
+    
+	Turret* dumbTurret = this->gameManager->getTurret(this->gameManager->createTurret());
+	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
 																	this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
-	dumbMarine->setPosition(500,500);
 
 	Zombie* dumbZombie = new Zombie();
 	this->gameManager->addZombie(dumbZombie);
@@ -70,6 +77,8 @@ bool GameStateMatch::load() {
 
 	Point newPoint = this->base->getSpawnPoint();
 
+	dumbTurret->setPosition(1000,500);
+    
 	this->player = new Player();
 	this->player->setControl(this->gameManager->getMarine(playerMarineID));
 	this->player->marine->setPosition(newPoint.first, newPoint.second);
@@ -140,7 +149,7 @@ void GameStateMatch::handle() {
 	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
 	// Handle movement input
 	this->player->handleKeyboardInput(state);
-	this->player->handleMouseInput(this->game->window);
+	this->player->handleMouseUpdate(this->game->window);
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
@@ -151,6 +160,11 @@ void GameStateMatch::handle() {
 		case SDL_MOUSEWHEEL:
 			this->player->handleMouseWheelInput(&(this->event));
 			break;
+        case SDL_MOUSEBUTTONDOWN:
+			if (this->event.button.button == SDL_BUTTON_RIGHT) {
+				this->player->handlePlacementClick(this->gameManager, this->game->renderer);	
+			}
+            break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
 			case SDLK_ESCAPE:

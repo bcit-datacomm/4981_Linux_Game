@@ -13,6 +13,11 @@ Object::Object() {
 	this->projectileHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.attached = this;
 	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+	this->damageHitBox.setRect(objectSpriteClips[0]);
+	this->damageHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.attached = this;
+	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+
 }
 
 Object::~Object() {

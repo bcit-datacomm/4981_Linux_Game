@@ -13,14 +13,15 @@ GameManager::~GameManager() {
 	for (const auto& z : this->zombieManager) {
 		delete z.second;
 	}
-
+	for (const auto& m : this->turretManager) {
+		this->deleteTurret(m.first);
+	}
 }
 
 // Render all objects in level
 void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
 
 	for (const auto& m : this->marineManager) {
-		//m.second->setAngle();
 		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
 	}
 	for (const auto& o : this->objectManager) {
@@ -32,6 +33,10 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 
 
 
+    // render all turrets on the map
+    for (const auto& m : this->turretManager) {
+		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, NULL, m.second->getAngle());
+	}
 }
 
 // Update marine movements. health, and actions
@@ -58,6 +63,22 @@ unsigned int GameManager::createMarine() {
 	return id;
 }
 
+// Create marine add it to manager, returns marine id
+bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y) {
+	unsigned int id = 0;
+	if (!this->marineManager.empty()) {
+		id = this->marineManager.rbegin()->first + 1;
+	}
+	this->marineManager[id] = new Marine();
+	if (!this->marineManager[id]->texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
+		printf("Failed to load the player texture!\n");
+		this->deleteMarine(id);
+		return false;
+	}
+	this->marineManager[id]->setPosition(x,y);
+	return true;
+}
+
 // Deletes marine from level
 void GameManager::deleteMarine(unsigned int id) {
 	if (this->marineManager.count(id)) {
@@ -81,25 +102,81 @@ Marine* GameManager::getMarine(unsigned int id) {
 	return this->marineManager.find(id)->second;
 }
 
+// Create Turret add it to manager, returns tower id
+unsigned int GameManager::createTurret() {
+    unsigned int id = 0;
+	if (!this->turretManager.empty()) {
+		id = this->turretManager.rbegin()->first + 1;
+	}
+	this->turretManager[id] = new Turret();
+	return id;
+}
+
+// Deletes tower from level
+void GameManager::deleteTurret(unsigned int id) {
+    if (this->turretManager.count(id)) {
+		delete this->turretManager.find(id)->second;
+	}
+	this->turretManager.erase(id);
+}
+
+// Adds tower to level
+bool GameManager::addTurret (unsigned int id, Turret* newTurret) {
+    if (this->turretManager.count(id)) {
+		return false;
+	} else {
+		this->turretManager[id] = newTurret;
+		return true;
+	}
+}
+
+// Get a tower by its id
+Turret* GameManager::getTurret(unsigned int id) {
+    return this->turretManager.find(id)->second;
+}
+
+// Returns Collision Handler
+CollisionHandler* GameManager::getCollisionHandler() {
+    return this->collisionHandler;
+}
+
 // Update colliders to current state
 void GameManager::updateCollider() {
-	std::vector<HitBox*> moveColliders;
+
+	delete this->collisionHandler->quadtreeMov;
+	delete this->collisionHandler->quadtreePro;
+	delete this->collisionHandler->quadtreeDam;
+
+	this->collisionHandler->quadtreeMov = new Quadtree(0, {0,0,2000,2000});
+	this->collisionHandler->quadtreePro = new Quadtree(0, {0,0,2000,2000});
+	this->collisionHandler->quadtreeDam = new Quadtree(0, {0,0,2000,2000});
+	
+
 	for (const auto& m : this->marineManager) {
-		moveColliders.push_back(&m.second->movementHitBox);
+		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
 	std::vector<HitBox*> projectileColliders;
 	for (const auto& m : this->marineManager) {
 		projectileColliders.push_back(&m.second->projectileHitBox);
 	}
 	for (const auto& z : this->zombieManager) {
-		moveColliders.push_back(&z.second->movementHitBox);
-		projectileColliders.push_back(&z.second->projectileHitBox);
+		this->collisionHandler->quadtreeMov->insert(&z.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&z.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&z.second->damageHitBox);
 	}
 	for (const auto& o : this->objectManager) {
-		moveColliders.push_back(&o.second->movementHitBox);
-		projectileColliders.push_back(&o.second->projectileHitBox);
+		this->collisionHandler->quadtreeMov->insert(&o.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&o.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&o.second->damageHitBox);
 	}
-	this->collisionHandler->updateColliders(moveColliders, projectileColliders);
+  	for (const auto& m : this->turretManager) {
+		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
+	}
+  
 }
 
 unsigned int GameManager::addZombie(Zombie* newZombie) {
