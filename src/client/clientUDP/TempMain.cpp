@@ -6,7 +6,7 @@
 #include "SyncHandling.hpp"
 
 #define UDP_PORT 35522
-#define SERVER_IP "192.168.0.7"
+#define SERVER_IP "127.0.0.1"
 
 int main() {
     const char *ip = SERVER_IP;

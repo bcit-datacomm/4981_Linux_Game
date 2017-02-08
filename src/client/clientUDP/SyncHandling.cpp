@@ -10,9 +10,8 @@ const char *testData[TOTAL_TESTS] = {"defaultusername", "aname",
 int testIndex = 0;
 
 void init(const char *servIP, int stdPort) {
-    UDPSocket recvSockUDP;
-    UDPSocket sendSockUDP;
-    sendSockUDP.bindTo(stdPort);
+    UDPSocket sockUDP;
+    sockUDP.bindTo(stdPort);
 
     struct sockaddr_in servAddr;
     memset((char *) &servAddr, 0, sizeof(servAddr));
@@ -20,10 +19,10 @@ void init(const char *servIP, int stdPort) {
     servAddr.sin_port = htons(stdPort);
     servAddr.sin_addr.s_addr = inet_addr(servIP);
 
-    std::thread sendThread(sendloop, &sendSockUDP, servAddr);
+    std::thread sendThread(sendloop, &sockUDP, servAddr);
     sendThread.detach();
 
-    std::thread recvThread(recvloop, &recvSockUDP, servAddr);
+    std::thread recvThread(recvloop, &sockUDP, servAddr);
     recvThread.join();
 }
 
@@ -34,6 +33,7 @@ void sendloop(UDPSocket *sendSockUDP, struct sockaddr_in servAddr) {
 
         std::cout << "Sending: " << pkt.buf << std::endl;
         sendSockUDP->sendTo(pkt.buf, pkt.len, servAddr);
+        usleep(1000 * 100);
     }
 }
 
