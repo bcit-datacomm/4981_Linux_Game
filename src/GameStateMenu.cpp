@@ -16,11 +16,27 @@ bool GameStateMenu::load() {
 	bool success = true;
 
 	//Open the font
-	this->frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
+	this->frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 50);
 	if ( this->frameFont == NULL ) {
 		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
+
+	this->menuFont = TTF_OpenFont( "assets/fonts/Overdrive Sunset.otf", 100);
+	if ( this->frameFont == NULL ) {
+		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+		success = false;
+	}
+
+	this->level = new Level();
+	if (!this->level->levelTexture.loadFromFile("assets/TitleScreen_Marz.png", this->game->renderer)) {
+		printf("Failed to load the level texture!\n");
+	} else {
+		this->level->levelTexture.setDimensions(this->game->window->getWidth(), this->game->window->getHeight());	
+	}
+
+	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
+
 
 	return success;
 }
@@ -68,6 +84,8 @@ void GameStateMenu::loop() {
 			SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
 		}
 
+		SDL_RenderPresent(this->game->renderer);
+
 	}
 }
 
@@ -75,42 +93,99 @@ void GameStateMenu::sync() {
 
 }
 
+/**
+* Function: handle
+* 
+* Date: 
+* JF: February 8, 2017: added handler for window resizing event
+* 
+* Designer:
+* 
+* Programmer:
+* Jacob Frank
+* 
+* Interface: handle()
+* 
+* Returns: void
+* 
+* Notes:
+* Function handles events occuring within the window to control
+* functionality of the main menu
+*/
 void GameStateMenu::handle() {
+	int x,y;
+
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
-   		switch( this->event.type ) {
-      	case SDL_KEYDOWN:
-        	switch( this->event.key.keysym.sym ) {
-			case SDLK_ESCAPE:
+   		switch ( this->event.type ) {
+	      	case SDL_KEYDOWN:
+	        	switch ( this->event.key.keysym.sym ) {
+					case SDLK_ESCAPE:
+						play = false;
+						break;
+					default:
+		                break;
+				}
+	        	break;
+	      	case SDL_KEYUP:
+	       		switch ( this->event.key.keysym.sym ) {
+					default:
+		               	break;
+				}
+	        	break;
+	        case SDL_MOUSEMOTION:
+	        	x = this->event.motion.x;
+	        	y = this->event.motion.y;
+	        	for (int i = 0; i < NUM_MENU_ITEMS; i++) {
+	        		if (x >= pos[i].x && x <= pos[i].x + this->menuTextTextures[i].getWidth() &&
+	        			y >= pos[i].y && y <= pos[i].y + this->menuTextTextures[i].getHeight()) {
+	        			if (!selected[i]) {
+	        				selected[i] = true;
+	        			}
+	        		} else {
+	        			if (selected[i]) {
+	        				selected[i] = false;
+	        			}	        			
+	        		}
+	        	}
+	        	break;
+	        case SDL_MOUSEBUTTONDOWN:
+	        	x = this->event.button.x;
+	        	y = this->event.button.y;
+	        	for (int i = 0; i < NUM_MENU_ITEMS; i++) {
+	        		if (x >= pos[i].x && x <= pos[i].x + this->menuTextTextures[i].getWidth() &&
+	        			y >= pos[i].y && y <= pos[i].y + this->menuTextTextures[i].getHeight()) {
+	        			this->update(i);
+	        		}
+	        		play = false;
+	        	}
+
+	        	break;
+	        case SDL_WINDOWEVENT:
+	        	switch (this->event.window.event) {
+		    		case SDL_WINDOWEVENT_RESIZED:
+		    			this->level->levelTexture.setDimensions(this->game->window->getWidth(), 
+		    													this->game->window->getHeight());
+		    			break;
+		        }
+	        	break;
+			case SDL_QUIT:
 				play = false;
 				break;
-			default:
-                break;
-			}
-        	break;
-      	case SDL_KEYUP:
-       		switch( this->event.key.keysym.sym ) {
-			default:
-               	break;
-			}
-        	break;
-		case SDL_QUIT:
-			play = false;
-			break;
-      	default:
-        	break;
+	      	default:
+	        	break;
     	}
 	}
 }
 
 void GameStateMenu::update(const float& delta) {
 	
-	// TEMP: Skip to GameStateMatch
-	// Remove this when working on the main menu
-	this->game->stateID = 2;
-	play = false;
-	
+	// TEMP: need to handle changing states better (use correct numbering in Game.cpp)
+	//Add a switch statement instead
+	if(delta == 0) {
+		this->game->stateID = 2;
+	}
 }
 
 void GameStateMenu::render() {
@@ -120,17 +195,47 @@ void GameStateMenu::render() {
 		//Clear screen
 		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( this->game->renderer );
+		int windowWidth = this->game->window->getWidth();
+		int windowHeight = this->game->window->getHeight();
+
+		//Render textures
+		this->level->levelTexture.render(this->game->renderer, 
+										 0-this->camera->getX(),
+										 0-this->camera->getY());
 	
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
-		//Render text
+
+		//Render FPS text
 		if ( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
 											  textColor, this->game->renderer, this->frameFont ) ) {
 			printf( "Unable to render FPS texture!\n" );
+		}		
+		this->frameFPSTextTexture.render(this->game->renderer, (windowWidth - this->frameFPSTextTexture.getWidth()), 0);
+
+
+		//Render Menu text
+		for (int i = 0; i < NUM_MENU_ITEMS; i++) {
+			if(selected[i]) {
+				if ( !this->menuTextTextures[i].loadFromRenderedText( this->menuItems[i],
+											  fontColors[1], this->game->renderer, this->menuFont ) ) {
+					printf( "Unable to render Join texture!\n" );				
+				}
+			} else {
+				if ( !this->menuTextTextures[i].loadFromRenderedText( this->menuItems[i],
+											  fontColors[0], this->game->renderer, this->menuFont ) ) {
+					printf( "Unable to render Join texture!\n" );				
+				}
+			}
+			this->menuTextTextures[i].render(this->game->renderer, pos[i].x, pos[i].y);
 		}
-		
-		this->frameFPSTextTexture.render(this->game->renderer,
-								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
+
+		//Position the menu text
+		pos[0].x = windowWidth/2 - this->menuTextTextures[0].getWidth()/2;
+		pos[0].y = windowHeight/2 - this->menuTextTextures[0].getHeight();
+		pos[1].x = windowWidth/2 - this->menuTextTextures[1].getWidth()/2;
+		pos[1].y = windowHeight/2 + this->menuTextTextures[1].getHeight();
+
 		
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
@@ -141,7 +246,11 @@ GameStateMenu::~GameStateMenu() {
 	
 	// Free texture and font
 	this->frameFPSTextTexture.free();
+	this->menuTextTextures[1].free();
+	this->menuTextTextures[0].free();
 	TTF_CloseFont(this->frameFont);
+	TTF_CloseFont(this->menuFont);
+	this->menuFont = NULL;
 	this->frameFont = NULL;
 
 }
