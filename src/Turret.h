@@ -1,8 +1,10 @@
+// Created 05/02/2017 Mark C.
 #ifndef TURRET_H
 #define TURRET_H
 #include "LTexture.h"
 #include "HitBox.h"
 #include "Entity.h"
+#include "Marine.h"
 #include "CollisionHandler.h"
 #include <vector>
 #include <SDL2/SDL.h>
@@ -18,7 +20,7 @@ class Turret : public Entity {
 	
 	bool placementCheckTurret(); // checks if turret placement is within bounds
 	
-	bool collisionCheckTurret(); // checks if the turret placement overlaps with any currently existing objects
+	bool collisionCheckTurret(float x, float y, CollisionHandler* ch); // checks if the turret placement overlaps with any currently existing objects
 	
 	void activateTurret(); // activates the turret 
 	

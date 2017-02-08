@@ -41,6 +41,14 @@ bool GameStateMatch::load() {
 	}
 	dumbMarine->setPosition(500,500);
     
+	Turret* dumbTurret = this->gameManager->getTurret(this->gameManager->createTurret());
+	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
+																	this->game->renderer)) {
+		printf("Failed to load the player texture!\n");
+		success = false;
+	}
+	dumbTurret->setPosition(1000,500);
+    
 	this->player = new Player();
 	this->player->setControl(this->gameManager->getMarine(playerMarineID));
 
@@ -120,6 +128,9 @@ void GameStateMatch::handle() {
 		case SDL_MOUSEWHEEL:
 			this->player->handleMouseWheelInput(&(this->event));
 			break;
+        case SDL_MOUSEBUTTONDOWN:
+            this->player->handleMouseClick(&(this->event), this->gameManager, this->game->renderer);
+            break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
 			case SDLK_ESCAPE:

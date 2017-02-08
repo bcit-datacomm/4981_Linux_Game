@@ -99,6 +99,11 @@ Turret* GameManager::getTurret(unsigned int id) {
     return this->turretManager.find(id)->second;
 }
 
+// Returns Collision Handler
+CollisionHandler* GameManager::getCollisionHandler() {
+    return this->collisionHandler;
+}
+
 // Update colliders to current state
 void GameManager::updateCollider() {
 	std::vector<HitBox*> moveColliders;

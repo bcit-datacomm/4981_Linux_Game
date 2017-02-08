@@ -1,3 +1,4 @@
+// Created 05/02/2017 Mark C.
 #include "Turret.h"
 
 Turret::Turret() {
@@ -24,7 +25,16 @@ bool Turret::placementCheckTurret(){
 }
 	
 // checks if the turret placement overlaps with any currently existing objects, currently does nothing
-bool Turret::collisionCheckTurret() {
+bool Turret::collisionCheckTurret(float x, float y, CollisionHandler* ch) {
+    SDL_Rect checkBox;
+    checkBox.h = 100;
+    checkBox.w = 100;
+    checkBox.x = x;
+    checkBox.y = y;
+	HitBox hitBox;
+    hitBox.setRect(checkBox);
+    if(ch->detectMovementCollision(&hitBox))
+        return false;
     return true;
 }
 

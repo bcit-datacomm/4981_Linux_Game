@@ -28,7 +28,10 @@ public:
     bool addTurret(unsigned int id, Turret* newTurret);
     Turret* getTurret(unsigned int id);
     
-	void updateCollider(); // Updates CollisionHanlder
+    // Method for getting collisionHandler
+    CollisionHandler* getCollisionHandler();
+    
+	void updateCollider(); // Updates CollisionHandler
 	void updateMarines(const float& delta); // Update marine actions
 	
 private:

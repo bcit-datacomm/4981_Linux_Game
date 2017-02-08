@@ -16,7 +16,7 @@ Marine::Marine() {
 }
 
 Marine::~Marine() {
-	printf("Destory Marine\n");
+	printf("Destroy Marine\n");
 }
 
 // Move Marine by x and y amount
