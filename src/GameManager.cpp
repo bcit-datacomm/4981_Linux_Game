@@ -3,6 +3,8 @@
 
 GameManager *GameManager::sInstance;
 
+//Returns the already existing GameManager or if there isn't one, makes
+//a new one and returns it. 
 GameManager *GameManager::instance() {
     if (!sInstance)
         sInstance = new GameManager;
