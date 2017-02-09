@@ -3,8 +3,6 @@
 */
 #include "ShotGun.h"
 
-using namespace std;
-
 ShotGun::ShotGun(){
 
     range = 100;

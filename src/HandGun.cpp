@@ -3,8 +3,6 @@
 */
 #include "HandGun.h"
 
-using namespace std;
-
 HandGun::HandGun(){
 
     range = 300;

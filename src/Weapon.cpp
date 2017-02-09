@@ -1,7 +1,5 @@
 #include "Weapon.h"
 
-using namespace std;
-
 Weapon::Weapon(){
 
 }
@@ -44,7 +42,7 @@ int Weapon::getClipMax(){
     return clipMax;
 }
 
-string Weapon::getType(){
+std::string Weapon::getType(){
     return type;
 }
 

@@ -3,8 +3,6 @@
 */
 #include "Rifle.h"
 
-using namespace std;
-
 Rifle::Rifle(){
 
     range = 1000;
