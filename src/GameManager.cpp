@@ -12,11 +12,12 @@ GameManager *GameManager::instance() {
 }
 
 GameManager::GameManager() {
+	printf("Create GM\n");
 	this->collisionHandler = new CollisionHandler();
 }
 
 GameManager::~GameManager() {
-    delete this->sInstance;
+	printf("Destroy GM\n");
 	delete this->collisionHandler;
 	for (const auto& m : this->marineManager) {
 		this->deleteMarine(m.first);

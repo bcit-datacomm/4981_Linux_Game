@@ -225,9 +225,9 @@ void GameStateMatch::render() {
 }
 
 GameStateMatch::~GameStateMatch() {
-
+	
 	// Free texture and font
-	delete this->gameManager;
+	delete GameManager::instance();
 	delete this->camera;
 	delete this->player;
 	delete this->level;
