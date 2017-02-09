@@ -3,6 +3,9 @@
 #define INVENTORY_H
 #include <SDL2/SDL.h>
 #include "Weapon.h"
+#include "HandGun.h"
+#include "Rifle.h"
+#include "ShotGun.h"
 
 class Inventory {
 public:
@@ -16,6 +19,9 @@ public:
 private:
     int current = 0;//current weapon
     Weapon* weapons[3];
+    HandGun defaultGun;
+    Rifle tempRifle;
+    ShotGun tempShotGun;
 
 };
 

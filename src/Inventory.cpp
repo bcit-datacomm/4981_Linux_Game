@@ -2,6 +2,9 @@
 #include "Inventory.h"
 
 Inventory::Inventory(){
+	weapons[0] = &defaultGun;
+	weapons[1] = &tempRifle;
+	weapons[2] = &tempShotGun;
 
 }
 
@@ -11,8 +14,9 @@ Inventory::~Inventory(){
 
 void Inventory::switchCurrent(int slot){
 	if (current != slot) {
-    printf("Switched to slot: %d\n", slot);
-    current = slot;
+
+		printf("Switched to %s  slot: %d\n", weapons[slot]->getType().c_str(), slot);
+	    current = slot;
 	}
 }
 
@@ -33,6 +37,5 @@ void Inventory::scrollCurrent(int direction){
     } else {
         current = direction;
     }
-
-    printf("Switched to slot: %d\n", current);
+	printf("Switched to %s slot:%d\n", weapons[current]->getType().c_str(), current);
 }

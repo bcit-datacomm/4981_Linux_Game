@@ -1,6 +1,12 @@
 #include "Weapon.h"
 
-using namespace std;
+Weapon::Weapon(){
+
+}
+
+Weapon::~Weapon(){
+
+}
 
 int Weapon::getClip(){
     return clip;
@@ -34,4 +40,12 @@ void Weapon::shot(){
 
 int Weapon::getClipMax(){
     return clipMax;
+}
+
+std::string Weapon::getType(){
+    return type;
+}
+
+int Weapon::getReloadSpeed(){
+    return reloadSpeed;
 }
