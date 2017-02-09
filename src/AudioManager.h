@@ -1,5 +1,5 @@
-#ifndef AUDIO_MANAGER_HPP
-#define AUDIO_MANAGER_HPP
+#ifndef AUDIO_MANAGER_H
+#define AUDIO_MANAGER_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
