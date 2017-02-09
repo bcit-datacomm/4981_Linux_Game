@@ -21,7 +21,7 @@ public:
 
 	GameStateMatch(Game* g) : GameState(g) {};
 	virtual ~GameStateMatch();
-	
+
 	Player* player = NULL;
 	Level* level = NULL;
 	Camera* camera = NULL;
@@ -33,14 +33,14 @@ public:
 	std::stringstream frameTimeText;
 	TTF_Font* frameFont = NULL;
 	LTexture frameFPSTextTexture;
-	
+
 private:
 
 	virtual void sync();
 	virtual void handle();
 	virtual void update(const float& delta);
 	virtual void render();
-	
+
 };
 
 #endif

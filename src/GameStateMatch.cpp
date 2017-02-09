@@ -30,31 +30,27 @@ bool GameStateMatch::load() {
 		this->level->levelTexture.setDimensions(2000, 2000);
 	}
 
-	this->gameManager = new GameManager();
-	unsigned int playerMarineID = this->gameManager->createMarine();
+	unsigned int playerMarineID = GameManager::instance()->createMarine();
 
 	// Create Dummy Marines
-	success = this->gameManager->createMarine(this->game->renderer, 1500, 1500);
+	success = GameManager::instance()->createMarine(this->game->renderer, 1500, 1500);
 
-    
-	Turret* dumbTurret = this->gameManager->getTurret(this->gameManager->createTurret());
-	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
-																	this->game->renderer)) {
+
+	Turret* dumbTurret = GameManager::instance()->getTurret(GameManager::instance()->createTurret());
+	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
 
 	Zombie* dumbZombie = new Zombie();
-	this->gameManager->addZombie(dumbZombie);
-	if (!dumbZombie->texture.loadFromFile("assets/texture/zombie.png",
-																	this->game->renderer)) {
+	GameManager::instance()->addZombie(dumbZombie);
+	if (!dumbZombie->texture.loadFromFile("assets/texture/zombie.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
 	dumbZombie = new Zombie();
-	this->gameManager->addZombie(dumbZombie);
-	if (!dumbZombie->texture.loadFromFile("assets/texture/zombie.png",
-																	this->game->renderer)) {
+	GameManager::instance()->addZombie(dumbZombie);
+	if (!dumbZombie->texture.loadFromFile("assets/texture/zombie.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
@@ -62,25 +58,23 @@ bool GameStateMatch::load() {
 
 
 	this->base = new Base();
-	
-	if (!this->base->texture.loadFromFile("assets/texture/base.png",
-																	this->game->renderer)) {
+
+	if (!this->base->texture.loadFromFile("assets/texture/base.png", this->game->renderer)) {
 		printf("Failed to load the base texture!\n");
 		success = false;
 	}
 
-	this->gameManager->addObject(this->base);
+	GameManager::instance()->addObject(this->base);
 
 	Point newPoint = this->base->getSpawnPoint();
 
 	dumbTurret->setPosition(1000,500);
-    
+
 	this->player = new Player();
-	this->player->setControl(this->gameManager->getMarine(playerMarineID));
+	this->player->setControl(GameManager::instance()->getMarine(playerMarineID));
 	this->player->marine->setPosition(newPoint.first, newPoint.second);
 
-	if (!this->player->marine->texture.loadFromFile("assets/texture/arrow.png",
-																	this->game->renderer)) {
+	if (!this->player->marine->texture.loadFromFile("assets/texture/arrow.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
@@ -158,7 +152,7 @@ void GameStateMatch::handle() {
 			break;
         case SDL_MOUSEBUTTONDOWN:
 			if (this->event.button.button == SDL_BUTTON_RIGHT) {
-				this->player->handlePlacementClick(this->gameManager, this->game->renderer);	
+				this->player->handlePlacementClick(this->game->renderer);
 			}
             break;
       	case SDL_KEYDOWN:
@@ -186,11 +180,11 @@ void GameStateMatch::handle() {
 }
 
 void GameStateMatch::update(const float& delta) {
-	this->gameManager->updateCollider();
+	GameManager::instance()->updateCollider();
 
 	// Move player
-	this->gameManager->updateMarines(delta);
-	this->gameManager->updateZombies(delta);
+	GameManager::instance()->updateMarines(delta);
+	GameManager::instance()->updateZombies(delta);
 
 	// Move Camera
 	this->camera->move(this->player->marine->getX(), this->player->marine->getY());
@@ -212,7 +206,7 @@ void GameStateMatch::render() {
 										 0-this->camera->getY());
 
 		//renders objects in game
-		this->gameManager->renderObjects(this->game->renderer, this->camera->getX(), this->camera->getY());
+		GameManager::instance()->renderObjects(this->game->renderer, this->camera->getX(), this->camera->getY());
 
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
@@ -231,9 +225,9 @@ void GameStateMatch::render() {
 }
 
 GameStateMatch::~GameStateMatch() {
-
+	
 	// Free texture and font
-	delete this->gameManager;
+	delete GameManager::instance();
 	delete this->camera;
 	delete this->player;
 	delete this->level;

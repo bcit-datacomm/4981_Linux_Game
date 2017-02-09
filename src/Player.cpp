@@ -33,46 +33,45 @@ void Player::handleMouseWheelInput(const SDL_Event *e){
 }
 
 // function to handle mouse-click events
-void Player::handlePlacementClick(GameManager *gameManager, SDL_Renderer *renderer) {
+void Player::handlePlacementClick(SDL_Renderer *renderer) {
     double angle;
     float marineX = this->marine->getX();
     float marineY = this->marine->getY();
     // getting mouses current position
 	angle = this->marine->getAngle();
-    
-    unsigned int tid = gameManager->createTurret();
-    
-	Turret* dumbTurret = gameManager->getTurret(tid);
+
+    unsigned int tid = GameManager::instance()->createTurret();
+
+	Turret* dumbTurret = GameManager::instance()->getTurret(tid);
 	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
 																	renderer)) {
 		printf("Failed to load the player texture!\n");
 	}
-    
+
     // calculates which spot to place turret based on player mouse direction
     if (angle <= 22.5 && angle >= -22.5) {
-       turretPlaceCheck(marineX, marineY-100, gameManager->getCollisionHandler(), dumbTurret
-                        , gameManager, tid);
+       turretPlaceCheck(marineX, marineY-100, GameManager::instance()->getCollisionHandler(), dumbTurret, tid);
     } else if (angle > 22.5 && angle <= 67.5) {
-       turretPlaceCheck(marineX + 100, marineY - 100, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX + 100, marineY - 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     } else if (angle > 67.5 && angle <= 112.5) {
-       turretPlaceCheck(marineX + 100, marineY, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX + 100, marineY, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     } else if (angle > 112.5 && angle <= 157.5) {
-       turretPlaceCheck(marineX + 100, marineY + 100, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX + 100, marineY + 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     } else if (angle < -157.5 || angle > 157.5) {
-       turretPlaceCheck(marineX, marineY+100, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX, marineY+100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     } else if (angle >= -67.5 && angle < -22.5) {
-       turretPlaceCheck(marineX - 100, marineY - 100, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX - 100, marineY - 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     } else if (angle >= -112.5 && angle <= -67.5) {
-       turretPlaceCheck(marineX-100, marineY, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX-100, marineY, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     } else if (angle >= -157.5 && angle <= -112.5) {
-       turretPlaceCheck(marineX - 100, marineY + 100, gameManager->getCollisionHandler()
-                        , dumbTurret, gameManager, tid);
+       turretPlaceCheck(marineX - 100, marineY + 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
     }
 }
 
@@ -108,12 +107,12 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 }
 
 // checks for collision and to whether or not to place the turret
-void Player::turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret 
-                      ,GameManager* gameManager, unsigned int tid){
+void Player::turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
+                      unsigned int tid){
    if(dumbTurret->collisionCheckTurret(x, y, collisionHandler)){
    	   dumbTurret->setPosition(x, y);
    } else {
         printf("\nCANNOT PLACE TURRET HERE\n");
-        gameManager->deleteTurret(tid);
-        }
+        GameManager::instance()->deleteTurret(tid);
+    }
 }

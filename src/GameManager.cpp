@@ -1,11 +1,23 @@
 #include "GameManager.h"
 #include "HitBox.h"
 
+GameManager *GameManager::sInstance;
+
+//Returns the already existing GameManager or if there isn't one, makes
+//a new one and returns it. 
+GameManager *GameManager::instance() {
+    if (!sInstance)
+        sInstance = new GameManager;
+    return sInstance;
+}
+
 GameManager::GameManager() {
+	printf("Create GM\n");
 	this->collisionHandler = new CollisionHandler();
 }
 
 GameManager::~GameManager() {
+	printf("Destroy GM\n");
 	delete this->collisionHandler;
 	for (const auto& m : this->marineManager) {
 		this->deleteMarine(m.first);
@@ -32,12 +44,12 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 		o.second->texture.render(gRenderer, o.second->getX()-camX, o.second->getY()-camY);
 	}
 	for (const auto& z : this->zombieManager) {
-		z.second->texture.render(gRenderer, z.second->getX()-camX, z.second->getY()-camY, 
+		z.second->texture.render(gRenderer, z.second->getX()-camX, z.second->getY()-camY,
 								 NULL, z.second->getAngle());
 	}
 
     for (const auto& m : this->turretManager) {
-		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY, 
+		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY,
 								 NULL, m.second->getAngle());
 	}
 }
@@ -187,7 +199,7 @@ void GameManager::updateCollider() {
 	this->collisionHandler->quadtreeMov = new Quadtree(0, {0,0,2000,2000});
 	this->collisionHandler->quadtreePro = new Quadtree(0, {0,0,2000,2000});
 	this->collisionHandler->quadtreeDam = new Quadtree(0, {0,0,2000,2000});
-	
+
 
 	for (const auto& m : this->marineManager) {
 		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
@@ -213,7 +225,5 @@ void GameManager::updateCollider() {
 		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
 		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
-  
+
 }
-
-
