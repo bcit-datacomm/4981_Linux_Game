@@ -20,11 +20,19 @@ public:
     std::string getType();
     int getReloadSpeed();
 
-	Weapon();
+	Weapon(std::string type = "no type", 
+		   int range = 0,
+		   int damage = 0,
+		   int clip = 0, 
+		   int clipMax = 0, 
+		   int ammo = 0,
+		   int rAOE = 0, 
+		   int reloadSpeed = 0);
+	
 	~Weapon();
 
 protected:
-    std::string type = "no type";
+    std::string type;
     int range; //range of weapon
     int damage;//damage per bullet
     int clip;//bullets in clip

@@ -7,7 +7,9 @@ CollisionHandler::CollisionHandler() {
 }
 
 CollisionHandler::~CollisionHandler() {
-	
+	delete this->quadtreeMov;
+	delete this->quadtreePro;
+	delete this->quadtreeDam;
 }
 
 // Check for projectile collisions, return object it hits
