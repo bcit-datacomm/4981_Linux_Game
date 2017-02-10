@@ -68,18 +68,12 @@ void Turret::shootTurret() {
 
  // returns true if turret has >0 ammo, false otherwise
 bool Turret::ammoCheckTurret() {
-    if (ammo > 0)
-        return true;
-    else
-        return false;
+    return (ammo > 0);
 }
 	
  // returns true if turret has >=1 health, false otherwise  
 bool Turret::healthCheckTurret() {
-    if (health > 0) 
-        return true;
-    else
-        return false;
+	return (health > 0);
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined
