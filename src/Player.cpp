@@ -1,100 +1,118 @@
 #include "Player.h"
 
 Player::Player() {
-	playerSpriteClips[0].x = 0;
-	playerSpriteClips[0].y = 0;
-	playerSpriteClips[0].w = 100;
-	playerSpriteClips[0].h = 100;
+
 }
 
 Player::~Player() {
-	this->playerTexture.free();	
+
 }
 
-void Player::handleInput(const Uint8 *state) {
+void Player::setControl(Marine* newControl) {
+	this->marine = newControl;
+}
+
+void Player::handleMouseUpdate(Window* w) {
+	int mouseX;
+    int mouseY;
+    int mouseDeltaX;
+    int mouseDeltaY;
+    double radianConvert = 180.0000;
+
+    SDL_GetMouseState(&mouseX, &mouseY);
+    mouseDeltaX = w->getWidth()/2 - mouseX;
+    mouseDeltaY = w->getHeight()/2 - mouseY;
+
+    double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
+	this->marine->setAngle(angle);
+
+}
+
+void Player::handleMouseWheelInput(const SDL_Event *e){
+	this->marine->inventory.scrollCurrent(e->wheel.y);
+}
+
+// function to handle mouse-click events
+void Player::handlePlacementClick(SDL_Renderer *renderer) {
+    double angle;
+    float marineX = this->marine->getX();
+    float marineY = this->marine->getY();
+    // getting mouses current position
+	angle = this->marine->getAngle();
+
+    unsigned int tid = GameManager::instance()->createTurret();
+
+	Turret* dumbTurret = GameManager::instance()->getTurret(tid);
+	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
+																	renderer)) {
+		printf("Failed to load the player texture!\n");
+	}
+
+    // calculates which spot to place turret based on player mouse direction
+    if (angle <= 22.5 && angle >= -22.5) {
+       turretPlaceCheck(marineX, marineY-100, GameManager::instance()->getCollisionHandler(), dumbTurret, tid);
+    } else if (angle > 22.5 && angle <= 67.5) {
+       turretPlaceCheck(marineX + 100, marineY - 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    } else if (angle > 67.5 && angle <= 112.5) {
+       turretPlaceCheck(marineX + 100, marineY, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    } else if (angle > 112.5 && angle <= 157.5) {
+       turretPlaceCheck(marineX + 100, marineY + 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    } else if (angle < -157.5 || angle > 157.5) {
+       turretPlaceCheck(marineX, marineY+100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    } else if (angle >= -67.5 && angle < -22.5) {
+       turretPlaceCheck(marineX - 100, marineY - 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    } else if (angle >= -112.5 && angle <= -67.5) {
+       turretPlaceCheck(marineX-100, marineY, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    } else if (angle >= -157.5 && angle <= -112.5) {
+       turretPlaceCheck(marineX - 100, marineY + 100, GameManager::instance()->getCollisionHandler()
+                        , dumbTurret, tid);
+    }
+}
+
+void Player::handleKeyboardInput(const Uint8 *state) {
 	float x = 0;
 	float y = 0;
-	float velocity = this->getVelocity();
-	
+	float velocity = this->marine->getVelocity();
+
 	// Check for move inputs
-	if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) 
-	{
+	if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
 		y -= velocity;
 	}
-	if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) 
-	{
+	if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
 		y += velocity;
 	}
-	if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) 
-	{
+	if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
 		x -= velocity;
 	}
-	if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) 
-	{
+	if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
 		x += velocity;
 	}
 
-	this->setDY(y);
-	this->setDX(x);
+	//Inventory inputs
+	if (state[SDL_SCANCODE_1]){
+		this->marine->inventory.switchCurrent(0);
+	} else if (state[SDL_SCANCODE_2]){
+		this->marine->inventory.switchCurrent(1);
+	} else if (state[SDL_SCANCODE_3]){
+		this->marine->inventory.switchCurrent(2);
+	}
+	this->marine->setDY(y);
+	this->marine->setDX(x);
 }
 
-// Move player by x and y amount
-void Player::move(float moveX, float moveY) {
-	//Move the player left or right
-	this->setX(this->getX()+moveX);
-
-	//Move the player up or down
-	this->setY(this->getY()+moveY);
-	
+// checks for collision and to whether or not to place the turret
+void Player::turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
+                      unsigned int tid){
+   if(dumbTurret->collisionCheckTurret(x, y, collisionHandler)){
+   	   dumbTurret->setPosition(x, y);
+   } else {
+        printf("\nCANNOT PLACE TURRET HERE\n");
+        GameManager::instance()->deleteTurret(tid);
+    }
 }
-
-// Set x coordinate
-void Player::setX(float px) {
-	x = px;
-} 
-
-// Set y coordinate
-void Player::setY(float py) {
-	y = py;
-} 
-
-// Set delta x coordinate
-void Player::setDX(float px) {
-	dx = px;
-} 
-
-// Set delta y coordinate
-void Player::setDY(float py) {
-	dy = py;
-} 
-
-// set velocity of player movement
-void Player::setVelocity(int pvel) {
-	velocity = pvel;
-} 
-
-// Get x coordinate
-float Player::getX() {
-	return x;
-} 
-
-// Get y coordinate
-float Player::getY() {
-	return y;
-} 
-
-// Get delta x coordinate
-float Player::getDX() {
-	return dx;
-} 
-
-// Get delta y coordinate
-float Player::getDY() {
-	return dy;
-} 
-
-// Get velocity of player movement
-int Player::getVelocity() {
-	return velocity;
-} 
-
