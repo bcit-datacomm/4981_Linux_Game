@@ -1,31 +1,47 @@
-==] Code Style [==
+#==] Code Style [==
 
-==> File Extensions <==
+#==> File Extensions <==
 -for c++ source files use the extension .cpp
 -for c source files use the extension .c
 -for c++ header files as well as c header files use .h
     note: this is to maintain backwards consistancy with c as some c++ headers may be used in c
 
-==> Objects and Structs <==
+#==> Objects and Structs <==
 -start with a capital letter
 -decending visibility ie public then protected then private
 -visibility same level as the struct or class keyword
+-set defaults in the headers in the ctors specifically, dont do it in the member list
+-use member initializers as much as possible, its a waste of memory and time to not
+-abstract parent classes should still provid the ctors to initialize the variables that the child is inheriting at a minimum
+-use smartpointers where you can and references even more so but if you _need_ to make a new object manually, make sure it is being deleted later
 
 struct Bla {
 public:
+    Bla(int xVal = 5);
     void thing();
     //protected: would go here if needed
 private:
-    int x;
+    int x;  //dont do 
+            //int x = 5;
+            //here it goes in the ctor
 }
 
+//implementation file
+Bla::Bla(int xVal):x(xVal){
+    printf("some thing was made");
+}
 
-==> Braces and Indenting <==
+-defaults should be put in the header in the parameter list
+
+
+#==> Braces and Indenting <==
 -space between if and first parentheses
 -space after last parentheses and opening brace
 -brace on the same line as the if
 -same goes for all other flow control
 -else encapsulated by a brace on either side on the same line with spaces either side
+- ###dont use tabs ever period. use 4 spaces.
+    all major IDEs support pressing tab but writing 4 spacess
 
 if (stuff == otherStuff) {
     doStuff();
@@ -55,7 +71,7 @@ switch (i) {
         break;
 }
 
-==> Line Limit <==
+#==> Line Limit <==
 -the soft max line limit is 100 characters while the hard max is at 115 characters
     -if your line goes to 105 and is annoying to break into multiple lines then thats ok
     -if its easy to make multi lines break it up
@@ -93,7 +109,7 @@ plugBoard = Arrays.stream(keyValue[1].split("#"))
     .collect(Collectors.toList());
 
 
-==> Comments <==
+#==> Comments <==
 -quick notes saying what you did can be single line comments
     //my quick note
 -for documentation use double * multi line comments
