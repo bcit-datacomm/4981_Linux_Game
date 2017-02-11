@@ -1,6 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 #include <SDL2/SDL.h>
+#include "HitBox.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1280;
