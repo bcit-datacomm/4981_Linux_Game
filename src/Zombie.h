@@ -8,11 +8,13 @@
 #include "Inventory.h"
 #include <math.h>
 #include <vector>
+#include <utility>
 #include <SDL2/SDL.h>
 #include "Window.h"
 
 const int ZOMBIE_HEIGHT = 100;
 const int ZOMBIE_WIDTH = 100;
+
 
 class Zombie : public Entity {
 public:
@@ -39,9 +41,7 @@ public:
 
 	double getAngle(); //returns sprites angle
 
-	void generateRandomMove(); //randomly generate the zombie's movement
-
-	int getRandomAngle(); //randomly generate the angle of zombie
+	void generateMove();
 
 
 	Zombie();
@@ -51,7 +51,7 @@ public:
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectiles
 	HitBox damageHitBox; // Hit box for damage
-	
+
 private:
     float dx = 0; // delta x coordinat
     float dy = 0; //delta ycoordinate
@@ -59,6 +59,7 @@ private:
     int velocity = 200; // velocity of Zombie movement
     int health = 100;
     int state; //used to select sprite to display
+	std::vector<std::pair<int, int>> path;
 
 };
 

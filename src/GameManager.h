@@ -9,6 +9,7 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
+#include <utility>
 
 class GameManager {
 public:
@@ -40,11 +41,11 @@ public:
 
 	unsigned int addObject(Object*);
 	void deleteObject(unsigned int id);
-	
+
 	unsigned int addZombie(Zombie*);
 	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
-	
+
 
 private:
     static GameManager *sInstance;

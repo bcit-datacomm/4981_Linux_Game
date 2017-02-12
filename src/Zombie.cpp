@@ -1,7 +1,13 @@
 #include "Zombie.h"
 #include <math.h>
 #include <random>
+#include <utility>
+#include "Astar.h"
+using namespace std;
+
 #define PI 3.14159265
+#define MAP_HEIGHT 2000
+#define MAP_WIDTH 2000
 
 Zombie::Zombie()  {
 	zombieSpriteClips[0].x = 0;
@@ -18,7 +24,10 @@ Zombie::Zombie()  {
 	this->damageHitBox.move(this->getX(), this->getY());
 	this->damageHitBox.attached = this;
 
-	this->setAngle(this->getRandomAngle());
+	//this->setAngle(this->getRandomAngle());
+
+	path = buildCoordinatePath(getX(), getY(), MAP_HEIGHT/2, MAP_WIDTH/2);
+
 	printf("Create Zombie\n");
 }
 
@@ -100,30 +109,36 @@ double Zombie::getAngle(){
     return angle;
 }
 
-int Zombie::getRandomAngle(){
-	//random number generator 
-	std::random_device rd;
-	std::mt19937 eng(rd());
+void Zombie::generateMove(){
+	bool goingUp;
+	bool goingRight;
 
-	//range 0 to 360 degrees for zombie's angle
-	std::uniform_int_distribution<> distr(0,360);
+	pair<int, int> nextStep = path.front();
+	path.erase(path.begin());
 
-	return distr(eng);
+	int x = nextStep.first;
+	int y = nextStep.second;
+
+	this->setDX(getVelocity() + (x + getX()));
+	this->setDY(getVelocity() + (y + getY()));
+
+
 }
-
+/*
 void Zombie::generateRandomMove(){
 	int tx = this->getX()+50;
 	int ty = this->getY()+50;
 	if(tx<=0 || tx>=2000 || ty<=0 || ty>=2000){
 		this->setAngle(this->getRandomAngle());
 	}
-		
+
 	double cosVal = cos(this->getAngle()*PI/180.0);
 	double sinVal = sin(this->getAngle()*PI/180.0);
 
 	int x = this->getVelocity();
 	int y = this->getVelocity();
-	
+
 	this->setDX(x*cosVal);
 	this->setDY(y*sinVal);
 }
+*/
