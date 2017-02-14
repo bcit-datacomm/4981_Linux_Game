@@ -34,10 +34,13 @@ bool GameStateMatch::load() {
 
 	// Create Dummy Entitys
 	success = GameManager::instance()->createMarine(this->game->renderer, 1500, 1500);
-	success = GameManager::instance()->createZombie(this->game->renderer, 100, 100);
-	success = GameManager::instance()->createZombie(this->game->renderer, 700, 700);
-	success = GameManager::instance()->createTurret(this->game->renderer, 1000, 500);
-	
+	//success = GameManager::instance()->createZombie(this->game->renderer, 100, 100);
+	//success = GameManager::instance()->createZombie(this->game->renderer, 700, 700);
+	//success = GameManager::instance()->createTurret(this->game->renderer, 1000, 500);
+    
+    success = GameManager::instance()->createTurret(this->game->renderer, 800, 350);
+    success = GameManager::instance()->createTurret(this->game->renderer, 500, 350);
+	success = GameManager::instance()->createZombie(this->game->renderer, 100, 400);
 
 	this->base = new Base();
 	if (!this->base->texture.loadFromFile("assets/texture/base.png", this->game->renderer)) {
