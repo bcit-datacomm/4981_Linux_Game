@@ -44,13 +44,13 @@ bool GameStateMatch::load() {
 
 	Zombie* dumbZombie = new Zombie();
 	GameManager::instance()->addZombie(dumbZombie);
-	if (!dumbZombie->texture.loadFromFile("assets/texture/zombie.png", this->game->renderer)) {
+	if (!dumbZombie->texture.loadFromFile("assets/texture/babyz2.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
 	dumbZombie = new Zombie();
 	GameManager::instance()->addZombie(dumbZombie);
-	if (!dumbZombie->texture.loadFromFile("assets/texture/zombie.png", this->game->renderer)) {
+	if (!dumbZombie->texture.loadFromFile("assets/texture/babyz2.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 		success = false;
 	}
@@ -139,7 +139,7 @@ void GameStateMatch::handle() {
 	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
 	// Handle movement input
 	this->player->handleKeyboardInput(state);
-	this->player->handleMouseUpdate(this->game->window);
+	this->player->handleMouseUpdate(this->game->window, this->camera->getX(), this->camera->getY());
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
@@ -159,6 +159,9 @@ void GameStateMatch::handle() {
         	switch( this->event.key.keysym.sym ) {
 			case SDLK_ESCAPE:
 				play = false;
+				break;
+			case SDLK_b:
+				this->player->placeBarricade(this->game->renderer);
 				break;
 			default:
                 break;

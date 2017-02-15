@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <math.h>
 
 Player::Player() {
 
@@ -12,7 +13,7 @@ void Player::setControl(Marine* newControl) {
 	this->marine = newControl;
 }
 
-void Player::handleMouseUpdate(Window* w) {
+void Player::handleMouseUpdate(Window* w, float camX, float camY) {
 	int mouseX;
     int mouseY;
     int mouseDeltaX;
@@ -26,6 +27,9 @@ void Player::handleMouseUpdate(Window* w) {
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
 	this->marine->setAngle(angle);
 
+    if (this->tempBarricade != NULL) {
+	this->tempBarricade->move(this->marine->getX(), this->marine->getY(), mouseX+camX, mouseY+camY, GameManager::instance()->getCollisionHandler());
+    }
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){
@@ -39,6 +43,14 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
     float marineY = this->marine->getY();
     // getting mouses current position
 	angle = this->marine->getAngle();
+
+    if (this->tempBarricade != NULL) {
+	if (this->tempBarricade->isPlaceable()) {
+		GameManager::instance()->placeTempBarricade();
+		this->tempBarricade = NULL;
+	}
+	return;
+    }
 
     unsigned int tid = GameManager::instance()->createTurret();
 
@@ -105,6 +117,22 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 	this->marine->setDY(y);
 	this->marine->setDX(x);
 }
+
+void Player::placeBarricade(SDL_Renderer *renderer) {
+	if(this->tempBarricade == NULL){
+		double angle = this->marine->getAngle();
+		int distance = 100;
+		GameManager::instance()->createTempBarricade(renderer, this->marine->getX() + distance*cos(angle), 
+			this->marine->getY() + distance*sin(angle));
+		this->tempBarricade = GameManager::instance()->getTempBarricade();
+	}
+	else{
+		GameManager::instance()->deleteTempBarricade();
+		this->tempBarricade = NULL;
+	}
+}
+
+
 
 // checks for collision and to whether or not to place the turret
 void Player::turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,

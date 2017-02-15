@@ -31,6 +31,10 @@ GameManager::~GameManager() {
 	for (const auto& m : this->turretManager) {
 		this->deleteTurret(m.first);
 	}
+	for (const auto& b : this->barricadeManager) {
+		this->deleteBarricade(b.first);
+	}
+	this->deleteTempBarricade();
 }
 
 // Render all objects in level
@@ -52,6 +56,14 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY,
 								 NULL, m.second->getAngle());
 	}
+ 	for (const auto& b : this->barricadeManager) {
+		b.second->texture.render(gRenderer, b.second->getX()-camX, b.second->getY()-camY);
+	}
+	if(this->tempBarricade!=NULL){
+		this->tempBarricade->texture.render(gRenderer, tempBarricade->getX()-camX, tempBarricade->getY()-camY);
+		//this->tempBarricade->texture.setAlpha(this->tempBarricade->getAlpha());
+	}
+
 }
 
 // Update marine movements. health, and actions
@@ -225,5 +237,51 @@ void GameManager::updateCollider() {
 		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
 		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
+  	for (const auto& b : this->barricadeManager) {
+		this->collisionHandler->quadtreeMov->insert(&b.second->movementHitBox);
+		this->collisionHandler->quadtreePro->insert(&b.second->projectileHitBox);
+		this->collisionHandler->quadtreeDam->insert(&b.second->damageHitBox);
+	}
 
+
+}
+bool GameManager::createTempBarricade(SDL_Renderer* gRenderer, float x, float y){
+	if(tempBarricade!=NULL)
+		return false;
+
+	this->tempBarricade = new Barricade();
+	if (!this->tempBarricade->texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
+		printf("Failed to load the player texture!\n");
+		this->deleteTempBarricade();
+	}
+	this->tempBarricade->setPosition(x, y);
+	return true;
+}
+
+Barricade* GameManager::getTempBarricade(){
+	return tempBarricade;
+}
+void GameManager::deleteTempBarricade(){
+	if(this->tempBarricade == NULL)
+		return;
+	delete this->tempBarricade;
+	this->tempBarricade = NULL;
+	printf("delete tempBarricade\n");
+}
+
+unsigned int GameManager::placeTempBarricade(){
+	unsigned int id = 0;
+	if (!this->barricadeManager.empty()) {
+		id = this->barricadeManager.rbegin()->first + 1;
+	}
+	barricadeManager[id] = this->tempBarricade;
+	this->tempBarricade->texture.setAlpha(255);
+	this->tempBarricade = NULL;
+	return id;
+}
+void GameManager::deleteBarricade(unsigned int id) {
+	if (this->barricadeManager.count(id)) {
+		delete this->barricadeManager.find(id)->second;
+	}
+	this->barricadeManager.erase(id);
 }

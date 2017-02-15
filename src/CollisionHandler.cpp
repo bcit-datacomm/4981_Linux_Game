@@ -54,4 +54,3 @@ bool CollisionHandler::detectMovementCollision(HitBox* hb) {
   	}
 	return false;
 }
-

@@ -6,6 +6,7 @@
 #include "CollisionHandler.h"
 #include "Object.h"
 #include "Zombie.h"
+#include "Barricade.h"
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -38,11 +39,17 @@ public:
 	void updateZombies(const float& delta); // Update zombie actions
 
 	unsigned int addObject(Object*);
-	unsigned int addZombie(Zombie*);
-
-	void deleteZombie(unsigned int id);
 	void deleteObject(unsigned int id);
 
+	unsigned int addZombie(Zombie*);
+	void deleteZombie(unsigned int id);
+
+	bool createTempBarricade(SDL_Renderer* renderer, float x, float y);
+	Barricade *getTempBarricade();
+	void deleteTempBarricade();
+	unsigned int placeTempBarricade();
+
+	void deleteBarricade(unsigned int id);
 private:
     static GameManager *sInstance;
 
@@ -51,7 +58,9 @@ private:
 	std::map<unsigned int, Marine*> marineManager;
 	std::map<unsigned int, Object*> objectManager;
 	std::map<unsigned int, Zombie*> zombieManager;
-    std::map<unsigned int, Turret*> turretManager;
+    	std::map<unsigned int, Turret*> turretManager;
+	std::map<unsigned int, Barricade*> barricadeManager;
+	Barricade *tempBarricade = NULL;
 };
 
 

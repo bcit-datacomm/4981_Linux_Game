@@ -6,8 +6,8 @@
 Zombie::Zombie()  {
 	zombieSpriteClips[0].x = 0;
 	zombieSpriteClips[0].y = 0;
-	zombieSpriteClips[0].w = 100;
-	zombieSpriteClips[0].h = 100;
+	zombieSpriteClips[0].w = ZOMBIE_WIDTH;
+	zombieSpriteClips[0].h = ZOMBIE_HEIGHT;
 	this->movementHitBox.setRect(zombieSpriteClips[0]);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->movementHitBox.attached = this;
