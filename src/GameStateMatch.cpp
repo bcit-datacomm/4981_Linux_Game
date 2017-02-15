@@ -32,43 +32,19 @@ bool GameStateMatch::load() {
 
 	unsigned int playerMarineID = GameManager::instance()->createMarine();
 
-	// Create Dummy Marines
+	// Create Dummy Entitys
 	success = GameManager::instance()->createMarine(this->game->renderer, 1500, 1500);
-
-
-	Turret* dumbTurret = GameManager::instance()->getTurret(GameManager::instance()->createTurret());
-	if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png", this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-		success = false;
-	}
-
-	Zombie* dumbZombie = new Zombie();
-	GameManager::instance()->addZombie(dumbZombie);
-	if (!dumbZombie->texture.loadFromFile("assets/texture/babyz2.png", this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-		success = false;
-	}
-	dumbZombie = new Zombie();
-	GameManager::instance()->addZombie(dumbZombie);
-	if (!dumbZombie->texture.loadFromFile("assets/texture/babyz2.png", this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-		success = false;
-	}
-	dumbZombie->setPosition(100,100);
-
-
+	success = GameManager::instance()->createZombie(this->game->renderer, 100, 100);
+	success = GameManager::instance()->createZombie(this->game->renderer, 700, 700);
+	success = GameManager::instance()->createTurret(this->game->renderer, 1000, 500);
+	
 	this->base = new Base();
-
 	if (!this->base->texture.loadFromFile("assets/texture/base.png", this->game->renderer)) {
 		printf("Failed to load the base texture!\n");
 		success = false;
 	}
-
 	GameManager::instance()->addObject(this->base);
-
 	Point newPoint = this->base->getSpawnPoint();
-
-	dumbTurret->setPosition(1000,500);
 
 	this->player = new Player();
 	this->player->setControl(GameManager::instance()->getMarine(playerMarineID));

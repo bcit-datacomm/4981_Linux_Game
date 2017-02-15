@@ -29,6 +29,7 @@ public:
     unsigned int createTurret();
     void deleteTurret(unsigned int id);
     bool addTurret(unsigned int id, Turret* newTurret);
+	bool createTurret(SDL_Renderer* gRenderer, float x, float y) ;
     Turret* getTurret(unsigned int id);
 
     // Method for getting collisionHandler
@@ -42,8 +43,9 @@ public:
 	void deleteObject(unsigned int id);
 
 	unsigned int addZombie(Zombie*);
+	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
-
+	
 	bool createTempBarricade(SDL_Renderer* renderer, float x, float y);
 	Barricade *getTempBarricade();
 	void deleteTempBarricade();

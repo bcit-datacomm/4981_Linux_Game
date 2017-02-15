@@ -3,16 +3,8 @@
 */
 #include "Rifle.h"
 
-Rifle::Rifle(){
+Rifle::Rifle() : Weapon("Rifle", 1000, 100, 1, 1, 20, 1, 5) {
 
-    range = 1000;
-    damage = 100;
-    clipMax = 1;
-    clip = clipMax;
-    ammo = 20;
-    rAOE = 1;
-    type = "Rifle";
-    reloadSpeed = 5;
 }
 
 Rifle::~Rifle(){

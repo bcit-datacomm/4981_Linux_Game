@@ -90,7 +90,7 @@ unsigned int GameManager::createMarine() {
 	return id;
 }
 
-// Create marine add it to manager, returns marine id
+// Create marine add it to manager, returns success
 bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y) {
 	unsigned int id = 0;
 	if (!this->marineManager.empty()) {
@@ -157,6 +157,22 @@ bool GameManager::addTurret (unsigned int id, Turret* newTurret) {
 	}
 }
 
+// Create turret add it to truret, returns if success
+bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
+	unsigned int id = 0;
+	if (!this->turretManager.empty()) {
+		id = this->turretManager.rbegin()->first + 1;
+	}
+	this->turretManager[id] = new Turret();
+	if (!this->turretManager[id]->texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
+		printf("Failed to load the turret texture!\n");
+		this->deleteTurret(id);
+		return false;
+	}
+	this->turretManager[id]->setPosition(x,y);
+	return true;
+}
+
 // Get a tower by its id
 Turret* GameManager::getTurret(unsigned int id) {
     return this->turretManager.find(id)->second;
@@ -169,6 +185,22 @@ unsigned int GameManager::addZombie(Zombie* newZombie) {
 	}
 	zombieManager[id] = newZombie;
 	return id;
+}
+
+// Create zombie add it to manager, returns success
+bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
+	unsigned int id = 0;
+	if (!this->zombieManager.empty()) {
+		id = this->zombieManager.rbegin()->first + 1;
+	}
+	this->zombieManager[id] = new Zombie();
+	if (!this->zombieManager[id]->texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
+		printf("Failed to load the player texture!\n");
+		this->deleteZombie(id);
+		return false;
+	}
+	this->zombieManager[id]->setPosition(x,y);
+	return true;
 }
 
 // Deletes zombie from level

@@ -1,7 +1,21 @@
 #include "Weapon.h"
 
-Weapon::Weapon(){
-
+Weapon::Weapon(std::string type, 
+			   int range, 
+			   int damage, 
+			   int clip, 
+			   int clipMax, 
+			   int ammo, 
+			   int rAOE, 
+			   int reloadSpeed){
+	this->type = type;
+	this->range = range;
+	this->damage = damage;
+	this->clip = clip;
+	this->clipMax = clipMax;
+	this->ammo = ammo;
+	this->rAOE = rAOE;
+	this->reloadSpeed = reloadSpeed;
 }
 
 Weapon::~Weapon(){
