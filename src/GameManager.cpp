@@ -64,7 +64,8 @@ void GameManager::updateMarines(const float& delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float& delta) {
 	for (const auto& z : this->zombieManager) {
-		z.second->generateRandomMove();
+		//z.second->generateRandomMove();
+        z.second->generateMove();
 		z.second->move((z.second->getDX()*delta), (z.second->getDY()*delta), this->collisionHandler);
 	}
 }
@@ -188,6 +189,7 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
 		return false;
 	}
 	this->zombieManager[id]->setPosition(x,y);
+    this->zombieManager[id]->generatePath((int) x / 60, (int) y / 60, 50, 10); // turret position 500, 500?
 	return true;
 }
 

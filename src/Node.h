@@ -19,9 +19,47 @@
 #ifndef NODE_H
 #define NODE_H
 #include <math.h>
+#include <queue>
+#include <stdio.h>
 
-#define BASE_COST       10  // horizontal or vertical
-#define EXTEND_COST     14  // diagonal
+// screen w/h
+#define SCREEN_W    1280
+#define SCREEN_H    960
+
+// tile size
+#define TILE_SIZE   60
+#define STEP_SPAN   5
+
+// horizontal/vertical & diagonal cost
+#define BASE_COST   10
+#define EXTEND_COST 14
+
+// 8 possible directions
+#define DIR_CAP     8
+#define DIR_R       0
+#define DIR_RD      1
+#define DIR_D       2
+#define DIR_LD      3
+#define DIR_L       4
+#define DIR_LU      5
+#define DIR_U       6
+#define DIR_RU      7
+
+// map row & column
+const int row = TILE_SIZE;
+const int col = TILE_SIZE;
+static int map[row][col];
+
+static int closedNodes[row][col]; // array of closed nodes (evaluated)
+static int openNodes[row][col];   // array of open nodes (to be evaluated)
+static int dirMap[row][col];      // array of directions
+
+/* 8 possible movements
+ * 0 - right, 1 - right down, 2 - down, 3 - left down
+ * 4 - left, 5 - left up, 6 - up, 7 - right up
+ */
+static int mx[DIR_CAP]={1, 1, 0, -1, -1, -1, 0, 1};
+static int my[DIR_CAP]={0, 1, 1, 1, 0, -1, -1, -1};
 
 class Node {
 public:

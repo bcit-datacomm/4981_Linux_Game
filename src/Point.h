@@ -35,6 +35,6 @@ public:
 private:
     int xPos_;
     int yPos_;
-}
+};
 
 #endif
