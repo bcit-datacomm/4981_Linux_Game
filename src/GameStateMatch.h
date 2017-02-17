@@ -1,5 +1,6 @@
 #ifndef GAMESTATE_MATCH_H
 #define GAMESTATE_MATCH_H
+#include "Entity.h"
 #include "GameState.h"
 #include <string>
 #include <sstream>
