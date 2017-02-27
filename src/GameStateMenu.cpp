@@ -6,12 +6,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "GameStateMatch.h"
+#include "GameStateMenu.h"
 #include "LTimer.h"
 #include "LTexture.h"
 #include "Window.h"
 
-bool GameStateMatch::load() {
+bool GameStateMenu::load() {
 
 	bool success = true;
 
@@ -22,47 +22,10 @@ bool GameStateMatch::load() {
 		success = false;
 	}
 
-	this->level = new Level();
-	if (!this->level->levelTexture.loadFromFile("assets/texture/checkerboard.png", this->game->renderer)) {
-		printf("Failed to load the level texture!\n");
-		success = false;
-	} else {
-		this->level->levelTexture.setDimensions(2000, 2000);
-	}
-
-	unsigned int playerMarineID = GameManager::instance()->createMarine();
-
-	// Create Dummy Entitys
-	success = GameManager::instance()->createMarine(this->game->renderer, 1500, 1500);
-	success = GameManager::instance()->createZombie(this->game->renderer, 100, 100);
-	success = GameManager::instance()->createZombie(this->game->renderer, 700, 700);
-	success = GameManager::instance()->createTurret(this->game->renderer, 1000, 500);
-	
-
-	this->base = new Base();
-	if (!this->base->texture.loadFromFile("assets/texture/base.png", this->game->renderer)) {
-		printf("Failed to load the base texture!\n");
-		success = false;
-	}
-	GameManager::instance()->addObject(this->base);
-	Point newPoint = this->base->getSpawnPoint();
-
-	this->player = new Player();
-	this->player->setControl(GameManager::instance()->getMarine(playerMarineID));
-	this->player->marine->setPosition(newPoint.first, newPoint.second);
-
-	if (!this->player->marine->texture.loadFromFile("assets/texture/arrow.png", this->game->renderer)) {
-		printf("Failed to load the player texture!\n");
-		success = false;
-	}
-
-	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
-
-
 	return success;
 }
 
-void GameStateMatch::loop() {
+void GameStateMenu::loop() {
 	//The frames per second timer
 	LTimer fpsTimer;
 
@@ -108,30 +71,15 @@ void GameStateMatch::loop() {
 	}
 }
 
-void GameStateMatch::sync() {
+void GameStateMenu::sync() {
 
 }
 
-void GameStateMatch::handle() {
-	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
-	// Handle movement input
-	this->player->handleKeyboardInput(state);
-	this->player->handleMouseUpdate(this->game->window);
+void GameStateMenu::handle() {
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
    		switch( this->event.type ) {
-		case SDL_WINDOWEVENT:
-			this->camera->setViewSize(this->game->window->getWidth(), this->game->window->getHeight());
-			break;
-		case SDL_MOUSEWHEEL:
-			this->player->handleMouseWheelInput(&(this->event));
-			break;
-        case SDL_MOUSEBUTTONDOWN:
-			if (this->event.button.button == SDL_BUTTON_RIGHT) {
-				this->player->handlePlacementClick(this->game->renderer);
-			}
-            break;
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
 			case SDLK_ESCAPE:
@@ -156,35 +104,23 @@ void GameStateMatch::handle() {
 	}
 }
 
-void GameStateMatch::update(const float& delta) {
-	GameManager::instance()->updateCollider();
-
-	// Move player
-	GameManager::instance()->updateMarines(delta);
-	GameManager::instance()->updateZombies(delta);
-
-	// Move Camera
-	this->camera->move(this->player->marine->getX(), this->player->marine->getY());
-
-
+void GameStateMenu::update(const float& delta) {
+	
+	// TEMP: Skip to GameStateMatch
+	// Remove this when working on the main menu
+	this->game->stateID = 2;
+	play = false;
+	
 }
 
-void GameStateMatch::render() {
+void GameStateMenu::render() {
 	//Only draw when not minimized
 	if ( !this->game->window->isMinimized() ) {
 
 		//Clear screen
 		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 		SDL_RenderClear( this->game->renderer );
-
-		//Render textures
-		this->level->levelTexture.render(this->game->renderer,
-										 0-this->camera->getX(),
-										 0-this->camera->getY());
-
-		//renders objects in game
-		GameManager::instance()->renderObjects(this->game->renderer, this->camera->getX(), this->camera->getY());
-
+	
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
 		//Render text
@@ -192,24 +128,21 @@ void GameStateMatch::render() {
 											  textColor, this->game->renderer, this->frameFont ) ) {
 			printf( "Unable to render FPS texture!\n" );
 		}
-
+		
 		this->frameFPSTextTexture.render(this->game->renderer,
 								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
-
+		
 		//Update screen
 		SDL_RenderPresent( this->game->renderer );
 	}
 }
 
-GameStateMatch::~GameStateMatch() {
+GameStateMenu::~GameStateMenu() {
 	
 	// Free texture and font
-	delete GameManager::instance();
-	delete this->camera;
-	delete this->player;
-	delete this->level;
 	this->frameFPSTextTexture.free();
 	TTF_CloseFont(this->frameFont);
 	this->frameFont = NULL;
 
 }
+ 
