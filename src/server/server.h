@@ -1,8 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <stdarg.h>
-#include <stdbool.h>
+#include <cstdarg>
 
 //Temp variable to represent client count
 #define CLIENT_COUNT 10

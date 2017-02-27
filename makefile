@@ -53,11 +53,11 @@ $(OBJS): $(SRCOBJS)
 
 server: rserver
 
-dserver: $(wildcard $(SRC)/server/*.c)
-	gcc -Wall -pedantic -pipe -std=c11 -g -pg $(wildcard $(SRC)/server/*.c) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+dserver: $(wildcard $(SRC)/server/*.cpp)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) -g -pg $(wildcard $(SRC)/server/*.cpp) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
 
-rserver: $(wildcard $(SRC)/server/*.c)
-	gcc -Wall -pedantic -pipe -std=c11 -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.c) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+rserver: $(wildcard $(SRC)/server/*.cpp)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.cpp) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean

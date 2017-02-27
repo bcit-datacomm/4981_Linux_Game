@@ -1,7 +1,7 @@
 #include <omp.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
 #include <getopt.h>
@@ -13,15 +13,15 @@
 #include <sys/signal.h>
 #include <sys/time.h>
 #include <netinet/in.h>
-#include <stdarg.h>
-#include <stdbool.h>
+#include <cstdarg>
+//#include <stdbool.h>
 
 #include "server.h"
 
 //declared here so they can be overriden with flags at run time as needed
 int listen_port_udp = LISTEN_PORT_UDP;
 int listen_port_tcp = LISTEN_PORT_TCP;
-int client_count = CLIENT_COUNT;
+size_t client_count = CLIENT_COUNT;
 
 int main(int argc, char **argv) {
     int opt;
@@ -101,13 +101,21 @@ int main(int argc, char **argv) {
 
 void initSync(int sock){
     logv("Starting TCP sync\n");
-    int clientFDs[client_count];
-    socklen_t clientLens[client_count];
+    int *clientFDs = (int *) calloc(client_count, sizeof(int));
+    if (!clientFDs) {
+        perror("Init sync calloc failure");
+        exit(1);
+    }
+    socklen_t *clientLens = (socklen_t *) calloc(client_count, sizeof(socklen_t));
+    if (!clientLens) {
+        perror("Init sync calloc failure");
+        exit(1);
+    }
     //make this also hold player data
     clients = (Client *) calloc(client_count, sizeof(Client));
     //accept all the connections
     //get the basic info from each
-    for(int i = 0; i < client_count; ++i) {
+    for(size_t i = 0; i < client_count; ++i) {
         clients[i].addr = (struct sockaddr_in*) calloc(1, sizeof(struct sockaddr_in));
         clients[i].player = (Player*) calloc(1, sizeof(Player));
 
@@ -133,7 +141,7 @@ void initSync(int sock){
             }
 
             //update others of the clients addition
-            for (int j = 0; j < i; ++j){
+            for (size_t j = 0; j < i; ++j){
                 if (write(clientFDs[j], outbuff, SYNC_OUT) == -1) {
                     perror("failed to write to client updated user list");
                     exit(4);
@@ -141,7 +149,7 @@ void initSync(int sock){
             }
 
             //tell new clients previously connected clients
-            for (int j = 0; j < i; ++j) {
+            for (size_t j = 0; j < i; ++j) {
                 strcpy(outbuff, clients[j].player->username);
                 outbuff[SYNC_OUT-1] = clients[j].player->id;
                 if (write(clientFDs[i], outbuff, SYNC_OUT) == -1) {
@@ -167,6 +175,8 @@ void initSync(int sock){
     }
 #endif
     logv("TCP sync complete\n");
+    free(clientFDs);
+    free(clientLens);
 }
 
 void alarmHandler(int signo) {
