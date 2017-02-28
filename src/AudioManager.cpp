@@ -20,7 +20,7 @@ AudioManager::AudioManager(){
  
 	Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 );
 
-	loadAudioFiles();
+	loadFiles();
 }
 
 
@@ -39,7 +39,7 @@ AudioManager::~AudioManager(){
 
 
 //This plays a single background music file from the _music map.
-void AudioManager::playBackgroundMusic(const char * fileName){
+void AudioManager::playMusic(const char * fileName){
 		
 	Mix_Music * music = _music[fileName];
 
@@ -53,7 +53,7 @@ void AudioManager::playBackgroundMusic(const char * fileName){
 
 
 //This plays a single sound effect from the _chunks map.
-void AudioManager::playSoundEffect(const char * fileName){
+void AudioManager::playEffect(const char * fileName){
 
 	Mix_Chunk * chunk = _chunks[fileName];
 	
@@ -67,7 +67,7 @@ void AudioManager::playSoundEffect(const char * fileName){
 
 
 
-void AudioManager::loadAudioFiles(){
+void AudioManager::loadFiles(){
     
     ////MUSIC
     loadMusic(MUS_DARKNUBULA);
@@ -115,7 +115,7 @@ void AudioManager::loadMusic(const char * fileName){
 
 
 //This loads a single sound effect file into the _chunks map.
-void AudioManager::loadChunk(const char * fileName){
+void AudioManager::loadEffect(const char * fileName){
 
     Mix_Chunk * sound = NULL;
     sound = Mix_LoadWAV(fileName);

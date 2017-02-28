@@ -50,16 +50,16 @@ public:
 	AudioManager();
 	~AudioManager();
 
-	void playBackgroundMusic(const char * fileName);
-	void playSoundEffect(const char * fileName);
+	void playMusic(const char * fileName);
+	void playEffect(const char * fileName);
 
 private:
 	musicMap  _music;
 	chunkMap  _chunks;
 
-	void loadAudioFiles();
-	void loadMusic(const char * filename);
-	void loadChunk(const char * fileName);
+	void loadFiles();
+	void loadMusic(const char * fileName);
+	void loadEffect(const char * fileName);
 };
 
 #endif
