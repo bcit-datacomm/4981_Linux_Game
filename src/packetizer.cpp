@@ -36,6 +36,7 @@
 -- REVISIONS:
 -- 1.0 - Feb/12/17 - IM - completed design and pseudo code
 -- 2.0 - Feb/25/17 - EY - implmeted functon and made minor changes design
+-- 2.1 - Feb/27/17 - EY - changed cstyle casts to use reinterpret casts
 --
 -- DESIGNER: Isaac Morneau & Eva Yu
 --
@@ -61,7 +62,7 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
   MoveAction * moves;
   AttackAction * attacks;
   ZombieData * zombie;
-  pBuff = (int32_t *) syncBuff; // cast the buff to read 4 bytes at a time
+  pBuff = reinterpret_cast<int32_t *>(syncBuff); // cast the buff to read 4 bytes at a time
 
   if (*pBuff++ != SYNC) return; // Check that it is a sync pack
 
@@ -74,7 +75,7 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
       case PLAYERH: {  // enclose in braces to prevent
         int32_t pCount = *pBuff++;
         for(int32_t i = 0; i  < pCount; i++) {
-          player = (PlayerData *)(pBuff);
+          player = reinterpret_cast<PlayerData *>(pBuff);
           std::cout << "\nPlayer playerid:" << player->playerid;
           std::cout << "\n\tPlayer xpos:" << player->xpos;
           std::cout << "\n\tPlayer ypos:" << player->ypos;
@@ -82,7 +83,7 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
           std::cout << "\n\tPlayer direction:" << player->direction;
           std::cout << "\n\tPlayer health:" << player->health;
           std::cout << std::endl;
-          pBuff = (int32_t *) &(player->moves);
+          pBuff = reinterpret_cast<int32_t *>(&(player->moves));
           moves = player->moves;
           /*
           UpdatePlayer (player->playerid,
@@ -106,9 +107,9 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
             */
             moves++;
           }
-          pBuff = (int32_t *) &(player->attacks);
+          pBuff = reinterpret_cast<int32_t *> (&(player->attacks));
           attacks = player->attacks;
-        
+
           for(int32_t j = 0; j  < player->nattacks; j++) {
             //std::cout << "\n\tAction #:" << j;
             //std::cout << "\n\t\tAction xpos:" << action->xpos;
@@ -123,24 +124,21 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
             */
             attacks++;
           }
-
-
-
-          pBuff = (int32_t *)++player;
+          pBuff = reinterpret_cast<int32_t *>(++player);
         }
         break;
       } // End of PLAYERH case, must be enclosed in braces.
       case ZOMBIEH: {
         int32_t zCount = *pBuff++;
         for(int32_t i = 0; i  < zCount; i++){
-          zombie = (ZombieData *)(pBuff);
+          zombie = reinterpret_cast<ZombieData *>(pBuff);
           std::cout << "\nZombie zombieid:" << zombie->zombieid;
           std::cout << "\n\tZombie xpos:" << zombie->xpos;
           std::cout << "\n\tZombie ypos:" << zombie->ypos;
           std::cout << "\n\tZombie direction:" << zombie->direction;
           std::cout << "\n\tZombie health:" << zombie->health;
           std::cout << std::endl;
-          pBuff = (int32_t *)++zombie;
+          pBuff = reinterpret_cast<int32_t *>(++zombie);
           /*
           UpdateZombie (zombie->zombieid,
                           zombie->xpos,
