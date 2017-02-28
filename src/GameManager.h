@@ -40,11 +40,12 @@ public:
 
 	unsigned int addObject(Object*);
 	void deleteObject(unsigned int id);
-	
+
 	unsigned int addZombie(Zombie*);
 	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
-	
+
+    std::map<unsigned int, Zombie*>* getZombies();
 
 private:
     static GameManager *sInstance;

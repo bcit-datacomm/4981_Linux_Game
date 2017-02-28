@@ -4,7 +4,7 @@
 GameManager *GameManager::sInstance;
 
 //Returns the already existing GameManager or if there isn't one, makes
-//a new one and returns it. 
+//a new one and returns it.
 GameManager *GameManager::instance() {
     if (!sInstance)
         sInstance = new GameManager;
@@ -261,3 +261,7 @@ void GameManager::updateCollider() {
 	}
 
 }
+
+std::map<unsigned int, Zombie*>* GameManager::getZombies() {
+    return &zombieManager;
+ }
