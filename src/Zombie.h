@@ -30,6 +30,8 @@ public:
     	float getDY(); //get delta y coordinate
 
     	int getVelocity(); // get velocity of Zombie movement
+        
+    int getHealth(){return health;} // get health of Zombie
 
 	void onCollision();
 

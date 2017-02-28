@@ -57,10 +57,11 @@
 void Packetizer::parse(const void * syncBuff, size_t bytesReads)
 {
   int32_t *pBuff, *pEnd;
-  Player * player;
-  Action * action;
-  Zombie * zombie;
-  pBuff = (int32_t *) syncBuff; // cast the buff to read 4 ytes at a time
+  PlayerData * player;
+  MoveAction * moves;
+  AttackAction * attacks;
+  ZombieData * zombie;
+  pBuff = (int32_t *) syncBuff; // cast the buff to read 4 bytes at a time
 
   if (*pBuff++ != SYNC) return; // Check that it is a sync pack
 
@@ -73,17 +74,16 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
       case PLAYERH: {  // enclose in braces to prevent
         int32_t pCount = *pBuff++;
         for(int32_t i = 0; i  < pCount; i++) {
-          player = (Player *)(pBuff);
+          player = (PlayerData *)(pBuff);
           std::cout << "\nPlayer playerid:" << player->playerid;
           std::cout << "\n\tPlayer xpos:" << player->xpos;
           std::cout << "\n\tPlayer ypos:" << player->ypos;
-          std::cout << "\n\tPlayer xvel:" << player->xvel;
-          std::cout << "\n\tPlayer yvel:" << player->yvel;
+          std::cout << "\n\tPlayer vel:" << player->vel;
           std::cout << "\n\tPlayer direction:" << player->direction;
           std::cout << "\n\tPlayer health:" << player->health;
           std::cout << std::endl;
-          pBuff = (int32_t *)&(player->actions);
-          action = player->actions;
+          pBuff = (int32_t *) &(player->moves);
+          moves = player->moves;
           /*
           UpdatePlayer (player->playerid,
                           player->xpos,
@@ -92,11 +92,11 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
                           player->yvel,
                           player->direction);
           */
-          for(int32_t j = 0; j  < player->nactions; j++) {
-            std::cout << "\n\tAction #:" << j;
-            std::cout << "\n\t\tAction xpos:" << action->xpos;
-            std::cout << "\n\t\tAction ypos:" << action->ypos;
-            std::cout << "\n\t\tAction direction:" << action->direction;
+          for(int32_t j = 0; j  < player->nmoves; j++) {
+            //std::cout << "\n\tAction #:" << j;
+            //std::cout << "\n\t\tAction xpos:" << action->xpos;
+            //std::cout << "\n\t\tAction ypos:" << action->ypos;
+            //std::cout << "\n\t\tAction direction:" << action->direction;
             /*
             UpdatePlayerAction (player->playerid,
                             action->actionid,
@@ -104,8 +104,28 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
                             action->ypos,
                             action->direction);
             */
-            action++;
+            moves++;
           }
+          pBuff = (int32_t *) &(player->attacks);
+          attacks = player->attacks;
+        
+          for(int32_t j = 0; j  < player->nattacks; j++) {
+            //std::cout << "\n\tAction #:" << j;
+            //std::cout << "\n\t\tAction xpos:" << action->xpos;
+            //std::cout << "\n\t\tAction ypos:" << action->ypos;
+            //std::cout << "\n\t\tAction direction:" << action->direction;
+            /*
+            UpdatePlayerAction (player->playerid,
+                            action->actionid,
+                            action->xpos,
+                            action->ypos,
+                            action->direction);
+            */
+            attacks++;
+          }
+
+
+
           pBuff = (int32_t *)++player;
         }
         break;
@@ -113,7 +133,7 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
       case ZOMBIEH: {
         int32_t zCount = *pBuff++;
         for(int32_t i = 0; i  < zCount; i++){
-          zombie = (Zombie *)(pBuff);
+          zombie = (ZombieData *)(pBuff);
           std::cout << "\nZombie zombieid:" << zombie->zombieid;
           std::cout << "\n\tZombie xpos:" << zombie->xpos;
           std::cout << "\n\tZombie ypos:" << zombie->ypos;

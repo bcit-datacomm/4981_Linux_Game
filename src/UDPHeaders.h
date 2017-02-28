@@ -107,6 +107,7 @@ typedef struct {
 -- REVISIONS:
 -- V1, Feb 07 2017 Deisgned by IM
 -- V1, Feb 08 2017 Written by EY
+-- V1, Feb 27 2017 Changed x and y velocity to just velocity to match game logic
 --
 -- DESIGNER: Isaac Morneau
 --
@@ -116,8 +117,7 @@ typedef struct {
     -- int32_t   id - int32_t to signify the playerid
     -- float xpos - the X position`
     -- float ypos - the Y position
-    -- float xvel - the X velocity`
-    -- float yvel - the Y velocity
+    -- float vel - the velocity of the player
     -- float direction -- the direction the weapon is facing
 --------------------------------------------------------------------------*/
 typedef struct
@@ -125,8 +125,7 @@ typedef struct
 	int32_t   id;
 	float xpos;
 	float ypos;
-	float xvel;
-	float yvel;
+	float vel;
 	float direction;
 }  MoveAction;
 
@@ -158,13 +157,14 @@ typedef struct {
 }  Action;
 
 /*------------------------------------------------------------------------------
--- Struct: Player`
+-- Struct: PlayerData
 --
 -- DATE: Feb. 07, 2017
 --
 -- REVISIONS:
 -- V1, Feb 07 2017 Deisgned by IM
 -- V1, Feb 08 2017 Written by EY
+-- V1, Feb 27 2017 TEMPORARY hardcoding of action structs JA
 --
 -- DESIGNER: Isaac Morneau
 --
@@ -174,8 +174,7 @@ typedef struct {
     -- int32_t   playerid - int32_t to signify the playerid
     -- float xpos - the X position`
     -- float ypos - the Y position
-    -- float xvel - the x Velocity of the player
-    -- float yvel - the y velocity of the player
+    -- float vel - the Velocity of the player
     -- float direction -- the direction the player is going towards
     -- int32_t   health --
     -- int32_t   actionid --
@@ -183,21 +182,33 @@ typedef struct {
     -- Action * actions --
 --
 --------------------------------------------------------------------------*/
+//typedef struct {
+	//int32_t   playerid;
+	//float xpos;
+	//float ypos;
+	//float vel;
+	//float direction;
+	//int32_t   health;
+	//int32_t   actionid = ACTIONH;
+	//int32_t   nactions;
+	//Action * actions;
+//} PlayerData;
+
 typedef struct {
 	int32_t   playerid;
 	float xpos;
 	float ypos;
-	float xvel;
-	float yvel;
+	float vel;
 	float direction;
 	int32_t   health;
 	int32_t   actionid = ACTIONH;
-	int32_t   nactions;
-	Action * actions;
-} Player;
-
+	int32_t   nmoves;
+	MoveAction *moves;
+	int32_t   nattacks;
+	AttackAction *attacks;
+} PlayerData;
 /*------------------------------------------------------------------------------
--- Struct: Zombie
+-- Struct: ZombieData
 --
 -- DATE: Feb. 07, 2017
 --
@@ -224,7 +235,7 @@ typedef struct {
 	float xpos;
 	float ypos;
 	float direction;
-}  Zombie;
+}  ZombieData;
 
 /*------------------------------------------------------------------------------
 -- Struct: GameSync
@@ -250,13 +261,13 @@ typedef struct {
 --------------------------------------------------------------------------*/
 typedef struct
 {
-	  int32_t id = SYNC; //packet
+	int32_t id = SYNC; //packet
     int32_t playerheaderid = PLAYERH;
     int32_t nplayers;
-    Player * players;
+    PlayerData * players;
     int32_t zombieheaderid = ZOMBIEH;
     int32_t nzombies;
-    Zombie * zombies;
+    ZombieData * zombies;
 } GameSync;
 
 #endif

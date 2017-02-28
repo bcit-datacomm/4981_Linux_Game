@@ -30,11 +30,13 @@ typedef struct Clients{
     struct sockaddr_in *addr;
 } Client;
 
-const long long microSecPerTick = (1000 * 1000) / TICK_RATE;
-char outputPacket[OUT_PACKET_SIZE];
-int listenSocketUDP,listenSocketTCP;
-int sendSocketUDP, sendSocketTCP;
-Client *clients;
+extern const long long microSecPerTick;
+extern char outputPacket[OUT_PACKET_SIZE];
+extern int listenSocketUDP;
+extern int listenSocketTCP;
+extern int sendSocketUDP;
+extern int sendSocketTCP;
+extern Client *clients;
 
 void initSync(int sock);
 
@@ -51,15 +53,7 @@ int createSocket(bool useUDP, bool nonblocking);
 //where each client w/ both socket and user info is stored
 
 //off by default
-bool verbose = false;
+extern bool verbose;
 //logging for statuses when in verbose mode
-void logv(const char *msg, ...){
-    if(!verbose)
-        return;
-    va_list args;
-    va_start(args, msg);
-    vprintf(msg, args);
-    va_end(args);
-    fflush(stdout);
-}
+void logv(const char *msg, ...);
 #endif

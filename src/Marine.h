@@ -31,6 +31,8 @@ public:
     float getDY(); //get delta y coordinate
 
     int	getVelocity(); // get velocity of Marine movement
+    
+    auto getHealth() {return health;} // get health of Marine
 
 	void onCollision();
 

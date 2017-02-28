@@ -53,16 +53,24 @@ $(OBJS): $(SRCOBJS)
 
 server: rserver
 
-dserver: $(wildcard $(SRC)/server/*.cpp)
-	$(CXX) $(CFLAGS) $(CXXFLAGS) -g -pg $(wildcard $(SRC)/server/*.cpp) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+dserver: $(wildcard $(SRC)/server/*.cpp) $(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD)))
+	$(CXX) -Wall -pedantic -pipe -std=c++14 -g -pg $(wildcard $(SRC)/server/*.cpp) \
+		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server \
+		|| (echo "Linking failed, retrying...";$(MAKE) $(MAKEFLAGS))
+	$(CXX) -Wall -pedantic -pipe -std=c++14 -g -pg $(wildcard $(SRC)/server/*.cpp) \
+		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
 
-rserver: $(wildcard $(SRC)/server/*.cpp)
-	$(CXX) $(CFLAGS) $(CXXFLAGS) -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.cpp) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+rserver: $(wildcard $(SRC)/server/*.cpp) $(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD)))
+	$(CXX) -Wall -pedantic -pipe -std=c++14 -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.cpp) \
+		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server \
+		|| (echo "Linking failed, retrying...";$(MAKE) $(MAKEFLAGS))
+	$(CXX) -Wall -pedantic -pipe -std=c++14 -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.cpp) \
+		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean
 
 # Deletes the executable and all .o and .d files in the bin folder
-clean: |$(ODIR)
+clean: | $(ODIR)
 	$(RM) $(EXEC) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
 

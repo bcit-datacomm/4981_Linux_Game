@@ -23,6 +23,15 @@ int listen_port_udp = LISTEN_PORT_UDP;
 int listen_port_tcp = LISTEN_PORT_TCP;
 size_t client_count = CLIENT_COUNT;
 
+const long long microSecPerTick = (1000 * 1000) / TICK_RATE;
+char outputPacket[OUT_PACKET_SIZE];
+int listenSocketUDP;
+int listenSocketTCP;
+int sendSocketUDP;
+int sendSocketTCP;
+Client *clients;
+bool verbose = false;
+
 int main(int argc, char **argv) {
     int opt;
     while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
@@ -299,4 +308,15 @@ void listenUDP(int socket, unsigned long ip, unsigned short port) {
 
 int createSocket(bool useUDP, bool nonblocking) {
     return socket(AF_INET, ((useUDP) ? SOCK_DGRAM : SOCK_STREAM) | (nonblocking * SOCK_NONBLOCK), 0);
+}
+
+void logv(const char *msg, ...) {
+    if(!verbose) {
+        return;
+    }
+    va_list args;
+    va_start(args, msg);
+    vprintf(msg, args);
+    va_end(args);
+    fflush(stdout);
 }

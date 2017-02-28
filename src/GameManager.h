@@ -23,6 +23,8 @@ public:
 	void deleteMarine(unsigned int id);
 	bool addMarine(unsigned int id, Marine* newMarine);
 	Marine* getMarine(unsigned int id);
+	const auto& getAllMarines() const {return marineManager;}
+	const auto& getAllZombies() const {return zombieManager;}
 
     // Methods for creating, getting, and deleting towers from the level.
     unsigned int createTurret();
