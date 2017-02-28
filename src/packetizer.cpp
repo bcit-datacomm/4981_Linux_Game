@@ -57,12 +57,13 @@
 --------------------------------------------------------------------------*/
 void Packetizer::parse(const void * syncBuff, size_t bytesReads)
 {
-  int32_t *pBuff, *pEnd;
+  int32_t *pBuff;
+  int32_t *pEnd;
   PlayerData * player;
   MoveAction * moves;
   AttackAction * attacks;
   ZombieData * zombie;
-  pBuff = reinterpret_cast<int32_t *>(syncBuff); // cast the buff to read 4 bytes at a time
+  pBuff = reinterpret_cast<int32_t *>(const_cast<void *>(syncBuff)); // cast the buff to read 4 bytes at a time
 
   if (*pBuff++ != SYNC) return; // Check that it is a sync pack
 

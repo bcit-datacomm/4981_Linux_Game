@@ -1,6 +1,9 @@
-CXXFLAGS := -Wall -pedantic -pipe -std=c++14 
+BASEFLAGS := -Wall -pedantic -pipe -std=c++14 
+DEBUGFLAGS := -g -pg
+RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG
 CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 CLIBSSERVER := -pthread -fopenmp
+CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
@@ -11,6 +14,9 @@ SRCWILD := $(wildcard $(SRC)/*.cpp)
 HEADWILD := $(wildcard $(HEAD)/*.h)
 EXEC := $(ODIR)/$(APPNAME)
 DEPS := $(EXEC).d
+
+release: all
+debug: all
 
 all: $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))
 # Command takes all bin .o files and creates an executable called chess in the bin folder
@@ -33,18 +39,15 @@ $(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR)
 
 # Add the dependencies into make and don't throw an error if it doesn't exist
 # Also don't generate dependency file during a clean
-ifeq (,$(filter server clean, $(MAKECMDGOALS)))
+ifeq (,$(filter clean, $(MAKECMDGOALS)))
 -include $(DEPS)
 endif
 
-ifneq (,$(findstring debug,$(MAKECMDGOALS)))
-	CXXFLAGS += -g -pg
+ifeq (,$(filter debug dserver, $(MAKECMDGOALS)))
+$(eval CXXFLAGS := $(BASEFLAGS) $(RELEASEFLAGS))
 else
-	CXXFLAGS += -O3 -march=native -flto -DNDEBUG
+$(eval CXXFLAGS := $(BASEFLAGS) $(DEBUGFLAGS))
 endif
-
-release: all
-debug: all
 
 # Target is any bin .o file, prereq is the equivalent src .cpp file
 $(OBJS): $(SRCOBJS)
@@ -53,19 +56,13 @@ $(OBJS): $(SRCOBJS)
 
 server: rserver
 
-dserver: $(wildcard $(SRC)/server/*.cpp) $(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD)))
-	$(CXX) -Wall -pedantic -pipe -std=c++14 -g -pg $(wildcard $(SRC)/server/*.cpp) \
-		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server \
-		|| (echo "Linking failed, retrying...";$(MAKE) $(MAKEFLAGS))
-	$(CXX) -Wall -pedantic -pipe -std=c++14 -g -pg $(wildcard $(SRC)/server/*.cpp) \
-		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+dserver:  $(wildcard $(SRC)/server/*.cpp) $(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD)))
+	$(CXX) $(CXXFLAGS) $(wildcard $(SRC)/server/*.cpp) \
+		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server 
 
 rserver: $(wildcard $(SRC)/server/*.cpp) $(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD)))
-	$(CXX) -Wall -pedantic -pipe -std=c++14 -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.cpp) \
-		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server \
-		|| (echo "Linking failed, retrying...";$(MAKE) $(MAKEFLAGS))
-	$(CXX) -Wall -pedantic -pipe -std=c++14 -O3 -march=native -flto -DNDEBUG $(wildcard $(SRC)/server/*.cpp) \
-		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server
+	$(CXX) $(CXXFLAGS) $(wildcard $(SRC)/server/*.cpp) \
+		$(filter-out $(ODIR)/main.o, $(patsubst $(SRCOBJS), $(OBJS), $(SRCWILD))) $(CLIBS) $(CLIBSSERVER) -o $(CURDIR)/$(ODIR)/server 
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean
