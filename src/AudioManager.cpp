@@ -76,24 +76,24 @@ void AudioManager::loadFiles(){
 
     ////CHUNKS
     //marine
-    loadChunk(EFX_PDROP01);
-    loadChunk(EFX_PDROP02);
-    loadChunk(EFX_PPICK01);
-    loadChunk(EFX_PPICK02);
+    loadEffect(EFX_PDROP01);
+    loadEffect(EFX_PDROP02);
+    loadEffect(EFX_PPICK01);
+    loadEffect(EFX_PPICK02);
 
-    loadChunk(EFX_PGRUNT01);
-    loadChunk(EFX_PDEATH01);
+    loadEffect(EFX_PGRUNT01);
+    loadEffect(EFX_PDEATH01);
 
     //weapon
-    loadChunk(EFX_WLPISTOL);
-    loadChunk(EFX_WLRIFLE);
+    loadEffect(EFX_WLPISTOL);
+    loadEffect(EFX_WLRIFLE);
 
-    loadChunk(EFX_WRELOAD01);
-    loadChunk(EFX_WTURRET01);
+    loadEffect(EFX_WRELOAD01);
+    loadEffect(EFX_WTURRET01);
 
     //zombie
-    loadChunk(EFX_ZGROAN01);
-    loadChunk(EFX_ZGRUNT01);
+    loadEffect(EFX_ZGROAN01);
+    loadEffect(EFX_ZGRUNT01);
 
 }
 
