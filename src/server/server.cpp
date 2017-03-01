@@ -14,9 +14,10 @@
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <cstdarg>
-//#include <stdbool.h>
 
+#include "../UDPHeaders.h"
 #include "server.h"
+#include "servergamestate.h"
 
 //declared here so they can be overriden with flags at run time as needed
 int listen_port_udp = LISTEN_PORT_UDP;
@@ -192,6 +193,7 @@ void alarmHandler(int signo) {
     startTimer();
     genOutputPacket();
     sendSyncPacket(sendSocketUDP);
+    clearMoveActions();
 }
 
 void listenForPackets(const struct sockaddr_in servaddr) {
@@ -242,6 +244,9 @@ void listenForPackets(const struct sockaddr_in servaddr) {
 
 void processPacket(const char *data) {
     //Actual implementation TBD
+    const MoveAction *ma = reinterpret_cast<const MoveAction *>(data);
+    updateMarine(*ma);
+    saveMoveAction(ma->id, *ma);
 }
 
 void genOutputPacket() {
