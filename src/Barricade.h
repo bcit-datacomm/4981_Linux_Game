@@ -11,29 +11,30 @@
 #include <SDL2/SDL.h>
 #include "Window.h"
 
+const int BARRICADE_WIDTH = 100;
+const int BARRICADE_HEIGHT = 100;
+
 class Barricade : public Object {
 public:
+    Barricade();
+    virtual ~Barricade();
 
-	void move(float, float, float, float, CollisionHandler*); // Moves Zombie
+    void move(float, float, float, float, CollisionHandler*); // Moves Zombie
 
-	void onCollision();
+    void onCollision();
 
-	void collidingProjectile(int damage);
+    void collidingProjectile(int damage);
 
-	void setAngle(double a);//sets angle of sprite to
+    void setAngle(double a);//sets angle of sprite to
 
-	double getAngle(); //returns sprites angle
+    double getAngle(); //returns sprites angle
 
-	bool isPlaceable();
+    bool isPlaceable();
 
-	bool checkPlaceablePosition(float, float, float, float, CollisionHandler*);
-
-	Barricade();
-	virtual ~Barricade();
+    bool checkPlaceablePosition(float, float, float, float, CollisionHandler*);
 
 private:
     double angle = 180.0;
-    int velocity = 200; // velocity of Zombie movement
     int health = 100;
     int state; //used to select sprite to display
     bool boolPlaceable = false;

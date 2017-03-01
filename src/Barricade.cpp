@@ -4,22 +4,7 @@
 #include <random>
 #define PI 3.14159265
 
-Barricade::Barricade()  {
-	objectSpriteClips[0].x = 0;
-	objectSpriteClips[0].y = 0;
-	objectSpriteClips[0].w = 100;
-	objectSpriteClips[0].h = 100;
-	this->movementHitBox.setRect(objectSpriteClips[0]);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->movementHitBox.attached = this;
-	this->projectileHitBox.setRect(objectSpriteClips[0]);
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.attached = this;
-	this->damageHitBox.setRect(objectSpriteClips[0]);
-	this->damageHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.attached = this;
-
-
+Barricade::Barricade() : Object(BARRICADE_WIDTH, BARRICADE_HEIGHT) {
 	printf("Create Barricade\n");
 }
 
@@ -70,7 +55,7 @@ void Barricade::onCollision() {
 }
 
 void Barricade::collidingProjectile(int damage) {
-	this->health = health - damage;
+	this->health -= damage;
 }
 
 //sets the angle of zombie's sprite

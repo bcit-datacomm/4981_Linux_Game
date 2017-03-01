@@ -2,11 +2,9 @@
 #include "Marine.h"
 #include<random>
 
-Base::Base() {
+Base::Base() : Object(BASE_WIDTH, BASE_HEIGHT) {
 	this->setX((MAP_WIDTH / 2) - BASE_WIDTH);
 	this->setY((MAP_HEIGHT / 2) - BASE_HEIGHT);
-	this->setHeight(BASE_HEIGHT);
-	this->setWidth(BASE_WIDTH);
 
 	printf("Create Base\n");
 }

@@ -5,17 +5,17 @@
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie() : Movable(ZOMBIE_VELOCITY) {
-	zombieSpriteClips[0].x = 0;
-	zombieSpriteClips[0].y = 0;
-	zombieSpriteClips[0].w = ZOMBIE_WIDTH;
-	zombieSpriteClips[0].h = ZOMBIE_HEIGHT;
-	this->movementHitBox.setRect(zombieSpriteClips[0]);
+	spriteClips[0].x = 0;
+	spriteClips[0].y = 0;
+	spriteClips[0].w = ZOMBIE_WIDTH;
+	spriteClips[0].h = ZOMBIE_HEIGHT;
+	this->movementHitBox.setRect(spriteClips[0]);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->movementHitBox.attached = this;
-	this->projectileHitBox.setRect(zombieSpriteClips[0]);
+	this->projectileHitBox.setRect(spriteClips[0]);
 	this->projectileHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.attached = this;
-	this->damageHitBox.setRect(zombieSpriteClips[0]);
+	this->damageHitBox.setRect(spriteClips[0]);
 	this->damageHitBox.move(this->getX(), this->getY());
 	this->damageHitBox.attached = this;
 	this->setAngle(this->getRandomAngle());

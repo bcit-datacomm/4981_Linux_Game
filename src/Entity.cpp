@@ -23,11 +23,17 @@ Entity::~Entity() {
 // Set x coordinate
 void Entity::setX(float px) {
 	x = px;
+	this->movementHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 }
 
 // Set y coordinate
 void Entity::setY(float py) {
 	y = py;
+	this->movementHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.move(this->getX(), this->getY());
 }
 
 // Get x coordinate

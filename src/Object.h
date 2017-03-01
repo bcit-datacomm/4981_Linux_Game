@@ -8,17 +8,17 @@
 class Object : public Entity {
 public:
 
-	Object();
-	virtual ~Object();
+    Object(int w = 0, int h = 0);
+    virtual ~Object();
 
-	void setHeight(int);
-	void setWidth(int);
-	int getHeight();
-	int getWidth();
+    void setHeight(int);
+    void setWidth(int);
+    int getHeight();
+    int getWidth();
 
 private:
-	int height; // Height of object
-	int width; // Width of object
+    int width; // Width of object
+    int height; // Height of object
 };
 
 #endif

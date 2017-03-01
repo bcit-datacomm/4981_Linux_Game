@@ -13,8 +13,8 @@
 //#include <SDL2/SDL.h>
 
 //TODO :  change later.
-const int BASE_HEIGHT = 500;
-const int BASE_WIDTH = 500;
+const int BASE_HEIGHT = 100;
+const int BASE_WIDTH = 100;
 const int MAP_HEIGHT = 2000;
 const int MAP_WIDTH = 2000;
 
@@ -22,17 +22,17 @@ typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
-	void onCollision();
+    Base();
+    virtual ~Base();
 
-	void collidingProjectile(int damage);
+    void onCollision();
 
-	Point getSpawnPoint();
+    void collidingProjectile(int damage);
 
-	Base();
-	virtual ~Base();
-
+    Point getSpawnPoint();
+   
 private:
-	int health = 100;
+    int health = 100;
 
 };
 #endif

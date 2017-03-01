@@ -1,9 +1,19 @@
 #include "Object.h"
 
-Object::Object() {
-	//this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+Object::Object(int w, int h) : width(w), height(h) {
+	spriteClips[0].x = 0;
+	spriteClips[0].y = 0;
+	spriteClips[0].w = w;
+	spriteClips[0].h = h;
+	this->movementHitBox.setRect(spriteClips[0]);
+	this->movementHitBox.move(this->getX(), this->getY());
+	this->movementHitBox.attached = this;
+	this->projectileHitBox.setRect(spriteClips[0]);
+	this->projectileHitBox.move(this->getX(), this->getY());
+	this->projectileHitBox.attached = this;
+	this->damageHitBox.setRect(spriteClips[0]);
+	this->damageHitBox.move(this->getX(), this->getY());
+	this->damageHitBox.attached = this;
 }
 
 Object::~Object() {
