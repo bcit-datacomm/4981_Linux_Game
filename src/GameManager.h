@@ -46,7 +46,7 @@ public:
 	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
 
-    std::map<unsigned int, Zombie*>* getZombies();
+    const std::map<unsigned int, Zombie*>* getZombies();
 
 private:
     static GameManager *sInstance;

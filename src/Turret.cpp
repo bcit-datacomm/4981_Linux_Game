@@ -82,7 +82,7 @@ bool Turret::healthCheckTurret() {
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined
 bool Turret::targetScanTurret() {
-    std::map<unsigned int, Zombie*>* mapZombies
+    const std::map<unsigned int, Zombie*>* mapZombies
      = GameManager::instance()->getZombies();
 
     unsigned int closestZombieId = 0;
@@ -90,7 +90,7 @@ bool Turret::targetScanTurret() {
 
     // Detect zombies;
     // TODO: Improve the algorithm that selects zombie(s) to attack.
-    std::map<unsigned int, Zombie*> detectList;
+    bool bDetect = false;
     for (const auto& item : *mapZombies)
     {
         const auto& zombie = item.second;
@@ -104,25 +104,25 @@ bool Turret::targetScanTurret() {
 
         if (sqrDist < sqrRange)
         {
-            detectList.insert(
-                std::pair<unsigned int, Zombie*>(item.first, item.second));
-
             if (sqrDist < closestZombieDist)
             {
                 closestZombieId = item.first;
                 closestZombieDist = sqrDist;
+                bDetect = true;
             }
         }
     }
 
     // TODO: Attack a zombie;
-    if (detectList.empty())
+    if (!bDetect)
+        return false;
+    
+    const auto& target = mapZombies->find(closestZombieId);
+    if (target == mapZombies->end())
         return false;
 
-    const auto& target = detectList[closestZombieId];
-
-    float deltaX = this->getX() - target->getX();
-    float deltaY = this->getY() - target->getY();
+    float deltaX = this->getX() - target->second->getX();
+    float deltaY = this->getY() - target->second->getY();
 
     double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * - 1;
     this->setAngle(angle);

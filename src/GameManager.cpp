@@ -72,6 +72,11 @@ void GameManager::updateZombies(const float& delta) {
 
 // Update turrets.
 void GameManager::updateTurrets(const float& delta) {
+	static bool bi_frame = false;
+	bi_frame = !bi_frame;
+	if (!bi_frame)
+		return;
+
 	for (const auto& t : this->turretManager) {
 		//z.second->generateRandomMove();
 		t.second->targetScanTurret();
@@ -271,6 +276,6 @@ void GameManager::updateCollider() {
 
 }
 
-std::map<unsigned int, Zombie*>* GameManager::getZombies() {
+const std::map<unsigned int, Zombie*>* GameManager::getZombies() {
     return &zombieManager;
  }
