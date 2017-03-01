@@ -94,8 +94,8 @@ bool Turret::targetScanTurret() {
      for (auto const& item : *mapZombies)
      {
          auto const& zombie = item.second;
-         float zombieX = zombie->getDX();
-         float zombieY = zombie->getDY();
+         float zombieX = zombie->getX();
+         float zombieY = zombie->getY();
 
          float xDelta = zombieX - this->getX();
          float yDelta = zombieY - this->getY();
