@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include "Game.hpp"
+#include "Game.h"
 
 
-int main()
-{
+int main() {
+	
 	Game* game = new Game();
 	
-	printf( "loading...\n");
+	printf( "Loading...\n");
 	
 	//Start up SDL and create window
 	if(game->init() && game->loadMedia())
 	{
+		printf( "Running...\n");
+	
 		game->run();
-	}
-	else
-	{
+		
+	} else {
 		printf( "Failed to start!\n" );
 	}
 
