@@ -97,7 +97,7 @@ typedef struct {
 	float xpos;
 	float ypos;
 	float direction;
-} AttackAction;
+} __attribute__((packed, aligned(1))) AttackAction;
 
 /*------------------------------------------------------------------------------
 -- Struct: MoveAction
@@ -127,7 +127,7 @@ typedef struct
 	float ypos;
 	float vel;
 	float direction;
-}  MoveAction;
+} __attribute__((packed, aligned(1))) MoveAction;
 
 /*------------------------------------------------------------------------------
 -- Struct: Action
@@ -213,8 +213,9 @@ typedef struct {
 -- DATE: Feb. 07, 2017
 --
 -- REVISIONS:
--- V1, Feb 07 2017 Deisgned by IM
--- V1, Feb 08 2017 Written by EY
+-- V1,  Feb 07 2017 Deisgned by IM
+-- V1,  Feb 08 2017 Written by EY
+-- V1.2 Feb 09 2017 Changes by JA
 --
 -- DESIGNER: Isaac Morneau
 --
