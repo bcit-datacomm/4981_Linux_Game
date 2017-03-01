@@ -18,6 +18,7 @@ Zombie::Zombie() : Movable(ZOMBIE_VELOCITY) {
 	this->damageHitBox.setRect(spriteClips[0]);
 	this->damageHitBox.move(this->getX(), this->getY());
 	this->damageHitBox.attached = this;
+
 	this->setAngle(this->getRandomAngle());
 	printf("Create Zombie\n");
 }

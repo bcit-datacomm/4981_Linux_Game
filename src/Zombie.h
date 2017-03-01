@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 #include "Window.h"
 #include "Movable.h"
+
 const int ZOMBIE_HEIGHT = 125;
 const int ZOMBIE_WIDTH = 75;
 
