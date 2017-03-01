@@ -70,7 +70,8 @@ void GameManager::updateZombies(const float& delta) {
 	}
 }
 
-// Update turrets.
+// Update turret actions.
+// Jamie, 2017-03-01.
 void GameManager::updateTurrets(const float& delta) {
 	static bool bi_frame = false;
 	bi_frame = !bi_frame;
@@ -276,6 +277,8 @@ void GameManager::updateCollider() {
 
 }
 
+// returns the list of zombies.
+// Jamie, 2017-03-01.
 const std::map<unsigned int, Zombie*>* GameManager::getZombies() {
     return &zombieManager;
- }
+}

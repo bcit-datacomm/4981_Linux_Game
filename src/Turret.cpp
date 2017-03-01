@@ -116,7 +116,7 @@ bool Turret::targetScanTurret() {
     // TODO: Attack a zombie;
     if (!bDetect)
         return false;
-    
+
     const auto& target = mapZombies->find(closestZombieId);
     if (target == mapZombies->end())
         return false;
@@ -131,7 +131,9 @@ bool Turret::targetScanTurret() {
     return true;
 }
 
-inline float Turret::getRange()
+// returns the turret's range.
+// Jamie, 2017-03-01.
+inline float Turret::getRange() const
 {
     return this->range;
 }

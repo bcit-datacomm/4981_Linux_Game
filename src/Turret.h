@@ -52,7 +52,7 @@ class Turret : public Entity {
 
 	void removeTurret(); // removes the turret
 
-	float getRange();
+	float getRange() const; // returns the turret's range.
 
 	Turret();
 	virtual ~Turret();
@@ -67,7 +67,7 @@ class Turret : public Entity {
 	double angle = 0.0; // turret direction angle in which it is pointing
 	int health = 200; // turret health pool
 	int ammo = 100; // turret ammo pool
-	float range = 300.0f;
+	float range = 300.0f; // turret's range.
 
 };
 
