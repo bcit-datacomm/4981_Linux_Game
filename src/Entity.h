@@ -19,9 +19,9 @@ public:
 
     void setY(float py); //set y coordinate
 
-	float getX(); // get x coordinate
+	float getX() const; // get x coordinate
 
-    float getY(); // get y coordinate
+    float getY() const; // get y coordinate
 
     HitBox movementHitBox;	// Hit box for movement
     HitBox projectileHitBox; // Hit box for projectiles

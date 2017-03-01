@@ -24,3 +24,11 @@ int Object::getHeight(){
 int Object::getWidth(){
 	return this->width;
 }
+
+void Object::onCollision() {
+	// Do nothing for now
+}
+
+void Object::collidingProjectile(int damage) {
+    //nothing for now
+}

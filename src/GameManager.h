@@ -9,6 +9,14 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
+#include "WeaponDrop.h"
+#include <memory>
+
+//just for tesing weapon drop
+#include "Weapon.h"
+#include "HandGun.h"
+#include "Rifle.h"
+#include "ShotGun.h"
 
 class GameManager {
 public:
@@ -21,13 +29,13 @@ public:
 	unsigned int createMarine();
 	bool createMarine(SDL_Renderer* gRenderer, float x, float y);
 	void deleteMarine(unsigned int id);
-	bool addMarine(unsigned int id, Marine* newMarine);
+	bool addMarine(unsigned int id, Marine& newMarine);
 	Marine* getMarine(unsigned int id);
 
     // Methods for creating, getting, and deleting towers from the level.
     unsigned int createTurret();
     void deleteTurret(unsigned int id);
-    bool addTurret(unsigned int id, Turret* newTurret);
+    bool addTurret(unsigned int id, Turret& newTurret);
 	bool createTurret(SDL_Renderer* gRenderer, float x, float y) ;
     Turret* getTurret(unsigned int id);
 
@@ -38,23 +46,28 @@ public:
 	void updateMarines(const float& delta); // Update marine actions
 	void updateZombies(const float& delta); // Update zombie actions
 
-	unsigned int addObject(Object*);
+	unsigned int addObject(Object&);
 	void deleteObject(unsigned int id);
-	
-	unsigned int addZombie(Zombie*);
+
+	unsigned int addZombie(Zombie&);
 	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
-	
+
+    unsigned int addWeaponDrop(WeaponDrop& newWeaponDrop);
+    bool createWeaponDrop(SDL_Renderer* gRenderer, float x, float y);
+    void deleteWeaponDrop(unsigned int id);
 
 private:
     static GameManager *sInstance;
 
 	GameManager();
 	CollisionHandler* collisionHandler = NULL;
-	std::map<unsigned int, Marine*> marineManager;
-	std::map<unsigned int, Object*> objectManager;
-	std::map<unsigned int, Zombie*> zombieManager;
-    std::map<unsigned int, Turret*> turretManager;
+    std::unique_ptr<WeaponDrop> wdPointer;
+	std::map<unsigned int, Marine> marineManager;
+	std::map<unsigned int, Object> objectManager;
+	std::map<unsigned int, Zombie> zombieManager;
+    std::map<unsigned int, Turret> turretManager;
+    std::map<unsigned int, WeaponDrop> weaponDropManager;
 };
 
 

@@ -12,7 +12,7 @@ void Player::setControl(Marine* newControl) {
 	this->marine = newControl;
 }
 
-void Player::handleMouseUpdate(Window* w) {
+void Player::handleMouseUpdate(Window& w) {
 	int mouseX;
     int mouseY;
     int mouseDeltaX;
@@ -20,12 +20,11 @@ void Player::handleMouseUpdate(Window* w) {
     double radianConvert = 180.0000;
 
     SDL_GetMouseState(&mouseX, &mouseY);
-    mouseDeltaX = w->getWidth()/2 - mouseX;
-    mouseDeltaY = w->getHeight()/2 - mouseY;
+    mouseDeltaX = w.getWidth()/2 - mouseX;
+    mouseDeltaY = w.getHeight()/2 - mouseY;
 
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
 	this->marine->setAngle(angle);
-
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){
@@ -101,6 +100,14 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 		this->marine->inventory.switchCurrent(1);
 	} else if (state[SDL_SCANCODE_3]){
 		this->marine->inventory.switchCurrent(2);
+	}
+
+	//Weapon input
+	if(state[SDL_SCANCODE_R]){
+		this->marine->inventory.getCurrent()->reloadClip();
+	}
+	if(state[SDL_SCANCODE_E]){
+		this->marine->inventory.pickUp();
 	}
 	this->marine->setDY(y);
 	this->marine->setDX(x);

@@ -31,12 +31,12 @@ void Entity::setY(float py) {
 }
 
 // Get x coordinate
-float Entity::getX() {
+float Entity::getX() const{
 	return x;
 }
 
 // Get y coordinate
-float Entity::getY() {
+float Entity::getY() const{
 	return y;
 }
 

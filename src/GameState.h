@@ -10,7 +10,7 @@ public:
 	virtual void loop() = 0;
 
 	// Pointer to game parent
-	Game* game = NULL;
+	Game& game;
 
 	// Event handler
 	SDL_Event event;
@@ -18,7 +18,7 @@ public:
 	//Main loop flag
 	bool play = true;
 
-	GameState(Game* g) { this->game = g; };
+	GameState(Game& g): game(g){};
 	virtual ~GameState() {};
 
 private:

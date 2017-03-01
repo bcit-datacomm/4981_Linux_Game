@@ -15,6 +15,8 @@ public:
 	void setWidth(int);
 	int getHeight();
 	int getWidth();
+    void onCollision();
+    void collidingProjectile(int damage);
 
 private:
 	int height; // Height of object

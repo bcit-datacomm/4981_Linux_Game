@@ -5,16 +5,17 @@
 #include <SDL2/SDL_ttf.h>
 #include "Window.h"
 
-class GameState; 
+class GameState;
 
 class Game {
 public:
+    Game():window(){};
 
 	// Game window
-	Window* window = NULL;
+	Window window;
 	SDL_Renderer* renderer = NULL;
 	SDL_Surface* screenSurface = NULL;
-	
+
 	unsigned int stateID = 1; // Starting game state id
 
 	bool init();
@@ -24,11 +25,11 @@ public:
 	void run();
 	void loadState();
 	void close();
-	
+
 private:
 
 	// Current game state
-	GameState* state = NULL;
+	GameState* state = NULL;//stays as a pointer cause we need to be able to switch between match and menu states
 
 };
 

@@ -11,6 +11,11 @@
 #include "LTexture.h"
 #include "Window.h"
 
+GameStateMenu::GameStateMenu(Game& g): GameState(g){
+
+}
+
+
 bool GameStateMenu::load() {
 
 	bool success = true;
@@ -78,7 +83,7 @@ void GameStateMenu::sync() {
 void GameStateMenu::handle() {
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
-		this->game->window->handleEvent(this->event);
+		this->game.window.handleEvent(this->event);
    		switch( this->event.type ) {
       	case SDL_KEYDOWN:
         	switch( this->event.key.keysym.sym ) {
@@ -105,44 +110,43 @@ void GameStateMenu::handle() {
 }
 
 void GameStateMenu::update(const float& delta) {
-	
+
 	// TEMP: Skip to GameStateMatch
 	// Remove this when working on the main menu
-	this->game->stateID = 2;
+	this->game.stateID = 2;
 	play = false;
-	
+
 }
 
 void GameStateMenu::render() {
 	//Only draw when not minimized
-	if ( !this->game->window->isMinimized() ) {
+	if ( !this->game.window.isMinimized() ) {
 
 		//Clear screen
-		SDL_SetRenderDrawColor( this->game->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-		SDL_RenderClear( this->game->renderer );
-	
+		SDL_SetRenderDrawColor( this->game.renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+		SDL_RenderClear( this->game.renderer );
+
 		SDL_Color textColor = { 0, 0, 0, 255 };
 
 		//Render text
 		if ( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
-											  textColor, this->game->renderer, this->frameFont ) ) {
+											  textColor, this->game.renderer, this->frameFont ) ) {
 			printf( "Unable to render FPS texture!\n" );
 		}
-		
-		this->frameFPSTextTexture.render(this->game->renderer,
-								( this->game->window->getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
-		
+
+		this->frameFPSTextTexture.render(this->game.renderer,
+								( this->game.window.getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
+
 		//Update screen
-		SDL_RenderPresent( this->game->renderer );
+		SDL_RenderPresent( this->game.renderer );
 	}
 }
 
 GameStateMenu::~GameStateMenu() {
-	
+
 	// Free texture and font
 	this->frameFPSTextTexture.free();
 	TTF_CloseFont(this->frameFont);
 	this->frameFont = NULL;
 
 }
- 

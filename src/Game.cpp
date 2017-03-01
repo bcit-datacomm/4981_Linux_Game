@@ -9,6 +9,10 @@
 #include "GameStateMatch.h"
 #include "GameStateMenu.h"
 #include "Window.h"
+#include "Player.h"
+#include "Base.h"
+#include "Level.h"
+#include "Camera.h"
 
 
 void Game::run() {
@@ -30,11 +34,13 @@ void Game::loadState() {
 	switch(this->stateID) {
 		case 1:
 			printf("Menu State\n");
-			this->state = new GameStateMenu(this);
+			this->state = new GameStateMenu(*this);
 			break;
 		case 2:
 			printf("Match State\n");
-			this->state = new GameStateMatch(this);
+
+			this->state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
+
 			break;
 		default:
 			break;
@@ -58,13 +64,13 @@ bool Game::init() {
 		}
 
 		//Create window
-		this->window = new Window();
-		if ( !this->window->init() ) {
+		this->window = Window();
+		if ( !this->window.init() ) {
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
 		} else {
 			//Create renderer for window
-			this->renderer = this->window->createRenderer();
+			this->renderer = this->window.createRenderer();
 			if ( this->renderer  == NULL ) {
 				printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
 				success = false;
@@ -79,7 +85,7 @@ bool Game::init() {
 					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
 					success = false;
 				} else {
-					this->screenSurface = this->window->getScreenSurface();
+					this->screenSurface = this->window.getScreenSurface();
 				}
 
 				 //Initialize SDL_ttf
@@ -94,7 +100,7 @@ bool Game::init() {
 					success = false;
 				}
 
-		 		this->screenSurface = this->window->getScreenSurface();
+		 		this->screenSurface = this->window.getScreenSurface();
 
 			}
 		}
@@ -107,7 +113,7 @@ bool Game::loadMedia() {
 	//Loading success flag
 	bool success = true;
 
-	
+
 	// Load graphics, audio, and fonts here
 
 	return success;
@@ -132,7 +138,7 @@ SDL_Surface* Game::loadSurface( std::string path ) {
 		//Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
 	}
-	
+
 	return optimizedSurface;
 }
 
@@ -165,8 +171,7 @@ void Game::close() {
 
 	//Destroy window
 	SDL_DestroyRenderer( this->renderer );
-	this->window->free();
-	this->window = NULL;
+	this->window.free();
 	this->renderer = NULL;
 
 	//Quit SDL subsystems

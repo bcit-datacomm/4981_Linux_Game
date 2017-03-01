@@ -12,7 +12,7 @@ public:
 
 	void move(float x, float y);
 	void setRect(const SDL_Rect rect);
-	const SDL_Rect& getRect();
+	const SDL_Rect& getRect() const;
 
 	void setFriendly(bool isFriendly);
 	bool isPlayerFriendly();

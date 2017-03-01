@@ -16,15 +16,15 @@ public:
 
     void setVelocity(int pvel); // set velocity of Marine movement
 
-    float getDX(); // get delta x coordinate
+    float getDX() const; // get delta x coordinate
 
-    float getDY(); //get delta y coordinate
+    float getDY() const; //get delta y coordinate
 
-    int	getVelocity(); // get velocity of Marine movement
+    int	getVelocity() const; // get velocity of Marine movement
 
     void setAngle(double a);//sets angle of sprite to
 
-    double getAngle(); //returns sprites angle
+    double getAngle() const; //returns sprites angle
 private:
     float dx = 0; // delta x coordinat
     float dy = 0; //delta ycoordinate

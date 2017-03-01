@@ -1,9 +1,9 @@
 #include "Movable.h"
 
 // Move Movable by x and y amount
-void Movable::move(float moveX, float moveY, CollisionHandler* ch) {
+void Movable::move(float moveX, float moveY, CollisionHandler* ch){
 	//Move the Movable left or right
-	this->setX(this->getX()+moveX);
+	this->setX(this->getX()+ moveX);
 	this->movementHitBox.move(this->getX(), this->getY());
 	this->projectileHitBox.move(this->getX(), this->getY());
 	this->damageHitBox.move(this->getX(), this->getY());
@@ -46,17 +46,17 @@ void Movable::setVelocity(int pvel) {
 }
 
 // Get delta x coordinate
-float Movable::getDX() {
+float Movable::getDX() const{
 	return dx;
 }
 
 // Get delta y coordinate
-float Movable::getDY() {
+float Movable::getDY() const{
 	return dy;
 }
 
 // Get velocity of Movable movement
-int Movable::getVelocity() {
+int Movable::getVelocity() const{
 	return velocity;
 }
 
@@ -66,6 +66,6 @@ void Movable::setAngle(double a){
 }
 
 //returns the angle of the player's Movable sprite
-double Movable::getAngle(){
+double Movable::getAngle() const{
     return angle;
 }

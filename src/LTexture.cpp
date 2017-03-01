@@ -101,13 +101,13 @@ void LTexture::setBlendMode( SDL_BlendMode blending ) {
 	//Set blending function
 	SDL_SetTextureBlendMode( mTexture, blending );
 }
-		
+
 void LTexture::setAlpha( Uint8 alpha ) {
 	//Modulate texture alpha
 	SDL_SetTextureAlphaMod( mTexture, alpha );
 }
 
-void LTexture::render(SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip ) {
+void LTexture::render(SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip ) const{
 	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
 
@@ -126,11 +126,10 @@ void LTexture::setDimensions(int w, int h) {
 	mHeight = h;
 }
 
-int LTexture::getWidth() {
+int LTexture::getWidth() const{
 	return mWidth;
 }
 
-int LTexture::getHeight() {
+int LTexture::getHeight() const{
 	return mHeight;
 }
-

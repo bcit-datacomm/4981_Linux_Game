@@ -13,6 +13,7 @@
 #include "Zombie.h"
 #include "GameManager.h"
 #include "CollisionHandler.h"
+#include "Window.h"
 
 class GameStateMatch : public GameState {
 public:
@@ -20,13 +21,11 @@ public:
 	virtual bool load();
 	virtual void loop();
 
-	GameStateMatch(Game* g) : GameState(g) {};
+	GameStateMatch(Game& g, int gameWidth, int gameHeight);
+
 	virtual ~GameStateMatch();
 
-	Player* player = NULL;
-	Level* level = NULL;
-	Camera* camera = NULL;
-	Base* base = NULL;
+
 
 	GameManager* gameManager = NULL;
 
@@ -36,6 +35,11 @@ public:
 	LTexture frameFPSTextTexture;
 
 private:
+
+    Player player;
+	Level level;
+	Base base;
+    Camera camera;
 
 	virtual void sync();
 	virtual void handle();

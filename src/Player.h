@@ -12,7 +12,7 @@ class Player {
 public:
 
 	void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-	void handleMouseUpdate(Window* w);
+	void handleMouseUpdate(Window& w);
 
 	void setControl(Marine* newControl);
 
@@ -31,7 +31,6 @@ public:
 	Marine* marine = NULL;
 
 private:
-
 
 };
 

@@ -2,18 +2,18 @@
 
 
 HitBox::HitBox() {
-	
+
 }
 
 HitBox::~HitBox() {
-	
+
 }
 
-const SDL_Rect& HitBox::getRect() {
-	return this->rect;	
+const SDL_Rect& HitBox::getRect() const{
+	return this->rect;
 }
 
-void HitBox::move(float x, float y) {
+void HitBox::move(float x, float y){
 	this->rect.x = x;
 	this->rect.y = y;
 }
