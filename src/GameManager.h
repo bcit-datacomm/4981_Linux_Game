@@ -37,6 +37,7 @@ public:
 	void updateCollider(); // Updates CollisionHandler
 	void updateMarines(const float& delta); // Update marine actions
 	void updateZombies(const float& delta); // Update zombie actions
+    void updateTurrets(const float& delta); // Update turret actions
 
 	unsigned int addObject(Object*);
 	void deleteObject(unsigned int id);

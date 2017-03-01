@@ -69,6 +69,15 @@ void GameManager::updateZombies(const float& delta) {
 		z.second->move((z.second->getDX()*delta), (z.second->getDY()*delta), this->collisionHandler);
 	}
 }
+
+// Update turrets.
+void GameManager::updateTurrets(const float& delta) {
+	for (const auto& t : this->turretManager) {
+		//z.second->generateRandomMove();
+		t.second->targetScanTurret();
+	}
+}
+
 // Create marine add it to manager, returns marine id
 unsigned int GameManager::createMarine() {
 	unsigned int id = 0;

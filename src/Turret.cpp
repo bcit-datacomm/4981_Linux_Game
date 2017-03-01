@@ -85,38 +85,47 @@ bool Turret::targetScanTurret() {
     std::map<unsigned int, Zombie*>* mapZombies
      = GameManager::instance()->getZombies();
 
-     unsigned int closestZombieId = 0;
-     float closestZombieDist = std::numeric_limits<float>::max();
+    unsigned int closestZombieId = 0;
+    float closestZombieDist = std::numeric_limits<float>::max();
 
-     // Detect zombies;
-     // TODO: Improve the algorithm that selects zombie(s) to attack.
-     std::map<unsigned int, Zombie*> detectList;
-     for (auto const& item : *mapZombies)
-     {
-         auto const& zombie = item.second;
-         float zombieX = zombie->getX();
-         float zombieY = zombie->getY();
+    // Detect zombies;
+    // TODO: Improve the algorithm that selects zombie(s) to attack.
+    std::map<unsigned int, Zombie*> detectList;
+    for (const auto& item : *mapZombies)
+    {
+        const auto& zombie = item.second;
+        float zombieX = zombie->getX();
+        float zombieY = zombie->getY();
 
-         float xDelta = zombieX - this->getX();
-         float yDelta = zombieY - this->getY();
-         float sqrDist = xDelta * xDelta + yDelta * yDelta;
-         float sqrRange = this->getRange() * this->getRange();
+        float xDelta = zombieX - this->getX();
+        float yDelta = zombieY - this->getY();
+        float sqrDist = xDelta * xDelta + yDelta * yDelta;
+        float sqrRange = this->getRange() * this->getRange();
 
-         if (sqrDist < sqrRange)
-         {
-             detectList.insert(
-                 std::pair<unsigned int, Zombie*>(item.first, item.second));
+        if (sqrDist < sqrRange)
+        {
+            detectList.insert(
+                std::pair<unsigned int, Zombie*>(item.first, item.second));
 
-             if (sqrDist < closestZombieDist)
-             {
-                 closestZombieId = item.first;
-                 closestZombieDist = sqrDist;
-             }
-         }
-     }
+            if (sqrDist < closestZombieDist)
+            {
+                closestZombieId = item.first;
+                closestZombieDist = sqrDist;
+            }
+        }
+    }
 
-     // TODO: Attack a zombie;
-     detectList[closestZombieId];
+    // TODO: Attack a zombie;
+    if (detectList.empty())
+        return false;
+
+    const auto& target = detectList[closestZombieId];
+
+    float deltaX = this->getX() - target->getX();
+    float deltaY = this->getY() - target->getY();
+
+    double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * - 1;
+    this->setAngle(angle);
      //detectList[closestZombieId]->damage(this->attackDmg);
 
     return true;
