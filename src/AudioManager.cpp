@@ -20,7 +20,7 @@ AudioManager::AudioManager(){
  
 	Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 );
 
-	loadAudioFiles();
+	loadFiles();
 }
 
 
@@ -39,7 +39,7 @@ AudioManager::~AudioManager(){
 
 
 //This plays a single background music file from the _music map.
-void AudioManager::playBackgroundMusic(const char * fileName){
+void AudioManager::playMusic(const char * fileName){
 		
 	Mix_Music * music = _music[fileName];
 
@@ -53,7 +53,7 @@ void AudioManager::playBackgroundMusic(const char * fileName){
 
 
 //This plays a single sound effect from the _chunks map.
-void AudioManager::playSoundEffect(const char * fileName){
+void AudioManager::playEffect(const char * fileName){
 
 	Mix_Chunk * chunk = _chunks[fileName];
 	
@@ -67,7 +67,7 @@ void AudioManager::playSoundEffect(const char * fileName){
 
 
 
-void AudioManager::loadAudioFiles(){
+void AudioManager::loadFiles(){
     
     ////MUSIC
     loadMusic(MUS_DARKNUBULA);
@@ -76,24 +76,24 @@ void AudioManager::loadAudioFiles(){
 
     ////CHUNKS
     //marine
-    loadChunk(EFX_PDROP01);
-    loadChunk(EFX_PDROP02);
-    loadChunk(EFX_PPICK01);
-    loadChunk(EFX_PPICK02);
+    loadEffect(EFX_PDROP01);
+    loadEffect(EFX_PDROP02);
+    loadEffect(EFX_PPICK01);
+    loadEffect(EFX_PPICK02);
 
-    loadChunk(EFX_PGRUNT01);
-    loadChunk(EFX_PDEATH01);
+    loadEffect(EFX_PGRUNT01);
+    loadEffect(EFX_PDEATH01);
 
     //weapon
-    loadChunk(EFX_WLPISTOL);
-    loadChunk(EFX_WLRIFLE);
+    loadEffect(EFX_WLPISTOL);
+    loadEffect(EFX_WLRIFLE);
 
-    loadChunk(EFX_WRELOAD01);
-    loadChunk(EFX_WTURRET01);
+    loadEffect(EFX_WRELOAD01);
+    loadEffect(EFX_WTURRET01);
 
     //zombie
-    loadChunk(EFX_ZGROAN01);
-    loadChunk(EFX_ZGRUNT01);
+    loadEffect(EFX_ZGROAN01);
+    loadEffect(EFX_ZGRUNT01);
 
 }
 
@@ -115,7 +115,7 @@ void AudioManager::loadMusic(const char * fileName){
 
 
 //This loads a single sound effect file into the _chunks map.
-void AudioManager::loadChunk(const char * fileName){
+void AudioManager::loadEffect(const char * fileName){
 
     Mix_Chunk * sound = NULL;
     sound = Mix_LoadWAV(fileName);
