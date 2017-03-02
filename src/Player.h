@@ -28,7 +28,7 @@ public:
     Player();
     ~Player();
 
-    //Stays as pointer
+    //Stays as pointer cause the player gets a marine object after the ctor is called
     Marine *marine = NULL;
 
 private:
