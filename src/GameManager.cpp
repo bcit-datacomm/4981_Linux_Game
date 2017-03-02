@@ -13,14 +13,12 @@ GameManager *GameManager::instance() {
     return sInstance;
 }
 
-GameManager::GameManager() {
+GameManager::GameManager():collisionHandler() {
     printf("Create GM\n");
-    collisionHandler = new CollisionHandler();
 }
 
 GameManager::~GameManager() {
     printf("Destroy GM\n");
-    delete collisionHandler;
     marineManager.clear();
     zombieManager.clear();
     objectManager.clear();
@@ -32,24 +30,24 @@ GameManager::~GameManager() {
 void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
 
     for (const auto& m : marineManager) {
-        m.second.texture.render(gRenderer, m.second.getX()-camX, m.second.getY()-camY,
+        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
                                  NULL, m.second.getAngle());
     }
     /*for (const auto& o : objectManager) {
-        o.second.texture.render(gRenderer, o.second.getX()-camX, o.second.getY()-camY);
+        o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
     }*/
     for (const auto& z : zombieManager) {
-        z.second.texture.render(gRenderer, z.second.getX()-camX, z.second.getY()-camY,
+        z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
                                  NULL, z.second.getAngle());
     }
 
     for (const auto& m : turretManager) {
-        m.second.texture.render(gRenderer, m.second.getX()-camX, m.second.getY()-camY,
+        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
                                  NULL, m.second.getAngle());
     }
 
     for (const auto& m : weaponDropManager) {
-        m.second.texture.render(gRenderer, m.second.getX()-camX, m.second.getY()-camY);
+        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY);
     }
 }
 
@@ -108,8 +106,8 @@ bool GameManager::addMarine(unsigned int id, Marine& newMarine) {
 }
 
 // Get a marine by its id
-Marine* GameManager::getMarine(unsigned int id) {
-    return &(marineManager.find(id)->second);
+Marine& GameManager::getMarine(unsigned int id) {
+    return marineManager.find(id)->second;
 }
 
 // Create Turret add it to manager, returns tower id
@@ -154,8 +152,8 @@ bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
 }
 
 // Get a tower by its id
-Turret* GameManager::getTurret(unsigned int id) {
-    return &(turretManager.find(id)->second);
+Turret& GameManager::getTurret(unsigned int id) {
+    return turretManager.find(id)->second;
 }
 
 unsigned int GameManager::addZombie(Zombie& newZombie) {
@@ -243,52 +241,52 @@ void GameManager::deleteWeaponDrop(unsigned int id) {
 }
 
 // Returns Collision Handler
-CollisionHandler* GameManager::getCollisionHandler() {
+CollisionHandler& GameManager::getCollisionHandler() {
     return collisionHandler;
 }
 
 // Update colliders to current state
 void GameManager::updateCollider() {
 
-    delete collisionHandler->quadtreeMov;
-    delete collisionHandler->quadtreePro;
-    delete collisionHandler->quadtreeDam;
+    delete collisionHandler.quadtreeMov;
+    delete collisionHandler.quadtreePro;
+    delete collisionHandler.quadtreeDam;
 
-    collisionHandler->quadtreeMov = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler->quadtreePro = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler->quadtreeDam = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreeMov = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
 
 
     for (auto& m : marineManager) {
-        collisionHandler->quadtreeMov->insert(&m.second.movementHitBox);
-        collisionHandler->quadtreePro->insert(&m.second.projectileHitBox);
-        collisionHandler->quadtreeDam->insert(&m.second.damageHitBox);
-        collisionHandler->quadtreePickUp->insert(&m.second.pickUpHitBox);
+        collisionHandler.quadtreeMov->insert(&m.second.movementHitBox);
+        collisionHandler.quadtreePro->insert(&m.second.projectileHitBox);
+        collisionHandler.quadtreeDam->insert(&m.second.damageHitBox);
+        collisionHandler.quadtreePickUp->insert(&m.second.pickUpHitBox);
     }
     std::vector<HitBox> projectileColliders;
     for (const auto& m : marineManager) {
         projectileColliders.push_back(m.second.projectileHitBox);
     }
     for (auto& z : zombieManager) {
-        collisionHandler->quadtreeMov->insert(&z.second.movementHitBox);
-        collisionHandler->quadtreePro->insert(&z.second.projectileHitBox);
-        collisionHandler->quadtreeDam->insert(&z.second.damageHitBox);
+        collisionHandler.quadtreeMov->insert(&z.second.movementHitBox);
+        collisionHandler.quadtreePro->insert(&z.second.projectileHitBox);
+        collisionHandler.quadtreeDam->insert(&z.second.damageHitBox);
     }
 
     for (auto& o : objectManager) {
-        collisionHandler->quadtreeMov->insert(&o.second.movementHitBox);
-        collisionHandler->quadtreePro->insert(&o.second.projectileHitBox);
-        collisionHandler->quadtreeDam->insert(&o.second.damageHitBox);
+        collisionHandler.quadtreeMov->insert(&o.second.movementHitBox);
+        collisionHandler.quadtreePro->insert(&o.second.projectileHitBox);
+        collisionHandler.quadtreeDam->insert(&o.second.damageHitBox);
     }
 
       for (auto& m : turretManager) {
-        collisionHandler->quadtreeMov->insert(&m.second.movementHitBox);
-        collisionHandler->quadtreePro->insert(&m.second.projectileHitBox);
-        collisionHandler->quadtreeDam->insert(&m.second.damageHitBox);
+        collisionHandler.quadtreeMov->insert(&m.second.movementHitBox);
+        collisionHandler.quadtreePro->insert(&m.second.projectileHitBox);
+        collisionHandler.quadtreeDam->insert(&m.second.damageHitBox);
     }
 
     for (auto& m : weaponDropManager) {
-        collisionHandler->quadtreePickUp->insert(&m.second.pickUpHitBox);
+        collisionHandler.quadtreePickUp->insert(&m.second.pickUpHitBox);
     }
 
 }

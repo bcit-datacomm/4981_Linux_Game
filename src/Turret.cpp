@@ -17,7 +17,7 @@ bool Turret::placementCheckTurret(){
 }
 
 // checks if the turret placement overlaps with any currently existing objects, currently does nothing
-bool Turret::collisionCheckTurret(float x, float y, CollisionHandler* ch) {
+bool Turret::collisionCheckTurret(float x, float y, CollisionHandler& ch) {
     SDL_Rect checkBox;
     checkBox.h = 100;
     checkBox.w = 100;
@@ -25,7 +25,7 @@ bool Turret::collisionCheckTurret(float x, float y, CollisionHandler* ch) {
     checkBox.y = y;
     HitBox hitBox;
     hitBox.setRect(checkBox);
-    if(ch->detectMovementCollision(&hitBox))
+    if(ch.detectMovementCollision(&hitBox))
         return false;
     return true;
 }

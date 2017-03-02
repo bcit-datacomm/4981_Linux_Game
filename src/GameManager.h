@@ -30,17 +30,17 @@ public:
     bool createMarine(SDL_Renderer* gRenderer, float x, float y);
     void deleteMarine(unsigned int id);
     bool addMarine(unsigned int id, Marine& newMarine);
-    Marine* getMarine(unsigned int id);
+    Marine& getMarine(unsigned int id);
 
     // Methods for creating, getting, and deleting towers from the level.
     unsigned int createTurret();
     void deleteTurret(unsigned int id);
     bool addTurret(unsigned int id, Turret& newTurret);
     bool createTurret(SDL_Renderer* gRenderer, float x, float y) ;
-    Turret* getTurret(unsigned int id);
+    Turret& getTurret(unsigned int id);
 
     // Method for getting collisionHandler
-    CollisionHandler* getCollisionHandler();
+    CollisionHandler& getCollisionHandler();
 
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float& delta); // Update marine actions
@@ -61,7 +61,7 @@ private:
     static GameManager *sInstance;
 
     GameManager();
-    CollisionHandler* collisionHandler = NULL;
+    CollisionHandler collisionHandler;
     std::unique_ptr<WeaponDrop> wdPointer;
     std::map<unsigned int, Marine> marineManager;
     std::map<unsigned int, Object> objectManager;

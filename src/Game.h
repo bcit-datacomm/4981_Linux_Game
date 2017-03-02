@@ -29,7 +29,7 @@ public:
 private:
 
     // Current game state
-    GameState* state = NULL;//stays as a pointer cause we need to be able to switch between match and menu states
+    GameState* state = nullptr;//stays as a pointer cause we need to be able to switch between match and menu states
 
 };
 

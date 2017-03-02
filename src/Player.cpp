@@ -8,8 +8,8 @@ Player::~Player() {
 
 }
 
-void Player::setControl(Marine* newControl) {
-    marine = newControl;
+void Player::setControl(Marine& newControl) {
+    marine = &newControl;
 }
 
 void Player::handleMouseUpdate(Window& w) {
@@ -41,8 +41,8 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 
     unsigned int tid = GameManager::instance()->createTurret();
 
-    Turret* dumbTurret = GameManager::instance()->getTurret(tid);
-    if (!dumbTurret->texture.loadFromFile("assets/texture/turret.png",
+    Turret &dumbTurret = GameManager::instance()->getTurret(tid);
+    if (!dumbTurret.texture.loadFromFile("assets/texture/turret.png",
                                                                     renderer)) {
         printf("Failed to load the player texture!\n");
     }
@@ -114,10 +114,10 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 }
 
 // checks for collision and to whether or not to place the turret
-void Player::turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
+void Player::turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
                       unsigned int tid){
-   if(dumbTurret->collisionCheckTurret(x, y, collisionHandler)){
-          dumbTurret->setPosition(x, y);
+   if(dumbTurret.collisionCheckTurret(x, y, collisionHandler)){
+          dumbTurret.setPosition(x, y);
    } else {
         printf("\nCANNOT PLACE TURRET HERE\n");
         GameManager::instance()->deleteTurret(tid);

@@ -14,7 +14,7 @@ public:
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
     void handleMouseUpdate(Window& w);
 
-    void setControl(Marine* newControl);
+    void setControl(Marine& newControl);
 
     void handleMouseWheelInput(const SDL_Event *e);
 
@@ -22,13 +22,14 @@ public:
     void handlePlacementClick(SDL_Renderer *renderer);
 
     // determines whether turret can be placed
-    void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
+    void turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
                           unsigned int tid);
 
     Player();
     ~Player();
 
-    Marine* marine = NULL;
+    //Stays as pointer
+    Marine *marine = NULL;
 
 private:
 

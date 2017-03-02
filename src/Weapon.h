@@ -43,8 +43,8 @@ protected:
     int reloadSpeed;
     LTexture inGameTexture;
     LTexture UiTexture;
-    int reloadTick = 0;
-    int reloadDelay = 200;
+    int reloadTick;
+    int reloadDelay;
 
 };
 

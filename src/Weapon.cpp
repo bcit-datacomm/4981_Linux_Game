@@ -1,7 +1,8 @@
 #include "Weapon.h"
 
 Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE, int reloadSpeed)
-               :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed){
+               :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed),
+               reloadTick(0), reloadDelay(200){
 
 }
 

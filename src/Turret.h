@@ -19,7 +19,7 @@ public:
 
     bool placementCheckTurret(); // checks if turret placement is within bounds
 
-    bool collisionCheckTurret(float x, float y, CollisionHandler* ch); // checks if the turret placement overlaps with any currently existing objects
+    bool collisionCheckTurret(float x, float y, CollisionHandler& ch); // checks if the turret placement overlaps with any currently existing objects
 
     void activateTurret(); // activates the turret
 

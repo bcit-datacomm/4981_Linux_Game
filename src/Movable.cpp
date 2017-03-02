@@ -1,15 +1,15 @@
 #include "Movable.h"
 
 // Move Movable by x and y amount
-void Movable::move(float moveX, float moveY, CollisionHandler* ch){
+void Movable::move(float moveX, float moveY, CollisionHandler &ch){
     //Move the Movable left or right
-    setX(getX()+ moveX);
+    setX(getX() + moveX);
     movementHitBox.move(getX(), getY());
     projectileHitBox.move(getX(), getY());
     damageHitBox.move(getX(), getY());
 
-    if (ch->detectMovementCollision(&movementHitBox)) {
-        setX(getX()-moveX);
+    if (ch.detectMovementCollision(&movementHitBox)) {
+        setX(getX() - moveX);
         movementHitBox.move(getX(), getY());
         projectileHitBox.move(getX(), getY());
         damageHitBox.move(getX(), getY());
@@ -21,8 +21,8 @@ void Movable::move(float moveX, float moveY, CollisionHandler* ch){
     projectileHitBox.move(getX(), getY());
     damageHitBox.move(getX(), getY());
 
-    if (ch->detectMovementCollision(&movementHitBox)) {
-        setY(getY()-moveY);
+    if (ch.detectMovementCollision(&movementHitBox)) {
+        setY(getY() - moveY);
         movementHitBox.move(getX(), getY());
         projectileHitBox.move(getX(), getY());
         damageHitBox.move(getX(), getY());

@@ -198,7 +198,7 @@ void GameStateMatch::render() {
         }
 
         frameFPSTextTexture.render(game.renderer,
-                (game.window.getWidth() - frameFPSTextTexture.getWidth()), 0);
+            (game.window.getWidth() - frameFPSTextTexture.getWidth()), 0);
 
         //Update screen
         SDL_RenderPresent( game.renderer );
