@@ -4,7 +4,7 @@
 GameManager *GameManager::sInstance;
 
 //Returns the already existing GameManager or if there isn't one, makes
-//a new one and returns it. 
+//a new one and returns it.
 GameManager *GameManager::instance() {
     if (!sInstance)
         sInstance = new GameManager;
@@ -69,6 +69,21 @@ void GameManager::updateZombies(const float& delta) {
 		z.second->move((z.second->getDX()*delta), (z.second->getDY()*delta), this->collisionHandler);
 	}
 }
+
+// Update turret actions.
+// Jamie, 2017-03-01.
+void GameManager::updateTurrets(const float& delta) {
+	static bool bi_frame = false;
+	bi_frame = !bi_frame;
+	if (!bi_frame)
+		return;
+
+	for (const auto& t : this->turretManager) {
+		//z.second->generateRandomMove();
+		t.second->targetScanTurret();
+	}
+}
+
 // Create marine add it to manager, returns marine id
 unsigned int GameManager::createMarine() {
 	unsigned int id = 0;
@@ -260,4 +275,10 @@ void GameManager::updateCollider() {
 		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
 
+}
+
+// returns the list of zombies.
+// Jamie, 2017-03-01.
+const std::map<unsigned int, Zombie*>* GameManager::getZombies() {
+    return &zombieManager;
 }
