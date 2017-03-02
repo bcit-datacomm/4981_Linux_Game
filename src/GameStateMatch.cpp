@@ -30,9 +30,10 @@ bool GameStateMatch::load() {
 	}
 	
 	this->player = new Player();
-	if (!this->player->playerTexture.loadFromFile("assets/texture/arrow.png", this->game->renderer)) {
+	if (!this->player->playerTexture.loadFromFile("assets/texture/mohawk_sprite_sheet_0.25.png", this->game->renderer)) {
 		printf("Failed to load the player texture!\n");
 	}
+
 	this->camera = new Camera(this->game->window->getWidth(), this->game->window->getHeight());
 
 	return success;
@@ -91,7 +92,7 @@ void GameStateMatch::sync() {
 void GameStateMatch::handle() {
 	const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
 	// Handle movement input
-	this->player->handleInput(state);
+	this->player->handleInput(state, this->game->renderer);
 	//Handle events on queue
 	while ( SDL_PollEvent( &this->event )) {
 		this->game->window->handleEvent(this->event);
