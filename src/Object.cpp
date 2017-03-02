@@ -1,9 +1,9 @@
 #include "Object.h"
 
 Object::Object() {
-    //this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-    //this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-    //this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+    //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
+    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
 }
 
 Object::~Object() {
@@ -11,18 +11,18 @@ Object::~Object() {
 }
 
 void Object::setHeight(int h) {
-    this->height = h;
-    this->spriteClips[0].h = this->height;
+    height = h;
+    spriteClips[0].h = height;
 }
 void Object::setWidth(int w) {
-    this->width = w;
-    this->spriteClips[0].w = this->width;
+    width = w;
+    spriteClips[0].w = width;
 }
 int Object::getHeight(){
-    return this->height;
+    return height;
 }
 int Object::getWidth(){
-    return this->width;
+    return width;
 }
 
 void Object::onCollision() {

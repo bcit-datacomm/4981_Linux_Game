@@ -3,10 +3,10 @@
 #include<random>
 
 Base::Base() {
-    this->setX((MAP_WIDTH / 2) - BASE_WIDTH);
-    this->setY((MAP_HEIGHT / 2) - BASE_HEIGHT);
-    this->setHeight(BASE_HEIGHT);
-    this->setWidth(BASE_WIDTH);
+    setX((MAP_WIDTH / 2) - BASE_WIDTH);
+    setY((MAP_HEIGHT / 2) - BASE_HEIGHT);
+    setHeight(BASE_HEIGHT);
+    setWidth(BASE_WIDTH);
 
     printf("Create Base\n");
 }
@@ -19,7 +19,7 @@ void Base::onCollision() {
 }
     
 void Base::collidingProjectile(int damage) {
-    this->health -= damage;
+    health -= damage;
 }
 
 Point Base::getSpawnPoint(){
@@ -42,36 +42,36 @@ Point Base::getSpawnPoint(){
         case 0://North
     
             //y point is fixed
-            y = this->getY() - gab;
+            y = getY() - gab;
             //x point is randomly generated;    
-            x = distr(eng, decltype(distr)::param_type(this->getX() - gab, 
-                                                       this->getX() + this->getWidth() + gab));
+            x = distr(eng, decltype(distr)::param_type(getX() - gab, 
+                                                       getX() + getWidth() + gab));
 
             break;
         case 1://South
-            y = this->getY() + this->getHeight() + gab;
-            x = distr(eng, decltype(distr)::param_type(this->getX() - gab,
-                                                       this->getX()+ this-> getWidth() + gab));
+            y = getY() + getHeight() + gab;
+            x = distr(eng, decltype(distr)::param_type(getX() - gab,
+                                                       getX()+  getWidth() + gab));
             break;
         case 2://West
             
             //x point is fixed
-            x = this->getX() - gab;
+            x = getX() - gab;
             //y point is randomly generated
-            y = distr(eng, decltype(distr)::param_type(this->getY() - gab, 
-                                                       this->getY() + this->getHeight() + gab));
+            y = distr(eng, decltype(distr)::param_type(getY() - gab, 
+                                                       getY() + getHeight() + gab));
             break;
         case 3://East
-            x = this->getY() + this->getWidth() + gab;
-            y = distr(eng, decltype(distr)::param_type(this->getY() - gab, 
-                                                       this->getY() + this->getHeight() + gab));
+            x = getY() + getWidth() + gab;
+            y = distr(eng, decltype(distr)::param_type(getY() - gab, 
+                                                       getY() + getHeight() + gab));
             break;
     }
     
     //considering the player size
-    if(x < this->getX())
+    if(x < getX())
         x-=MARINE_WIDTH;
-    if(y < this->getY())
+    if(y < getY())
         y-=MARINE_HEIGHT;
 
     return Point(x,y);

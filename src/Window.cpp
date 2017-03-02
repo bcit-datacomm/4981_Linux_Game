@@ -32,7 +32,7 @@ bool Window::init() {
 }
 
 SDL_Surface* Window::getScreenSurface() {
-    return  SDL_GetWindowSurface( this->mWindow );
+    return  SDL_GetWindowSurface( mWindow );
 }
 
 SDL_Renderer* Window::createRenderer() {
@@ -47,13 +47,13 @@ void Window::handleEvent( SDL_Event& e ) {
             //Get new dimensions
             case SDL_WINDOWEVENT_SIZE_CHANGED:
             if (e.window.data1 < MIN_SCREEN_WIDTH) {
-                SDL_SetWindowSize(this->mWindow, MIN_SCREEN_WIDTH, e.window.data2);
+                SDL_SetWindowSize(mWindow, MIN_SCREEN_WIDTH, e.window.data2);
                 mWidth = MIN_SCREEN_WIDTH;
             } else {
                 mWidth = e.window.data1;
             }
             if (e.window.data2 < MIN_SCREEN_HEIGHT) {
-                SDL_SetWindowSize(this->mWindow, e.window.data1, MIN_SCREEN_HEIGHT);
+                SDL_SetWindowSize(mWindow, e.window.data1, MIN_SCREEN_HEIGHT);
                 mHeight = MIN_SCREEN_HEIGHT;
             } else {
                 mHeight = e.window.data2;        
@@ -109,7 +109,7 @@ void Window::handleEvent( SDL_Event& e ) {
             SDL_GetDesktopDisplayMode(0, &DM);
             auto Width = DM.w;
             auto Height = DM.h;
-            SDL_SetWindowSize(this->mWindow, Width, Height);
+            SDL_SetWindowSize(mWindow, Width, Height);
             SDL_SetWindowFullscreen( mWindow, SDL_TRUE );
             mFullScreen = true;
             mMinimized = false;

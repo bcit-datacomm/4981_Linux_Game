@@ -9,7 +9,7 @@ Player::~Player() {
 }
 
 void Player::setControl(Marine* newControl) {
-    this->marine = newControl;
+    marine = newControl;
 }
 
 void Player::handleMouseUpdate(Window& w) {
@@ -24,20 +24,20 @@ void Player::handleMouseUpdate(Window& w) {
     mouseDeltaY = w.getHeight()/2 - mouseY;
 
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
-    this->marine->setAngle(angle);
+    marine->setAngle(angle);
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){
-    this->marine->inventory.scrollCurrent(e->wheel.y);
+    marine->inventory.scrollCurrent(e->wheel.y);
 }
 
 // function to handle mouse-click events
 void Player::handlePlacementClick(SDL_Renderer *renderer) {
     double angle;
-    float marineX = this->marine->getX();
-    float marineY = this->marine->getY();
+    float marineX = marine->getX();
+    float marineY = marine->getY();
     // getting mouses current position
-    angle = this->marine->getAngle();
+    angle = marine->getAngle();
 
     unsigned int tid = GameManager::instance()->createTurret();
 
@@ -77,7 +77,7 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 void Player::handleKeyboardInput(const Uint8 *state) {
     float x = 0;
     float y = 0;
-    float velocity = this->marine->getVelocity();
+    float velocity = marine->getVelocity();
 
     // Check for move inputs
     if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
@@ -95,22 +95,22 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 
     //Inventory inputs
     if (state[SDL_SCANCODE_1]){
-        this->marine->inventory.switchCurrent(0);
+        marine->inventory.switchCurrent(0);
     } else if (state[SDL_SCANCODE_2]){
-        this->marine->inventory.switchCurrent(1);
+        marine->inventory.switchCurrent(1);
     } else if (state[SDL_SCANCODE_3]){
-        this->marine->inventory.switchCurrent(2);
+        marine->inventory.switchCurrent(2);
     }
 
     //Weapon input
     if(state[SDL_SCANCODE_R]){
-        this->marine->inventory.getCurrent()->reloadClip();
+        marine->inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
-        this->marine->inventory.pickUp();
+        marine->inventory.pickUp();
     }
-    this->marine->setDY(y);
-    this->marine->setDX(x);
+    marine->setDY(y);
+    marine->setDX(x);
 }
 
 // checks for collision and to whether or not to place the turret

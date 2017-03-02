@@ -2,9 +2,9 @@
 #include "Turret.h"
 
 Turret::Turret() : Movable(MARINE_VELOCITY){
-    //this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-    //this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-    //this->damageHitBox.setFriendly(true); Uncomment for no friendly fire
+    //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
+    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+    //damageHitBox.setFriendly(true); Uncomment for no friendly fire
 }
 
 Turret::~Turret() {
@@ -32,7 +32,7 @@ bool Turret::collisionCheckTurret(float x, float y, CollisionHandler* ch) {
 
 // activates the turret
 void Turret::activateTurret() {
-    this->activated = true;
+    activated = true;
 }
 
 void Turret::onCollision() {
@@ -40,12 +40,12 @@ void Turret::onCollision() {
 }
 
 void Turret::collidingProjectile(int damage) {
-    this->health = health - damage;
+    health = health - damage;
 }
 
 // turret ammo pool decrements by this amount
 void Turret::decrementAmmo(int amount) {
-    this->ammo = ammo- amount;
+    ammo = ammo- amount;
 }
 
 // turret shoots, this is not yet defined

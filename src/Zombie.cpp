@@ -5,7 +5,7 @@
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie() : Movable(ZOMBIE_VELOCITY) {
-    this->setAngle(this->getRandomAngle());
+    setAngle(getRandomAngle());
     printf("Create Zombie\n");
 }
 
@@ -18,7 +18,7 @@ void Zombie::onCollision() {
 }
 
 void Zombie::collidingProjectile(int damage) {
-    this->health = health - damage;
+    health = health - damage;
 }
 
 int Zombie::getRandomAngle(){
@@ -33,18 +33,18 @@ int Zombie::getRandomAngle(){
 }
 
 void Zombie::generateRandomMove(){
-    int tx = this->getX()+50;
-    int ty = this->getY()+50;
+    int tx = getX()+50;
+    int ty = getY()+50;
     if(tx<=0 || tx>=2000 || ty<=0 || ty>=2000){
-        this->setAngle(this->getRandomAngle());
+        setAngle(getRandomAngle());
     }
 
-    double cosVal = cos(this->getAngle()*PI/180.0);
-    double sinVal = sin(this->getAngle()*PI/180.0);
+    double cosVal = cos(getAngle()*PI/180.0);
+    double sinVal = sin(getAngle()*PI/180.0);
 
-    int x = this->getVelocity();
-    int y = this->getVelocity();
+    int x = getVelocity();
+    int y = getVelocity();
 
-    this->setDX(x*cosVal);
-    this->setDY(y*sinVal);
+    setDX(x*cosVal);
+    setDY(y*sinVal);
 }

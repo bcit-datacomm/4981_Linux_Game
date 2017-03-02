@@ -10,23 +10,23 @@ HitBox::~HitBox() {
 }
 
 const SDL_Rect& HitBox::getRect() const{
-    return this->rect;
+    return rect;
 }
 
 void HitBox::move(float x, float y){
-    this->rect.x = x;
-    this->rect.y = y;
+    rect.x = x;
+    rect.y = y;
 }
 
 
 void HitBox::setRect(const SDL_Rect rerect) {
-    this->rect = rerect;
+    rect = rerect;
 }
 
 void HitBox::setFriendly(bool isFriendly) {
-    this->playerFriendly =     isFriendly;
+    playerFriendly =     isFriendly;
 }
 
 bool HitBox::isPlayerFriendly() {
-    return     this->playerFriendly;
+    return     playerFriendly;
 }

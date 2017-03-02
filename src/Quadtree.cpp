@@ -22,7 +22,7 @@ Quadtree::~Quadtree() {
 }
 
 unsigned int Quadtree::getTreeSize() const{
-    return this->objectCounter;
+    return objectCounter;
 }
 
 void Quadtree::clear() {

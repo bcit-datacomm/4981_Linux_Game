@@ -21,8 +21,8 @@ bool GameStateMenu::load() {
     bool success = true;
 
     //Open the font
-    this->frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
-    if ( this->frameFont == NULL ) {
+    frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
+    if ( frameFont == NULL ) {
         printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
@@ -46,7 +46,7 @@ void GameStateMenu::loop() {
     fpsTimer.start();
 
     // State Loop
-    while (this->play) {
+    while (play) {
         //Start cap timer
         capTimer.start();
 
@@ -54,15 +54,15 @@ void GameStateMenu::loop() {
         avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
 
         //Set FPS text to be rendered
-        this->frameTimeText.str( "" );
-        this->frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
+        frameTimeText.str( "" );
+        frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
 
         // Process frame
-        this->handle();    // Handle user input
-        this->update(stepTimer.getTicks() / 1000.f); // Update state values
+        handle();    // Handle user input
+        update(stepTimer.getTicks() / 1000.f); // Update state values
         stepTimer.start(); //Restart step timer
-        this->sync();    // Sync game to server
-        this->render();    // Render game state to window
+        sync();    // Sync game to server
+        render();    // Render game state to window
 
         ++countedFrames;
 
@@ -82,11 +82,11 @@ void GameStateMenu::sync() {
 
 void GameStateMenu::handle() {
     //Handle events on queue
-    while ( SDL_PollEvent( &this->event )) {
-        this->game.window.handleEvent(this->event);
-           switch( this->event.type ) {
+    while ( SDL_PollEvent( &event )) {
+        game.window.handleEvent(event);
+           switch( event.type ) {
           case SDL_KEYDOWN:
-            switch( this->event.key.keysym.sym ) {
+            switch( event.key.keysym.sym ) {
             case SDLK_ESCAPE:
                 play = false;
                 break;
@@ -95,7 +95,7 @@ void GameStateMenu::handle() {
             }
             break;
           case SDL_KEYUP:
-               switch( this->event.key.keysym.sym ) {
+               switch( event.key.keysym.sym ) {
             default:
                    break;
             }
@@ -113,40 +113,40 @@ void GameStateMenu::update(const float& delta) {
 
     // TEMP: Skip to GameStateMatch
     // Remove this when working on the main menu
-    this->game.stateID = 2;
+    game.stateID = 2;
     play = false;
 
 }
 
 void GameStateMenu::render() {
     //Only draw when not minimized
-    if ( !this->game.window.isMinimized() ) {
+    if ( !game.window.isMinimized() ) {
 
         //Clear screen
-        SDL_SetRenderDrawColor( this->game.renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-        SDL_RenderClear( this->game.renderer );
+        SDL_SetRenderDrawColor( game.renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_RenderClear( game.renderer );
 
         SDL_Color textColor = { 0, 0, 0, 255 };
 
         //Render text
-        if ( !this->frameFPSTextTexture.loadFromRenderedText( this->frameTimeText.str().c_str(),
-                                              textColor, this->game.renderer, this->frameFont ) ) {
+        if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
+                                              textColor, game.renderer, frameFont ) ) {
             printf( "Unable to render FPS texture!\n" );
         }
 
-        this->frameFPSTextTexture.render(this->game.renderer,
-                                ( this->game.window.getWidth() - this->frameFPSTextTexture.getWidth() ), 0);
+        frameFPSTextTexture.render(game.renderer,
+                                ( game.window.getWidth() - frameFPSTextTexture.getWidth() ), 0);
 
         //Update screen
-        SDL_RenderPresent( this->game.renderer );
+        SDL_RenderPresent( game.renderer );
     }
 }
 
 GameStateMenu::~GameStateMenu() {
 
     // Free texture and font
-    this->frameFPSTextTexture.free();
-    TTF_CloseFont(this->frameFont);
-    this->frameFont = NULL;
+    frameFPSTextTexture.free();
+    TTF_CloseFont(frameFont);
+    frameFont = NULL;
 
 }

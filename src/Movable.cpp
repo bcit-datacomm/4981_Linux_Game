@@ -3,29 +3,29 @@
 // Move Movable by x and y amount
 void Movable::move(float moveX, float moveY, CollisionHandler* ch){
     //Move the Movable left or right
-    this->setX(this->getX()+ moveX);
-    this->movementHitBox.move(this->getX(), this->getY());
-    this->projectileHitBox.move(this->getX(), this->getY());
-    this->damageHitBox.move(this->getX(), this->getY());
+    setX(getX()+ moveX);
+    movementHitBox.move(getX(), getY());
+    projectileHitBox.move(getX(), getY());
+    damageHitBox.move(getX(), getY());
 
-    if (ch->detectMovementCollision(&this->movementHitBox)) {
-        this->setX(this->getX()-moveX);
-        this->movementHitBox.move(this->getX(), this->getY());
-        this->projectileHitBox.move(this->getX(), this->getY());
-        this->damageHitBox.move(this->getX(), this->getY());
+    if (ch->detectMovementCollision(&movementHitBox)) {
+        setX(getX()-moveX);
+        movementHitBox.move(getX(), getY());
+        projectileHitBox.move(getX(), getY());
+        damageHitBox.move(getX(), getY());
     }
 
     //Move the Movable up or down
-    this->setY(this->getY()+moveY);
-    this->movementHitBox.move(this->getX(), this->getY());
-    this->projectileHitBox.move(this->getX(), this->getY());
-    this->damageHitBox.move(this->getX(), this->getY());
+    setY(getY()+moveY);
+    movementHitBox.move(getX(), getY());
+    projectileHitBox.move(getX(), getY());
+    damageHitBox.move(getX(), getY());
 
-    if (ch->detectMovementCollision(&this->movementHitBox)) {
-        this->setY(this->getY()-moveY);
-        this->movementHitBox.move(this->getX(), this->getY());
-        this->projectileHitBox.move(this->getX(), this->getY());
-        this->damageHitBox.move(this->getX(), this->getY());
+    if (ch->detectMovementCollision(&movementHitBox)) {
+        setY(getY()-moveY);
+        movementHitBox.move(getX(), getY());
+        projectileHitBox.move(getX(), getY());
+        damageHitBox.move(getX(), getY());
     }
 
 }

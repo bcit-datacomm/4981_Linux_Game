@@ -17,36 +17,36 @@
 
 void Game::run() {
     // End program if stateID is 0 after a end of a loop
-    while (this->stateID > 0) {
-        this->loadState();
-        if (this->state->load()) {
-            this->state->loop();
+    while (stateID > 0) {
+        loadState();
+        if (state->load()) {
+            state->loop();
         }
     }
 }
 
 void Game::loadState() {
     printf("Starting ");
-    if (this->state != NULL) {
-        delete this->state;
+    if (state != NULL) {
+        delete state;
     }
     // Sets the state by the state ID
-    switch(this->stateID) {
+    switch(stateID) {
         case 1:
             printf("Menu State\n");
-            this->state = new GameStateMenu(*this);
+            state = new GameStateMenu(*this);
             break;
         case 2:
             printf("Match State\n");
 
-            this->state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
+            state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
 
             break;
         default:
             break;
     }
      // Reset stateID back to zero to allow states to end program or incase of load failure
-    this->stateID = 0;
+    stateID = 0;
 }
 
 bool Game::init() {
@@ -64,20 +64,20 @@ bool Game::init() {
         }
 
         //Create window
-        this->window = Window();
-        if ( !this->window.init() ) {
+        window = Window();
+        if ( !window.init() ) {
             printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
             success = false;
         } else {
             //Create renderer for window
-            this->renderer = this->window.createRenderer();
-            if ( this->renderer  == NULL ) {
+            renderer = window.createRenderer();
+            if ( renderer  == NULL ) {
                 printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
                 success = false;
             } else {
 
                 //Initialize renderer color
-                SDL_SetRenderDrawColor( this->renderer , 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_SetRenderDrawColor( renderer , 0xFF, 0xFF, 0xFF, 0xFF );
 
                 //Initialize PNG loading
                 int imgFlags = IMG_INIT_PNG;
@@ -85,7 +85,7 @@ bool Game::init() {
                     printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
                     success = false;
                 } else {
-                    this->screenSurface = this->window.getScreenSurface();
+                    screenSurface = window.getScreenSurface();
                 }
 
                  //Initialize SDL_ttf
@@ -100,7 +100,7 @@ bool Game::init() {
                     success = false;
                 }
 
-                 this->screenSurface = this->window.getScreenSurface();
+                 screenSurface = window.getScreenSurface();
 
             }
         }
@@ -127,11 +127,11 @@ SDL_Surface* Game::loadSurface( std::string path ) {
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
     if ( loadedSurface == NULL ) {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-    } else if (this->screenSurface == NULL) {
+    } else if (screenSurface == NULL) {
         printf( "Unable to load image %s!\n  Window surface is NULL\n", path.c_str());
     } else {
         //Convert surface to screen format
-        optimizedSurface = SDL_ConvertSurface( loadedSurface, this->screenSurface->format, 0 );
+        optimizedSurface = SDL_ConvertSurface( loadedSurface, screenSurface->format, 0 );
         if( optimizedSurface == NULL ) {
             printf( "Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
         }
@@ -153,7 +153,7 @@ SDL_Texture* Game::loadTexture( std::string path ) {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     } else {
         //Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( this->renderer, loadedSurface );
+        newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
         if( newTexture == NULL ) {
             printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
         }
@@ -165,14 +165,14 @@ SDL_Texture* Game::loadTexture( std::string path ) {
 
 void Game::close() {
 
-    if (this->state != NULL) {
-        delete this->state;
+    if (state != NULL) {
+        delete state;
     }
 
     //Destroy window
-    SDL_DestroyRenderer( this->renderer );
-    this->window.free();
-    this->renderer = NULL;
+    SDL_DestroyRenderer( renderer );
+    window.free();
+    renderer = NULL;
 
     //Quit SDL subsystems
     Mix_Quit();
