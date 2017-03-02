@@ -11,24 +11,24 @@ const unsigned int MAX_LEVELS = 5;
 class Quadtree {
 public:
 
-	Quadtree(int pLevel, SDL_Rect pBounds);
-	~Quadtree();
+    Quadtree(int pLevel, SDL_Rect pBounds);
+    ~Quadtree();
 
-	void clear();
-	void split();
-	unsigned int getTreeSize() const;
-	int getIndex(const HitBox* pRect) const;
-	void insert(HitBox* pRect);
-	std::vector<HitBox*> retrieve(std::vector<HitBox*> returnObjects, HitBox* pRect);
+    void clear();
+    void split();
+    unsigned int getTreeSize() const;
+    int getIndex(const HitBox* pRect) const;
+    void insert(HitBox* pRect);
+    std::vector<HitBox*> retrieve(std::vector<HitBox*> returnObjects, HitBox* pRect);
 
-	std::vector<HitBox*> objects;
+    std::vector<HitBox*> objects;
 
 private:
 
-	unsigned int objectCounter;
-	unsigned int level;
-	SDL_Rect bounds;
-	Quadtree* nodes[BRANCHSIZE];
+    unsigned int objectCounter;
+    unsigned int level;
+    SDL_Rect bounds;
+    Quadtree* nodes[BRANCHSIZE];
 
 
 };

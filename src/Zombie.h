@@ -17,16 +17,16 @@ const int ZOMBIE_WIDTH = 100;
 class Zombie : public Movable {
 public:
 
-	void onCollision();
+    void onCollision();
 
-	void collidingProjectile(int damage);
+    void collidingProjectile(int damage);
 
-	void generateRandomMove(); //randomly generate the zombie's movement
+    void generateRandomMove(); //randomly generate the zombie's movement
 
-	int getRandomAngle(); //randomly generate the angle of zombie
+    int getRandomAngle(); //randomly generate the angle of zombie
 
-	Zombie();
-	virtual ~Zombie();
+    Zombie();
+    virtual ~Zombie();
 
 private:
 

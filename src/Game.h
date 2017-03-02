@@ -11,25 +11,25 @@ class Game {
 public:
     Game():window(){};
 
-	// Game window
-	Window window;
-	SDL_Renderer* renderer = NULL;
-	SDL_Surface* screenSurface = NULL;
+    // Game window
+    Window window;
+    SDL_Renderer* renderer = NULL;
+    SDL_Surface* screenSurface = NULL;
 
-	unsigned int stateID = 1; // Starting game state id
+    unsigned int stateID = 1; // Starting game state id
 
-	bool init();
-	bool loadMedia();
-	SDL_Surface* loadSurface( std::string path );
-	SDL_Texture* loadTexture( std::string path );
-	void run();
-	void loadState();
-	void close();
+    bool init();
+    bool loadMedia();
+    SDL_Surface* loadSurface( std::string path );
+    SDL_Texture* loadTexture( std::string path );
+    void run();
+    void loadState();
+    void close();
 
 private:
 
-	// Current game state
-	GameState* state = NULL;//stays as a pointer cause we need to be able to switch between match and menu states
+    // Current game state
+    GameState* state = NULL;//stays as a pointer cause we need to be able to switch between match and menu states
 
 };
 

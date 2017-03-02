@@ -11,12 +11,12 @@
 class Player {
 public:
 
-	void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-	void handleMouseUpdate(Window& w);
+    void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
+    void handleMouseUpdate(Window& w);
 
-	void setControl(Marine* newControl);
+    void setControl(Marine* newControl);
 
-	void handleMouseWheelInput(const SDL_Event *e);
+    void handleMouseWheelInput(const SDL_Event *e);
 
     // Added by Mark.C 02/07/2017
     void handlePlacementClick(SDL_Renderer *renderer);
@@ -25,10 +25,10 @@ public:
     void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
                           unsigned int tid);
 
-	Player();
-	~Player();
+    Player();
+    ~Player();
 
-	Marine* marine = NULL;
+    Marine* marine = NULL;
 
 private:
 

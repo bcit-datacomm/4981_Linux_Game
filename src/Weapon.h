@@ -22,15 +22,15 @@ public:
     int getAmmo();//returns ammo amount
     int getRAOE(); //returns radius of effect
 
-	Weapon(std::string type = "no type", int range = 0,
-		   int damage = 0,
-		   int clip = 0,
-		   int clipMax = 0,
-		   int ammo = 0,
-		   int rAOE = 0,
-		   int reloadSpeed = 0);
+    Weapon(std::string type = "no type", int range = 0,
+           int damage = 0,
+           int clip = 0,
+           int clipMax = 0,
+           int ammo = 0,
+           int rAOE = 0,
+           int reloadSpeed = 0);
 
-	~Weapon();
+    ~Weapon();
 
 protected:
     std::string type;

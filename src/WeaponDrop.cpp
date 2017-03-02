@@ -11,7 +11,7 @@ WeaponDrop::WeaponDrop(Weapon &w): weapon(w){
 
 
 WeaponDrop::~WeaponDrop() {
-	printf("Destory WeaponDrop\n");
+    printf("Destory WeaponDrop\n");
 }
 void WeaponDrop::setPosition(int x, int y){
     xCoord = x;
@@ -31,7 +31,7 @@ Weapon&  WeaponDrop::getWeapon(){
 }
 
 void WeaponDrop::onCollision() {
-	// Do nothing for now
+    // Do nothing for now
 }
 
 void WeaponDrop::collidingProjectile(int damage) {

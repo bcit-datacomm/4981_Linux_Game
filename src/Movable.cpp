@@ -2,62 +2,62 @@
 
 // Move Movable by x and y amount
 void Movable::move(float moveX, float moveY, CollisionHandler* ch){
-	//Move the Movable left or right
-	this->setX(this->getX()+ moveX);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.move(this->getX(), this->getY());
+    //Move the Movable left or right
+    this->setX(this->getX()+ moveX);
+    this->movementHitBox.move(this->getX(), this->getY());
+    this->projectileHitBox.move(this->getX(), this->getY());
+    this->damageHitBox.move(this->getX(), this->getY());
 
-	if (ch->detectMovementCollision(&this->movementHitBox)) {
-		this->setX(this->getX()-moveX);
-		this->movementHitBox.move(this->getX(), this->getY());
-		this->projectileHitBox.move(this->getX(), this->getY());
-		this->damageHitBox.move(this->getX(), this->getY());
-	}
+    if (ch->detectMovementCollision(&this->movementHitBox)) {
+        this->setX(this->getX()-moveX);
+        this->movementHitBox.move(this->getX(), this->getY());
+        this->projectileHitBox.move(this->getX(), this->getY());
+        this->damageHitBox.move(this->getX(), this->getY());
+    }
 
-	//Move the Movable up or down
-	this->setY(this->getY()+moveY);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.move(this->getX(), this->getY());
+    //Move the Movable up or down
+    this->setY(this->getY()+moveY);
+    this->movementHitBox.move(this->getX(), this->getY());
+    this->projectileHitBox.move(this->getX(), this->getY());
+    this->damageHitBox.move(this->getX(), this->getY());
 
-	if (ch->detectMovementCollision(&this->movementHitBox)) {
-		this->setY(this->getY()-moveY);
-		this->movementHitBox.move(this->getX(), this->getY());
-		this->projectileHitBox.move(this->getX(), this->getY());
-		this->damageHitBox.move(this->getX(), this->getY());
-	}
+    if (ch->detectMovementCollision(&this->movementHitBox)) {
+        this->setY(this->getY()-moveY);
+        this->movementHitBox.move(this->getX(), this->getY());
+        this->projectileHitBox.move(this->getX(), this->getY());
+        this->damageHitBox.move(this->getX(), this->getY());
+    }
 
 }
 
 // Set delta x coordinate
 void Movable::setDX(float px) {
-	dx = px;
+    dx = px;
 }
 
 // Set delta y coordinate
 void Movable::setDY(float py) {
-	dy = py;
+    dy = py;
 }
 
 // set velocity of Movable movement
 void Movable::setVelocity(int pvel) {
-	velocity = pvel;
+    velocity = pvel;
 }
 
 // Get delta x coordinate
 float Movable::getDX() const{
-	return dx;
+    return dx;
 }
 
 // Get delta y coordinate
 float Movable::getDY() const{
-	return dy;
+    return dy;
 }
 
 // Get velocity of Movable movement
 int Movable::getVelocity() const{
-	return velocity;
+    return velocity;
 }
 
 //sets the angle of the player's Movable sprite

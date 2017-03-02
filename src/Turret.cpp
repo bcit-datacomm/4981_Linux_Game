@@ -2,13 +2,13 @@
 #include "Turret.h"
 
 Turret::Turret() : Movable(MARINE_VELOCITY){
-	//this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-	//this->damageHitBox.setFriendly(true); Uncomment for no friendly fire
+    //this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
+    //this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+    //this->damageHitBox.setFriendly(true); Uncomment for no friendly fire
 }
 
 Turret::~Turret() {
-	printf("Destroy Turret\n");
+    printf("Destroy Turret\n");
 }
 
 // checks if turret placement is within bounds, currently does nothing
@@ -23,7 +23,7 @@ bool Turret::collisionCheckTurret(float x, float y, CollisionHandler* ch) {
     checkBox.w = 100;
     checkBox.x = x;
     checkBox.y = y;
-	HitBox hitBox;
+    HitBox hitBox;
     hitBox.setRect(checkBox);
     if(ch->detectMovementCollision(&hitBox))
         return false;
@@ -60,7 +60,7 @@ bool Turret::ammoCheckTurret() {
 
  // returns true if turret has >=1 health, false otherwise
 bool Turret::healthCheckTurret() {
-	return (health > 0);
+    return (health > 0);
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined

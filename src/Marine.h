@@ -20,20 +20,20 @@ class Marine : public Movable {
 public:
     void create(); //function displays character
 
-	void onCollision();
+    void onCollision();
 
-	void collidingProjectile(int damage);
+    void collidingProjectile(int damage);
 
-	Marine();
-	virtual ~Marine();
+    Marine();
+    virtual ~Marine();
 
-	SDL_Rect marineSpriteClips[1];
-	HitBox movementHitBox;	// Hit box for movement
-	HitBox projectileHitBox; // Hit box for projectiles
-	HitBox damageHitBox; // Hit box for damage
+    SDL_Rect marineSpriteClips[1];
+    HitBox movementHitBox;    // Hit box for movement
+    HitBox projectileHitBox; // Hit box for projectiles
+    HitBox damageHitBox; // Hit box for damage
     HitBox pickUpHitBox; //Hit box for picking up Weapons
 
-	Inventory inventory;
+    Inventory inventory;
 
 private:
     int health = 100;

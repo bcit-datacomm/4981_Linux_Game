@@ -20,7 +20,7 @@ public:
 
     float getDY() const; //get delta y coordinate
 
-    int	getVelocity() const; // get velocity of Marine movement
+    int    getVelocity() const; // get velocity of Marine movement
 
     void setAngle(double a);//sets angle of sprite to
 

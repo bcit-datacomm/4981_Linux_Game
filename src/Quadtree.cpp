@@ -3,26 +3,26 @@
 
 
 Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) {
-   	level = pLevel;
-   	bounds = pBounds;
-	objectCounter = 0;
-	for (unsigned int i = 0; i < BRANCHSIZE; i++) {
-		nodes[i] = nullptr;
-   	}
+       level = pLevel;
+       bounds = pBounds;
+    objectCounter = 0;
+    for (unsigned int i = 0; i < BRANCHSIZE; i++) {
+        nodes[i] = nullptr;
+       }
 }
 
 Quadtree::~Quadtree() {
-	for (unsigned int i = 0; i < BRANCHSIZE; i++) {
-    	if (nodes[i] != nullptr) {
-    		nodes[i]->clear();
-    		delete nodes[i];
-			nodes[i] = nullptr;
-		}
+    for (unsigned int i = 0; i < BRANCHSIZE; i++) {
+        if (nodes[i] != nullptr) {
+            nodes[i]->clear();
+            delete nodes[i];
+            nodes[i] = nullptr;
+        }
    }
 }
 
 unsigned int Quadtree::getTreeSize() const{
-	return this->objectCounter;
+    return this->objectCounter;
 }
 
 void Quadtree::clear() {
@@ -31,11 +31,11 @@ void Quadtree::clear() {
    for (unsigned int i = 0; i < BRANCHSIZE; i++) {
      if (nodes[i] != nullptr) {
        nodes[i]->clear();
-		delete nodes[i];
-		 nodes[i] = nullptr;
+        delete nodes[i];
+         nodes[i] = nullptr;
      }
    }
-	objectCounter = 0;
+    objectCounter = 0;
 }
 
 void Quadtree::split() {
@@ -84,7 +84,7 @@ int Quadtree::getIndex(const HitBox* pRect) const{
 
 
 void Quadtree::insert(HitBox* pRect) {
-	objectCounter++;
+    objectCounter++;
    if (nodes[0] != nullptr) {
      int index = getIndex(pRect);
 
@@ -107,7 +107,7 @@ void Quadtree::insert(HitBox* pRect) {
        int index = getIndex(objects.at(i));
        if (index != -1) {
          nodes[index]->insert(objects.at(i));
-		 objects.erase(objects.begin()+i);
+         objects.erase(objects.begin()+i);
        }
        else {
          i++;
