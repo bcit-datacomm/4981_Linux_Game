@@ -20,22 +20,12 @@ GameManager::GameManager() {
 
 GameManager::~GameManager() {
 	printf("Destroy GM\n");
-	delete this->collisionHandler;
-	for (const auto& m : this->marineManager) {
-		this->deleteMarine(m.first);
-	}
-	for (const auto& z : this->zombieManager) {
-		this->deleteZombie(z.first);
-	}
-	/*for (const auto& o : this->objectManager) {
-		this->deleteObject(o.first);
-	}*/
-	for (const auto& m : this->turretManager) {
-		this->deleteTurret(m.first);
-	}
-    for (const auto& m : this->weaponDropManager) {
-		this->deleteWeaponDrop(m.first);
-	}
+	delete collisionHandler;
+    marineManager.clear();
+    zombieManager.clear();
+    objectManager.clear();
+    turretManager.clear();
+    weaponDropManager.clear();
 }
 
 // Render all objects in level
@@ -103,9 +93,6 @@ bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
 }
 
 void GameManager::deleteMarine(unsigned int id) {
-    if (this->marineManager.count(id)) {
-		delete &(this->marineManager.find(id)->second);
-	}
 	this->marineManager.erase(id);
 }
 
@@ -137,9 +124,6 @@ unsigned int GameManager::createTurret() {
 
 // Deletes tower from level
 void GameManager::deleteTurret(unsigned int id) {
-    if (this->turretManager.count(id)) {
-		delete &(this->turretManager.find(id)->second);
-	}
 	this->turretManager.erase(id);
 }
 
@@ -201,9 +185,6 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
 
 // Deletes zombie from level
 void GameManager::deleteZombie(unsigned int id) {
-	if (this->zombieManager.count(id)) {
-		delete &(this->zombieManager.find(id)->second);
-	}
 	this->zombieManager.erase(id);
 }
 
@@ -218,9 +199,6 @@ unsigned int GameManager::addObject(Object& newObject) {
 
 // Deletes Object from level
 void GameManager::deleteObject(unsigned int id) {
-	if (this->objectManager.count(id)) {
-		delete &(this->objectManager.find(id)->second);
-	}
 	this->objectManager.erase(id);
 }
 
@@ -235,7 +213,7 @@ unsigned int GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 
 // Create weapon drop add it to manager, returns success
 bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, float x, float y) {
-    int id = 0;
+    int id;
     int randGun = rand() % 2 + 1;
 
     if(randGun == 1){
@@ -244,15 +222,18 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, float x, float y) {
         w = ShotGun();
     }
 
-    WeaponDrop wd{w};
-    id = this->addWeaponDrop(wd);
+    if (!this->zombieManager.empty()) {
+		id = this->zombieManager.rbegin()->first + 1;
+	}
 
-	/*if(!this->weaponDropManager[id].texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
+    weaponDropManager.insert(std::make_pair(id, WeaponDrop(w)));
+
+	if(!this->weaponDropManager.at(id).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
 		printf("Failed to load the player texture!\n");
 		this->deleteWeaponDrop(id);
 		return false;
-	}*/
-	//this->weaponDropManager[id].setPosition(x,y);
+	}
+	this->weaponDropManager.at(id).setPosition(x,y);
 	return true;
 }
 

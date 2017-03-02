@@ -210,9 +210,6 @@ GameStateMatch::~GameStateMatch() {
 
 	// Free texture and font
 	delete GameManager::instance();
-	delete &(this->camera);
-	delete &(this->player);
-	delete &(this->level);
 	this->frameFPSTextTexture.free();
 	TTF_CloseFont(this->frameFont);
 	this->frameFont = NULL;
