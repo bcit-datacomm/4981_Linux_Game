@@ -1,32 +1,33 @@
  #include "HitBox.h"
 
 
-HitBox::HitBox() {
-	
+HitBox::HitBox(float x, float y, SDL_Rect rect, Entity* attached) : attached(attached) {
+	setRect(rect);
+	move(x,y);
 }
 
 HitBox::~HitBox() {
-	
+
 }
 
-const SDL_Rect& HitBox::getRect() {
-	return this->rect;	
+const SDL_Rect& HitBox::getRect() const{
+    return rect;
 }
 
-void HitBox::move(float x, float y) {
-	this->rect.x = x;
-	this->rect.y = y;
+void HitBox::move(float x, float y){
+    rect.x = x;
+    rect.y = y;
 }
 
 
 void HitBox::setRect(const SDL_Rect rerect) {
-	this->rect = rerect;
+    rect = rerect;
 }
 
 void HitBox::setFriendly(bool isFriendly) {
-	this->playerFriendly = 	isFriendly;
+    playerFriendly =     isFriendly;
 }
 
-bool HitBox::isPlayerFriendly() {
-	return 	this->playerFriendly;
+bool HitBox::isPlayerFriendly() const {
+    return     playerFriendly;
 }

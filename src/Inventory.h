@@ -22,6 +22,10 @@ private:
     HandGun defaultGun;
     Rifle tempRifle;
     ShotGun tempShotGun;
+    int slotScrollTick = 0;
+    int scrollDelay = 200;
+    int pickupTick = 0;
+    int pickupDelay = 200;
 
 };
 
