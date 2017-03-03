@@ -16,8 +16,7 @@ public:
     void onCollision();
 
     void collidingProjectile(int damage);
-    HitBox pickUpHitBox;
-
+	
     int getX() const;
     int getY() const;
     Weapon& getWeapon();

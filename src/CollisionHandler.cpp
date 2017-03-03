@@ -19,7 +19,7 @@ HitBox* CollisionHandler::detectDamageCollision(HitBox* hb) {
     std::vector<HitBox*> returnObjects;
     returnObjects = quadtreeDam->retrieve(returnObjects, hb);
       for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (hb->attached != returnObjects.at(x)->attached) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
             if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
                 !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
                 return returnObjects.at(x);
@@ -34,7 +34,7 @@ HitBox* CollisionHandler::detectProjectileCollision(HitBox* hb) {
     std::vector<HitBox*> returnObjects;
     returnObjects = quadtreePro->retrieve(returnObjects, hb);
       for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (hb->attached != returnObjects.at(x)->attached) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
             if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
                 !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
                 return returnObjects.at(x);
@@ -49,7 +49,7 @@ bool CollisionHandler::detectMovementCollision(HitBox* hb) {
     std::vector<HitBox*> returnObjects;
     returnObjects = quadtreeMov->retrieve(returnObjects, hb);
       for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (hb->attached != returnObjects.at(x)->attached) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
             if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
                 !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
                 return true;

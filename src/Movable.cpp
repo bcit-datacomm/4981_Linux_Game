@@ -4,28 +4,16 @@
 void Movable::move(float moveX, float moveY, CollisionHandler &ch){
     //Move the Movable left or right
     setX(getX() + moveX);
-    movementHitBox.move(getX(), getY());
-    projectileHitBox.move(getX(), getY());
-    damageHitBox.move(getX(), getY());
 
-    if (ch.detectMovementCollision(&movementHitBox)) {
+    if (ch.detectMovementCollision(movementHitBox.get())) {
         setX(getX() - moveX);
-        movementHitBox.move(getX(), getY());
-        projectileHitBox.move(getX(), getY());
-        damageHitBox.move(getX(), getY());
     }
 
     //Move the Movable up or down
     setY(getY()+moveY);
-    movementHitBox.move(getX(), getY());
-    projectileHitBox.move(getX(), getY());
-    damageHitBox.move(getX(), getY());
 
-    if (ch.detectMovementCollision(&movementHitBox)) {
+    if (ch.detectMovementCollision(movementHitBox.get())) {
         setY(getY() - moveY);
-        movementHitBox.move(getX(), getY());
-        projectileHitBox.move(getX(), getY());
-        damageHitBox.move(getX(), getY());
     }
 
 }

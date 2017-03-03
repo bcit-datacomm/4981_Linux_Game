@@ -1,8 +1,9 @@
  #include "HitBox.h"
 
 
-HitBox::HitBox() {
-
+HitBox::HitBox(float x, float y, SDL_Rect rect, Entity* attached) : attached(attached) {
+	setRect(rect);
+	move(x,y);
 }
 
 HitBox::~HitBox() {
@@ -27,6 +28,6 @@ void HitBox::setFriendly(bool isFriendly) {
     playerFriendly =     isFriendly;
 }
 
-bool HitBox::isPlayerFriendly() {
+bool HitBox::isPlayerFriendly() const {
     return     playerFriendly;
 }

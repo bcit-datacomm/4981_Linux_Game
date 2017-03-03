@@ -4,10 +4,7 @@ Marine::Marine() : Movable(MARINE_VELOCITY) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
-
-    pickUpHitBox.setRect(marineSpriteClips[0]);
-    pickUpHitBox.move(getX(), getY());
-    pickUpHitBox.attached = this;
+    printf("Create Marine\n");
 }
 
 Marine::~Marine() {

@@ -5,8 +5,6 @@ using namespace std;
 
 WeaponDrop::WeaponDrop(Weapon &w): weapon(w){
     printf("Created Weapon Drop\n");
-    pickUpHitBox.move(getX(), getY());
-    movementHitBox.attached = this;
 }
 
 

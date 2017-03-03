@@ -34,16 +34,16 @@ bool GameStateMatch::load() {
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
-
+ 	
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
-    success = GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    success = GameManager::instance()->createZombie(game.renderer, 100, 100);
-    success = GameManager::instance()->createZombie(game.renderer, 700, 700);
-    success = GameManager::instance()->createTurret(game.renderer, 1000, 500);
-    success = GameManager::instance()->createWeaponDrop(game.renderer, 1600, 1500);
-
+    GameManager::instance()->createMarine(game.renderer, 1500, 1500);
+    GameManager::instance()->createZombie(game.renderer, 100, 100);
+    GameManager::instance()->createZombie(game.renderer, 700, 700);
+    GameManager::instance()->createTurret(game.renderer, 1000, 500);
+    GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
+	
 
     //base = Base();
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
