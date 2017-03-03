@@ -34,6 +34,9 @@ Client *clients;
 bool verbose = false;
 
 int main(int argc, char **argv) {
+    setenv("OMP_PROC_BIND", "TRUE", 1);
+    setenv("OMP_DYNAMIC", "TRUE", 1);
+
     int opt;
     while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
         switch(opt) {
@@ -198,15 +201,21 @@ void alarmHandler(int signo) {
 
 void listenForPackets(const struct sockaddr_in servaddr) {
     int epollfd;
-    struct epoll_event ev;
+    epoll_event ev;
+    epoll_event *events;
     socklen_t servAddrLen = sizeof(servaddr);
+
+    if (!(events = (epoll_event *) calloc(MAXEVENTS, sizeof(epoll_event)))) {
+        perror("Calloc failure");
+        exit(1);
+    }
 
     if ((epollfd = epoll_create1(0)) == -1) {
         perror("Epoll create");
         exit(1);
     }
 
-    ev.events = EPOLLIN | EPOLLET;
+    ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
     ev.data.fd = listenSocketUDP;
 
     if ((epoll_ctl(epollfd, EPOLL_CTL_ADD, listenSocketUDP, &ev)) == -1) {
@@ -215,29 +224,32 @@ void listenForPackets(const struct sockaddr_in servaddr) {
     }
 
     char buff[IN_PACKET_SIZE];
-#pragma omp parallel shared(epollfd, ev) private(buff) 
+    ssize_t nbytes = 0;
+    int nevents = 0;
     for (;;) {
         if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
             perror("epoll_wait");
             exit(1);
         }
-        ssize_t read = recvfrom(listenSocketUDP,
-                buff,
-                IN_PACKET_SIZE,
-                0,
-                (struct sockaddr *) &servaddr,
-                &servAddrLen);
-
-        if (read == -1) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+#pragma omp parallel for schedule (static)
+        for (int i = 0; i < nevents; ++i) {
+            if (events[i].events & EPOLLERR) {
+                perror("Socket error");
+                close(events[i].data.fd);
                 continue;
             }
-            perror("Packet read failure");
-            exit(1);
-        }
-        if (read == IN_PACKET_SIZE) {
+            if (events[i].events & EPOLLHUP) {
+                //Peer closed the connection
+                close(events[i].data.fd);
+                continue;
+            }
+            if (events[i].events & EPOLLIN) {
+                while ((nbytes = recvfrom(listenSocketUDP, buff, IN_PACKET_SIZE, 
+                        0, (sockaddr *) &servaddr, &servAddrLen)) > 0) {
 #pragma omp task
-            processPacket(buff);
+                    processPacket(buff);
+                }
+            }
         }
     }
 }

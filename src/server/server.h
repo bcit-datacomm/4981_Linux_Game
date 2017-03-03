@@ -17,6 +17,7 @@
 #define OPT_STRING "hl:L:c:v"
 #define MAX_PORT 65535
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
+#define MAXEVENTS 100 //although many kernals define it as 5 usually it can support many more
 
 typedef struct Players{
     int x,y;
