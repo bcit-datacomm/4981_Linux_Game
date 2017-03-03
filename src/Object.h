@@ -8,7 +8,7 @@
 class Object : public Entity {
 public:
 
-    Object(int w = 0, int h = 0);
+    Object();
     virtual ~Object();
 
     void setHeight(int);
@@ -16,9 +16,13 @@ public:
     int getHeight();
     int getWidth();
 
+    void onCollision();
+    void collidingProjectile(int damage);
+
 private:
-    int width; // Width of object
     int height; // Height of object
+    int width; // Width of object
+
 };
 
 #endif

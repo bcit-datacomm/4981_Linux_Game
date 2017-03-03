@@ -1,22 +1,11 @@
 #include "Weapon.h"
 
-Weapon::Weapon(std::string type, 
-			   int range, 
-			   int damage, 
-			   int clip, 
-			   int clipMax, 
-			   int ammo, 
-			   int rAOE, 
-			   int reloadSpeed){
-	this->type = type;
-	this->range = range;
-	this->damage = damage;
-	this->clip = clip;
-	this->clipMax = clipMax;
-	this->ammo = ammo;
-	this->rAOE = rAOE;
-	this->reloadSpeed = reloadSpeed;
+Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE, int reloadSpeed)
+               :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed),
+               reloadTick(0), reloadDelay(200){
+
 }
+
 
 Weapon::~Weapon(){
 
@@ -36,16 +25,23 @@ int Weapon::getRange(){
 
 void Weapon::reloadClip(){
 
-    if(ammo >= clipMax){
-        clip = clipMax;
-    } if (ammo < clipMax){
-        int nextLoad = clip + ammo;
-        if(nextLoad <= clipMax){
-            clip = nextLoad;
-        } else {
+    int currentTime = SDL_GetTicks();
+
+    if(currentTime > (reloadTick + reloadDelay)){
+        reloadTick = currentTime;
+        printf("RELOADED\n");
+        /*if(ammo >= clipMax){
             clip = clipMax;
-        }
+        } if (ammo < clipMax){
+            int nextLoad = clip + ammo;
+            if(nextLoad <= clipMax){
+                clip = nextLoad;
+            } else {
+                clip = clipMax;
+            }
+        }*/
     }
+
 }
 
 void Weapon::shot(){
@@ -62,4 +58,12 @@ std::string Weapon::getType(){
 
 int Weapon::getReloadSpeed(){
     return reloadSpeed;
+}
+
+int Weapon::getAmmo(){
+    return ammo;
+}
+
+int Weapon::getRAOE(){
+    return rAOE;
 }

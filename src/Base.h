@@ -22,12 +22,15 @@ typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
-    Base();
-    virtual ~Base();
 
     void onCollision();
 
     void collidingProjectile(int damage);
+
+    Point getSpawnPoint();
+
+    Base();
+    virtual ~Base();
 
     Point getSpawnPoint();
    

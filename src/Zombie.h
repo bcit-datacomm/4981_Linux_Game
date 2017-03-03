@@ -27,6 +27,11 @@ public:
     void generateRandomMove(); //randomly generate the zombie's movement
 
     int getRandomAngle(); //randomly generate the angle of zombie
+
+    Zombie();
+    virtual ~Zombie();
+
+    int getRandomAngle(); //randomly generate the angle of zombie
 private:
 
     int health = 100;

@@ -5,60 +5,47 @@
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie() : Movable(ZOMBIE_VELOCITY) {
-	spriteClips[0].x = 0;
-	spriteClips[0].y = 0;
-	spriteClips[0].w = ZOMBIE_WIDTH;
-	spriteClips[0].h = ZOMBIE_HEIGHT;
-	this->movementHitBox.setRect(spriteClips[0]);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->movementHitBox.attached = this;
-	this->projectileHitBox.setRect(spriteClips[0]);
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.attached = this;
-	this->damageHitBox.setRect(spriteClips[0]);
-	this->damageHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.attached = this;
 
-	this->setAngle(this->getRandomAngle());
-	printf("Create Zombie\n");
+    setAngle(getRandomAngle());
+    printf("Create Zombie\n");
 }
 
 Zombie::~Zombie() {
-	printf("Destory Zombie\n");
+    printf("Destory Zombie\n");
 }
 
 void Zombie::onCollision() {
-	// Do nothing for now
+    // Do nothing for now
 }
 
 void Zombie::collidingProjectile(int damage) {
-	this->health = health - damage;
+    health = health - damage;
 }
 
 int Zombie::getRandomAngle(){
-	//random number generator
-	std::random_device rd;
-	std::mt19937 eng(rd());
+    //random number generator
+    std::random_device rd;
+    std::mt19937 eng(rd());
 
-	//range 0 to 360 degrees for zombie's angle
-	std::uniform_int_distribution<> distr(0,360);
+    //range 0 to 360 degrees for zombie's angle
+    std::uniform_int_distribution<> distr(0,360);
 
-	return distr(eng);
+    return distr(eng);
 }
 
 void Zombie::generateRandomMove(){
-	int tx = this->getX()+50;
-	int ty = this->getY()+50;
-	if(tx<=0 || tx>=2000 || ty<=0 || ty>=2000){
-		this->setAngle(this->getRandomAngle());
-	}
+    int tx = getX()+50;
+    int ty = getY()+50;
+    if(tx<=0 || tx>=2000 || ty<=0 || ty>=2000){
+        setAngle(getRandomAngle());
+    }
 
-	double cosVal = cos(this->getAngle()*PI/180.0);
-	double sinVal = sin(this->getAngle()*PI/180.0);
+    double cosVal = cos(getAngle()*PI/180.0);
+    double sinVal = sin(getAngle()*PI/180.0);
 
-	int x = this->getVelocity();
-	int y = this->getVelocity();
+    int x = getVelocity();
+    int y = getVelocity();
 
-	this->setDX(x*cosVal);
-	this->setDY(y*sinVal);
+    setDX(x*cosVal);
+    setDY(y*sinVal);
 }
