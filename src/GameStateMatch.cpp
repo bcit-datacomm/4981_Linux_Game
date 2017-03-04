@@ -138,12 +138,15 @@ void GameStateMatch::handle() {
                 player.handlePlacementClick(game.renderer);
             }
             break;
-          case SDL_KEYDOWN:
-            switch( event.key.keysym.sym ) {
-            case SDLK_ESCAPE:
-                play = false;
-                break;
-            default:
+      	case SDL_KEYDOWN:
+        	switch( this->event.key.keysym.sym ) {
+			case SDLK_ESCAPE:
+				play = false;
+				break;
+			case SDLK_b:
+				this->player->placeBarricade(this->game->renderer);
+				break;
+			default:
                 break;
             }
             break;

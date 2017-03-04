@@ -5,6 +5,7 @@
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie() : Movable(ZOMBIE_VELOCITY) {
+
     setAngle(getRandomAngle());
     printf("Create Zombie\n");
 }

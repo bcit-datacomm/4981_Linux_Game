@@ -62,9 +62,9 @@ bool CollisionHandler::detectMovementCollision(HitBox* hb) {
 //check for pickup collision
 HitBox* CollisionHandler::detectPickUpCollision(HitBox* hb) {
     std::vector<HitBox*> returnObjects;
-    returnObjects = quadtreeMov->retrieve(returnObjects, hb);
+    returnObjects = quadtreePickUp->retrieve(returnObjects, hb);
       for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (hb->attached != returnObjects.at(x)->attached) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
             if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
                 !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
                 return returnObjects.at(x);
@@ -73,3 +73,4 @@ HitBox* CollisionHandler::detectPickUpCollision(HitBox* hb) {
       }
     return nullptr;
 }
+

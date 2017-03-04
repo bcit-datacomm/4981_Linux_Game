@@ -1,9 +1,7 @@
 #include "Object.h"
 
 Object::Object() {
-    //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+
 }
 
 Object::~Object() {

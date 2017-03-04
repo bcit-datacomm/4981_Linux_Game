@@ -18,6 +18,7 @@ GameManager::GameManager():collisionHandler() {
 }
 
 GameManager::~GameManager() {
+
     printf("Destroy GM\n");
     marineManager.clear();
     zombieManager.clear();
@@ -48,6 +49,9 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
                                  NULL, m.second.getAngle());
     }
 
+ 	for (const auto& b : barricadeManager) {
+		b.second->texture.render(gRenderer, b.second->getX()-camX, b.second->getY()-camY);
+	}
 
 }
 
@@ -282,9 +286,18 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
     }
 
+   	for (const auto& b : this->barricadeManager) {
+		  this->collisionHandler->quadtreeMov->insert(m.second.movementHitBox.get());
+		  this->collisionHandler->quadtreeDam->insert(m.second.damageHitBox.get());
+	  }
+
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
     }
     
-
+void GameManager::deleteBarricade(unsigned int id) {
+	if (this->barricadeManager.count(id)) {
+		delete this->barricadeManager.find(id)->second;
+	}
+	this->barricadeManager.erase(id);
 }

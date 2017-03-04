@@ -11,6 +11,7 @@
 class Player {
 public:
 
+
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
     void handleMouseUpdate(Window& w);
 
@@ -24,6 +25,7 @@ public:
     // determines whether turret can be placed
     void turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
                           unsigned int tid);
+
 
     Player();
     ~Player();
