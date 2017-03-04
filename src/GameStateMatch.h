@@ -1,5 +1,6 @@
 #ifndef GAMESTATE_MATCH_H
 #define GAMESTATE_MATCH_H
+#include "Entity.h"
 #include "GameState.h"
 #include <string>
 #include <sstream>
@@ -12,34 +13,38 @@
 #include "Zombie.h"
 #include "GameManager.h"
 #include "CollisionHandler.h"
+#include "Window.h"
 
 class GameStateMatch : public GameState {
 public:
 
-	virtual bool load();
-	virtual void loop();
+    virtual bool load();
+    virtual void loop();
 
-	GameStateMatch(Game* g) : GameState(g) {};
-	virtual ~GameStateMatch();
+    GameStateMatch(Game& g, int gameWidth, int gameHeight);
 
-	Player* player = NULL;
-	Level* level = NULL;
-	Camera* camera = NULL;
-	Base* base = NULL;
+    virtual ~GameStateMatch();
 
-	GameManager* gameManager = NULL;
 
-	// Frame Display
-	std::stringstream frameTimeText;
-	TTF_Font* frameFont = NULL;
-	LTexture frameFPSTextTexture;
+
+    GameManager* gameManager = NULL;
+
+    // Frame Display
+    std::stringstream frameTimeText;
+    TTF_Font* frameFont = NULL;
+    LTexture frameFPSTextTexture;
 
 private:
 
-	virtual void sync();
-	virtual void handle();
-	virtual void update(const float& delta);
-	virtual void render();
+    Player player;
+    Level level;
+    Base base;
+    Camera camera;
+
+    virtual void sync();
+    virtual void handle();
+    virtual void update(const float& delta);
+    virtual void render();
 
 };
 

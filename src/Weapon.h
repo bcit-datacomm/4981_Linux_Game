@@ -17,19 +17,20 @@ public:
     void reloadClip();//resets clip to max amount
     void shot();//decreases the amount of ammo
     int getClipMax(); //returns max amount clip can hold
-    std::string getType();
-    int getReloadSpeed();
+    std::string getType();//returns weapon type
+    int getReloadSpeed();//returns weapon reload speed
+    int getAmmo();//returns ammo amount
+    int getRAOE(); //returns radius of effect
 
-	Weapon(std::string type = "no type", 
-		   int range = 0,
-		   int damage = 0,
-		   int clip = 0, 
-		   int clipMax = 0, 
-		   int ammo = 0,
-		   int rAOE = 0, 
-		   int reloadSpeed = 0);
-	
-	~Weapon();
+    Weapon(std::string type = "no type", int range = 0,
+           int damage = 0,
+           int clip = 0,
+           int clipMax = 0,
+           int ammo = 0,
+           int rAOE = 0,
+           int reloadSpeed = 0);
+
+    ~Weapon();
 
 protected:
     std::string type;
@@ -42,6 +43,8 @@ protected:
     int reloadSpeed;
     LTexture inGameTexture;
     LTexture UiTexture;
+    int reloadTick;
+    int reloadDelay;
 
 };
 

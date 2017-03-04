@@ -1,8 +1,10 @@
 #include "GameManager.h"
 #include "HitBox.h"
+#include <memory>
+#include <utility>
 
 GameManager *GameManager::sInstance;
-
+Weapon w;
 //Returns the already existing GameManager or if there isn't one, makes
 //a new one and returns it.
 GameManager *GameManager::instance() {
@@ -11,252 +13,279 @@ GameManager *GameManager::instance() {
     return sInstance;
 }
 
-GameManager::GameManager() {
-	printf("Create GM\n");
-	this->collisionHandler = new CollisionHandler();
+GameManager::GameManager():collisionHandler() {
+    printf("Create GM\n");
 }
 
 GameManager::~GameManager() {
-	printf("Destroy GM\n");
-	delete this->collisionHandler;
-	for (const auto& m : this->marineManager) {
-		this->deleteMarine(m.first);
-	}
-	for (const auto& z : this->zombieManager) {
-		this->deleteZombie(z.first);
-	}
-	for (const auto& o : this->objectManager) {
-		this->deleteObject(o.first);
-	}
-	for (const auto& m : this->turretManager) {
-		this->deleteTurret(m.first);
-	}
+    printf("Destroy GM\n");
+    marineManager.clear();
+    zombieManager.clear();
+    objectManager.clear();
+    turretManager.clear();
+    weaponDropManager.clear();
 }
 
 // Render all objects in level
 void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
+    for (const auto& m : weaponDropManager) {
+        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY);
+    }
+    for (const auto& m : marineManager) {
+        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
+                                 NULL, m.second.getAngle());
+    }
+    for (const auto& o : objectManager) {
+        o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
+    }
+    for (const auto& z : zombieManager) {
+        z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
+                                 NULL, z.second.getAngle());
+    }
 
-	for (const auto& m : this->marineManager) {
-		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY,
-								 NULL, m.second->getAngle());
-	}
-	for (const auto& o : this->objectManager) {
-		o.second->texture.render(gRenderer, o.second->getX()-camX, o.second->getY()-camY);
-	}
-	for (const auto& z : this->zombieManager) {
-		z.second->texture.render(gRenderer, z.second->getX()-camX, z.second->getY()-camY,
-								 NULL, z.second->getAngle());
-	}
+    for (const auto& m : turretManager) {
+        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
+                                 NULL, m.second.getAngle());
+    }
 
-    for (const auto& m : this->turretManager) {
-		m.second->texture.render(gRenderer, m.second->getX()-camX, m.second->getY()-camY,
-								 NULL, m.second->getAngle());
-	}
+
 }
 
 // Update marine movements. health, and actions
 void GameManager::updateMarines(const float& delta) {
-	for (const auto& m : this->marineManager) {
-		m.second->move((m.second->getDX()*delta), (m.second->getDY()*delta), this->collisionHandler);
-	}
+    for (auto& m : marineManager) {
+        m.second.move((m.second.getDX()*delta), (m.second.getDY()*delta), collisionHandler);
+    }
 }
 
 // Update zombie movements.
 void GameManager::updateZombies(const float& delta) {
-	for (const auto& z : this->zombieManager) {
-		z.second->generateRandomMove();
-		z.second->move((z.second->getDX()*delta), (z.second->getDY()*delta), this->collisionHandler);
-	}
+    for (auto& z : zombieManager) {
+        z.second.generateRandomMove();
+        z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
+    }
 }
 // Create marine add it to manager, returns marine id
 unsigned int GameManager::createMarine() {
-	unsigned int id = 0;
-	if (!this->marineManager.empty()) {
-		id = this->marineManager.rbegin()->first + 1;
-	}
-	this->marineManager[id] = new Marine();
-	return id;
+    unsigned int id = 0;
+    if (!marineManager.empty()) {
+        id = marineManager.rbegin()->first + 1;
+    }
+    marineManager[id] = Marine();
+    return id;
 }
 
-// Create marine add it to manager, returns success
-bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y) {
-	unsigned int id = 0;
-	if (!this->marineManager.empty()) {
-		id = this->marineManager.rbegin()->first + 1;
-	}
-	this->marineManager[id] = new Marine();
-	if (!this->marineManager[id]->texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
-		printf("Failed to load the player texture!\n");
-		this->deleteMarine(id);
-		return false;
-	}
-	this->marineManager[id]->setPosition(x,y);
-	return true;
+bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
+    unsigned int id = 0;
+    if (!marineManager.empty()) {
+        id = marineManager.rbegin()->first + 1;
+    }
+    marineManager[id] = Marine();
+    if (!marineManager.at(id).texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
+        printf("Failed to load the marine texture!\n");
+        deleteMarine(id);
+        return false;
+    }
+    marineManager[id].setPosition(x,y);
+    return true;
 }
 
-// Deletes marine from level
 void GameManager::deleteMarine(unsigned int id) {
-	if (this->marineManager.count(id)) {
-		delete this->marineManager.find(id)->second;
-	}
-	this->marineManager.erase(id);
+    marineManager.erase(id);
 }
+
 
 // Adds marine to level
-bool GameManager::addMarine(unsigned int id, Marine* newMarine) {
-	if (this->marineManager.count(id)) {
-		return false;
-	} else {
-		this->marineManager[id] = newMarine;
-		return true;
-	}
+bool GameManager::addMarine(unsigned int id, Marine& newMarine) {
+    if (marineManager.count(id)) {
+        return false;
+    } else {
+        marineManager[id] = newMarine;
+        return true;
+    }
 }
 
 // Get a marine by its id
-Marine* GameManager::getMarine(unsigned int id) {
-	return this->marineManager.find(id)->second;
+Marine& GameManager::getMarine(unsigned int id) {
+    return marineManager.find(id)->second;
 }
 
 // Create Turret add it to manager, returns tower id
 unsigned int GameManager::createTurret() {
     unsigned int id = 0;
-	if (!this->turretManager.empty()) {
-		id = this->turretManager.rbegin()->first + 1;
-	}
-	this->turretManager[id] = new Turret();
-	return id;
+    if (!turretManager.empty()) {
+        id = turretManager.rbegin()->first + 1;
+    }
+    turretManager[id] = Turret();
+    return id;
 }
 
 // Deletes tower from level
 void GameManager::deleteTurret(unsigned int id) {
-    if (this->turretManager.count(id)) {
-		delete this->turretManager.find(id)->second;
-	}
-	this->turretManager.erase(id);
+    turretManager.erase(id);
 }
 
 // Adds tower to level
-bool GameManager::addTurret (unsigned int id, Turret* newTurret) {
-    if (this->turretManager.count(id)) {
-		return false;
-	} else {
-		this->turretManager[id] = newTurret;
-		return true;
-	}
+bool GameManager::addTurret (unsigned int id, Turret& newTurret) {
+    if (turretManager.count(id)) {
+        return false;
+    } else {
+        turretManager[id] = newTurret;
+        return true;
+    }
 }
 
 // Create turret add it to truret, returns if success
 bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
-	unsigned int id = 0;
-	if (!this->turretManager.empty()) {
-		id = this->turretManager.rbegin()->first + 1;
-	}
-	this->turretManager[id] = new Turret();
-	if (!this->turretManager[id]->texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
-		printf("Failed to load the turret texture!\n");
-		this->deleteTurret(id);
-		return false;
-	}
-	this->turretManager[id]->setPosition(x,y);
-	return true;
+    unsigned int id = 0;
+    if (!turretManager.empty()) {
+        id = turretManager.rbegin()->first + 1;
+    }
+    turretManager[id] = Turret();
+    if (!turretManager.at(id).texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
+        printf("Failed to load the turret texture!\n");
+        deleteTurret(id);
+        return false;
+    }
+    turretManager.at(id).setPosition(x,y);
+    return true;
 }
 
 // Get a tower by its id
-Turret* GameManager::getTurret(unsigned int id) {
-    return this->turretManager.find(id)->second;
+Turret& GameManager::getTurret(unsigned int id) {
+    return turretManager.find(id)->second;
 }
 
-unsigned int GameManager::addZombie(Zombie* newZombie) {
-	unsigned int id = 0;
-	if (!this->zombieManager.empty()) {
-		id = this->zombieManager.rbegin()->first + 1;
-	}
-	zombieManager[id] = newZombie;
-	return id;
+unsigned int GameManager::addZombie(Zombie& newZombie) {
+    unsigned int id = 0;
+    if (!zombieManager.empty()) {
+        id = zombieManager.rbegin()->first + 1;
+    }
+    zombieManager[id] = newZombie;
+    return id;
 }
 
 // Create zombie add it to manager, returns success
 bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
-	unsigned int id = 0;
-	if (!this->zombieManager.empty()) {
-		id = this->zombieManager.rbegin()->first + 1;
-	}
-	this->zombieManager[id] = new Zombie();
-	if (!this->zombieManager[id]->texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
-		printf("Failed to load the player texture!\n");
-		this->deleteZombie(id);
-		return false;
-	}
-	this->zombieManager[id]->setPosition(x,y);
-	return true;
+    unsigned int id = 0;
+    if (!zombieManager.empty()) {
+        id = zombieManager.rbegin()->first + 1;
+    }
+    zombieManager[id] = Zombie();
+    if (!zombieManager.at(id).texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
+        printf("Failed to load the player texture!\n");
+        deleteZombie(id);
+        return false;
+    }
+    zombieManager.at(id).setPosition(x,y);
+    return true;
 }
 
 // Deletes zombie from level
 void GameManager::deleteZombie(unsigned int id) {
-	if (this->zombieManager.count(id)) {
-		delete this->zombieManager.find(id)->second;
-	}
-	this->zombieManager.erase(id);
+    zombieManager.erase(id);
 }
 
-unsigned int GameManager::addObject(Object* newObject) {
-	unsigned int id = 0;
-	if (!this->objectManager.empty()) {
-		id = this->objectManager.rbegin()->first + 1;
-	}
-	objectManager[id] = newObject;
-	return id;
+unsigned int GameManager::addObject(Object& newObject) {
+    unsigned int id = 0;
+    if (!objectManager.empty()) {
+        id = objectManager.rbegin()->first + 1;
+    }
+    objectManager[id] = newObject;
+    return id;
 }
 
-// Deletes zombie from level
+// Deletes Object from level
 void GameManager::deleteObject(unsigned int id) {
-	if (this->objectManager.count(id)) {
-		delete this->objectManager.find(id)->second;
-	}
-	this->objectManager.erase(id);
+    objectManager.erase(id);
+}
+
+unsigned int GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
+    unsigned int id = 0;
+    if (!weaponDropManager.empty()) {
+        id = weaponDropManager.rbegin()->first + 1;
+    }
+    weaponDropManager.insert(std::make_pair(id, newWeaponDrop));
+    return id;
+}
+
+// Create weapon drop add it to manager, returns success
+bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, float x, float y) {
+    int id;
+    int randGun = rand() % 2 + 1;
+
+    if(randGun == 1){
+        w = Rifle();
+    } else if(randGun == 2){
+        w = ShotGun();
+    }
+
+    if (!zombieManager.empty()) {
+        id = zombieManager.rbegin()->first + 1;
+    }
+
+    weaponDropManager.insert(std::make_pair(id, WeaponDrop(w)));
+
+    if(!weaponDropManager.at(id).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
+        printf("Failed to load the player texture!\n");
+        deleteWeaponDrop(id);
+        return false;
+    }
+    weaponDropManager.at(id).setPosition(x,y);
+    return true;
+}
+
+// Deletes weapon from level
+void GameManager::deleteWeaponDrop(unsigned int id) {
+    weaponDropManager.erase(id);
 }
 
 // Returns Collision Handler
-CollisionHandler* GameManager::getCollisionHandler() {
-    return this->collisionHandler;
+CollisionHandler& GameManager::getCollisionHandler() {
+    return collisionHandler;
 }
 
 // Update colliders to current state
 void GameManager::updateCollider() {
 
-	delete this->collisionHandler->quadtreeMov;
-	delete this->collisionHandler->quadtreePro;
-	delete this->collisionHandler->quadtreeDam;
+    delete collisionHandler.quadtreeMov;
+    delete collisionHandler.quadtreePro;
+    delete collisionHandler.quadtreeDam;
+    delete collisionHandler.quadtreePickUp;
 
-	this->collisionHandler->quadtreeMov = new Quadtree(0, {0,0,2000,2000});
-	this->collisionHandler->quadtreePro = new Quadtree(0, {0,0,2000,2000});
-	this->collisionHandler->quadtreeDam = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreeMov = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
+    collisionHandler.quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
+    
+    for (auto& m : marineManager) {
+        collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
+        collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
+    }
 
+    for (auto& z : zombieManager) {
+        collisionHandler.quadtreeMov->insert(z.second.movementHitBox.get());
+        collisionHandler.quadtreePro->insert(z.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam->insert(z.second.damageHitBox.get());
+    }
 
-	for (const auto& m : this->marineManager) {
-		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
-		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
-		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
-	}
-	std::vector<HitBox*> projectileColliders;
-	for (const auto& m : this->marineManager) {
-		projectileColliders.push_back(&m.second->projectileHitBox);
-	}
-	for (const auto& z : this->zombieManager) {
-		this->collisionHandler->quadtreeMov->insert(&z.second->movementHitBox);
-		this->collisionHandler->quadtreePro->insert(&z.second->projectileHitBox);
-		this->collisionHandler->quadtreeDam->insert(&z.second->damageHitBox);
-	}
-	for (const auto& o : this->objectManager) {
-		this->collisionHandler->quadtreeMov->insert(&o.second->movementHitBox);
-		this->collisionHandler->quadtreePro->insert(&o.second->projectileHitBox);
-		this->collisionHandler->quadtreeDam->insert(&o.second->damageHitBox);
-	}
-  	for (const auto& m : this->turretManager) {
-		this->collisionHandler->quadtreeMov->insert(&m.second->movementHitBox);
-		this->collisionHandler->quadtreePro->insert(&m.second->projectileHitBox);
-		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
-	}
+    for (auto& o : objectManager) {
+        collisionHandler.quadtreeMov->insert(o.second.movementHitBox.get());
+        collisionHandler.quadtreePro->insert(o.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam->insert(o.second.damageHitBox.get());
+    }
+
+      for (auto& m : turretManager) {
+        collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
+        collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
+    }
+
+    for (auto& m : weaponDropManager) {
+        collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
+    }
+    
 
 }
 

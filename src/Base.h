@@ -1,15 +1,16 @@
 #ifndef BASE_H
 #define BASE_H
-#include <string>
-#include "LTexture.h"
-#include "HitBox.h"
+//#include <string>
+//#include "LTexture.h"
+//#include "HitBox.h"
+#include "Entity.h"
 #include "Object.h"
-#include "CollisionHandler.h"
-#include "Player.h"
-#include <vector>
-#include <map>
-#include <utility>
-#include <SDL2/SDL.h>
+//#include "CollisionHandler.h"
+//#include "Player.h"
+//#include <vector>
+//#include <map>
+//#include <utility>
+//#include <SDL2/SDL.h>
 
 //TODO :  change later.
 const int BASE_HEIGHT = 500;
@@ -21,17 +22,17 @@ typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
-	void onCollision();
-	
-	void collidingProjectile(int damage);
+    void onCollision();
 
-	Point getSpawnPoint();
-	
-	Base();
-	virtual ~Base();
-	
+    void collidingProjectile(int damage);
+
+    Point getSpawnPoint();
+
+    Base();
+    virtual ~Base();
+
 private:
-	int health = 100;
-	
+    int health = 100;
+
 };
 #endif
