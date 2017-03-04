@@ -122,7 +122,7 @@ void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
-    player.handleMouseUpdate(game.window);
+    player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
     //Handle events on queue
     while ( SDL_PollEvent( &event )) {
         game.window.handleEvent(event);
@@ -144,7 +144,7 @@ void GameStateMatch::handle() {
 				play = false;
 				break;
 			case SDLK_b:
-				this->player->placeBarricade(this->game->renderer);
+				player.handleTempBarricade(game.renderer);
 				break;
 			default:
                 break;

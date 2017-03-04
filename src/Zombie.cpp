@@ -4,8 +4,7 @@
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
-Zombie::Zombie() : Movable(ZOMBIE_VELOCITY) {
-
+Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
     printf("Create Zombie\n");
 }

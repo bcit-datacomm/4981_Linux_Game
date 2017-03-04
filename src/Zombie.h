@@ -17,24 +17,15 @@ const int ZOMBIE_WIDTH = 75;
 
 class Zombie : public Movable {
 public:
-    Zombie();
+    Zombie(int health = 100, int state = 0);
     virtual ~Zombie();
 
     void onCollision();
-
     void collidingProjectile(int damage);
-
     void generateRandomMove(); //randomly generate the zombie's movement
-
-    int getRandomAngle(); //randomly generate the angle of zombie
-
-    Zombie();
-    virtual ~Zombie();
-
     int getRandomAngle(); //randomly generate the angle of zombie
 private:
-
-    int health = 100;
+    int health;
     int state; //used to select sprite to display
 
 };

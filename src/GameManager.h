@@ -60,7 +60,9 @@ public:
     bool createWeaponDrop(SDL_Renderer* gRenderer, float x, float y);
     void deleteWeaponDrop(unsigned int id);
 
+    unsigned int createBarricade(SDL_Renderer* gRenderer, float x, float y);
     void deleteBarricade(unsigned int id);
+    Barricade& getBarricade(unsigned int id);
 private:
     static GameManager *sInstance;
 
@@ -72,7 +74,7 @@ private:
     std::map<unsigned int, Zombie> zombieManager;
     std::map<unsigned int, Turret> turretManager;
     std::map<unsigned int, WeaponDrop> weaponDropManager;
-    std::map<unsigned int, Barricade*> barricadeManager;
+    std::map<unsigned int, Barricade> barricadeManager;
 
 };
 

@@ -50,7 +50,7 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
     }
 
  	for (const auto& b : barricadeManager) {
-		b.second->texture.render(gRenderer, b.second->getX()-camX, b.second->getY()-camY);
+		b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
 	}
 
 }
@@ -280,24 +280,46 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeDam->insert(o.second.damageHitBox.get());
     }
 
-      for (auto& m : turretManager) {
+    for (auto& m : turretManager) {
         collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
         collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
         collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
     }
 
-   	for (const auto& b : this->barricadeManager) {
-		  this->collisionHandler->quadtreeMov->insert(m.second.movementHitBox.get());
-		  this->collisionHandler->quadtreeDam->insert(m.second.damageHitBox.get());
-	  }
+   	for (auto& b : barricadeManager) {
+        if(b.second.isPlaced()) {
+            collisionHandler.quadtreeMov->insert(b.second.movementHitBox.get());
+            collisionHandler.quadtreeDam->insert(b.second.damageHitBox.get());
+        }
+	}
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
     }
     
+}
+
+// Create barricade add it to manager, returns success
+unsigned int GameManager::createBarricade(SDL_Renderer* gRenderer, float x, float y) {
+    unsigned int id = 0;
+    if (!barricadeManager.empty()) {
+        id = barricadeManager.rbegin()->first + 1;
+    }
+    barricadeManager[id] = Barricade();
+    if (!barricadeManager.at(id).texture.loadFromFile("assets/texture/barricade.png", gRenderer)) {
+        printf("Failed to load the barricade texture!\n");
+        deleteBarricade(id);
+        return -1;
+    }
+    barricadeManager.at(id).setPosition(x,y);
+    return id;
+}
+
+
 void GameManager::deleteBarricade(unsigned int id) {
-	if (this->barricadeManager.count(id)) {
-		delete this->barricadeManager.find(id)->second;
-	}
-	this->barricadeManager.erase(id);
+	barricadeManager.erase(id);
+}
+// Get a barricade by its id
+Barricade& GameManager::getBarricade(unsigned int id) {
+    return barricadeManager.find(id)->second;
 }

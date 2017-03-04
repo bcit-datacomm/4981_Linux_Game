@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <math.h>
 
-Player::Player() {
+Player::Player() : tempBarricadeID(-1) {
 
 }
 
@@ -14,7 +14,7 @@ void Player::setControl(Marine& newControl) {
 }
 
 
-void Player::handleMouseUpdate(Window& w) {
+void Player::handleMouseUpdate(Window& w, float camX, float camY) {
     int mouseX;
     int mouseY;
     int mouseDeltaX;
@@ -28,6 +28,11 @@ void Player::handleMouseUpdate(Window& w) {
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
 
     marine->setAngle(angle);
+
+    if (tempBarricadeID > -1) {
+        Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
+        tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY, GameManager::instance()->getCollisionHandler());
+    }
 
 }
 
@@ -43,12 +48,13 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
     // getting mouses current position
     angle = marine->getAngle();
 
-    if (this->tempBarricade != NULL) {
-	if (this->tempBarricade->isPlaceable()) {
-		GameManager::instance()->placeTempBarricade();
-		this->tempBarricade = NULL;
-	}
-	return;
+    if (tempBarricadeID > -1) {
+        Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
+	    if (tempBarricade.isPlaceable()) {
+		    tempBarricade.placeBarricade();
+            tempBarricadeID = -1;
+	    }
+	    return;
     }
 
     unsigned int tid = GameManager::instance()->createTurret();
@@ -125,18 +131,17 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     marine->setDX(x);
 }
 
-void Player::placeBarricade(SDL_Renderer *renderer) {
-	if(this->tempBarricade == NULL){
-		double angle = this->marine->getAngle();
-		int distance = 100;
-		GameManager::instance()->createTempBarricade(renderer, this->marine->getX() + distance*cos(angle), 
-			this->marine->getY() + distance*sin(angle));
-		this->tempBarricade = GameManager::instance()->getTempBarricade();
-	}
-	else{
-		GameManager::instance()->deleteTempBarricade();
-		this->tempBarricade = NULL;
-	}
+void Player::handleTempBarricade(SDL_Renderer *renderer) {
+    if(tempBarricadeID < 0) {
+        double angle = marine->getAngle();
+        int distance = 100;
+        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle), 
+        marine->getY() + distance*sin(angle));
+    }
+    else {
+        GameManager::instance()->deleteBarricade(tempBarricadeID);
+        tempBarricadeID = -1;
+    }
 }
 
 

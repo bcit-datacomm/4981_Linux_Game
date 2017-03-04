@@ -4,7 +4,10 @@
 #include <random>
 #define PI 3.14159265
 
-Barricade::Barricade() : Object(BARRICADE_WIDTH, BARRICADE_HEIGHT) {
+Barricade::Barricade(int health, int state, bool boolPlaceable, bool boolPlaced) 
+                    : Object(BARRICADE_HEIGHT, BARRICADE_WIDTH),
+                      health(health), state(state), 
+                      boolPlaceable(boolPlaceable), boolPlaced(boolPlaced) {
 	printf("Create Barricade\n");
 }
 
@@ -12,41 +15,40 @@ Barricade::~Barricade() {
 	printf("Destory Barricade\n");
 }
 
-bool Barricade::checkPlaceablePosition(float playerX, float playerY, float moveX, float moveY, CollisionHandler * ch){
+bool Barricade::checkPlaceablePosition(float playerX, float playerY, float moveX, float moveY, CollisionHandler  &ch){
 	float distanceX = (playerX - moveX) * (playerX - moveX);
 	float distanceY = (playerY - moveY) * (playerY - moveY);
 	float distance = sqrt(abs(distanceX+distanceY));
 	if(distance>200){
-		this->boolPlaceable = false;
+		boolPlaceable = false;
 	}else
-		this->boolPlaceable = true;
-	if(this->boolPlaceable){
-		if (ch->detectMovementCollision(&this->movementHitBox) || ch->detectMovementCollision(&this->movementHitBox)) {
-			this->movementHitBox.move(this->getX(), this->getY());
-			this->projectileHitBox.move(this->getX(), this->getY());
-			this->damageHitBox.move(this->getX(), this->getY());
-			this->boolPlaceable = false;
-		}
+		boolPlaceable = true;
+
+	if(boolPlaceable){
+        if(ch.detectMovementCollision(movementHitBox.get()))
+			boolPlaceable = false;
+ 
 	}
 	return boolPlaceable;
-
 }
 
 bool Barricade::isPlaceable(){
 	return boolPlaceable;
 }
 
+bool Barricade::isPlaced(){
+    return boolPlaced;
+}
+
 // Move Zombie by x and y amount
-void Barricade::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler * ch) {
-	this->setPosition(moveX, moveY);
-	this->movementHitBox.move(moveX, moveY);
-	this->projectileHitBox.move(moveX, moveY);
-	this->damageHitBox.move(moveX, moveY);
-	
+void Barricade::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
+	setPosition(moveX, moveY);
+    //`setX(100);
+
 	if(this->checkPlaceablePosition(playerX, playerY, moveX, moveY, ch))
-		this->texture.setAlpha(200);
+		texture.setAlpha(200);
 	else
-		this->texture.setAlpha(30);
+		texture.setAlpha(30);
 }
 
 
@@ -55,15 +57,10 @@ void Barricade::onCollision() {
 }
 
 void Barricade::collidingProjectile(int damage) {
-	this->health -= damage;
+	health -= damage;
 }
 
-//sets the angle of zombie's sprite
-void Barricade::setAngle(double a){
-    angle = a;
-}
-
-//returns the angle of the player's marine sprite
-double Barricade::getAngle(){
-    return angle;
+void Barricade::placeBarricade(){
+    texture.setAlpha(255);
+    boolPlaced=true;
 }
