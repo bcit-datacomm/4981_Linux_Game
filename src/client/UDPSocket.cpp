@@ -26,7 +26,7 @@ UDPSocket encapsulates a file descriptor for a UDP socket.
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include "UDPSocket.hpp"
+#include "UDPSocket.h"
 
 /*--------------------------------------------------------------------------
 DESTRUCTOR: UDPSocket
@@ -45,14 +45,21 @@ PARAMS:
 NOTES:
 Opens socket and stores file descriptor.
 --------------------------------------------------------------------------*/
-UDPSocket::UDPSocket() {
+UDPSocket::UDPSocket(const char *ip) {
     if((_sockUDP = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("socket");
         exit(1);
     }
 
-    int truth = 1;
-    if(setsockopt(_sockUDP, SOL_SOCKET, SO_REUSEADDR, &truth, sizeof(int)) < 0) {
+    memset((char *) &_servAddr, 0, sizeof(_servAddr));
+    _servAddr.sin_family = AF_INET;
+    _servAddr.sin_port = htons(LISTEN_PORT_UDP);
+    _servAddr.sin_addr.s_addr = INADDR_ANY;
+
+    bindSock();
+
+    int unusedFlags = 1;
+    if(setsockopt(_sockUDP, SOL_SOCKET, SO_REUSEADDR, &unusedFlags, sizeof(int)) < 0) {
         perror("setsockopt");
         exit(1);
     }
@@ -100,14 +107,14 @@ void
 NOTES:
 Binds the socket to the specified port. (Wrapper method for bind function)
 --------------------------------------------------------------------------*/
-void UDPSocket::bindTo(int port) {
-    struct sockaddr_in myAddress;
-    memset((char *) &myAddress, 0, sizeof(myAddress));
-    myAddress.sin_family = AF_INET;
-    myAddress.sin_port = htons(port);
-    myAddress.sin_addr.s_addr = INADDR_ANY;
+void UDPSocket::bindSock() {
+    struct sockaddr_in addr;
+    memset((char *) &addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(LISTEN_PORT_UDP);
+    addr.sin_addr.s_addr = INADDR_ANY;
 
-    if(bind(_sockUDP, (struct sockaddr *)&myAddress, sizeof(myAddress)) < 0) {
+    if(bind(_sockUDP, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
         perror("bind");
         exit(1);
     }
@@ -136,13 +143,13 @@ void
 NOTES:
 Sends buf to servAddr. Reliable even when len exceeds MTU.
 --------------------------------------------------------------------------*/
-void UDPSocket::sendTo(const char *buf, int len, struct sockaddr_in servAddr) {
-    socklen_t addrLen = sizeof(servAddr);
+void UDPSocket::sendToServ(const char *buf, const int &len) {
+    socklen_t addrLen = sizeof(_servAddr);
     int res = 0;
 	int ttlsent = 0, bytesleft = len;
 	while (ttlsent < len) {
         if ((res = sendto(_sockUDP, buf + ttlsent, bytesleft, 0,
-            (struct sockaddr *)&servAddr, addrLen)) < 0 ) {
+            (struct sockaddr *)&_servAddr, addrLen)) < 0 ) {
 			perror("read");
             exit(1);
 		}
@@ -175,13 +182,13 @@ NOTES:
 Receives data from servAddr and stores it in buf. Reliable even when data
 being received exceeds MTU.
 --------------------------------------------------------------------------*/
-void UDPSocket::receiveFrom(char *buf, int len, struct sockaddr_in servAddr) {
-    socklen_t addrLen = sizeof(servAddr);
+void UDPSocket::recvFromServ(char *buf, const int& len) {
+    socklen_t addrLen = sizeof(_servAddr);
     int res = 0;
 	int ttlsent = 0, bytesleft = len;
 	while (ttlsent < len) {
 		if ((res = recvfrom(_sockUDP, buf + ttlsent, bytesleft, 0,
-            (struct sockaddr *)&servAddr, &addrLen)) < 0 ) {
+            (struct sockaddr *)&_servAddr, &addrLen)) < 0 ) {
 			perror("recvfrom");
             exit(1);
 		}

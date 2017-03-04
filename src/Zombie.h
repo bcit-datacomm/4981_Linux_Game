@@ -19,18 +19,18 @@ public:
 
 	void move(float moveX, float moveY, CollisionHandler* ch); // Moves Zombie
 
-    	void setDX(float px); //set delta x coordinate
+	void setDX(float px); //set delta x coordinate
 
-    	void setDY(float py); //set delta y coordinate
+	void setDY(float py); //set delta y coordinate
 
-    	void setVelocity(int pvel); // set velocity of Zombie movement
+	void setVelocity(int pvel); // set velocity of Zombie movement
 
-    	float getDX(); // get delta x coordinate
+	float getDX(); // get delta x coordinate
 
-    	float getDY(); //get delta y coordinate
+	float getDY(); //get delta y coordinate
 
-    	int getVelocity(); // get velocity of Zombie movement
-        
+	int getVelocity(); // get velocity of Zombie movement
+
     int getHealth(){return health;} // get health of Zombie
 
 	void onCollision();
@@ -45,6 +45,7 @@ public:
 
 	int getRandomAngle(); //randomly generate the angle of zombie
 
+    void setHealth(const int &health) {this->health = health;};
 
 	Zombie();
 	virtual ~Zombie();
@@ -53,7 +54,7 @@ public:
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectiles
 	HitBox damageHitBox; // Hit box for damage
-	
+
 private:
     float dx = 0; // delta x coordinat
     float dy = 0; //delta ycoordinate

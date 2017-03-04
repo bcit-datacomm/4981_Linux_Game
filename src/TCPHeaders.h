@@ -3,6 +3,7 @@
 
 // TCP Header Specifiers
 enum TCP_ID {
+    CONNECTPACKH
     USERNAME, // 'n'?
     PLAYERID, // 'i'?
     ACCEPTED, // 's'?
@@ -13,6 +14,7 @@ enum TCP_ID {
 
 // ConnectPack
 typedef struct {
+    int32_t = CONNECTPACKH;
     int  id;
     char username[32];
 } ConnectPack;

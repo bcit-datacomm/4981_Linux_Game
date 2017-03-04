@@ -25,6 +25,7 @@ public:
     void turretPlaceCheck(float x, float y, CollisionHandler* collisionHandler, Turret* dumbTurret,
                           unsigned int tid);
 
+    Marine *getMarine() {return marine;};
 	Player();
 	~Player();
 

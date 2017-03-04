@@ -22,7 +22,7 @@ public:
 
     void setDX(float px); //set delta x coordinate
 
-    void setDY(float py); //set delta y coordinate
+    void setDY(float py);
 
     void setVelocity(int pvel); // set velocity of Marine movement
 
@@ -31,7 +31,7 @@ public:
     float getDY(); //get delta y coordinate
 
     int	getVelocity(); // get velocity of Marine movement
-    
+
     auto getHealth() {return health;} // get health of Marine
 
 	void onCollision();
@@ -48,6 +48,8 @@ public:
 
     double getAngle(); //returns sprites angle
 
+    void setHealth(const int &health) {this->health = health;};
+
 	Marine();
 	virtual ~Marine();
 
@@ -55,7 +57,7 @@ public:
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectiles
 	HitBox damageHitBox; // Hit box for damage
-	
+
 	Inventory inventory;
 
 private:

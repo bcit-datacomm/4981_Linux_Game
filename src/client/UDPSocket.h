@@ -27,15 +27,18 @@ UDPSocket encapsulates a file descriptor for a UDP socket.
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#define LISTEN_PORT_UDP 35222
+
 class UDPSocket {
 public:
-    UDPSocket();
-    ~UDPSocket();
-    void bindTo(int);
-    void sendTo(const char *, int, struct sockaddr_in);
-    void receiveFrom(char *, int, struct sockaddr_in);
+    UDPSocket(const char *);
+    virtual ~UDPSocket();
+    void sendToServ(const char *, const int&);
+    void recvFromServ(char *, const int&);
 private:
+    void bindSock();
     int _sockUDP;
+    struct sockaddr_in _servAddr;
 };
 
 #endif

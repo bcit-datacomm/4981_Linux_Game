@@ -9,6 +9,8 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
+#include "UDPHeaders.h"
+#include <memory>
 
 class GameManager {
 public:
@@ -42,12 +44,17 @@ public:
 
 	unsigned int addObject(Object*);
 	void deleteObject(unsigned int id);
-	
+
 	unsigned int addZombie(Zombie*);
 	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
-	
 
+    //network update Methods
+    void updateMarine(const PlayerData &playerData);
+    void updateZombie(const ZombieData &zombieData);
+
+    //temporary dont yell at me
+    void setRenderer(SDL_Renderer *renderer) {_renderer = renderer;};
 private:
     static GameManager *sInstance;
 
@@ -57,6 +64,9 @@ private:
 	std::map<unsigned int, Object*> objectManager;
 	std::map<unsigned int, Zombie*> zombieManager;
     std::map<unsigned int, Turret*> turretManager;
+
+    //used a ptr because it is a temporary solution
+    SDL_Renderer *_renderer;
 };
 
 

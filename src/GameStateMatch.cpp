@@ -10,8 +10,15 @@
 #include "LTimer.h"
 #include "LTexture.h"
 #include "Window.h"
+#include "client/NetworkManager.h"
 
 bool GameStateMatch::load() {
+    std::string username, ip;
+    int numPlayers;
+    std::cout << "Enter username (32 char max), ip, and number of players:" << std::endl;
+    std::cin >> username >> ip >> numPlayers;
+
+    NetworkManager::instance().handshake(ip.c_str, username.c_str, numPlayers);
 
 	bool success = true;
 
@@ -31,13 +38,13 @@ bool GameStateMatch::load() {
 	}
 
 	unsigned int playerMarineID = GameManager::instance()->createMarine();
-
+    GameManager::instance()->setRenderer(game->renderer);
 	// Create Dummy Entitys
 	success = GameManager::instance()->createMarine(this->game->renderer, 1500, 1500);
 	success = GameManager::instance()->createZombie(this->game->renderer, 100, 100);
 	success = GameManager::instance()->createZombie(this->game->renderer, 700, 700);
 	success = GameManager::instance()->createTurret(this->game->renderer, 1000, 500);
-	
+
 
 	this->base = new Base();
 	if (!this->base->texture.loadFromFile("assets/texture/base.png", this->game->renderer)) {
@@ -91,6 +98,18 @@ void GameStateMatch::loop() {
 
 		// Process frame
 		this->handle();	// Handle user input
+
+        /*
+        int32_t   id;
+    	float xpos;
+    	float ypos;
+    	float vel;
+    	float direction;
+        */
+        MoveAction moveAction;
+        player->getMarine().
+        NetworkManager::instance().getSockUDP.sendToServ
+
 		this->update(stepTimer.getTicks() / 1000.f); // Update state values
 		stepTimer.start(); //Restart step timer
 		this->sync();	// Sync game to server
@@ -202,7 +221,7 @@ void GameStateMatch::render() {
 }
 
 GameStateMatch::~GameStateMatch() {
-	
+
 	// Free texture and font
 	delete GameManager::instance();
 	delete this->camera;

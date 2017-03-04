@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include "packetizer.h"
 #include "UDPHeaders.h"
+#include "GameManager.h"
 /*------------------------------------------------------------------------------
 -- FUNCTION: parse
 --
@@ -86,14 +87,9 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
           std::cout << std::endl;
           pBuff = reinterpret_cast<int32_t *>(&(player->moves));
           moves = player->moves;
-          /*
-          UpdatePlayer (player->playerid,
-                          player->xpos,
-                          player->ypos,
-                          player->xvel,
-                          player->yvel,
-                          player->direction);
-          */
+
+          GameManager::instance()->updateMarine(*player);
+
           for(int32_t j = 0; j  < player->nmoves; j++) {
             //std::cout << "\n\tAction #:" << j;
             //std::cout << "\n\t\tAction xpos:" << action->xpos;
@@ -140,13 +136,8 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
           std::cout << "\n\tZombie health:" << zombie->health;
           std::cout << std::endl;
           pBuff = reinterpret_cast<int32_t *>(++zombie);
-          /*
-          UpdateZombie (zombie->zombieid,
-                          zombie->xpos,
-                          zombie->ypos,
-                          zombie->health,
-                          zombie->direction);
-          */
+
+          GameManager::instance()->updateZombie(*zombie);
         }
         break;
       }

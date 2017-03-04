@@ -4,7 +4,7 @@
 GameManager *GameManager::sInstance;
 
 //Returns the already existing GameManager or if there isn't one, makes
-//a new one and returns it. 
+//a new one and returns it.
 GameManager *GameManager::instance() {
     if (!sInstance)
         sInstance = new GameManager;
@@ -258,4 +258,26 @@ void GameManager::updateCollider() {
 		this->collisionHandler->quadtreeDam->insert(&m.second->damageHitBox);
 	}
 
+}
+
+void GameManager::updateMarine(const PlayerData &playerData) {
+    if(marineManager.find(playerData.playerid) == marineManager.end()) {
+        createMarine(_renderer, playerData.xpos, playerData.ypos);
+    } else {
+        marineManager[playerData.playerid]->setPosition(playerData.xpos, playerData.ypos);
+    }
+
+    marineManager[playerData.playerid]->setAngle(playerData.direction);
+    marineManager[playerData.playerid]->setHealth(playerData.health);
+}
+
+void GameManager::updateZombie(const ZombieData &zombieData) {
+    if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
+        createZombie(_renderer, zombieData.xpos, zombieData.ypos);
+    } else {
+        zombieManager[zombieData.zombieid]->setPosition(zombieData.xpos, zombieData.ypos);
+    }
+
+    zombieManager[zombieData.zombieid]->setAngle(zombieData.direction);
+    zombieManager[zombieData.zombieid]->setHealth(zombieData.health);
 }
