@@ -10,11 +10,11 @@
 class Level {
 public:
     std::string getTexturePath();
-	LTexture levelTexture;
-	
-	Level();
-	~Level();
-	
+    LTexture levelTexture;
+    
+    Level();
+    ~Level();
+    
 private:
     static int width;
     static int height;
