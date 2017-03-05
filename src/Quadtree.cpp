@@ -46,13 +46,15 @@ int Quadtree::getIndex(const HitBox *pRect) const{
     double verticalMidpoint = bounds.x + (bounds.w / 2);
     double horizontalMidpoint = bounds.y + (bounds.h / 2);
 
+    const auto& hitRect = pRect->getRect();
+
     // Object can completely fit within the top quadrants
-    bool topQuadrant = (pRect->getRect().y < horizontalMidpoint && pRect->getRect().y + pRect->getRect().h < horizontalMidpoint);
+    bool topQuadrant = (hitRect.y < horizontalMidpoint && hitRect.y + hitRect.h < horizontalMidpoint);
     // Object can completely fit within the bottom quadrants
-    bool bottomQuadrant = (pRect->getRect().y > horizontalMidpoint);
+    bool bottomQuadrant = (hitRect.y > horizontalMidpoint);
 
     // Object can completely fit within the left quadrants
-    if (pRect->getRect().x < verticalMidpoint && pRect->getRect().x + pRect->getRect().w < verticalMidpoint) {
+    if (hitRect.x < verticalMidpoint && hitRect.x + hitRect.w < verticalMidpoint) {
         if (topQuadrant) {
             index = 1;
         } else if (bottomQuadrant) {
@@ -60,7 +62,7 @@ int Quadtree::getIndex(const HitBox *pRect) const{
         }
     }
     // Object can completely fit within the right quadrants
-    else if (pRect->getRect().x > verticalMidpoint) {
+    else if (hitRect.x > verticalMidpoint) {
         if (topQuadrant) {
             index = 0;
         } else if (bottomQuadrant) {
