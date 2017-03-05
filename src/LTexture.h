@@ -10,51 +10,51 @@
 //Texture wrapper class
 class LTexture {
 public:
-	
-	//Initializes variables
-	LTexture();
 
-	//Deallocates memory
-	~LTexture();
+    //Initializes variables
+    LTexture();
 
-	//Loads image at specified path
-	bool loadFromFile( std::string path, SDL_Renderer* gRenderer );
+    //Deallocates memory
+    ~LTexture();
 
-	#ifdef _SDL_TTF_H
-	//Creates image from font string
-	bool loadFromRenderedText( std::string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font* gFont);
-	#endif
+    //Loads image at specified path
+    bool loadFromFile( std::string path, SDL_Renderer* gRenderer );
 
-	//Deallocates texture
-	void free();
+    #ifdef _SDL_TTF_H
+    //Creates image from font string
+    bool loadFromRenderedText( std::string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font* gFont);
+    #endif
 
-	//Set color modulation
-	void setColor( Uint8 red, Uint8 green, Uint8 blue );
+    //Deallocates texture
+    void free();
 
-	//Set blending
-	void setBlendMode( SDL_BlendMode blending );
+    //Set color modulation
+    void setColor( Uint8 red, Uint8 green, Uint8 blue );
 
-	//Set alpha modulation
-	void setAlpha( Uint8 alpha );
+    //Set blending
+    void setBlendMode( SDL_BlendMode blending );
 
-	//Renders texture at given point
-	void render(SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
+    //Set alpha modulation
+    void setAlpha( Uint8 alpha );
 
-	//Gets image dimensions
-	int getWidth();
-	int getHeight();
-	
-	void setDimensions(int w, int h);
+    //Renders texture at given point
+    void render(SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE ) const;
+
+    //Gets image dimensions
+    int getWidth() const;
+    int getHeight() const;
+
+    void setDimensions(int w, int h);
 
 private:
-	
-	//The actual hardware texture
-	SDL_Texture* mTexture;
 
-	//Image dimensions
-	int mWidth;
-	int mHeight;
-	
+    //The actual hardware texture
+    SDL_Texture* mTexture;
+
+    //Image dimensions
+    int mWidth;
+    int mHeight;
+
 };
 
 #endif
