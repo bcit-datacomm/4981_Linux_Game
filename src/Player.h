@@ -11,8 +11,9 @@
 class Player {
 public:
 
+
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-    void handleMouseUpdate(Window& w);
+    void handleMouseUpdate(Window& w, float camX, float camY);
 
     void setControl(Marine& newControl);
 
@@ -25,6 +26,8 @@ public:
     void turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
                           unsigned int tid);
 
+    void handleTempBarricade(SDL_Renderer *renderer);
+
     Player();
     ~Player();
 
@@ -32,7 +35,7 @@ public:
     Marine *marine = NULL;
 
 private:
-
+    int tempBarricadeID;
 };
 
 #endif

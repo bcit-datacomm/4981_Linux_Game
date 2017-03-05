@@ -27,8 +27,10 @@ public:
     SDL_Rect spriteClips[1];
 
 private:
+
     float x = 0; //x coordinate
     float y = 0; //y coordinate
+
 };
 
 #endif
