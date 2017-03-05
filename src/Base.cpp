@@ -2,11 +2,9 @@
 #include "Marine.h"
 #include<random>
 
-Base::Base() {
+Base::Base(int health) : Object(BASE_HEIGHT, BASE_WIDTH), health(health) {
     setX((MAP_WIDTH / 2) - BASE_WIDTH);
     setY((MAP_HEIGHT / 2) - BASE_HEIGHT);
-    setHeight(BASE_HEIGHT);
-    setWidth(BASE_WIDTH);
 
     printf("Create Base\n");
 }
@@ -22,7 +20,7 @@ void Base::collidingProjectile(int damage) {
     health -= damage;
 }
 
-Point Base::getSpawnPoint(){
+Point Base::getSpawnPoint() {
     
     //random number generator 
     std::random_device rd;

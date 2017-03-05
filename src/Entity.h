@@ -20,6 +20,7 @@ public:
 
     void setY(float py); //set y coordinate
 
+
     float getX() const; // get x coordinate
 
     float getY() const; // get y coordinate
@@ -30,12 +31,15 @@ public:
 	std::shared_ptr<HitBox> projectileHitBox = nullptr;
 	std::shared_ptr<HitBox> damageHitBox = nullptr;
 	std::shared_ptr<HitBox> pickupHitBox = nullptr;
+
     LTexture texture;
     SDL_Rect spriteClips[1];
 
 private:
+
     float x = 0; //x coordinate
     float y = 0; //y coordinate
+
 };
 
 #endif
