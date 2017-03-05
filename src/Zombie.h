@@ -11,14 +11,22 @@
 #include <utility>
 #include <SDL2/SDL.h>
 #include "Window.h"
+#include "Movable.h"
 
-const int ZOMBIE_HEIGHT = 100;
-const int ZOMBIE_WIDTH = 100;
+const int ZOMBIE_HEIGHT = 125;
+const int ZOMBIE_WIDTH = 75;
 
+<<<<<<< HEAD
 
 class Zombie : public Entity {
+=======
+class Zombie : public Movable {
+>>>>>>> 6ad3220451911c42b263705814964620ec216bf0
 public:
+    Zombie(int health = 100, int state = 0);
+    virtual ~Zombie();
 
+<<<<<<< HEAD
 	void move(float moveX, float moveY, CollisionHandler* ch); // Moves Zombie
 
     	void setDX(float px); //set delta x coordinate
@@ -52,12 +60,14 @@ public:
 	HitBox projectileHitBox; // Hit box for projectiles
 	HitBox damageHitBox; // Hit box for damage
 
+=======
+    void onCollision();
+    void collidingProjectile(int damage);
+    void generateRandomMove(); //randomly generate the zombie's movement
+    int getRandomAngle(); //randomly generate the angle of zombie
+>>>>>>> 6ad3220451911c42b263705814964620ec216bf0
 private:
-    float dx = 0; // delta x coordinat
-    float dy = 0; //delta ycoordinate
-    double angle = 180.0;
-    int velocity = 200; // velocity of Zombie movement
-    int health = 100;
+    int health;
     int state; //used to select sprite to display
 	std::vector<std::pair<int, int>> path;
 

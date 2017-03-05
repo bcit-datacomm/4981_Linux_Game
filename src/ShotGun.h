@@ -10,7 +10,7 @@ class ShotGun: public Weapon {
 public:
 
     ShotGun();
-	~ShotGun();
+    ~ShotGun();
 };
 
 #endif
