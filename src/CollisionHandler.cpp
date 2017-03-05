@@ -1,75 +1,71 @@
+#include "Quadtree.h"
 #include "CollisionHandler.h"
 
-CollisionHandler::CollisionHandler() {
-    quadtreeMov = new Quadtree(0, {0,0,2000,2000});
-    quadtreePro = new Quadtree(0, {0,0,2000,2000});
-    quadtreeDam = new Quadtree(0, {0,0,2000,2000});
-    quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
+CollisionHandler::CollisionHandler() : quadtreeMov(0, {0,0,2000,2000}), quadtreePro(0, {0,0,2000,2000}), 
+        quadtreeDam(0, {0,0,2000,2000}),quadtreePickUp(0, {0,0,2000,2000}) {
+
 }
 
-CollisionHandler::~CollisionHandler() {
-    delete quadtreeMov;
-    delete quadtreePro;
-    delete quadtreeDam;
-    delete quadtreePickUp;
+CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
+    quadtreeMov = handle.quadtreeMov;
+    quadtreePro = handle.quadtreePro;
+    quadtreeDam = handle.quadtreeDam;
+    quadtreePickUp = handle.quadtreePickUp;
+    return *this;
 }
 
 // Check for projectile collisions, return object it hits
-HitBox* CollisionHandler::detectDamageCollision(HitBox* hb) {
-    std::vector<HitBox*> returnObjects;
-    returnObjects = quadtreeDam->retrieve(returnObjects, hb);
-      for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
-            if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
-                !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-                return returnObjects.at(x);
-            }
+HitBox *CollisionHandler::detectDamageCollision(const HitBox *hb) {
+    std::vector<HitBox *> returnObjects;
+    returnObjects = quadtreeDam.retrieve(hb);
+    for (unsigned int x = 0; x < returnObjects.size(); x++) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
+            return returnObjects.at(x);
         }
-      }
+    }
     return nullptr;
 }
 
 // Check for projectile collisions, return object it hits
-HitBox* CollisionHandler::detectProjectileCollision(HitBox* hb) {
+HitBox *CollisionHandler::detectProjectileCollision(const HitBox *hb) {
     std::vector<HitBox*> returnObjects;
-    returnObjects = quadtreePro->retrieve(returnObjects, hb);
-      for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
-            if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
-                !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-                return returnObjects.at(x);
-            }
+    returnObjects = quadtreePro.retrieve(hb);
+    for (unsigned int x = 0; x < returnObjects.size(); x++) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
+            return returnObjects.at(x);
         }
-      }
+    }
     return nullptr;
 }
 
 // Check for collisions during movement
-bool CollisionHandler::detectMovementCollision(HitBox* hb) {
-    std::vector<HitBox*> returnObjects;
-    returnObjects = quadtreeMov->retrieve(returnObjects, hb);
-      for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached) {
-            if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
-                !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-                return true;
-            }
+bool CollisionHandler::detectMovementCollision(const HitBox *hb) {
+    std::vector<HitBox *> returnObjects;
+    returnObjects = quadtreeMov.retrieve(hb);
+    for (unsigned int x = 0; x < returnObjects.size(); x++) {
+        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
+            return true;
         }
-      }
+    }
     return false;
 }
 
 //check for pickup collision
-HitBox* CollisionHandler::detectPickUpCollision(HitBox* hb) {
+HitBox *CollisionHandler::detectPickUpCollision(const HitBox *hb) {
     std::vector<HitBox*> returnObjects;
-    returnObjects = quadtreeMov->retrieve(returnObjects, hb);
-      for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (hb->attached != returnObjects.at(x)->attached) {
-            if (SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) &&
-                !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-                return returnObjects.at(x);
-            }
+    returnObjects = quadtreeMov.retrieve(hb);
+    for (unsigned int x = 0; x < returnObjects.size(); x++) {
+        if (hb->attached != returnObjects.at(x)->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
+            return returnObjects.at(x);
         }
-      }
+    }
     return nullptr;
 }
