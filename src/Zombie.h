@@ -28,6 +28,7 @@ public:
 
     Zombie();
     virtual ~Zombie();
+    void setHealth(const int& hlth) {health = hlth;};
 
 private:
 

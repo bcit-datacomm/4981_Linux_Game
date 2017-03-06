@@ -27,7 +27,7 @@
 
 class NetworkManager {
 public:
-    static NetworkManager instance();
+    static NetworkManager& instance();
 	void handshake(const char *, const char *, int);
 
     UDPSocket& getSockUDP() {return _sockUDP;};
@@ -41,8 +41,6 @@ private:
     int TCPConnect(const char *);
     int writeTCPSocket(const char *, int);
 	int readTCPSocket(char *, int);
-
-
 };
 
 #endif

@@ -16,7 +16,7 @@
 #include "NetworkManager.h"
 #include "../packetizer.h"
 
-NetworkManager NetworkManager::instance() {
+NetworkManager& NetworkManager::instance() {
     static NetworkManager sInstance;
     return sInstance;
 }

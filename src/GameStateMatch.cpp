@@ -18,12 +18,10 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 }
 
 bool GameStateMatch::load() {
-    std::string username, ip;
-    int numPlayers;
-    std::cout << "Enter username (32 char max), ip, and number of players:" << std::endl;
-    std::cin >> username >> ip >> numPlayers;
 
-    NetworkManager::instance().handshake(ip.c_str, username.c_str, numPlayers);
+    std::string username;
+    std::cin >> username;
+//    NetworkManager::instance().handshake(ip.c_str, username.c_str, numPlayers);
 
 
     bool success = true;
@@ -31,17 +29,19 @@ bool GameStateMatch::load() {
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
     if ( frameFont == NULL ) {
-        printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+        //printf( "Failed to load font! SDL_invalid use of non-static member function ttf Error: %s\n",
+        //    TTF_GetError() );
         success = false;
     }
 
     //level = new Level();
     if (!level.levelTexture.loadFromFile("assets/texture/checkerboard.png", game.renderer)) {
-        printf("Failed to load the level texture!\n");
+        //printf("Failed to load the level texture!\n");
         success = false;
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
+
 
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
@@ -71,7 +71,7 @@ bool GameStateMatch::load() {
 
     //camera = Camera(game.window.getWidth(), game.window.getHeight());
 
-
+    GameManager::instance()->printMarineCount();
     return success;
 }
 

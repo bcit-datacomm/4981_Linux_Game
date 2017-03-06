@@ -12,6 +12,7 @@
 #include "UDPHeaders.h"
 #include <memory>
 #include "WeaponDrop.h"
+#include <iostream>
 #include <memory>
 
 //just for tesing weapon drop
@@ -65,7 +66,7 @@ public:
     //network update Methods
     void updateMarine(const PlayerData &playerData);
     void updateZombie(const ZombieData &zombieData);
-
+    void printMarineCount() {std::cout << "marine count: " << marineManager.size() << std::endl;};
     //temporary dont yell at me
     void setRenderer(SDL_Renderer *renderer) {_renderer = renderer;};
 private:

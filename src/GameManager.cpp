@@ -257,7 +257,7 @@ void GameManager::updateCollider() {
     collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
     collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
     collisionHandler.quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
-    
+
     for (auto& m : marineManager) {
         collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
         collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
@@ -285,7 +285,7 @@ void GameManager::updateCollider() {
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
     }
-    
+
 
 }
 
@@ -293,20 +293,20 @@ void GameManager::updateMarine(const PlayerData &playerData) {
     if(marineManager.find(playerData.playerid) == marineManager.end()) {
         createMarine(_renderer, playerData.xpos, playerData.ypos);
     } else {
-        marineManager[playerData.playerid]->setPosition(playerData.xpos, playerData.ypos);
+        marineManager[playerData.playerid].setPosition(playerData.xpos, playerData.ypos);
     }
 
-    marineManager[playerData.playerid]->setAngle(playerData.direction);
-    marineManager[playerData.playerid]->setHealth(playerData.health);
+    marineManager[playerData.playerid].setAngle(playerData.direction);
+    marineManager[playerData.playerid].setHealth(playerData.health);
 }
 
 void GameManager::updateZombie(const ZombieData &zombieData) {
     if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
         createZombie(_renderer, zombieData.xpos, zombieData.ypos);
     } else {
-        zombieManager[zombieData.zombieid]->setPosition(zombieData.xpos, zombieData.ypos);
+        zombieManager[zombieData.zombieid].setPosition(zombieData.xpos, zombieData.ypos);
     }
 
-    zombieManager[zombieData.zombieid]->setAngle(zombieData.direction);
-    zombieManager[zombieData.zombieid]->setHealth(zombieData.health);
+    zombieManager[zombieData.zombieid].setAngle(zombieData.direction);
+    zombieManager[zombieData.zombieid].setHealth(zombieData.health);
 }

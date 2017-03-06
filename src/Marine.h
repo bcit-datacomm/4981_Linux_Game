@@ -28,6 +28,8 @@ public:
     virtual ~Marine();
 
     Inventory inventory;
+
+    void setHealth(const int& hlth) {health = hlth;};
 private:
     int health = 100;
     int state; //used to select sprite to display

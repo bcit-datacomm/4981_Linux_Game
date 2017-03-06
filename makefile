@@ -1,7 +1,7 @@
-BASEFLAGS := -Wall -pedantic -pipe -std=c++14 -fopenmp
+BASEFLAGS := -Wall -g -pg -pedantic -pipe -std=c++14 -fopenmp
 DEBUGFLAGS := -g -pg
 RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG
-CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
+CLIBS := -pthread  -lefence -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
 ODIR := bin
@@ -36,7 +36,7 @@ $(ODIR):
 	@mkdir -p $(ODIR)
 
 # Create dependency file for make and manually adjust it silently to work with other directories
-$(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR) 
+$(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR)
 # Compile the non-system dependencies and store it in outputdir/execname.d
 	@$(CXX) -MM $(CFLAGS) $(CXXFLAGS) $(SRCWILD) > $(DEPS)
 # Take the temp file contents, do a regex text replace to change all .o strings into
@@ -69,7 +69,7 @@ $(OBJS): $(filter .+$$@, $(SRCWILD))
 dserver: server
 
 server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean
@@ -77,4 +77,3 @@ server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*
 # Deletes the executable and all .o and .d files in the bin folder
 clean: | $(ODIR)
 	$(RM) $(EXEC) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
-
