@@ -1,7 +1,11 @@
 // Created 05/02/2017 Mark C.
+#include <map>
+#include <limits>
+#include "GameManager.h"
+
 #include "Turret.h"
 
-Turret::Turret() : Movable(MARINE_VELOCITY){
+Turret::Turret() : Movable(MARINE_VELOCITY) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -63,6 +67,61 @@ bool Turret::healthCheckTurret() {
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined
+// Jamie, March 1
+// Revised by Rob, March 5
 bool Turret::targetScanTurret() {
+    const std::map<unsigned int, Zombie>& mapZombies
+     = GameManager::instance()->getZombies();
+
+    unsigned int closestZombieId = 0;
+    float closestZombieDist = std::numeric_limits<float>::max();
+
+    // Detect zombies;
+    // TODO: Improve the algorithm that selects zombie(s) to attack.
+    bool bDetect = false;
+    for (const auto& item : mapZombies)
+    {
+        const auto& zombie = item.second;
+        float zombieX = zombie.getX();
+        float zombieY = zombie.getY();
+
+        float xDelta = zombieX - getX();
+        float yDelta = zombieY - getY();
+        float sqrDist = xDelta * xDelta + yDelta * yDelta;
+        float sqrRange = getRange() * getRange();
+
+        if (sqrDist < sqrRange)
+        {
+            if (sqrDist < closestZombieDist)
+            {
+                closestZombieId = item.first;
+                closestZombieDist = sqrDist;
+                bDetect = true;
+            }
+        }
+    }
+
+    // TODO: Attack a zombie;
+    if (!bDetect)
+        return false;
+
+    const auto& target = mapZombies.find(closestZombieId);
+    if (target == mapZombies.end())
+        return false;
+
+    float deltaX = getX() - target->second.getX();
+    float deltaY = getY() - target->second.getY();
+
+    double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * - 1;
+    setAngle(angle);
+     //detectList[closestZombieId]->damage(this->attackDmg);
+
     return true;
+}
+
+// returns the turret's range.
+// Jamie, 2017-03-01.
+inline float Turret::getRange() const
+{
+    return this->range;
 }

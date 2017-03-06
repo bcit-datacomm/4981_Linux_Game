@@ -7,6 +7,7 @@
 #include "CollisionHandler.h"
 #include "Inventory.h"
 #include <math.h>
+#include <random>
 #include <vector>
 #include <utility>
 #include <SDL2/SDL.h>
@@ -16,61 +17,39 @@
 const int ZOMBIE_HEIGHT = 125;
 const int ZOMBIE_WIDTH = 75;
 
-<<<<<<< HEAD
 
-class Zombie : public Entity {
-=======
+
 class Zombie : public Movable {
->>>>>>> 6ad3220451911c42b263705814964620ec216bf0
 public:
     Zombie(int health = 100, int state = 0);
     virtual ~Zombie();
-
-<<<<<<< HEAD
-	void move(float moveX, float moveY, CollisionHandler* ch); // Moves Zombie
-
-    	void setDX(float px); //set delta x coordinate
-
-    	void setDY(float py); //set delta y coordinate
-
-    	void setVelocity(int pvel); // set velocity of Zombie movement
-
-    	float getDX(); // get delta x coordinate
-
-    	float getDY(); //get delta y coordinate
-
-    	int getVelocity(); // get velocity of Zombie movement
 
 	void onCollision();
 
 	void collidingProjectile(int damage);
 
-	void setAngle(double a);//sets angle of sprite to
+    void generateMove();            // A* movement
 
-	double getAngle(); //returns sprites angle
+    void setStep(int sp);           // set step
 
-	void generateMove();
+    int getStep();                  // get step
 
+    std::string getPath();          // get path
 
-	Zombie();
-	virtual ~Zombie();
+    void setPath(std::string pth);  // set path
 
-	SDL_Rect zombieSpriteClips[1];
-	HitBox movementHitBox;	// Hit box for movement
-	HitBox projectileHitBox; // Hit box for projectiles
-	HitBox damageHitBox; // Hit box for damage
+    int getDir();                   // get move direction
 
-=======
-    void onCollision();
-    void collidingProjectile(int damage);
-    void generateRandomMove(); //randomly generate the zombie's movement
-    int getRandomAngle(); //randomly generate the angle of zombie
->>>>>>> 6ad3220451911c42b263705814964620ec216bf0
+    bool checkBound(float x, float y);  // boundary checks
+    // A* path
+    std::string generatePath(const int& xStart, const int& yStart,
+                             const int& xDest, const int& yDest);
+
 private:
     int health;
     int state; //used to select sprite to display
-	std::vector<std::pair<int, int>> path;
-
+    std::string path;
+    int step = 0;
 };
 
 #endif

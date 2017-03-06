@@ -34,7 +34,7 @@ bool GameStateMatch::load() {
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
- 	
+
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
@@ -43,7 +43,6 @@ bool GameStateMatch::load() {
     GameManager::instance()->createZombie(game.renderer, 700, 700);
     GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
-	
 
     //base = Base();
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
@@ -171,6 +170,7 @@ void GameStateMatch::update(const float& delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
+	GameManager::instance()->updateTurrets(delta);
 
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());

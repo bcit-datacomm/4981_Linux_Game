@@ -10,9 +10,6 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
-<<<<<<< HEAD
-#include <utility>
-=======
 #include "WeaponDrop.h"
 #include <memory>
 
@@ -21,7 +18,6 @@
 #include "HandGun.h"
 #include "Rifle.h"
 #include "ShotGun.h"
->>>>>>> 6ad3220451911c42b263705814964620ec216bf0
 
 class GameManager {
 public:
@@ -51,20 +47,13 @@ public:
 
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float& delta); // Update marine actions
-    void updateZombies(const float& delta); // Update zombie actions
+    void updateZombies(const float& delta); // Update zombie actionss
+    void updateTurrets(const float& delta); // Update turret actions
 
-<<<<<<< HEAD
-	unsigned int addObject(Object*);
-	void deleteObject(unsigned int id);
+    const std::map<unsigned int, Zombie>& getZombies(); // returns the list of zombies.
 
-	unsigned int addZombie(Zombie*);
-	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
-	void deleteZombie(unsigned int id);
-
-=======
     unsigned int addObject(Object&);
     void deleteObject(unsigned int id);
->>>>>>> 6ad3220451911c42b263705814964620ec216bf0
 
     unsigned int addZombie(Zombie&);
     bool createZombie(SDL_Renderer* gRenderer, float x, float y);
