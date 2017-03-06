@@ -20,14 +20,14 @@ class Marine : public Movable {
 public:
     void create(); //function displays character
 
-	void onCollision();
+    void onCollision();
 
-	void collidingProjectile(int damage);
+    void collidingProjectile(int damage);
 
-	Marine();
-	virtual ~Marine();
+    Marine();
+    virtual ~Marine();
 
-	Inventory inventory;
+    Inventory inventory;
 
 private:
     int health = 100;

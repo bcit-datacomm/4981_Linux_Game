@@ -1,32 +1,35 @@
- #include "HitBox.h"
+#include "HitBox.h"
 
-
-HitBox::HitBox() {
-	
+HitBox::HitBox(const float& x, const float& y, SDL_Rect rect, Entity* attached) : attached(attached) {
+    setRect(rect);
+    move(x,y);
 }
 
-HitBox::~HitBox() {
-	
+const SDL_Rect& HitBox::getRect() const{
+    return rect;
 }
 
-const SDL_Rect& HitBox::getRect() {
-	return this->rect;	
+void HitBox::move(const float& x, const float& y){
+    rect.x = x;
+    rect.y = y;
 }
 
-void HitBox::move(float x, float y) {
-	this->rect.x = x;
-	this->rect.y = y;
-}
-
-
-void HitBox::setRect(const SDL_Rect rerect) {
-	this->rect = rerect;
+void HitBox::setRect(const SDL_Rect& rerect) {
+    rect = rerect;
 }
 
 void HitBox::setFriendly(bool isFriendly) {
-	this->playerFriendly = 	isFriendly;
+    playerFriendly = isFriendly;
 }
 
-bool HitBox::isPlayerFriendly() {
-	return 	this->playerFriendly;
+bool HitBox::isPlayerFriendly() const {
+    return playerFriendly;
+}
+
+bool operator!=(const HitBox& first, const HitBox& second) {
+    return first.rect != second.rect && first.attached != second.attached && first.playerFriendly != second.playerFriendly;
+}
+
+bool operator!=(const SDL_Rect& first, const SDL_Rect& second) {
+    return first.x != second.x && first.y != second.y && first.w != second.h && first.h != second.h;
 }

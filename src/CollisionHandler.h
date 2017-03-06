@@ -4,27 +4,25 @@
 #include "Quadtree.h"
 #include <vector>
 
-/*
- * Work In Progress, Quadtree not implemented
- */
-
 class CollisionHandler {
 public:
-	
-	CollisionHandler();
-	~CollisionHandler();
-	
-	HitBox* detectDamageCollision(HitBox* hb);	// Check for damage collisions, return object if hits
-	HitBox* detectProjectileCollision(HitBox* hb); // Check for projectile collisions, return object if hits
-	bool detectMovementCollision(HitBox* hb); // // Check for collisions during movement
+    CollisionHandler();
+    ~CollisionHandler() = default;
 
-	
-	Quadtree* quadtreeMov = NULL;
-	Quadtree* quadtreePro = NULL;
-	Quadtree* quadtreeDam = NULL;
-	
+    HitBox *detectDamageCollision(const HitBox *hb);    // Check for damage collisions, return object if hits
+    HitBox *detectProjectileCollision(const HitBox *hb); // Check for projectile collisions, return object if hits
+    bool detectMovementCollision(const HitBox *hb); // // Check for collisions during movement
+    HitBox *detectPickUpCollision(const HitBox *hb);//check for pick up collision, return object if can pick up
+
+    Quadtree quadtreeMov;
+    Quadtree quadtreePro;
+    Quadtree quadtreeDam;
+    Quadtree quadtreePickUp;
+
+    CollisionHandler& operator=(const CollisionHandler& handle);
+
 private:
-	
+
 };
 
 
