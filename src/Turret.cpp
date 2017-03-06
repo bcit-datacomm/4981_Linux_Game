@@ -96,10 +96,10 @@ bool Turret::targetScanTurret() {
         float zombieX = zombie->getX();
         float zombieY = zombie->getY();
 
-        float xDelta = zombieX - this->getX();
-        float yDelta = zombieY - this->getY();
+        float xDelta = zombieX - getX();
+        float yDelta = zombieY - getY();
         float sqrDist = xDelta * xDelta + yDelta * yDelta;
-        float sqrRange = this->getRange() * this->getRange();
+        float sqrRange = getRange() * getRange();
 
         if (sqrDist < sqrRange)
         {
@@ -120,11 +120,11 @@ bool Turret::targetScanTurret() {
     if (target == mapZombies.end())
         return false;
 
-    float deltaX = this->getX() - target->second->getX();
-    float deltaY = this->getY() - target->second->getY();
+    float deltaX = getX() - target->second->getX();
+    float deltaY = getY() - target->second->getY();
 
     double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * -1;
-    this->setAngle(angle);
+    setAngle(angle);
     //detectList[closestZombieId]->damage(this->attackDmg);
 
     return true;
