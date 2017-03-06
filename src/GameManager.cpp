@@ -278,8 +278,8 @@ void GameManager::updateCollider() {
     }
 
     for (auto& w : wallManager) {
-        collisionHandler.quadtreeMov->insert(w.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(w.second.projectileHitBox.get());
+        collisionHandler.quadtreeMov.insert(w.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(w.second.projectileHitBox.get());
     }
 
     for (auto& m : turretManager) {
