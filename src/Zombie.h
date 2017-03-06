@@ -11,28 +11,24 @@
 #include <SDL2/SDL.h>
 #include "Window.h"
 #include "Movable.h"
-const int ZOMBIE_HEIGHT = 100;
-const int ZOMBIE_WIDTH = 100;
+
+const int ZOMBIE_HEIGHT = 125;
+const int ZOMBIE_WIDTH = 75;
 
 class Zombie : public Movable {
 public:
+    Zombie(int health = 100, int state = 0);
+    virtual ~Zombie();
 
 
     void onCollision();
-
     void collidingProjectile(int damage);
-
     void generateRandomMove(); //randomly generate the zombie's movement
-
     int getRandomAngle(); //randomly generate the angle of zombie
 
-    Zombie();
-    virtual ~Zombie();
     void setHealth(const int& hlth) {health = hlth;};
-
 private:
-
-    int health = 100;
+    int health;
     int state; //used to select sprite to display
 
 };

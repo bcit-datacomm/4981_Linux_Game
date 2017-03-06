@@ -18,6 +18,7 @@ GameManager::GameManager():collisionHandler() {
 }
 
 GameManager::~GameManager() {
+
     printf("Destroy GM\n");
     marineManager.clear();
     zombieManager.clear();
@@ -33,21 +34,24 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
     }
     for (const auto& m : marineManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
-                                 NULL, m.second.getAngle());
+                NULL, m.second.getAngle());
     }
     for (const auto& o : objectManager) {
         o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
     }
     for (const auto& z : zombieManager) {
         z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
-                                 NULL, z.second.getAngle());
+                NULL, z.second.getAngle());
     }
 
     for (const auto& m : turretManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
-                                 NULL, m.second.getAngle());
+                NULL, m.second.getAngle());
     }
 
+ 	for (const auto& b : barricadeManager) {
+		b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
+	}
 
 }
 
@@ -135,7 +139,7 @@ bool GameManager::addTurret (unsigned int id, Turret& newTurret) {
     }
 }
 
-// Create turret add it to truret, returns if success
+// Create turret add it to turret, returns if success
 bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
     unsigned int id = 0;
     if (!turretManager.empty()) {
@@ -247,7 +251,9 @@ CollisionHandler& GameManager::getCollisionHandler() {
 
 // Update colliders to current state
 void GameManager::updateCollider() {
+    collisionHandler = CollisionHandler();
 
+/*
     delete collisionHandler.quadtreeMov;
     delete collisionHandler.quadtreePro;
     delete collisionHandler.quadtreeDam;
@@ -257,36 +263,41 @@ void GameManager::updateCollider() {
     collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
     collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
     collisionHandler.quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
-
+*/
     for (auto& m : marineManager) {
-        collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
     }
 
     for (auto& z : zombieManager) {
-        collisionHandler.quadtreeMov->insert(z.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(z.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(z.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(z.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(z.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(z.second.damageHitBox.get());
     }
 
     for (auto& o : objectManager) {
-        collisionHandler.quadtreeMov->insert(o.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(o.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(o.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(o.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(o.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(o.second.damageHitBox.get());
     }
 
-      for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
+    for (auto& m : turretManager) {
+        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
     }
+
+   	for (auto& b : barricadeManager) {
+        if (b.second.isPlaced()) {
+            collisionHandler.quadtreeMov.insert(b.second.movementHitBox.get());
+            collisionHandler.quadtreeDam.insert(b.second.damageHitBox.get());
+        }
+	}
 
     for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
+        collisionHandler.quadtreePickUp.insert(m.second.pickupHitBox.get());
     }
-
-
 }
 
 void GameManager::updateMarine(const PlayerData &playerData) {
@@ -309,4 +320,29 @@ void GameManager::updateZombie(const ZombieData &zombieData) {
 
     zombieManager[zombieData.zombieid].setAngle(zombieData.direction);
     zombieManager[zombieData.zombieid].setHealth(zombieData.health);
+}
+
+// Create barricade add it to manager, returns success
+unsigned int GameManager::createBarricade(SDL_Renderer* gRenderer, float x, float y) {
+    unsigned int id = 0;
+    if (!barricadeManager.empty()) {
+        id = barricadeManager.rbegin()->first + 1;
+    }
+    barricadeManager[id] = Barricade();
+    if (!barricadeManager.at(id).texture.loadFromFile("assets/texture/barricade.png", gRenderer)) {
+        printf("Failed to load the barricade texture!\n");
+        deleteBarricade(id);
+        return -1;
+    }
+    barricadeManager.at(id).setPosition(x,y);
+    return id;
+}
+
+
+void GameManager::deleteBarricade(unsigned int id) {
+	barricadeManager.erase(id);
+}
+// Get a barricade by its id
+Barricade& GameManager::getBarricade(unsigned int id) {
+    return barricadeManager.find(id)->second;
 }

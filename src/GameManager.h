@@ -6,6 +6,7 @@
 #include "CollisionHandler.h"
 #include "Object.h"
 #include "Zombie.h"
+#include "Barricade.h"
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -33,6 +34,7 @@ public:
     unsigned int createMarine();
     bool createMarine(SDL_Renderer* gRenderer, float x, float y);
     void deleteMarine(unsigned int id);
+
     bool addMarine(unsigned int id, Marine& newMarine);
     Marine& getMarine(unsigned int id);
     const auto& getAllMarines() const {return marineManager;}
@@ -41,6 +43,7 @@ public:
     // Methods for creating, getting, and deleting towers from the level.
     unsigned int createTurret();
     void deleteTurret(unsigned int id);
+
     bool addTurret(unsigned int id, Turret& newTurret);
     bool createTurret(SDL_Renderer* gRenderer, float x, float y) ;
     Turret& getTurret(unsigned int id);
@@ -69,6 +72,10 @@ public:
     void printMarineCount() {std::cout << "marine count: " << marineManager.size() << std::endl;};
     //temporary dont yell at me
     void setRenderer(SDL_Renderer *renderer) {_renderer = renderer;};
+
+    unsigned int createBarricade(SDL_Renderer* gRenderer, float x, float y);
+    void deleteBarricade(unsigned int id);
+    Barricade& getBarricade(unsigned int id);
 private:
     static GameManager *sInstance;
 
@@ -83,6 +90,8 @@ private:
     std::map<unsigned int, Zombie> zombieManager;
     std::map<unsigned int, Turret> turretManager;
     std::map<unsigned int, WeaponDrop> weaponDropManager;
+    std::map<unsigned int, Barricade> barricadeManager;
+
 };
 
 

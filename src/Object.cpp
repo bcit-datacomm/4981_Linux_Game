@@ -1,11 +1,9 @@
 #include "Object.h"
 
-Object::Object() {
-    //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
+Object::Object(int height, int width, double angle) : Entity(), height(height), width(width), angle(angle){
+    setHeight(height);
+    setWidth(width);
 }
-
 Object::~Object() {
     printf("Destory Object\n");
 }
@@ -29,6 +27,12 @@ void Object::onCollision() {
     // Do nothing for now
 }
 
-void Object::collidingProjectile(int damage) {
-    //nothing for now
+//sets the angle of object's sprite
+void Object::setAngle(double a){
+    angle = a;
+}
+
+//returns the angle of the object's sprite
+double Object::getAngle(){
+    return angle;
 }

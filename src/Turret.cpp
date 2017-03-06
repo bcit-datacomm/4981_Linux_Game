@@ -16,7 +16,7 @@ bool Turret::placementCheckTurret(){
     return true;
 }
 
-// checks if the turret placement overlaps with any currently existing objects, currently does nothing
+// checks if the turret placement overlaps with any currently existing objects
 bool Turret::collisionCheckTurret(float x, float y, CollisionHandler& ch) {
     SDL_Rect checkBox;
     checkBox.h = 100;
@@ -24,9 +24,7 @@ bool Turret::collisionCheckTurret(float x, float y, CollisionHandler& ch) {
     checkBox.x = x;
     checkBox.y = y;
     HitBox hitBox(x, y, checkBox, nullptr);
-    if(ch.detectMovementCollision(&hitBox))
-        return false;
-    return true;
+    return !ch.detectMovementCollision(&hitBox);
 }
 
 // activates the turret
@@ -39,12 +37,12 @@ void Turret::onCollision() {
 }
 
 void Turret::collidingProjectile(int damage) {
-    health = health - damage;
+    health -= damage;
 }
 
 // turret ammo pool decrements by this amount
 void Turret::decrementAmmo(int amount) {
-    ammo = ammo- amount;
+    ammo -= amount;
 }
 
 // turret shoots, this is not yet defined

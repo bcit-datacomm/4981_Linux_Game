@@ -3,36 +3,34 @@
 #include<SDL2/SDL.h>
 #include "HitBox.h"
 #include <vector>
+#include <array>
+#include <memory>
 
-const unsigned int BRANCHSIZE = 4;
-const unsigned int MAX_OBJECTS = 10;
-const unsigned int MAX_LEVELS = 5;
+constexpr unsigned int BRANCHSIZE = 4;
+constexpr unsigned int MAX_OBJECTS = 10;
+constexpr unsigned int MAX_LEVELS = 5;
 
 class Quadtree {
 public:
-
     Quadtree(int pLevel, SDL_Rect pBounds);
-    ~Quadtree();
+    ~Quadtree() = default;
+    
+    Quadtree& operator=(const Quadtree& quad);
 
     void clear();
     void split();
     unsigned int getTreeSize() const;
-    int getIndex(const HitBox* pRect) const;
-    void insert(HitBox* pRect);
-    std::vector<HitBox*> retrieve(std::vector<HitBox*> returnObjects, HitBox* pRect);
+    int getIndex(const HitBox *pRect) const;
+    void insert(HitBox *pRect);
+    std::vector<HitBox *> retrieve(const HitBox *pRect);
 
-    std::vector<HitBox*> objects;
+    std::vector<HitBox *> objects;
 
 private:
-
     unsigned int objectCounter;
     unsigned int level;
     SDL_Rect bounds;
-    Quadtree* nodes[BRANCHSIZE];
-
-
+    std::array<std::shared_ptr<Quadtree>, BRANCHSIZE> nodes;
 };
-
-
 
 #endif

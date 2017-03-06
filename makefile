@@ -1,4 +1,4 @@
-BASEFLAGS := -Wall -g -pg -pedantic -pipe -std=c++14 -fopenmp
+BASEFLAGS := -Wall -pedantic -pipe -std=c++14 -fopenmp
 DEBUGFLAGS := -g -pg
 RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG
 CLIBS := -pthread  -lefence -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
