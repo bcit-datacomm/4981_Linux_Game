@@ -27,6 +27,8 @@ public:
 	
 	void updateHitBoxes(); // update hitbox positions
 
+    void updateRectHitBoxes(); // update hitbox sizes
+
     std::shared_ptr<HitBox> movementHitBox = nullptr;
 	std::shared_ptr<HitBox> projectileHitBox = nullptr;
 	std::shared_ptr<HitBox> damageHitBox = nullptr;

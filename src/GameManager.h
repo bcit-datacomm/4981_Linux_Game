@@ -1,11 +1,13 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 #include<SDL2/SDL.h>
+#include "Zombie.h"
 #include "Marine.h"
 #include "Turret.h"
 #include "CollisionHandler.h"
 #include "Object.h"
-#include "Zombie.h"
+#include "Base.h"
+#include "Wall.h"
 #include "Barricade.h"
 #include <map>
 #include <unordered_map>
@@ -18,6 +20,7 @@
 #include "HandGun.h"
 #include "Rifle.h"
 #include "ShotGun.h"
+
 
 class GameManager {
 public:
@@ -63,6 +66,10 @@ public:
     unsigned int createBarricade(SDL_Renderer* gRenderer, float x, float y);
     void deleteBarricade(unsigned int id);
     Barricade& getBarricade(unsigned int id);
+
+    unsigned int createWall(SDL_Renderer* gRenderer, float x, float y); // create Wall object
+    void setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY); // place walls for the boundaries
+
 private:
     static GameManager *sInstance;
 
@@ -71,11 +78,13 @@ private:
     std::unique_ptr<WeaponDrop> wdPointer;
     std::map<unsigned int, Marine> marineManager;
     std::map<unsigned int, Object> objectManager;
+    std::map<unsigned int, Wall> wallManager;
     std::map<unsigned int, Zombie> zombieManager;
     std::map<unsigned int, Turret> turretManager;
     std::map<unsigned int, WeaponDrop> weaponDropManager;
     std::map<unsigned int, Barricade> barricadeManager;
 
+    LTexture wallTexture;  // texture for Wall object
 };
 
 

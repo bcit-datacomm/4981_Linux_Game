@@ -37,11 +37,20 @@ bool GameStateMatch::load() {
  	
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
+
+    //set the boundary on the map
+    GameManager::instance()->setBoundary(game.renderer, -1000, -1000, 3000, 3000);
+    
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 100, 100);
-    GameManager::instance()->createZombie(game.renderer, 700, 700);
-    GameManager::instance()->createTurret(game.renderer, 1000, 500);
+    GameManager::instance()->createZombie(game.renderer, -800, -800);
+    GameManager::instance()->createZombie(game.renderer, 2800, -800);
+    GameManager::instance()->createZombie(game.renderer, -800, 2800);
+    GameManager::instance()->createZombie(game.renderer, 2800, 2800);
+    GameManager::instance()->createZombie(game.renderer, -800, 1400);
+    GameManager::instance()->createZombie(game.renderer, 1400, 2800);
+    GameManager::instance()->createZombie(game.renderer, 2800, 1400);
+    GameManager::instance()->createZombie(game.renderer, 1400, 2800);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 	
 

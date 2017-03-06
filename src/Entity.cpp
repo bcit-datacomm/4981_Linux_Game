@@ -50,3 +50,10 @@ void Entity::updateHitBoxes() {
 	damageHitBox->move(x, y);
 	pickupHitBox->move(x, y);
 }
+
+void Entity::updateRectHitBoxes() {
+    movementHitBox->setRect(spriteClips[0]);
+    projectileHitBox->setRect(spriteClips[0]);
+    damageHitBox->setRect(spriteClips[0]);
+    pickupHitBox->setRect(spriteClips[0]);
+}

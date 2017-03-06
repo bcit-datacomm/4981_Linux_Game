@@ -36,9 +36,15 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
                                  NULL, m.second.getAngle());
     }
+
     for (const auto& o : objectManager) {
         o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
     }
+
+    for (const auto& w : wallManager) {
+        wallTexture.render(gRenderer, w.second.getX() - camX, w.second.getY() - camY);
+    }
+
     for (const auto& z : zombieManager) {
         z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
                                  NULL, z.second.getAngle());
@@ -280,6 +286,11 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeDam->insert(o.second.damageHitBox.get());
     }
 
+    for (auto& w : wallManager) {
+        collisionHandler.quadtreeMov->insert(w.second.movementHitBox.get());
+        collisionHandler.quadtreePro->insert(w.second.projectileHitBox.get());
+    }
+
     for (auto& m : turretManager) {
         collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
         collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
@@ -322,4 +333,81 @@ void GameManager::deleteBarricade(unsigned int id) {
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(unsigned int id) {
     return barricadeManager.find(id)->second;
+}
+
+// Create zombie add it to manager, returns success
+unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y) {
+    unsigned int id = 0;
+
+    if (!wallManager.empty()) {
+        id = wallManager.rbegin()->first + 1;
+    }
+    wallManager[id] = Wall();
+    wallManager.at(id).setPosition(x,y);
+    
+    return id;
+}
+
+
+void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY){
+    int width = WALL_WIDTH;
+    int height = WALL_HEIGHT;
+
+    if (!wallTexture.loadFromFile("assets/texture/wall.png", gRenderer)) {
+        printf("Failed to load the wall texture!\n");
+        return;
+    }
+    
+    float x = startX - width;
+    float y = startY - height;
+    while(x <= endX){
+        createWall(gRenderer, x, y);
+        createWall(gRenderer, x, endY);
+        x += width;
+    }
+
+    while(y < endY){
+        createWall(gRenderer, startX-width, y);
+        createWall(gRenderer, endX, y);
+        y += height;
+    }
+
+
+
+
+
+
+    /* For Test map. This code below will be removed */
+    float sX = (endX + startX)/2 - BASE_WIDTH;
+    float eX = (endX + startX)/2 + BASE_WIDTH;
+    float sY = (endY + startY)/2 - BASE_HEIGHT;
+    float eY = (endY + startY)/2 + BASE_HEIGHT;
+
+    x = sX - width;
+    
+    int i = 0;
+    int n = (eX-sX) / width / 2;
+    while(x <= eX) {
+        if(i < n) {
+            createWall(gRenderer, x, sY-height);
+        } else {
+            createWall(gRenderer, x, eY);
+        }
+        x += width;
+        i++;
+    }
+
+    y = sY;
+    i = 0;
+    while(y < eY) {
+        if(i < n) {
+            createWall(gRenderer, eX, y);
+        } else {
+            createWall(gRenderer, sX - width, y);
+        }
+        y += height;
+        i++;
+    }
+
+
 }
