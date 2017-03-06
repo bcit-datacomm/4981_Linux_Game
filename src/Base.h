@@ -13,10 +13,10 @@
 //#include <SDL2/SDL.h>
 
 //TODO :  change later.
-const int BASE_HEIGHT = 500;
-const int BASE_WIDTH = 500;
-const int MAP_HEIGHT = 2000;
-const int MAP_WIDTH = 2000;
+constexpr int BASE_HEIGHT = 500;
+constexpr int BASE_WIDTH = 500;
+constexpr int MAP_HEIGHT = 2000;
+constexpr int MAP_WIDTH = 2000;
 
 typedef std::pair<float, float> Point;
 
