@@ -30,6 +30,8 @@ public:
            int rAOE = 0,
            int reloadSpeed = 0);
 
+    Weapon(const Weapon& w);
+
     ~Weapon();
 
 protected:

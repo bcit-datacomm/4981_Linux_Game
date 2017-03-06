@@ -103,10 +103,9 @@ void GameManager::deleteMarine(unsigned int id) {
 bool GameManager::addMarine(unsigned int id, Marine& newMarine) {
     if (marineManager.count(id)) {
         return false;
-    } else {
-        marineManager[id] = newMarine;
-        return true;
     }
+    marineManager[id] = newMarine;
+    return true;
 }
 
 // Get a marine by its id
@@ -133,10 +132,9 @@ void GameManager::deleteTurret(unsigned int id) {
 bool GameManager::addTurret (unsigned int id, Turret& newTurret) {
     if (turretManager.count(id)) {
         return false;
-    } else {
-        turretManager[id] = newTurret;
-        return true;
     }
+    turretManager[id] = newTurret;
+    return true;
 }
 
 // Create turret add it to turret, returns if success
