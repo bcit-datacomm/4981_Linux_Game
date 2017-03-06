@@ -52,7 +52,7 @@ class Turret : public Entity {
 
 	void removeTurret(); // removes the turret
 
-	float getRange() const; // returns the turret's range.
+	inline float getRange() const; // returns the turret's range.
 
 	Turret();
 	virtual ~Turret();

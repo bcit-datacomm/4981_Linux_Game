@@ -1,3 +1,4 @@
+#include <memory>
 #include "GameManager.h"
 #include "HitBox.h"
 
@@ -279,6 +280,6 @@ void GameManager::updateCollider() {
 
 // returns the list of zombies.
 // Jamie, 2017-03-01.
-const std::map<unsigned int, Zombie*>* GameManager::getZombies() {
-    return &zombieManager;
+const std::map<unsigned int, Zombie*>& GameManager::getZombies() {
+    return zombieManager;
 }
