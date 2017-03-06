@@ -45,14 +45,15 @@ public:
     void generateMove();            // A* movement
 	int getRandomAngle();           // randomly generate the angle of zombie
     void setStep(int sp);           // set step
-    int getStep();                  // get step    
+    int getStep();                  // get step
     std::string getPath();          // get path
     void setPath(std::string pth);  // set path
     int getDir();                   // get move direction
     bool checkBound(float x, float y);  // boundary checks
     // A* path
-    std::string generatePath(const int& xStart, const int& yStart, 
+    std::string generatePath(const int& xStart, const int& yStart,
                              const int& xDest, const int& yDest);
+
 	Zombie();
 	virtual ~Zombie();
 
@@ -60,7 +61,7 @@ public:
 	HitBox movementHitBox;	// Hit box for movement
 	HitBox projectileHitBox; // Hit box for projectiles
 	HitBox damageHitBox; // Hit box for damage
-	
+
 private:
     float dx = 0; // delta x coordinate
     float dy = 0; // delta y coordinate

@@ -165,6 +165,7 @@ void GameStateMatch::update(const float& delta) {
 	// Move player
 	GameManager::instance()->updateMarines(delta);
 	GameManager::instance()->updateZombies(delta);
+	GameManager::instance()->updateTurrets(delta);
 
 	// Move Camera
 	this->camera->move(this->player->marine->getX(), this->player->marine->getY());

@@ -37,14 +37,16 @@ public:
 	void updateCollider(); // Updates CollisionHandler
 	void updateMarines(const float& delta); // Update marine actions
 	void updateZombies(const float& delta); // Update zombie actions
+    void updateTurrets(const float& delta); // Update turret actions
 
 	unsigned int addObject(Object*);
 	void deleteObject(unsigned int id);
-	
+
 	unsigned int addZombie(Zombie*);
 	bool createZombie(SDL_Renderer* gRenderer, float x, float y);
 	void deleteZombie(unsigned int id);
-	
+
+    const std::map<unsigned int, Zombie*>* getZombies(); // returns the list of zombies.
 
 private:
     static GameManager *sInstance;
