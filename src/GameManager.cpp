@@ -34,7 +34,7 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
     }
     for (const auto& m : marineManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
-                                 NULL, m.second.getAngle());
+                NULL, m.second.getAngle());
     }
 
     for (const auto& o : objectManager) {
@@ -47,12 +47,12 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 
     for (const auto& z : zombieManager) {
         z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
-                                 NULL, z.second.getAngle());
+                NULL, z.second.getAngle());
     }
 
     for (const auto& m : turretManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
-                                 NULL, m.second.getAngle());
+                NULL, m.second.getAngle());
     }
 
  	for (const auto& b : barricadeManager) {
@@ -145,7 +145,7 @@ bool GameManager::addTurret (unsigned int id, Turret& newTurret) {
     }
 }
 
-// Create turret add it to truret, returns if success
+// Create turret add it to turret, returns if success
 bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
     unsigned int id = 0;
     if (!turretManager.empty()) {
@@ -257,33 +257,24 @@ CollisionHandler& GameManager::getCollisionHandler() {
 
 // Update colliders to current state
 void GameManager::updateCollider() {
+    collisionHandler = CollisionHandler();
 
-    delete collisionHandler.quadtreeMov;
-    delete collisionHandler.quadtreePro;
-    delete collisionHandler.quadtreeDam;
-    delete collisionHandler.quadtreePickUp;
-
-    collisionHandler.quadtreeMov = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler.quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
-    
     for (auto& m : marineManager) {
-        collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
     }
 
     for (auto& z : zombieManager) {
-        collisionHandler.quadtreeMov->insert(z.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(z.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(z.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(z.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(z.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(z.second.damageHitBox.get());
     }
 
     for (auto& o : objectManager) {
-        collisionHandler.quadtreeMov->insert(o.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(o.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(o.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(o.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(o.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(o.second.damageHitBox.get());
     }
 
     for (auto& w : wallManager) {
@@ -292,20 +283,20 @@ void GameManager::updateCollider() {
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
     }
 
    	for (auto& b : barricadeManager) {
-        if(b.second.isPlaced()) {
-            collisionHandler.quadtreeMov->insert(b.second.movementHitBox.get());
-            collisionHandler.quadtreeDam->insert(b.second.damageHitBox.get());
+        if (b.second.isPlaced()) {
+            collisionHandler.quadtreeMov.insert(b.second.movementHitBox.get());
+            collisionHandler.quadtreeDam.insert(b.second.damageHitBox.get());
         }
 	}
 
     for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
+        collisionHandler.quadtreePickUp.insert(m.second.pickupHitBox.get());
     }
     
 }

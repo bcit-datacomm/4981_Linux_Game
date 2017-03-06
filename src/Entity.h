@@ -10,29 +10,21 @@ class Entity {
 public:
     Entity();
     virtual ~Entity();
-
     virtual void onCollision() = 0;
     virtual void collidingProjectile(int damage) = 0;
-
     void setPosition(float x, float y); // Set marine position
-
     void setX(float px); //set x coordinate
-
     void setY(float py); //set y coordinate
-
-
     float getX() const; // get x coordinate
-
     float getY() const; // get y coordinate
-	
-	void updateHitBoxes(); // update hitbox positions
+	  void updateHitBoxes(); // update hitbox positions
 
     void updateRectHitBoxes(); // update hitbox sizes
 
-    std::shared_ptr<HitBox> movementHitBox = nullptr;
-	std::shared_ptr<HitBox> projectileHitBox = nullptr;
-	std::shared_ptr<HitBox> damageHitBox = nullptr;
-	std::shared_ptr<HitBox> pickupHitBox = nullptr;
+  std::shared_ptr<HitBox> movementHitBox;
+	std::shared_ptr<HitBox> projectileHitBox;
+	std::shared_ptr<HitBox> damageHitBox;
+	std::shared_ptr<HitBox> pickupHitBox;
 
     LTexture texture;
     SDL_Rect spriteClips[1];
