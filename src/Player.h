@@ -7,6 +7,7 @@
 #include "Inventory.h"
 #include <SDL2/SDL.h>
 #include "GameManager.h"
+#include "UDPHeaders.h"
 
 class Player {
 public:
@@ -27,6 +28,8 @@ public:
                           unsigned int tid);
 
     void handleTempBarricade(SDL_Renderer *renderer);
+
+    MoveAction getMoveAction();
 
     Player();
     ~Player();

@@ -28,14 +28,15 @@
 class NetworkManager {
 public:
     static NetworkManager& instance();
-	void handshake(const char *, const char *, int);
 
     UDPSocket& getSockUDP() {return _sockUDP;};
+    void handshake(const char *, const char *, int);
+
 private:
     int _sockTCP;
-    UDPSocket& _sockUDP;
+    UDPSocket _sockUDP;
 
-	NetworkManager();
+    NetworkManager() {};
 
     void runUDPClient(std::shared_ptr<UDPSocket> udpSock);
     int TCPConnect(const char *);

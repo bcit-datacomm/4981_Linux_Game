@@ -31,10 +31,11 @@ UDPSocket encapsulates a file descriptor for a UDP socket.
 
 class UDPSocket {
 public:
+    UDPSocket() {};
     UDPSocket(const char *);
     virtual ~UDPSocket();
     void sendToServ(const char *, const int&);
-    void recvFromServ(char *, const int&);
+    int recvFromServ(char *, const int&);
 private:
     void bindSock();
     int _sockUDP;

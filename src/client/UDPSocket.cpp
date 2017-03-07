@@ -182,17 +182,14 @@ NOTES:
 Receives data from servAddr and stores it in buf. Reliable even when data
 being received exceeds MTU.
 --------------------------------------------------------------------------*/
-void UDPSocket::recvFromServ(char *buf, const int& len) {
+int UDPSocket::recvFromServ(char *buf, const int& len) {
     socklen_t addrLen = sizeof(_servAddr);
-    int res = 0;
-	int ttlsent = 0, bytesleft = len;
-	while (ttlsent < len) {
-		if ((res = recvfrom(_sockUDP, buf + ttlsent, bytesleft, 0,
-            (struct sockaddr *)&_servAddr, &addrLen)) < 0 ) {
-			perror("recvfrom");
-            exit(1);
-		}
-		ttlsent += res;
-		bytesleft -= res;
+    int res = recvfrom(_sockUDP, buf, len, 0,
+        (struct sockaddr *)&_servAddr, &addrLen);
+    if(res < 0 ) {
+		perror("recvfrom");
+        exit(1);
 	}
+
+    return res;
 }

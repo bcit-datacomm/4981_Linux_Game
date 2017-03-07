@@ -18,11 +18,11 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 }
 
 bool GameStateMatch::load() {
-
-//    std::string username;
-//    std::cin >> username;
-//    NetworkManager::instance().handshake(ip.c_str, username.c_str, numPlayers);
-
+    std::string username, ip;
+    int numPlayers;
+    std::cout << "Enter username (max 32 chars), server IP, and number of players: " << std::endl;
+    std::cin >> username >> ip >> numPlayers;
+    NetworkManager::instance().handshake(ip.c_str(), username.c_str(), numPlayers);
 
     bool success = true;
 
@@ -104,6 +104,12 @@ void GameStateMatch::loop() {
 
         // Process frame
         handle();    // Handle user input
+
+        MoveAction moveAction = player.getMoveAction();
+        NetworkManager::instance()
+            .getSockUDP()
+            .sendToServ((char *)&moveAction, sizeof(MoveAction));
+
         update(stepTimer.getTicks() / 1000.f); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server

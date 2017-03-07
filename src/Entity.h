@@ -19,6 +19,9 @@ public:
     float getY() const; // get y coordinate
 	void updateHitBoxes(); // update hitbox positions
 
+    void setID(const int& id) {_id = id;};
+    int& getID() {return _id;};
+
     std::shared_ptr<HitBox> movementHitBox;
 	std::shared_ptr<HitBox> projectileHitBox;
 	std::shared_ptr<HitBox> damageHitBox;
@@ -27,7 +30,7 @@ public:
     SDL_Rect spriteClips[1];
 
 private:
-
+    int _id;
     float x = 0; //x coordinate
     float y = 0; //y coordinate
 

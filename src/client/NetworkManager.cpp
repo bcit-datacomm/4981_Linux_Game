@@ -74,8 +74,8 @@ void NetworkManager::runUDPClient(std::shared_ptr<UDPSocket> udpSock) {
     char buffer[SYNC_PACKET_MAX];
     Packetizer packetizer;
     for(;;) {
-        udpSock.get()->recvFromServ(buffer, sizeof(int32_t));
-        packetizer.parse(buffer, 1);
+        int packetSize = udpSock.get()->recvFromServ(buffer, SYNC_PACKET_MAX);
+        packetizer.parse(buffer, packetSize);
     }
 }
 
