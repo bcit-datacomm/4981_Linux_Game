@@ -1,8 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- HEADER FILE: Node.h
 --
--- PROGRAM:     Astar
---
 -- FUNCTIONS:
 
 --
@@ -13,7 +11,7 @@
 -- PROGRAMMER:  Fred Yang, Robert Arendac
 --
 -- NOTES:
--- 
+-- Used for the A* algorithm in navigating the map
 ----------------------------------------------------------------------------------------------------------------------*/
 
 #ifndef NODE_H
@@ -23,11 +21,11 @@
 #include <stdio.h>
 
 // screen w/h
-#define SCREEN_W    1280
-#define SCREEN_H    960
+#define SCREEN_W    2000
+#define SCREEN_H    2000
 
-// tile size
-#define TILE_SIZE   60
+// The size of a tile/node and how large each zombie step is
+#define TILE_SIZE   100
 #define STEP_SPAN   5
 
 // horizontal/vertical & diagonal cost
@@ -44,6 +42,16 @@
 #define DIR_LU      5
 #define DIR_U       6
 #define DIR_RU      7
+
+// Cardinal directions for setting angles
+#define NORTH 0
+#define NORTHEAST 45
+#define EAST 90
+#define SOUTHEAST 135
+#define SOUTH 180
+#define SOUTHWEST 225
+#define WEST 270
+#define NORTHWEST 315
 
 // map row & column
 const int row = TILE_SIZE;
@@ -63,12 +71,12 @@ static int my[DIR_CAP]={0, 1, 1, 1, 0, -1, -1, -1};
 
 class Node {
 public:
-    explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0, 
-                  const int pri = 0) 
+    explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
+                  const int pri = 0)
     : xPos_(xPos), yPos_(yPos), lv_(lv), pri_(pri) {}
-    
+
     virtual ~Node() {}
-    
+
     int getXPos() const {return xPos_;}
     int getYPos() const {return yPos_;}
     int getLevel() const {return lv_;}
@@ -85,7 +93,7 @@ public:
     {
          lv_ += (dir%2 ==0 ? BASE_COST : EXTEND_COST);
     }
-    
+
     // calculate cost per the remaining distance to the destination
     const int& estimate(const int& xDest, const int& yDest) const
     {
@@ -101,7 +109,7 @@ public:
 
         return dist;
     }
-        
+
 private:
     // current position
     int xPos_;
@@ -117,6 +125,6 @@ private:
 inline bool operator<(const Node& node1, const Node& node2)
 {
   return node1.getPriority() > node2.getPriority();
-} 
+}
 
 #endif
