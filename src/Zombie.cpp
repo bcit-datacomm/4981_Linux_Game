@@ -9,7 +9,7 @@ using namespace std;
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state) {
-    setAngle(10/*temp*/);
+    setAngle(0); //Totally arbitrary right now
     printf("Create Zombie\n");
 }
 
@@ -27,7 +27,11 @@ void Zombie::setStep(int sp) {
     step = sp;
 }
 
-// Get move direction
+/*
+Get move direction
+Fred
+February
+*/
 int Zombie::getDir() {
     int sp = this->getStep();
     string pth = this->getPath();
@@ -53,64 +57,77 @@ void Zombie::collidingProjectile(int damage) {
     health = health - damage;
 }
 
+/*
+Get the direction of the zombie and take a step
+Rob, Fred
+Feb - Ongoing
+*/
 void Zombie::generateMove() {
-    int d = this->getDir();
+    int d = getDir();
     if (d < 0) return;
 
-    float x = this->getDX();
-    float y = this->getDY();
+    float x = getDX();
+    float y = getDY();
 
     switch(d) {
         case DIR_R:
             if (checkBound(x + STEP_SPAN, y)) {
-                this->setDX(x + STEP_SPAN);
-                this->step++;
+                setDX(x + STEP_SPAN);
+                step++;
+                setAngle(EAST);
             }
             break;
         case DIR_RD:
             if (checkBound(x + STEP_SPAN, y + STEP_SPAN)) {
-                this->setDX(x + STEP_SPAN);
-                this->setDY(y + STEP_SPAN);
-                this->step++;
+                setDX(x + STEP_SPAN);
+                setDY(y + STEP_SPAN);
+                step++;
+                setAngle(SOUTHEAST);
             }
             break;
         case DIR_D:
             if (checkBound(x, y + STEP_SPAN)) {
-                this->setDY(y + STEP_SPAN);
-                this->step++;
+                setDY(y + STEP_SPAN);
+                step++;
+                setAngle(SOUTH);
             }
             break;
         case DIR_LD:
             if (checkBound(x - STEP_SPAN, y + STEP_SPAN)) {
-                this->setDX(x - STEP_SPAN);
-                this->setDY(y + STEP_SPAN);
-                this->step++;
+                setDX(x - STEP_SPAN);
+                setDY(y + STEP_SPAN);
+                step++;
+                setAngle(SOUTHWEST);
             }
             break;
         case DIR_L:
             if (checkBound(x - STEP_SPAN, y)) {
-                this->setDX(x - STEP_SPAN);
-                this->step++;
+                setDX(x - STEP_SPAN);
+                step++;
+                setAngle(WEST);
             }
             break;
         case DIR_LU:
             if (checkBound(x - STEP_SPAN, y - STEP_SPAN)) {
-                this->setDX(x - STEP_SPAN);
-                this->setDY(y - STEP_SPAN);
-                this->step++;
+                setDX(x - STEP_SPAN);
+                setDY(y - STEP_SPAN);
+                step++;
+                setAngle(NORTHWEST);
             }
             break;
         case DIR_U:
             if (checkBound(x, y - STEP_SPAN)) {
-                this->setDY(y - STEP_SPAN);
-                this->step++;
+                setDY(y - STEP_SPAN);
+                step++;
+                setAngle(NORTH);
             }
             break;
         case DIR_RU:
             if (checkBound(x + STEP_SPAN, y - STEP_SPAN)) {
-                this->setDX(x + STEP_SPAN);
-                this->setDY(y - STEP_SPAN);
-                this->step++;
+                setDX(x + STEP_SPAN);
+                setDY(y - STEP_SPAN);
+                step++;
+                setAngle(NORTHEAST);
             }
             break;
         default:

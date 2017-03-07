@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "Zombie.h"
 #include "Barricade.h"
+#include "Base.h"
 #include <map>
 #include <unordered_map>
 #include <vector>

@@ -202,7 +202,8 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
     }
 
     zombieManager.at(id).setPosition(x,y);
-    zombieManager.at(id).generatePath((int) x / 60, (int) y / 60, 50, 10); // turret position 500, 500?
+    //Hard coded for now.  100 is the tile size and 900 is the tower location
+    zombieManager.at(id).generatePath((int) x / 100, (int) y / 100, 900 / 100, 900 / 100); 
     return true;
 }
 
