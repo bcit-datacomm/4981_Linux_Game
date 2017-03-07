@@ -10,7 +10,7 @@ class HandGun: public Weapon {
 public:
 
     HandGun();
-	~HandGun();
+    ~HandGun();
 };
 
 #endif

@@ -28,10 +28,10 @@ void clearAttackActions() {
 }
 
 void updateMarine(const MoveAction& ma) {
-    Marine *marine = gm->getMarine(ma.id);
-    marine->setPosition(ma.xpos, ma.ypos);
-    marine->setVelocity(ma.vel);
-    marine->setAngle(ma.direction);
+    Marine& marine = gm->getMarine(ma.id);
+    marine.setPosition(ma.xpos, ma.ypos);
+    marine.setVelocity(ma.vel);
+    marine.setAngle(ma.direction);
 }
 
 std::vector<PlayerData> getPlayers() {
@@ -42,11 +42,11 @@ std::vector<PlayerData> getPlayers() {
         memset(&tempPlayer, 0, sizeof(tempPlayer));
 
         tempPlayer.playerid = idPlayerPair.first;
-        tempPlayer.xpos = marine->getX();
-        tempPlayer.ypos = marine->getY();
-        tempPlayer.vel = marine->getVelocity();
-        tempPlayer.direction = marine->getAngle();
-        tempPlayer.health = marine->getHealth();
+        tempPlayer.xpos = marine.getX();
+        tempPlayer.ypos = marine.getY();
+        tempPlayer.vel = marine.getVelocity();
+        tempPlayer.direction = marine.getAngle();
+        tempPlayer.health = marine.getHealth();
         tempPlayer.actionid = ACTIONH;
         tempPlayer.nmoves = moveMap.count(idPlayerPair.first);
         tempPlayer.nattacks = attackMap.count(idPlayerPair.first);
@@ -85,10 +85,10 @@ std::vector<ZombieData> getZombies() {
         memset(&tempZombie, 0, sizeof(tempZombie));
 
         tempZombie.zombieid = idZombiePair.first;
-        tempZombie.health = zombie->getHealth();
-        tempZombie.xpos = zombie->getX();
-        tempZombie.ypos = zombie->getY();
-        tempZombie.direction = zombie->getAngle();
+        tempZombie.health = zombie.getHealth();
+        tempZombie.xpos = zombie.getX();
+        tempZombie.ypos = zombie.getY();
+        tempZombie.direction = zombie.getAngle();
 
         rtn.push_back(tempZombie);
     }

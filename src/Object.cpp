@@ -1,65 +1,38 @@
 #include "Object.h"
 
-Object::Object() {
-	objectSpriteClips[0].x = 0;
-	objectSpriteClips[0].y = 0;
-	objectSpriteClips[0].w = 100;
-	objectSpriteClips[0].h = 100;
-	this->movementHitBox.setRect(objectSpriteClips[0]);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->movementHitBox.attached = this;
-	//this->movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-	this->projectileHitBox.setRect(objectSpriteClips[0]);
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.attached = this;
-	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-	this->damageHitBox.setRect(objectSpriteClips[0]);
-	this->damageHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.attached = this;
-	//this->projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-
+Object::Object(int height, int width, double angle) : Entity(), height(height), width(width), angle(angle){
+    setHeight(height);
+    setWidth(width);
 }
-
 Object::~Object() {
-	printf("Destory Object\n");
+    printf("Destory Object\n");
 }
-
-void Object::setPosition(float x, float y) {
-	
-	Entity::setPosition(x, y);
-	
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.move(this->getX(), this->getY());
-}
-
-// Set x coordinate
-void Object::setX(float px) {
-	Entity::setX(px);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.move(this->getX(), this->getY());
-} 
-
-// Set y coordinate
-void Object::setY(float py) {
-	Entity::setY(py);
-	this->movementHitBox.move(this->getX(), this->getY());
-	this->projectileHitBox.move(this->getX(), this->getY());
-	this->damageHitBox.move(this->getX(), this->getY());
-} 
 
 void Object::setHeight(int h) {
-	this->height = h;
-	this->objectSpriteClips[0].h = this->height;
+    height = h;
+    spriteClips[0].h = height;
 }
 void Object::setWidth(int w) {
-	this->width = w;
-	this->objectSpriteClips[0].w = this->width;
+    width = w;
+    spriteClips[0].w = width;
 }
 int Object::getHeight(){
-	return this->height;
+    return height;
 }
 int Object::getWidth(){
-	return this->width;
+    return width;
+}
+
+void Object::onCollision() {
+    // Do nothing for now
+}
+
+//sets the angle of object's sprite
+void Object::setAngle(double a){
+    angle = a;
+}
+
+//returns the angle of the object's sprite
+double Object::getAngle(){
+    return angle;
 }
