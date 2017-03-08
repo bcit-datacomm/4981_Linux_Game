@@ -34,6 +34,16 @@ public:
 
     int getStep();                  // get step
 
+    float getEndY();
+
+    float getEndX();
+
+    bool isMoving();
+
+    void checkMove();
+
+    void setEnd(float X, float Y);
+
     std::string getPath();          // get path
 
     void setPath(std::string pth);  // set path
@@ -49,7 +59,10 @@ private:
     int health;
     int state; //used to select sprite to display
     std::string path;
-    int step = 0;
+    int step;
+    bool moving;
+    float endX;
+    float endY;
 };
 
 #endif
