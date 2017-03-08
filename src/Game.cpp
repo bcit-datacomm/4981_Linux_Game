@@ -13,6 +13,7 @@
 #include "Base.h"
 #include "Level.h"
 #include "Camera.h"
+#include "server/server.h"
 
 
 void Game::run() {
@@ -20,6 +21,9 @@ void Game::run() {
     while (stateID > 0) {
         loadState();
         if (state->load()) {
+#ifdef SERVER
+            isGameRunning.store(true, std::memory_order_relaxed);
+#endif
             state->loop();
         }
     }

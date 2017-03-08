@@ -17,6 +17,7 @@
 #include <climits>
 #include <unordered_map>
 #include <atomic>
+#include <thread>
 
 #include "../UDPHeaders.h"
 #include "server.h"
@@ -35,6 +36,7 @@ int listenSocketTCP;
 int sendSocketUDP;
 bool verbose = false;
 std::unordered_map<int32_t, PlayerJoin> clientList;
+std::atomic_bool isGameRunning{false};
 
 int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
@@ -231,6 +233,16 @@ void initSync(int sock) {
                                     } else {
                                         perror("Client not found in list");
                                     }
+                                    bool areAllReady = true;
+                                    for (const auto& elem : clientList) {
+                                        if (!elem.second.isPlayerReady) {
+                                            areAllReady = false;
+                                            break;
+                                        }
+                                    }
+                                    if (areAllReady) {
+                                        transitionToGameStart();
+                                    }
                                 } else if (strncmp(buff + 5, "unready", nbytes - 4) == 0) {
                                     //Unready command
                                     if (clientList.count(idReceived)) {
@@ -240,9 +252,7 @@ void initSync(int sock) {
                                         perror("Client not found in list");
                                     }
                                 } else if (strncmp(buff + 5, "start", nbytes - 4) == 0) {
-                                    //Start command
-                                    logv("Starting the game\n");
-                                    startGame();
+                                    transitionToGameStart();
                                 }
                             }
                         } else {
@@ -434,4 +444,12 @@ void logv(const char *msg, ...) {
     vprintf(msg, args);
     va_end(args);
     fflush(stdout);
+}
+
+void transitionToGameStart() {
+    logv("Starting the game\n");
+    std::thread(startGame).detach();
+    //Spinlock
+    while (!isGameRunning.load());
+    listenUDP(listenSocketUDP, INADDR_ANY, listen_port_udp);
 }

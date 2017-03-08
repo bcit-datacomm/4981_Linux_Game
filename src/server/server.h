@@ -3,6 +3,7 @@
 
 #include <netinet/in.h>
 #include <cstdarg>
+#include <atomic>
 
 //Temp variable to represent client count
 #define CLIENT_COUNT 10
@@ -38,6 +39,7 @@ extern int listenSocketUDP;
 extern int listenSocketTCP;
 extern int sendSocketUDP;
 extern std::unordered_map<int32_t, PlayerJoin> clientList;
+extern std::atomic_bool isGameRunning;
 
 void initSync(int sock);
 void processPacket(const char *data);
@@ -50,6 +52,7 @@ void listenTCP(int socket, unsigned long ip, unsigned short port);
 void listenUDP(int socket, unsigned long ip, unsigned short port);
 int createSocket(bool useUDP, bool nonblocking);
 int32_t getPlayerId();
+void transitionToGameStart();
 
 //off by default
 extern bool verbose;
