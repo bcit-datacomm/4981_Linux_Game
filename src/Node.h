@@ -20,7 +20,7 @@
 #include <queue>
 #include <stdio.h>
 
-// screen w/h
+// screen width/height
 #define SCREEN_W    2000
 #define SCREEN_H    2000
 
@@ -62,7 +62,8 @@ static int closedNodes[row][col]; // array of closed nodes (evaluated)
 static int openNodes[row][col];   // array of open nodes (to be evaluated)
 static int dirMap[row][col];      // array of directions
 
-/* 8 possible movements
+/**
+ * 8 possible movements
  * 0 - right, 1 - right down, 2 - down, 3 - left down
  * 4 - left, 5 - left up, 6 - up, 7 - right up
  */
@@ -77,26 +78,38 @@ public:
 
     virtual ~Node() {}
 
-    int getXPos() const {return xPos_;}
-    int getYPos() const {return yPos_;}
-    int getLevel() const {return lv_;}
-    int getPriority() const {return pri_;}
+    // X coordinate of current node
+    int getXPos() const {
+        return xPos_;
+    }
+
+    // Y coordinate of current node
+    int getYPos() const {
+        return yPos_;
+    }
+
+    // Get distance travelled so far
+    int getLevel() const {
+        return lv_;
+    }
+
+    // Get priority of current node
+    int getPriority() const {
+        return pri_;
+    }
 
     // current level plus remaining cost
-    void updatePriority(const int& xDest, const int &yDest)
-    {
+    void updatePriority(const int& xDest, const int &yDest) {
          pri_ = lv_ + estimate(xDest, yDest) * BASE_COST;
     }
 
     // calculate next level based on direction
-    void nextLevel(const int& dir)
-    {
+    void nextLevel(const int& dir) {
          lv_ += (dir%2 ==0 ? BASE_COST : EXTEND_COST);
     }
 
     // calculate cost per the remaining distance to the destination
-    const int& estimate(const int& xDest, const int& yDest) const
-    {
+    const int& estimate(const int& xDest, const int& yDest) const {
         static int xDist, yDist, dist;
         xDist = xDest - xPos_;
         yDist = yDest - yPos_;
@@ -114,17 +127,18 @@ private:
     // current position
     int xPos_;
     int yPos_;
+
     // level = total distance already travelled to reach the node
     int lv_;
+
     // priority = level+remaining distance estimated
     // smaller one with higher priority
     int pri_;
 };
 
 // determine priority in priority queue
-inline bool operator<(const Node& node1, const Node& node2)
-{
-  return node1.getPriority() > node2.getPriority();
+inline bool operator<(const Node& node1, const Node& node2) {
+    return node1.getPriority() > node2.getPriority();
 }
 
 #endif

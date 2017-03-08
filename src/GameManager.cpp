@@ -68,10 +68,13 @@ void GameManager::updateMarines(const float& delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float& delta) {
     for (auto& z : zombieManager) {
+        // Check if the zombie is allowed to move
         z.second.checkMove();
+
         if (z.second.isMoving()) {
             z.second.generateMove();
         }
+
         z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
     }
 }
@@ -81,8 +84,9 @@ void GameManager::updateZombies(const float& delta) {
 void GameManager::updateTurrets(const float& delta) {
 	static bool bi_frame = false;
 	bi_frame = !bi_frame;
-	if (!bi_frame)
+	if (!bi_frame) {
 		return;
+    }
 
 	for (auto& t : turretManager) {
 		//z.second->generateRandomMove();
@@ -205,8 +209,11 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
     }
 
     zombieManager.at(id).setPosition(x,y);
-    //Hard coded for now.  100 is the tile size and 900 is the tower location
+
+    //Hard coded for now.  Each coordinate value must be divided by the tile size
     zombieManager.at(id).generatePath((int) x / 50, (int) y / 50, 900 / 50, 900 / 50);
+
+    // Set end coordinates to spawn coordinates so the zombie moves on spawn
     zombieManager.at(id).setEnd(x, y);
     return true;
 }

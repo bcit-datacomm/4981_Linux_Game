@@ -57,7 +57,7 @@ bool GameStateMatch::load() {
 
     //player = new Player();
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
-    player.marine->setPosition(700, 0/*newPoint.first, newPoint.second*/);
+    player.marine->setPosition(newPoint.first, newPoint.second);
 
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
         printf("Failed to load the player texture!\n");

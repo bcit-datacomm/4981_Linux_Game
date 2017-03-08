@@ -17,34 +17,57 @@ Zombie::~Zombie() {
     printf("Destory Zombie\n");
 }
 
-// Get step
+/**
+ * Get steps taken
+ * Fred Yang
+ * Feb 14
+ */
 int Zombie::getStep() {
     return step;
 }
 
-// Set step
+/**
+ * Set steps taken
+ * Fred Yang
+ * Feb 14
+ */
 void Zombie::setStep(int sp) {
     step = sp;
 }
 
+/**
+ * Set the coordinates of the end of the current zombie step
+ * Robert Arendac
+ * March 7
+ */
 void Zombie::setEnd(float x, float y) {
     endX = x;
     endY = y;
 }
 
+/**
+ * Get the Y coordinate for the end of the zombie step
+ * Robert Arendac
+ * March 7
+ */
 float Zombie::getEndY() {
     return endY;
 }
 
+/**
+ * Get the X coordinate for the end of the zombie step
+ * Robert Arendac
+ * March 7
+ */
 float Zombie::getEndX() {
     return endX;
 }
 
-/*
-Get move direction
-Fred
-February
-*/
+/**
+ * Get move direction
+ * Fred Yang
+ * February 14
+ */
 int Zombie::getDir() {
     int sp = this->getStep();
     string pth = this->getPath();
@@ -52,13 +75,20 @@ int Zombie::getDir() {
     return (sp < (int) pth.length() ? stoi(pth.substr(sp,1)) : -1);
 }
 
-// Set path
+/**
+ * Set the A* path
+ * Fred Yang
+ * Feb 14
+ */
 void Zombie::setPath(string pth) {
     path = pth;
 }
 
-// Get path
-string Zombie::getPath() {
+/**
+ * Get the A* path
+ * Fred Yang
+ * Feb 14
+ */string Zombie::getPath() {
     return path;
 }
 
@@ -70,32 +100,50 @@ void Zombie::collidingProjectile(int damage) {
     health = health - damage;
 }
 
+/*
+ * Returns if the zombie is moving
+ * Robert Arendac
+ * March 7
+*/
 bool Zombie::isMoving() {
     return moving;
 }
 
+/*
+ * Does a check to see if the zombie should take another step.  If the current
+ * X and Y coordinates are within a range (set to 10 right now) for the end of
+ * the current step, it returns true.
+ * Robert Arendac
+ * March 7
+*/
 void Zombie::checkMove() {
     float curX = getX();
     float curY = getY();
-    if ((curX < endX + 10 && curX > endX - 10) && (curY < endY + 10 && curY > endY - 10))
+
+    // Check if the current coordinates are close to the end coordinates
+    if ((curX < endX + 10 && curX > endX - 10) && (curY < endY + 10 && curY > endY - 10)) {
         moving = true;
-    else
+    } else {
         moving = false;
+    }
 }
 
-/*
-Get the direction of the zombie and take a step
-Rob, Fred
-Feb - Ongoing
+/**
+ * Get the direction of the zombie and take a step in the appropriate direction
+ * Rob, Fred
+ * Feb - Ongoing
 */
 void Zombie::generateMove() {
-    int d = getDir();
+    int d = getDir();       //Direction zombie is moving
     float startX = getX();
     float startY = getY();
 
-    if (d < 0)
+    // Path is empty, shouldn't move
+    if (d < 0) {
         return;
+    }
 
+    // Each case will check if the zombie is within bounds before moving
     switch(d) {
         case DIR_R:
             if (checkBound(startX + STEP_SPAN, startY)) {
@@ -173,13 +221,15 @@ void Zombie::generateMove() {
                 endY -= STEP_SPAN;
             }
             break;
-        default:
-            break;
     }
     moving = false;
 }
 
-// A* algo generates a string of direction digits.
+/**
+ * A* algo generates a string of direction digits.
+ * Fred Yang
+ * Feb 14
+ */
 string Zombie::generatePath(const int& xStart, const int& yStart,
                             const int& xDest, const int& yDest) {
     // priority queue index
@@ -205,10 +255,8 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
     static priority_queue<Node> pq[2];
 
     // reset the node maps
-    for(i = 0; i < row; i++)
-    {
-        for(j = 0; j < col; j++)
-        {
+    for (i = 0; i < row; i++) {
+        for (j = 0; j < col; j++) {
             closedNodes[i][j] = 0;
             openNodes[i][j] = 0;
         }
@@ -220,10 +268,8 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
     pq[index].push(*curNode);
 
     // A* path finding
-    while(!pq[index].empty())
-    {
-        // get the current node with the highest priority
-        // from open list
+    while (!pq[index].empty()) {
+        // get the current node with the highest priority from open list
         curNode = new Node(pq[index].top().getXPos(), pq[index].top().getYPos(),
                            pq[index].top().getLevel(), pq[index].top().getPriority());
 
@@ -238,13 +284,11 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
         closedNodes[x][y] = 1;
 
         // quit searching when the destination is reached
-        if(x == xDest && y == yDest)
-        {
+        if (x == xDest && y == yDest) {
             // generate the path from destination to start
             // by following the directions
             path = "";
-            while(!(x == xStart && y == yStart))
-            {
+            while (!(x == xStart && y == yStart)) {
                 j = dirMap[x][y];
                 c = '0' + (j + DIR_CAP/2)%DIR_CAP;
                 path = c + path;
@@ -255,37 +299,36 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
             delete curNode;
 
             // empty the leftover nodes
-            while(!pq[index].empty()) pq[index].pop();
+            while (!pq[index].empty()) {
+                 pq[index].pop();
+             }
+
             setPath(path);
             return path;
         }
 
         // traverse neighbors
-        for(i = 0; i < DIR_CAP;i++)
-        {
+        for (i = 0; i < DIR_CAP;i++) {
             // neighbor coordinates
             xdx = x + mx[i];
             ydy = y + my[i];
 
             // not evaluated & not outside (bound checking)
-            if(!(xdx < 0 || xdx > col -1 || ydy < 0 || ydy > row - 1
-                || map[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1))
-            {
+            if (!(xdx < 0 || xdx > col -1 || ydy < 0 || ydy > row - 1
+                || map[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
+
                 // generate a child node
                 childNode = new Node(xdx, ydy, curNode->getLevel(), curNode->getPriority());
                 childNode->nextLevel(i);
                 childNode->updatePriority(xDest, yDest);
 
                 // if it is not in the open list then add into that
-                if(openNodes[xdx][ydy] == 0)
-                {
+                if (openNodes[xdx][ydy] == 0) {
                     openNodes[xdx][ydy] = childNode->getPriority();
                     pq[index].push(*childNode);
                     // update the parent direction info
                     dirMap[xdx][ydy] = (i + DIR_CAP/2)%DIR_CAP;
-                }
-                else if(openNodes[xdx][ydy] > childNode->getPriority())
-                {
+                } else if (openNodes[xdx][ydy] > childNode->getPriority()) {
                     // update the priority info
                     openNodes[xdx][ydy]= childNode->getPriority();
                     // update the parent direction info
@@ -293,9 +336,8 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
 
                     // use a queue and a backup queue to put the best node (with highest priority)
                     // on the top of the queue, which can be chosen later on to build the path.
-                    while(!(pq[index].top().getXPos() == xdx &&
-                           pq[index].top().getYPos() == ydy))
-                    {
+                    while (!(pq[index].top().getXPos() == xdx &&
+                           pq[index].top().getYPos() == ydy)) {
                         pq[1-index].push(pq[index].top());
                         pq[index].pop();
                     }
@@ -303,20 +345,19 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
                     pq[index].pop();
 
                     // switch to pq with smaller size
-                    if(pq[index].size() > pq[1-index].size())
-                    {
+                    if (pq[index].size() > pq[1-index].size()) {
                         index = 1 - index;
                     }
 
-                    while(!pq[index].empty())
-                    {
+                    while (!pq[index].empty()) {
                         pq[1-index].push(pq[index].top());
                         pq[index].pop();
                     }
                     index = 1 - index;
                     pq[index].push(*childNode);
+                } else  {
+                    delete childNode;
                 }
-                else delete childNode;
             }
         }
         delete curNode;
@@ -325,8 +366,15 @@ string Zombie::generatePath(const int& xStart, const int& yStart,
     return ""; // no route found
 }
 
+/**
+ * Check to see if the zombie is still within the screen bounds before moving
+ * Fred Yang
+ * Feb 14
+ */
 bool Zombie::checkBound(float x, float y) {
-    if (x < 0 || x > SCREEN_W || y < 0 || y > SCREEN_H)
+    if (x < 0 || x > SCREEN_W || y < 0 || y > SCREEN_H) {
         return false;
+    }
+
     return true;
 }
