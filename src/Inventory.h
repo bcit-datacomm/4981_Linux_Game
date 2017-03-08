@@ -7,6 +7,8 @@
 #include "HandGun.h"
 #include "Rifle.h"
 #include "ShotGun.h"
+#include "Consumable.h"
+#include "BasicMedkit.h"
 
 class Inventory {
 public:
@@ -14,6 +16,7 @@ public:
     void pickUp();//picks up weapon in to current slot
     Weapon *getCurrent();//Returns current weapon
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
+    void useItem(); //uses current inventory item
     Inventory();
     ~Inventory();
 
@@ -23,6 +26,8 @@ private:
     HandGun defaultGun;
     Rifle tempRifle;
     ShotGun tempShotGun;
+    //temp for now
+    std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());
     int slotScrollTick = 0;
     int scrollDelay = 200;
     int pickupTick = 0;

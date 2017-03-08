@@ -47,6 +47,14 @@ Weapon *Inventory::getCurrent() {
     return weapons[current].get();
 }
 
+void Inventory::useItem() {
+    if (medkit != nullptr) {
+        medkit->OnConsume();
+        medkit = nullptr;
+    }
+    
+}
+
 void Inventory::scrollCurrent(int direction){
     int currentTime = SDL_GetTicks();
 

@@ -127,6 +127,9 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_E]){
         marine->inventory.pickUp();
     }
+    if(state[SDL_SCANCODE_I]) {
+        marine->inventory.useItem();
+    }
     marine->setDY(y);
     marine->setDX(x);
 }
