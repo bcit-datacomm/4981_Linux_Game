@@ -11,10 +11,7 @@
 #include "LTexture.h"
 #include "Window.h"
 
-GameStateMenu::GameStateMenu(Game& g): GameState(g) {}
-
 bool GameStateMenu::load() {
-
     bool success = true;
 
     //Open the font

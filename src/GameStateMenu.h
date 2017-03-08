@@ -9,7 +9,7 @@
 
 class GameStateMenu : public GameState {
 public:
-    GameStateMenu(Game& g);
+    GameStateMenu(Game& g): GameState(g) {}
     virtual ~GameStateMenu();
 
     virtual bool load();
