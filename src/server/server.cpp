@@ -406,6 +406,7 @@ void sendTCPClientMessage(const int32_t id, const char *mesg, const size_t mesgS
             }
         }
     }
+    free(outBuff);
 }
 
 void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
