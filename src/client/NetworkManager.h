@@ -4,7 +4,7 @@
 #include "UDPSocket.h"
 #include <stdio.h>
 #include <iostream>
-#include <sys/types.h>
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <limits.h>
@@ -30,15 +30,17 @@ public:
     static NetworkManager& instance();
 
     UDPSocket& getSockUDP() {return _sockUDP;};
-    void handshake(const char *, const char *, int);
+    void handshake(const char *, const char *, int, char users[MAX_USERS][UNAME_SIZE]);
 
+    void setUDPRunning(bool running) {_UDPRunning = running;};
 private:
     int _sockTCP;
     UDPSocket _sockUDP;
+    std::atomic<bool> _UDPRunning;
 
-    NetworkManager() {};
+    NetworkManager() : _UDPRunning(false) {};
 
-    void runUDPClient(std::shared_ptr<UDPSocket> udpSock);
+    void runUDPClient();
     int TCPConnect(const char *);
     int writeTCPSocket(const char *, int);
 	int readTCPSocket(char *, int);

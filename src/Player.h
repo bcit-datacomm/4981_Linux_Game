@@ -38,6 +38,9 @@ public:
     Marine *marine = NULL;
 
 private:
+    MoveAction moveAction;
+    int dx;
+    int dy;
     int tempBarricadeID;
 };
 

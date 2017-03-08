@@ -11,6 +11,7 @@
 #include "LTexture.h"
 #include "Window.h"
 #include "client/NetworkManager.h"
+#include <thread>
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
@@ -22,7 +23,17 @@ bool GameStateMatch::load() {
     int numPlayers;
     std::cout << "Enter username (max 32 chars), server IP, and number of players: " << std::endl;
     std::cin >> username >> ip >> numPlayers;
-    NetworkManager::instance().handshake(ip.c_str(), username.c_str(), numPlayers);
+
+    char users[MAX_USERS][UNAME_SIZE];
+    NetworkManager::instance().handshake(ip.c_str(), username.c_str(), numPlayers, users);
+
+    for(int i  = 0; i < numPlayers; i++) {
+        Marine& marine = GameManager::instance()->createMarine(i, game.renderer, 0, 0);
+        if(strcmp(users[i], username.c_str()) == 0) {
+            std::cout << "control set" << std::endl;
+            player.setControl(marine);
+        }
+    }
 
     bool success = true;
 
@@ -43,8 +54,7 @@ bool GameStateMatch::load() {
     }
 
 
-    unsigned int playerMarineID = GameManager::instance()->createMarine();
-
+/*
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
     GameManager::instance()->createZombie(game.renderer, 100, 100);
@@ -60,10 +70,12 @@ bool GameStateMatch::load() {
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 
+*/
     //player = new Player();
-    player.setControl(GameManager::instance()->getMarine(playerMarineID));
-    player.marine->setPosition(newPoint.first, newPoint.second);
 
+    //player.marine->setPosition(newPoint.first, newPoint.second);
+
+/*
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
         printf("Failed to load the player texture!\n");
         success = false;
@@ -72,10 +84,13 @@ bool GameStateMatch::load() {
     //camera = Camera(game.window.getWidth(), game.window.getHeight());
 
     GameManager::instance()->printMarineCount();
+    */
+
     return success;
 }
 
 void GameStateMatch::loop() {
+    NetworkManager::instance().setUDPRunning(true);
     //The frames per second timer
     LTimer fpsTimer;
 
@@ -105,11 +120,8 @@ void GameStateMatch::loop() {
         // Process frame
         handle();    // Handle user input
 
-        MoveAction moveAction = player.getMoveAction(stepTimer.getTicks() / 1000.f);
-        NetworkManager::instance()
-            .getSockUDP()
-            .sendToServ((char *)&moveAction, sizeof(MoveAction));
-
+        updateServ(stepTimer.getTicks() / 1000.f);
+        camera.move(player.marine->getX(), player.marine->getY());
         //update(stepTimer.getTicks() / 1000.f); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
@@ -125,6 +137,13 @@ void GameStateMatch::loop() {
         }
 
     }
+}
+
+void GameStateMatch::updateServ(float delta) {
+    MoveAction moveAction = player.getMoveAction(delta);
+    NetworkManager::instance()
+        .getSockUDP()
+        .sendToServ((char *)&moveAction, sizeof(MoveAction));
 }
 
 void GameStateMatch::sync() {
@@ -186,7 +205,6 @@ void GameStateMatch::update(const float& delta) {
     GameManager::instance()->updateZombies(delta);
 
     // Move Camera
-    camera.move(player.marine->getX(), player.marine->getY());
 
 
 }

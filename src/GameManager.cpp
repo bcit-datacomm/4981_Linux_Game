@@ -79,6 +79,7 @@ unsigned int GameManager::createMarine() {
     return id;
 }
 
+/*
 bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
     unsigned int id = 0;
     if (!marineManager.empty()) {
@@ -92,6 +93,19 @@ bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
     }
     marineManager[id].setPosition(x,y);
     return true;
+}
+*/
+
+Marine& GameManager::createMarine(int id, SDL_Renderer* gRenderer, float x, float y){
+    marineManager[id] = Marine();
+
+    if (!marineManager.at(id).texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
+        printf("Failed to load the marine texture!\n");
+        deleteMarine(id);
+        exit(1);
+    }
+
+    return marineManager[id];
 }
 
 void GameManager::deleteMarine(unsigned int id) {
@@ -299,12 +313,7 @@ void GameManager::updateCollider() {
 }
 
 void GameManager::updateMarine(const PlayerData &playerData) {
-    if(marineManager.find(playerData.playerid) == marineManager.end()) {
-        createMarine(_renderer, playerData.xpos, playerData.ypos);
-    } else {
-        marineManager[playerData.playerid].setPosition(playerData.xpos, playerData.ypos);
-    }
-
+    marineManager[playerData.playerid].setPosition(playerData.xpos, playerData.ypos);
     marineManager[playerData.playerid].setAngle(playerData.direction);
     marineManager[playerData.playerid].setHealth(playerData.health);
 }

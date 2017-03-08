@@ -46,12 +46,17 @@ the client's username, receives the integer id assigned to the client, and
 then received the integer ids and usernames of other clients connecting to
 the server.
 --------------------------------------------------------------------------*/
-void NetworkManager::handshake(const char *ip, const char *username, int numPlayers) {
+void NetworkManager::handshake(const char *ip, const char *username, int numPlayers,
+    char users[MAX_USERS][UNAME_SIZE]) {
+
+    _sockUDP = UDPSocket(ip);
+    std::thread t(&NetworkManager::runUDPClient, this);
+    t.detach();
+
 	TCPConnect(ip);
 
-	char users[MAX_USERS][UNAME_SIZE];
 	char sendline[UNAME_SIZE];
-	char recvline[PLAYERPACK_SIZE + 1];
+	char recvline[PLAYERPACK_SIZE];
 
     memset(sendline, '\0', UNAME_SIZE);
 	strcpy(sendline, username);
@@ -60,22 +65,20 @@ void NetworkManager::handshake(const char *ip, const char *username, int numPlay
 
 	while(numPlayers--) {
         readTCPSocket(recvline, sizeof(recvline));
-		strncpy(users[(int)recvline[PLAYERPACK_SIZE - 1]], recvline, sizeof(recvline));
+		strncpy(users[(int)recvline[PLAYERPACK_SIZE - 1]], recvline, UNAME_SIZE);
 	}
 
 	close(_sockTCP);
-
-    std::shared_ptr<UDPSocket> udpSock = std::make_shared<UDPSocket>(ip);
-    std::thread t(&NetworkManager::runUDPClient, this, udpSock);
-    t.detach();
 }
 
-void NetworkManager::runUDPClient(std::shared_ptr<UDPSocket> udpSock) {
+void NetworkManager::runUDPClient() {
     char buffer[SYNC_PACKET_MAX];
     Packetizer packetizer;
     for(;;) {
-        int packetSize = udpSock.get()->recvFromServ(buffer, SYNC_PACKET_MAX);
-        packetizer.parse(buffer, packetSize);
+        if(_UDPRunning) {
+            int packetSize = _sockUDP.recvFromServ(buffer, SYNC_PACKET_MAX);
+            packetizer.parse(buffer, packetSize);
+        }
     }
 }
 
