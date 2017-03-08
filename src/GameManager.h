@@ -67,7 +67,7 @@ public:
     void deleteBarricade(unsigned int id);
     Barricade& getBarricade(unsigned int id);
 
-    unsigned int createWall(SDL_Renderer* gRenderer, float x, float y); // create Wall object
+    unsigned int createWall(SDL_Renderer* gRenderer, float x, float y, int h, int w); // create Wall object
     void setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY); // place walls for the boundaries
 
 private:
@@ -78,13 +78,11 @@ private:
     std::unique_ptr<WeaponDrop> wdPointer;
     std::map<unsigned int, Marine> marineManager;
     std::map<unsigned int, Object> objectManager;
-    std::map<unsigned int, Wall> wallManager;
     std::map<unsigned int, Zombie> zombieManager;
     std::map<unsigned int, Turret> turretManager;
     std::map<unsigned int, WeaponDrop> weaponDropManager;
     std::map<unsigned int, Barricade> barricadeManager;
 
-    LTexture wallTexture;  // texture for Wall object
 };
 
 

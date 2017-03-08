@@ -9,6 +9,7 @@ Entity::Entity() {
     projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
     damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
     pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
+    
 }
 
 Entity::~Entity() {

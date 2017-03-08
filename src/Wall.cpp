@@ -1,6 +1,6 @@
 #include "Wall.h"
 
-Wall::Wall() : Object(WALL_WIDTH, WALL_HEIGHT) {
+Wall::Wall(int height, int width) : Object(height, width) {
     printf("Create Wall\n");
 }
 

@@ -4,6 +4,7 @@ Object::Object(int height, int width, double angle) : Entity(), height(height), 
     setHeight(height);
     setWidth(width);
 }
+
 Object::~Object() {
 //    printf("Destory Object\n");
 }
