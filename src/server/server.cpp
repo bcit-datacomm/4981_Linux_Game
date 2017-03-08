@@ -391,10 +391,7 @@ void sendTCPClientMessage(const int32_t id, const char *mesg, const size_t mesgS
         exit(1);
     }
     memset(outBuff, '\0', mesgSize + 5);
-    outBuff[0] = (id >> 24) & 0xFF;
-    outBuff[1] = (id >> 16) & 0xFF;
-    outBuff[2] = (id >> 8) & 0xFF;
-    outBuff[3] = id & 0xFF;
+    reinterpret_cast<int32_t *>(outBuff)[0] = id;
     outBuff[4] = '/';
 
     strncpy(outBuff + 5, mesg, mesgSize);
@@ -411,7 +408,7 @@ void sendTCPClientMessage(const int32_t id, const char *mesg, const size_t mesgS
 
 void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
     //Convert first 4 chars to 32 bit int representing id
-    int32_t idReceived = (buff[0] << 24) + (buff[1] << 16) + (buff[2] << 8) + buff[3]; 
+    const int32_t idReceived = reinterpret_cast<const int32_t *>(buff)[0];
 
     logv("Read packet with id: %d\n", idReceived);
 
