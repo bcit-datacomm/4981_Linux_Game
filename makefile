@@ -58,6 +58,10 @@ else
 $(eval CXXFLAGS := $(BASEFLAGS) $(DEBUGFLAGS))
 endif
 
+ifneq (,$(filter server dserver, $(MAKECMDGOALS)))
+$(eval CXXFLAGS += -DSERVER)
+endif
+
 #Target needed for use of automatic variable used below
 .SECONDEXPANSION:
 

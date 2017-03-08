@@ -17,6 +17,7 @@ void saveMoveAction(const unsigned int& id, const MoveAction& ma);
 void saveAttack(const unsigned int& id, const AttackAction& aa);
 void clearMoveActions();
 void clearAttackActions();
+void startGame();
 
 std::vector<PlayerData> getPlayers();
 std::vector<MoveAction> getMoveActions(const unsigned int& id);

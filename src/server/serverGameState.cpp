@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include "../Game.h"
+#include "../LTimer.h"
 #include "../Marine.h"
 #include "../Zombie.h"
 #include "../GameManager.h"
@@ -93,5 +95,10 @@ std::vector<ZombieData> getZombies() {
         rtn.push_back(tempZombie);
     }
     return rtn;
+}
 
+void startGame() {
+    Game game;
+    game.run();
+    game.close();
 }

@@ -5,7 +5,6 @@
 
 
 int main() {
-    
     Game* game = new Game();
     
     printf( "Loading...\n");

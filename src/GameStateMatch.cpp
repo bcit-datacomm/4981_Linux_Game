@@ -18,9 +18,9 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 }
 
 bool GameStateMatch::load() {
-
     bool success = true;
 
+#ifndef SERVER
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
     if ( frameFont == NULL ) {
@@ -35,6 +35,7 @@ bool GameStateMatch::load() {
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
+#endif
  	
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
@@ -45,12 +46,13 @@ bool GameStateMatch::load() {
     GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 	
-
+#ifndef SERVER
     //base = Base();
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
         printf("Failed to load the base texture!\n");
         success = false;
     }
+#endif
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 
@@ -58,10 +60,12 @@ bool GameStateMatch::load() {
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.marine->setPosition(newPoint.first, newPoint.second);
 
+#ifndef SERVER
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
         printf("Failed to load the player texture!\n");
         success = false;
     }
+#endif
 
     //camera = Camera(game.window.getWidth(), game.window.getHeight());
 
@@ -79,9 +83,13 @@ void GameStateMatch::loop() {
     //Keeps track of time between steps
     LTimer stepTimer;
 
+#ifndef SERVER
+    float avgFPS = 0;
+#endif
+
     //Start counting frames per second
     unsigned long countedFrames = 0;
-    float avgFPS = 0;
+    int frameTicks;
     fpsTimer.start();
 
     // State Loop
@@ -89,27 +97,29 @@ void GameStateMatch::loop() {
         //Start cap timer
         capTimer.start();
 
+#ifndef SERVER
         //Calculate and correct fps
         avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
 
         //Set FPS text to be rendered
         frameTimeText.str( "" );
         frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
-
         // Process frame
         handle();    // Handle user input
+#endif
         update(stepTimer.getTicks() / 1000.f); // Update state values
         stepTimer.start(); //Restart step timer
+#ifndef SERVER
         sync();    // Sync game to server
         render();    // Render game state to window
+#endif
 
         ++countedFrames;
 
         //If frame finished early
-        int frameTicks = capTimer.getTicks();
-        if ( frameTicks < SCREEN_TICK_PER_FRAME ) {
+        if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
-            SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
+            SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
 
     }
@@ -173,10 +183,10 @@ void GameStateMatch::update(const float& delta) {
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
 
+#ifndef SERVER
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
-
-
+#endif
 }
 
 void GameStateMatch::render() {

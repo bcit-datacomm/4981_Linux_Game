@@ -26,6 +26,10 @@ void Game::run() {
 }
 
 void Game::loadState() {
+#ifdef SERVER
+    state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
+    stateID = 0;
+#else
     printf("Starting ");
     if (state != NULL) {
         delete state;
@@ -47,6 +51,7 @@ void Game::loadState() {
     }
      // Reset stateID back to zero to allow states to end program or incase of load failure
     stateID = 0;
+#endif
 }
 
 bool Game::init() {
