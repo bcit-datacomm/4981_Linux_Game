@@ -10,14 +10,11 @@
 #include <iostream>
 
 InstantWeapon::InstantWeapon(std::string type, int range, int damage, 
-    int clip, int clipMax, int ammo, int AOE, int reloadSpeed)
-: Weapon(type, range, damage, clip, clipMax, ammo, AOE, reloadSpeed)
-{
+        int clip, int clipMax, int ammo, int AOE, int reloadSpeed)
+: Weapon(type, range, damage, clip, clipMax, ammo, AOE, reloadSpeed) {
 
 }
 
-InstantWeapon::~InstantWeapon(){
-}
 
 
 // DericM, 01/03/17

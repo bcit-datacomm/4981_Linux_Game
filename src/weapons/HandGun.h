@@ -25,7 +25,7 @@ class HandGun: public InstantWeapon {
 public:
 
     HandGun();
-    ~HandGun();
+    ~HandGun() = default;
 };
 
 #endif

@@ -17,10 +17,6 @@ Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage)
 }
 
 
-Weapon::~Weapon(){
-
-}
-
 int Weapon::getClip(){
     return clip;
 }
@@ -82,4 +78,8 @@ bool Weapon::reduceAmmo(int rounds){
     }
     ammo -= rounds;
     return true;
+}
+
+void Weapon::fire(Marine &marine){
+        
 }

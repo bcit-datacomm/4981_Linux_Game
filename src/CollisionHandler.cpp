@@ -75,15 +75,14 @@ HitBox *CollisionHandler::detectPickUpCollision(const HitBox *hb) {
 
 // Created by DericM 3/8/2017
 std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
-    Marine &marine, const int range) 
-{
+        Marine &marine, const int range) {
     
-    double degrees = marine.getAngle() - 90;
-    double radians = degrees * M_PI / 180;
-    int playerX = marine.getX();
-    int playerY = marine.getY();
-    int deltaX  = range * cos(radians);
-    int deltaY  = range * sin(radians);
+    const double degrees = marine.getAngle() - 90;
+    const double radians = degrees * M_PI / 180;
+    const int playerX = marine.getX();
+    const int playerY = marine.getY();
+    const int deltaX  = range * cos(radians);
+    const int deltaY  = range * sin(radians);
     int aX, aY, bX, bY;
 
     std::vector<HitBox*> allHitBoxes;
@@ -91,16 +90,14 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
 
     std::priority_queue<HitBox*> targetsInSights;
     for (unsigned int x = 0; x < allHitBoxes.size(); x++) {
-        if (allHitBoxes.at(x)->attached != marine.projectileHitBox->attached) 
-        {
+        if (allHitBoxes.at(x)->attached != marine.projectileHitBox->attached) {
             aX = playerX;
             aY = playerY;
             bX = aX + deltaX;
             bY = aY + deltaY;
 
             if (SDL_IntersectRectAndLine(&allHitBoxes.at(x)->getRect(), &aX, &aY , &bX, &bY) &&
-                !(allHitBoxes.at(x)->isPlayerFriendly()) ) 
-            {
+                    !(allHitBoxes.at(x)->isPlayerFriendly()) ) {
                 std::cout << "Shot target at (" << aX << ", " << aY << ")" << std::endl;
                 targetsInSights.push(allHitBoxes.at(x));
             }

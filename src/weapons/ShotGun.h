@@ -24,7 +24,7 @@ class ShotGun: public InstantWeapon {
 public:
 
     ShotGun();
-    ~ShotGun();
+    ~ShotGun() = default;
 };
 
 #endif

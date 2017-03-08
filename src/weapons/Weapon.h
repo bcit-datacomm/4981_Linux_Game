@@ -8,37 +8,27 @@
 #include "../LTexture.h"
 #include <string>
 
-
 class Marine;
 
 class Weapon {
 public:
 
+    Weapon(std::string type = "no type", int range = 0, int damage = 0, int clip = 0, int clipMax = 0,
+            int ammo = 0, int rAOE = 0, int reloadSpeed = 0);
+    Weapon(const Weapon& w);
+    ~Weapon() = default;
+
+    std::string getType();//returns weapon type
     int getClip(); //returns bullets in clip
+    int getClipMax(); //returns max amount clip can hold
     int getDamage(); //returns damage of weapon
     int getRange(); //returns range of weapon
-    void reloadClip();//resets clip to max amount
-    int getClipMax(); //returns max amount clip can hold
-    std::string getType();//returns weapon type
     int getReloadSpeed();//returns weapon reload speed
     int getAmmo();//returns ammo amount
     int getRAOE(); //returns radius of effect
+    void reloadClip();//resets clip to max amount
     bool reduceAmmo(int rounds);
-    virtual void fire(Marine &marine){
-        
-    }
-
-    Weapon(std::string type = "no type", int range = 0,
-           int damage = 0,
-           int clip = 0,
-           int clipMax = 0,
-           int ammo = 0,
-           int rAOE = 0,
-           int reloadSpeed = 0);
-
-    Weapon(const Weapon& w);
-
-    ~Weapon();
+    virtual void fire(Marine &marine);
 
 protected:
     std::string type;

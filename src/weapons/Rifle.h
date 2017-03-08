@@ -23,7 +23,7 @@ class Rifle: public InstantWeapon {
 public:
 
     Rifle();
-    ~Rifle();
+    ~Rifle() = default;
 };
 
 #endif

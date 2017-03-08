@@ -21,5 +21,5 @@ void Marine::collidingProjectile(int damage) {
 
 // Created by DericM 3/8/2017
 void Marine::fireWeapon() {
-	inventory.getCurrent()->fire(*this);
+    inventory.getCurrent()->fire(*this);
 }
