@@ -187,78 +187,8 @@ void initSync(int sock) {
                             perror("Packet read was too small");
                             continue;
                         }
-
                         buff[nbytes] = '\0';
-
-                        //Convert first 4 chars to 32 bit int representing id
-                        int32_t idReceived = (buff[0] << 24) + (buff[1] << 16) + (buff[2] << 8) + buff[3]; 
-
-                        logv("Read packet with id: %d\n", idReceived);
-
-                        if (buff[4] == '/') {
-                            //Command message
-                            if (idReceived == -1) {
-                                //First connect message from client
-                                bool foundClient = false;
-                                std::pair<int32_t, PlayerJoin> tempMapEntry;
-                                for (auto& it : clientList) {
-                                    if (!it.first && it.second.entry.sock == events[i].data.fd) {
-                                        //This is the client that is sending the connect message
-                                        tempMapEntry = it;
-                                        tempMapEntry.first = getPlayerId();
-                                        tempMapEntry.second.hasSentUsername = true;
-                                        tempMapEntry.second.isPlayerReady = false;
-                                        strncpy(tempMapEntry.second.entry.username, buff + 5, 32);
-                                        strcat(tempMapEntry.second.entry.username, "\0");
-                                        logv("Server received username: %s\n", tempMapEntry.second.entry.username);
-
-                                        //Erase temporary entry in client list
-                                        clientList.erase(clientList.find(it.first));
-                                        //Insert newly compelted entry
-                                        clientList.insert(tempMapEntry);
-                                        foundClient = true;
-                                        break;
-                                    }
-                                }
-                                if (!foundClient) {
-                                    perror("Client not found in client list");
-                                }
-                            } else {
-                                //Might move to string literal switch, but this what the first thing that came to mind
-                                if (strncmp(buff + 5, "ready", nbytes - 4) == 0) {
-                                    //Ready command
-                                    if (clientList.count(idReceived)) {
-                                        clientList[idReceived].isPlayerReady = true;
-                                        logv("Player id %d is ready to start\n", idReceived);
-                                    } else {
-                                        perror("Client not found in list");
-                                    }
-                                    bool areAllReady = true;
-                                    for (const auto& elem : clientList) {
-                                        if (!elem.second.isPlayerReady) {
-                                            areAllReady = false;
-                                            break;
-                                        }
-                                    }
-                                    if (areAllReady) {
-                                        transitionToGameStart();
-                                    }
-                                } else if (strncmp(buff + 5, "unready", nbytes - 4) == 0) {
-                                    //Unready command
-                                    if (clientList.count(idReceived)) {
-                                        clientList[idReceived].isPlayerReady = false;
-                                        logv("Player id %d is NOT ready to start\n", idReceived);
-                                    } else {
-                                        perror("Client not found in list");
-                                    }
-                                } else if (strncmp(buff + 5, "start", nbytes - 4) == 0) {
-                                    transitionToGameStart();
-                                }
-                            }
-                        } else {
-                            //Text chat message
-                            logv("Server received: %s\n", buff + 4);
-                        }
+                        processTCPMessage(buff, nbytes, events[i].data.fd);
                     }
                     if (errno == EAGAIN || errno == EWOULDBLOCK) {
                         continue;
@@ -452,4 +382,104 @@ void transitionToGameStart() {
     //Spinlock
     while (!isGameRunning.load());
     listenUDP(listenSocketUDP, INADDR_ANY, listen_port_udp);
+}
+
+void sendTCPClientMessage(const int32_t id, const char *mesg, const size_t mesgSize) {
+    char *outBuff;
+    if ((outBuff = (char *) malloc(mesgSize + 5)) == nullptr) {
+        perror("Malloc failure");
+        exit(1);
+    }
+    memset(outBuff, '\0', mesgSize + 5);
+    outBuff[0] = (id >> 24) & 0xFF;
+    outBuff[1] = (id >> 16) & 0xFF;
+    outBuff[2] = (id >> 8) & 0xFF;
+    outBuff[3] = id & 0xFF;
+    outBuff[4] = '/';
+
+    strncpy(outBuff + 5, mesg, mesgSize);
+
+    for (auto& clients : clientList) {
+        if (clients.first != id && clients.second.hasSentUsername) {
+            if (send(clients.second.entry.sock, outBuff, sizeof(outBuff), 0) < 0) {
+                perror("Failed to send client messasge");
+            }
+        }
+    }
+}
+
+void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
+    //Convert first 4 chars to 32 bit int representing id
+    int32_t idReceived = (buff[0] << 24) + (buff[1] << 16) + (buff[2] << 8) + buff[3]; 
+
+    logv("Read packet with id: %d\n", idReceived);
+
+    if (buff[4] == '/') {
+        //Command message
+        if (idReceived == -1) {
+            //First connect message from client
+            bool foundClient = false;
+            std::pair<int32_t, PlayerJoin> tempMapEntry;
+            for (auto& it : clientList) {
+                if (!it.first && it.second.entry.sock == sock) {
+                    //This is the client that is sending the connect message
+                    tempMapEntry = it;
+                    tempMapEntry.first = getPlayerId();
+                    tempMapEntry.second.hasSentUsername = true;
+                    tempMapEntry.second.isPlayerReady = false;
+                    strncpy(tempMapEntry.second.entry.username, buff + 5, 32);
+                    strcat(tempMapEntry.second.entry.username, "\0");
+                    logv("Server received username: %s\n", tempMapEntry.second.entry.username);
+
+                    //Erase temporary entry in client list
+                    clientList.erase(clientList.find(it.first));
+                    //Insert newly compelted entry
+                    clientList.insert(tempMapEntry);
+                    foundClient = true;
+
+                    sendTCPClientMessage(tempMapEntry.first, tempMapEntry.second.entry.username, 32);
+                    break;
+                }
+            }
+            if (!foundClient) {
+                perror("Client not found in client list");
+            }
+        } else {
+            //Might move to string literal switch, but this what the first thing that came to mind
+            if (strncmp(buff + 5, "ready", nbytes - 4) == 0) {
+                //Ready command
+                if (clientList.count(idReceived)) {
+                    clientList[idReceived].isPlayerReady = true;
+                    logv("Player id %d is ready to start\n", idReceived);
+                    sendTCPClientMessage(idReceived, "ready", 5);
+                } else {
+                    perror("Client not found in list");
+                }
+                bool areAllReady = true;
+                for (const auto& elem : clientList) {
+                    if (!elem.second.isPlayerReady) {
+                        areAllReady = false;
+                        break;
+                    }
+                }
+                if (areAllReady) {
+                    transitionToGameStart();
+                }
+            } else if (strncmp(buff + 5, "unready", nbytes - 4) == 0) {
+                //Unready command
+                if (clientList.count(idReceived)) {
+                    clientList[idReceived].isPlayerReady = false;
+                    logv("Player id %d is NOT ready to start\n", idReceived);
+                    sendTCPClientMessage(idReceived, "unready", 7);
+                } else {
+                    perror("Client not found in list");
+                }
+            } else if (strncmp(buff + 5, "start", nbytes - 4) == 0) {
+                transitionToGameStart();
+            }
+        }
+    } else {
+        //Text chat message
+        logv("Server received: %s\n", buff + 4);
+    }
 }

@@ -53,6 +53,8 @@ void listenUDP(int socket, unsigned long ip, unsigned short port);
 int createSocket(bool useUDP, bool nonblocking);
 int32_t getPlayerId();
 void transitionToGameStart();
+void sendTCPClientMessage(const int32_t id, const char *mesg, const size_t mesgSize);
+void processTCPMessage(const char *buff, const size_t nbytes, int sock);
 
 //off by default
 extern bool verbose;
