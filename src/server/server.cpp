@@ -181,7 +181,7 @@ void initSync(int sock) {
                         continue;
                     }
                 } else {
-                    if ((nbytes = recv(events[i].data.fd, buff, USHRT_MAX - 1, 0)) > 0) {
+                    while ((nbytes = recv(events[i].data.fd, buff, USHRT_MAX - 1, 0)) > 0) {
                         //Handle message
                         if (nbytes < 4) {
                             perror("Packet read was too small");
