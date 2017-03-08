@@ -5,7 +5,7 @@
 #include "HitBox.h"
 #include "Entity.h"
 #include "CollisionHandler.h"
-#include "Weapon.h"
+#include "weapons/Weapon.h"
 #include <SDL2/SDL.h>
 
 class WeaponDrop: public Entity{

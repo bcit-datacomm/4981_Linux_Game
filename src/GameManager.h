@@ -14,10 +14,10 @@
 #include <memory>
 
 //just for tesing weapon drop
-#include "Weapon.h"
-#include "HandGun.h"
-#include "Rifle.h"
-#include "ShotGun.h"
+#include "weapons/Weapon.h"
+#include "weapons/HandGun.h"
+#include "weapons/Rifle.h"
+#include "weapons/ShotGun.h"
 
 class GameManager {
 public:

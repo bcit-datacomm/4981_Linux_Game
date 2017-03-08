@@ -1,4 +1,9 @@
+/*
+    Created by Maitiu Morton 2/1/2017
+        Edited by DericM 3/8/2017
+*/
 #include "Weapon.h"
+#include <iostream>
 
 Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE, int reloadSpeed)
                :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed),
@@ -49,10 +54,6 @@ void Weapon::reloadClip(){
 
 }
 
-void Weapon::shot(){
-    ammo--;
-}
-
 int Weapon::getClipMax(){
     return clipMax;
 }
@@ -71,4 +72,14 @@ int Weapon::getAmmo(){
 
 int Weapon::getRAOE(){
     return rAOE;
+}
+
+//Deric M       3/3/2017
+bool Weapon::reduceAmmo(int rounds){
+    std::cout << "Current ammo:" << ammo << std::endl;
+    if(ammo < rounds){
+        return false;
+    }
+    ammo -= rounds;
+    return true;
 }

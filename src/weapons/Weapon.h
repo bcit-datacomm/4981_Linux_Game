@@ -1,12 +1,15 @@
 /*
     Created by Maitiu Morton 2/1/2017
+        Edited by DericM 3/8/2017
 */
 #ifndef WEAPON_H
 #define WEAPON_H
 #include <SDL2/SDL.h>
-#include "LTexture.h"
+#include "../LTexture.h"
 #include <string>
 
+
+class Marine;
 
 class Weapon {
 public:
@@ -15,12 +18,15 @@ public:
     int getDamage(); //returns damage of weapon
     int getRange(); //returns range of weapon
     void reloadClip();//resets clip to max amount
-    void shot();//decreases the amount of ammo
     int getClipMax(); //returns max amount clip can hold
     std::string getType();//returns weapon type
     int getReloadSpeed();//returns weapon reload speed
     int getAmmo();//returns ammo amount
     int getRAOE(); //returns radius of effect
+    bool reduceAmmo(int rounds);
+    virtual void fire(Marine &marine){
+        
+    }
 
     Weapon(std::string type = "no type", int range = 0,
            int damage = 0,
