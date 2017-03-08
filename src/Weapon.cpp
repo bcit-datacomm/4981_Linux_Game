@@ -6,6 +6,11 @@ Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, i
 
 }
 
+Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage), ammo(w.ammo), 
+    rAOE(w.rAOE), reloadSpeed(w.reloadSpeed), reloadTick(w.reloadTick), reloadDelay(w.reloadDelay) {
+
+}
+
 
 Weapon::~Weapon(){
 
