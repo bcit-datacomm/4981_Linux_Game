@@ -26,6 +26,7 @@
 int listen_port_udp = LISTEN_PORT_UDP;
 int listen_port_tcp = LISTEN_PORT_TCP;
 size_t client_count = CLIENT_COUNT;
+int outputLength = 0;
 
 const long long microSecPerTick = (1000 * 1000) / TICK_RATE;
 char outputPacket[OUT_PACKET_SIZE];
@@ -335,14 +336,43 @@ void processPacket(const char *data) {
     saveMoveAction(ma->id, *ma);
 }
 
+//Isaac Morneau Feb 28th, 2017
 void genOutputPacket() {
-    //Actual implementation TBD
-    strcpy(outputPacket, "");
+    int32_t *pBuff = (int32_t*)outputPacket;
+    //get all the players
+    const auto& players = getPlayers();
+    //get all the zombies
+    const auto& zombies = getZombies();
+    
+    //start of every sync is the packet header
+    *pBuff++ = SYNC;
+    //construct the sub header for players
+    *pBuff++ = PLAYERH;
+    *pBuff++ = players.size();
+    PlayerData* pPlayer = reinterpret_cast<PlayerData*>(pBuff);
+    //write all the players to the buffer
+    for(auto p : players) {
+        p.nmoves = 0;
+        p.nattacks = 0;
+        memcpy(pPlayer++, &p, sizeof(PlayerData));
+    }
+    pBuff = reinterpret_cast<int32_t*>(pPlayer);
+    //construct the sub header for zombies
+    *pBuff++ = ZOMBIEH;
+    *pBuff++ = zombies.size();
+    ZombieData* pZombie = reinterpret_cast<ZombieData*>(pBuff);
+    //write all the zombies to the buffer
+    for(auto z : zombies) {
+        memcpy(pZombie++, &z,sizeof(ZombieData));
+    }
+    pBuff = reinterpret_cast<int32_t*>(pZombie);
+    //calculate how full the packet is for when its sent
+    outputLength = pBuff - (int32_t*)outputPacket;
 }
 
 void sendSyncPacket(int sock) {
     for (const auto& client : clientList) {
-        sendto(client.second.entry.sock, outputPacket, OUT_PACKET_SIZE, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
+        sendto(client.second.entry.sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
     }
 }
 
