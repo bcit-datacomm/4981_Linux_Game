@@ -2,55 +2,40 @@
 #define PLAYER_H
 #include <string>
 #include "LTexture.h"
+#include "Marine.h"
+#include "Turret.h"
+#include "Inventory.h"
 #include <SDL2/SDL.h>
-
-const int PLAYER_HEIGHT = 125;
-const int PLAYER_WIDTH = 75;
-const int WALKING_ANIMATION_FRAMES = 8; //Walking animation
-
+#include "GameManager.h"
 
 class Player {
 public:
-    void create(); //function displays character
-	
-	void handleInput(const Uint8 *state, SDL_Renderer* renderer); // Handles player input with keyboard state
 
-	void move(float moveX, float moveY); // Moves player
-	
-    void setX(float px); //set x coordinate
 
-    void setY(float py); //set y coordinate
+    void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
+    void handleMouseUpdate(Window& w, float camX, float camY);
 
-    void setDX(float px); //set delta x coordinate
+    void setControl(Marine& newControl);
 
-    void setDY(float py); //set delta y coordinate
+    void handleMouseWheelInput(const SDL_Event *e);
 
-    void setVelocity(int pvel); // set velocity of player movement
+    // Added by Mark.C 02/07/2017
+    void handlePlacementClick(SDL_Renderer *renderer);
 
-    float getX(); // get x coordinate
+    // determines whether turret can be placed
+    void turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
+                          unsigned int tid);
 
-    float getY(); // get y coordinate
+    void handleTempBarricade(SDL_Renderer *renderer);
 
-    float getDX(); // get delta x coordinate
+    Player();
+    ~Player();
 
-    float getDY(); //get delta y coordinate
+    //Stays as pointer cause the player gets a marine object after the ctor is called
+    Marine *marine = NULL;
 
-    int	getVelocity(); // get velocity of player movement
-
-	Player();
-	~Player();
-	
-	LTexture playerTexture;
-	SDL_Rect playerSpriteClips[WALKING_ANIMATION_FRAMES];
-	
 private:
-    float x = 200; //x coordinate
-    float y = 200; //y coordinate
-    float dx; // delta x coordinat
-    float dy; //delta ycoordinate
-    int velocity = 500; // velocity of player movement
-    int health;
-    int state; //used to select sprite to display
+    int tempBarricadeID;
 };
 
 #endif
