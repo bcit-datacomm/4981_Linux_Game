@@ -11,10 +11,7 @@
 #include "LTexture.h"
 #include "Window.h"
 
-GameStateMenu::GameStateMenu(Game& g): GameState(g){
-
-}
-
+GameStateMenu::GameStateMenu(Game& g): GameState(g) {}
 
 bool GameStateMenu::load() {
 
@@ -109,8 +106,7 @@ void GameStateMenu::handle() {
     }
 }
 
-void GameStateMenu::update(const float& delta) {
-
+void GameStateMenu::update(const float delta) {
     // TEMP: Skip to GameStateMatch
     // Remove this when working on the main menu
     game.stateID = 2;
@@ -120,33 +116,30 @@ void GameStateMenu::update(const float& delta) {
 
 void GameStateMenu::render() {
     //Only draw when not minimized
-    if ( !game.window.isMinimized() ) {
+    if (!game.window.isMinimized()) {
 
         //Clear screen
-        SDL_SetRenderDrawColor( game.renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-        SDL_RenderClear( game.renderer );
+        SDL_SetRenderDrawColor(game.renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(game.renderer);
 
-        SDL_Color textColor = { 0, 0, 0, 255 };
+        SDL_Color textColor = {0, 0, 0, 255};
 
         //Render text
-        if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
-                                              textColor, game.renderer, frameFont ) ) {
+        if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(), 
+                    textColor, game.renderer, frameFont ) ) {
             printf( "Unable to render FPS texture!\n" );
         }
 
-        frameFPSTextTexture.render(game.renderer,
-                                ( game.window.getWidth() - frameFPSTextTexture.getWidth() ), 0);
+        frameFPSTextTexture.render(game.renderer, (game.window.getWidth() - frameFPSTextTexture.getWidth()), 0);
 
         //Update screen
-        SDL_RenderPresent( game.renderer );
+        SDL_RenderPresent(game.renderer);
     }
 }
 
 GameStateMenu::~GameStateMenu() {
-
     // Free texture and font
     frameFPSTextTexture.free();
     TTF_CloseFont(frameFont);
-    frameFont = NULL;
-
+    frameFont = nullptr;
 }
