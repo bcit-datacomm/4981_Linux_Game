@@ -29,7 +29,7 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
 
-    MoveAction getMoveAction();
+    MoveAction getMoveAction(float delta);
 
     Player();
     ~Player();

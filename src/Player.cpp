@@ -157,11 +157,11 @@ void Player::turretPlaceCheck(float x, float y, CollisionHandler& collisionHandl
     }
 }
 
-MoveAction Player::getMoveAction() {
+MoveAction Player::getMoveAction(float delta) {
     MoveAction moveAction;
     moveAction.id = marine->getID();
-    moveAction.xpos = marine->getX();
-    moveAction.ypos = marine->getY();
+    moveAction.xpos = marine->getX() + (delta * marine->getDX());
+    moveAction.ypos = marine->getY() + (delta * marine->getDY());
     moveAction.vel = marine->getVelocity();
     moveAction.direction = marine->getAngle();
 

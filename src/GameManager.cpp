@@ -66,7 +66,7 @@ void GameManager::updateMarines(const float& delta) {
 void GameManager::updateZombies(const float& delta) {
     for (auto& z : zombieManager) {
         z.second.generateRandomMove();
-        z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
+        //z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
     }
 }
 // Create marine add it to manager, returns marine id

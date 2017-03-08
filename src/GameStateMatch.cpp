@@ -105,12 +105,12 @@ void GameStateMatch::loop() {
         // Process frame
         handle();    // Handle user input
 
-        MoveAction moveAction = player.getMoveAction();
+        MoveAction moveAction = player.getMoveAction(stepTimer.getTicks() / 1000.f);
         NetworkManager::instance()
             .getSockUDP()
             .sendToServ((char *)&moveAction, sizeof(MoveAction));
 
-        update(stepTimer.getTicks() / 1000.f); // Update state values
+        //update(stepTimer.getTicks() / 1000.f); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
         render();    // Render game state to window
