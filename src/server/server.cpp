@@ -14,6 +14,9 @@
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <cstdarg>
+#include <climits>
+#include <unordered_map>
+#include <atomic>
 
 #include "../UDPHeaders.h"
 #include "server.h"
@@ -29,9 +32,8 @@ char outputPacket[OUT_PACKET_SIZE];
 int listenSocketUDP;
 int listenSocketTCP;
 int sendSocketUDP;
-int sendSocketTCP;
-Client *clients;
 bool verbose = false;
+std::unordered_map<int32_t, PlayerJoin> clientList;
 
 int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
@@ -97,10 +99,6 @@ int main(int argc, char **argv) {
         perror("ListenSocket TCP");
         exit(1);
     }
-    if ((sendSocketTCP = createSocket(false, true)) == -1) {
-        perror("sendSocket TCP");
-        exit(1);
-    }
 
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
 
@@ -112,84 +110,160 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void initSync(int sock){
+void initSync(int sock) {
+    int epollfd;
+    epoll_event ev;
+    epoll_event *events;
+
     logv("Starting TCP sync\n");
-    int *clientFDs = (int *) calloc(client_count, sizeof(int));
-    if (!clientFDs) {
-        perror("Init sync calloc failure");
+
+    if (!(events = (epoll_event *) calloc(MAXEVENTS, sizeof(epoll_event)))) {
+        perror("Calloc failure");
         exit(1);
     }
-    socklen_t *clientLens = (socklen_t *) calloc(client_count, sizeof(socklen_t));
-    if (!clientLens) {
-        perror("Init sync calloc failure");
+
+    if ((epollfd = epoll_create1(0)) == -1) {
+        perror("Epoll create");
         exit(1);
     }
-    //make this also hold player data
-    clients = (Client *) calloc(client_count, sizeof(Client));
-    //accept all the connections
-    //get the basic info from each
-    for(size_t i = 0; i < client_count; ++i) {
-        clients[i].addr = (struct sockaddr_in*) calloc(1, sizeof(struct sockaddr_in));
-        clients[i].player = (Player*) calloc(1, sizeof(Player));
 
-        clientLens[i] = sizeof(struct sockaddr_in);
-        clientFDs[i] = accept(sock, (struct sockaddr *) clients[i].addr, &clientLens[i]);
+    ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
+    ev.data.fd = listenSocketTCP;
 
-        char inbuff[SYNC_IN+1], outbuff[SYNC_OUT];
-        memset(outbuff, 0, SYNC_OUT);
+    if ((epoll_ctl(epollfd, EPOLL_CTL_ADD, ev.data.fd, &ev)) == -1) {
+        perror("epoll_ctl");
+        exit(1);
+    }
 
-        int r;
-        if ((r = read(clientFDs[i], inbuff, SYNC_IN)) > 0){
-            inbuff[r] = '\0';
-            logv("connected:%s with id:%d\n", inbuff, i);
-            strcpy(clients[i].player->username,inbuff);
-            clients[i].player->id = i;
-            strcpy(outbuff, inbuff);
-            outbuff[SYNC_OUT-1] = i;
-            
-            //tell the client who they are
-            if (write(clientFDs[i], outbuff, SYNC_OUT) == -1) {
-                perror("failed to write to client user info");
-                exit(4);
-            }
-
-            //update others of the clients addition
-            for (size_t j = 0; j < i; ++j){
-                if (write(clientFDs[j], outbuff, SYNC_OUT) == -1) {
-                    perror("failed to write to client updated user list");
-                    exit(4);
-                }
-            }
-
-            //tell new clients previously connected clients
-            for (size_t j = 0; j < i; ++j) {
-                strcpy(outbuff, clients[j].player->username);
-                outbuff[SYNC_OUT-1] = clients[j].player->id;
-                if (write(clientFDs[i], outbuff, SYNC_OUT) == -1) {
-                    perror("failed to write to new client list of other users");
-                    exit(4);
-                }
-            }
-
-            logv("updated %d clients\n", i);
-        } else if (r == 0){//file closed
-            break;
-        } else if (r == -1) {
-            perror("Packet read failure");
+    char buff[USHRT_MAX];
+    ssize_t nbytes = 0;
+    int nevents = 0;
+    for (;;) {
+        if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
+            perror("epoll_wait");
             exit(1);
         }
+        for (int i = 0; i < nevents; ++i) {
+            if (events[i].events & EPOLLERR) {
+                perror("Socket error");
+                close(events[i].data.fd);
+                continue;
+            }
+            if (events[i].events & EPOLLHUP) {
+                //Peer closed the connection
+                logv("Peer closed connection\n");
+                close(events[i].data.fd);
+                continue;
+            }
+            if (events[i].events & EPOLLIN) {
+                if (events[i].data.fd == listenSocketTCP) {
+                    PlayerJoin cli{0};
+
+                    sockaddr_in addr;
+                    socklen_t addrLen;
+                    ev.data.fd = accept(listenSocketTCP, (sockaddr *) &addr, &addrLen);
+
+                    logv("New client has joined the server\n");
+
+                    cli.entry.addr = addr;
+                    cli.entry.sock = ev.data.fd;
+                    cli.hasSentUsername = false;
+                    cli.isPlayerReady = false;
+                    
+                    clientList.insert({getPlayerId(), cli});
+
+                    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, ev.data.fd, &ev) < 0) {
+                        perror("Epoll_ctl");
+                        close(ev.data.fd);
+                        continue;
+                    }
+                } else {
+                    if ((nbytes = recv(events[i].data.fd, buff, USHRT_MAX - 1, 0)) > 0) {
+                        //Handle message
+                        if (nbytes < 4) {
+                            perror("Packet read was too small");
+                            continue;
+                        }
+
+                        buff[nbytes] = '\0';
+
+                        //Convert first 4 chars to 32 bit int representing id
+                        int32_t idReceived = (buff[0] << 24) + (buff[1] << 16) + (buff[2] << 8) + buff[3]; 
+
+                        logv("Read packet with id: %d\n", idReceived);
+
+                        if (buff[4] == '/') {
+                            //Command message
+                            if (idReceived == -1) {
+                                //First connect message from client
+                                bool foundClient = false;
+                                std::pair<int32_t, PlayerJoin> tempMapEntry;
+                                for (auto& it : clientList) {
+                                    if (!it.first && it.second.entry.sock == events[i].data.fd) {
+                                        //This is the client that is sending the connect message
+                                        tempMapEntry = it;
+                                        tempMapEntry.first = getPlayerId();
+                                        tempMapEntry.second.hasSentUsername = true;
+                                        tempMapEntry.second.isPlayerReady = false;
+                                        strncpy(tempMapEntry.second.entry.username, buff + 5, 32);
+                                        strcat(tempMapEntry.second.entry.username, "\0");
+                                        logv("Server received username: %s\n", tempMapEntry.second.entry.username);
+
+                                        //Erase temporary entry in client list
+                                        clientList.erase(clientList.find(it.first));
+                                        //Insert newly compelted entry
+                                        clientList.insert(tempMapEntry);
+                                        foundClient = true;
+                                        break;
+                                    }
+                                }
+                                if (!foundClient) {
+                                    perror("Client not found in client list");
+                                }
+                            } else {
+                                //Might move to string literal switch, but this what the first thing that came to mind
+                                if (strncmp(buff + 5, "ready", nbytes - 4) == 0) {
+                                    //Ready command
+                                    if (clientList.count(idReceived)) {
+                                        clientList[idReceived].isPlayerReady = true;
+                                        logv("Player id %d is ready to start\n", idReceived);
+                                    } else {
+                                        perror("Client not found in list");
+                                    }
+                                } else if (strncmp(buff + 5, "unready", nbytes - 4) == 0) {
+                                    //Unready command
+                                    if (clientList.count(idReceived)) {
+                                        clientList[idReceived].isPlayerReady = false;
+                                        logv("Player id %d is NOT ready to start\n", idReceived);
+                                    } else {
+                                        perror("Client not found in list");
+                                    }
+                                } else if (strncmp(buff + 5, "start", nbytes - 4) == 0) {
+                                    //Start command
+                                    logv("Starting the game\n");
+                                    startGame();
+                                }
+                            }
+                        } else {
+                            //Text chat message
+                            logv("Server received: %s\n", buff + 4);
+                        }
+                    }
+                    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                        continue;
+                    }
+                    perror("Packet read failure");
+                    close(events[i].data.fd);
+                }
+            }
+        }
     }
-    //close all the connections
-#if 0
-    while(i){
-        logv("Closing TCP client %d\n",i);
-        write(clientFDs[i],"start",6);
-        close(clientFDs[i--]);
-    }
-#endif
-    logv("TCP sync complete\n");
-    free(clientFDs);
-    free(clientLens);
+    free(events);
+}
+
+int32_t getPlayerId() {
+    static std::atomic<int32_t> counter{0};
+    return ++counter;
 }
 
 void alarmHandler(int signo) {
@@ -267,14 +341,8 @@ void genOutputPacket() {
 }
 
 void sendSyncPacket(int sock) {
-#pragma omp parallel for
-    for (size_t i = 0; i < client_count; ++i) {
-        sendto(sock,
-                outputPacket,
-                OUT_PACKET_SIZE,
-                0,
-                (const struct sockaddr *) clients[i].addr,
-                sizeof(*clients[i].addr));
+    for (const auto& client : clientList) {
+        sendto(client.second.entry.sock, outputPacket, OUT_PACKET_SIZE, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
     }
 }
 

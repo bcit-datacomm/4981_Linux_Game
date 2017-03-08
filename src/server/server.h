@@ -1,6 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <netinet/in.h>
 #include <cstdarg>
 
 //Temp variable to represent client count
@@ -19,28 +20,26 @@
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
 #define MAXEVENTS 100 //although many kernals define it as 5 usually it can support many more
 
-typedef struct Players{
-    int x,y;
-    float dx,dy;
-    int id;
-    char username[NAMELEN];
-} Player;
+struct ClientEntry {
+    char username[NAMELEN + 1];
+    sockaddr_in addr;
+    int sock;
+};
 
-typedef struct Clients{
-    Player *player;
-    struct sockaddr_in *addr;
-} Client;
+struct PlayerJoin {
+    ClientEntry entry;
+    bool hasSentUsername;
+    bool isPlayerReady;
+};
 
 extern const long long microSecPerTick;
 extern char outputPacket[OUT_PACKET_SIZE];
 extern int listenSocketUDP;
 extern int listenSocketTCP;
 extern int sendSocketUDP;
-extern int sendSocketTCP;
-extern Client *clients;
+extern std::unordered_map<int32_t, PlayerJoin> clientList;
 
 void initSync(int sock);
-
 void processPacket(const char *data);
 void genOutputPacket();
 void sendSyncPacket(int sock);
@@ -50,8 +49,7 @@ void startTimer();
 void listenTCP(int socket, unsigned long ip, unsigned short port);
 void listenUDP(int socket, unsigned long ip, unsigned short port);
 int createSocket(bool useUDP, bool nonblocking);
-
-//where each client w/ both socket and user info is stored
+int32_t getPlayerId();
 
 //off by default
 extern bool verbose;
