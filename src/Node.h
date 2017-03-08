@@ -25,8 +25,8 @@
 #define SCREEN_H    2000
 
 // The size of a tile/node and how large each zombie step is
-#define TILE_SIZE   100
-#define STEP_SPAN   5
+#define TILE_SIZE   50
+#define STEP_SPAN   50
 
 // horizontal/vertical & diagonal cost
 #define BASE_COST   10

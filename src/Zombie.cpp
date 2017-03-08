@@ -8,7 +8,7 @@ using namespace std;
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
-Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state) {
+Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state), moving(true) {
     setAngle(0); //Totally arbitrary right now
     printf("Create Zombie\n");
 }
@@ -25,6 +25,19 @@ int Zombie::getStep() {
 // Set step
 void Zombie::setStep(int sp) {
     step = sp;
+}
+
+void Zombie::setEnd(float x, float y) {
+    endX = x;
+    endY = y;
+}
+
+float Zombie::getEndY() {
+    return endY;
+}
+
+float Zombie::getEndX() {
+    return endX;
 }
 
 /*
@@ -57,6 +70,19 @@ void Zombie::collidingProjectile(int damage) {
     health = health - damage;
 }
 
+bool Zombie::isMoving() {
+    return moving;
+}
+
+void Zombie::checkMove() {
+    float curX = getX();
+    float curY = getY();
+    if ((curX < endX + 10 && curX > endX - 10) && (curY < endY + 10 && curY > endY - 10))
+        moving = true;
+    else
+        moving = false;
+}
+
 /*
 Get the direction of the zombie and take a step
 Rob, Fred
@@ -64,75 +90,93 @@ Feb - Ongoing
 */
 void Zombie::generateMove() {
     int d = getDir();
-    if (d < 0) return;
+    float startX = getX();
+    float startY = getY();
 
-    float x = getDX();
-    float y = getDY();
+    if (d < 0)
+        return;
 
     switch(d) {
         case DIR_R:
-            if (checkBound(x + STEP_SPAN, y)) {
-                setDX(x + STEP_SPAN);
+            if (checkBound(startX + STEP_SPAN, startY)) {
+                setDX(STEP_SPAN);
+                setDY(0);
                 step++;
                 setAngle(EAST);
+                endX += STEP_SPAN;
             }
             break;
         case DIR_RD:
-            if (checkBound(x + STEP_SPAN, y + STEP_SPAN)) {
-                setDX(x + STEP_SPAN);
-                setDY(y + STEP_SPAN);
+            if (checkBound(startX + STEP_SPAN, startY + STEP_SPAN)) {
+                setDX(STEP_SPAN);
+                setDY(STEP_SPAN);
                 step++;
                 setAngle(SOUTHEAST);
+                endX += STEP_SPAN;
+                endY += STEP_SPAN;
             }
             break;
         case DIR_D:
-            if (checkBound(x, y + STEP_SPAN)) {
-                setDY(y + STEP_SPAN);
+            if (checkBound(startX, startY + STEP_SPAN)) {
+                setDX(0);
+                setDY(STEP_SPAN);
                 step++;
                 setAngle(SOUTH);
+                endY += STEP_SPAN;
             }
             break;
         case DIR_LD:
-            if (checkBound(x - STEP_SPAN, y + STEP_SPAN)) {
-                setDX(x - STEP_SPAN);
-                setDY(y + STEP_SPAN);
+            if (checkBound(startX - STEP_SPAN, startY + STEP_SPAN)) {
+                setDX(-STEP_SPAN);
+                setDY(STEP_SPAN);
                 step++;
                 setAngle(SOUTHWEST);
+                endX -= STEP_SPAN;
+                endY += STEP_SPAN;
             }
             break;
         case DIR_L:
-            if (checkBound(x - STEP_SPAN, y)) {
-                setDX(x - STEP_SPAN);
+            if (checkBound(startX - STEP_SPAN, startY)) {
+                setDX(-STEP_SPAN);
+                setDY(0);
                 step++;
                 setAngle(WEST);
+                endX -= STEP_SPAN;
             }
             break;
         case DIR_LU:
-            if (checkBound(x - STEP_SPAN, y - STEP_SPAN)) {
-                setDX(x - STEP_SPAN);
-                setDY(y - STEP_SPAN);
+            if (checkBound(startX - STEP_SPAN, startY - STEP_SPAN)) {
+                setDX(-STEP_SPAN);
+                setDY(-STEP_SPAN);
                 step++;
                 setAngle(NORTHWEST);
+                endX -= STEP_SPAN;
+                endY -= STEP_SPAN;
             }
             break;
         case DIR_U:
-            if (checkBound(x, y - STEP_SPAN)) {
-                setDY(y - STEP_SPAN);
+            if (checkBound(startX, startY - STEP_SPAN)) {
+                setDX(0);
+                setDY(-STEP_SPAN);
                 step++;
                 setAngle(NORTH);
+                endY -= STEP_SPAN;
             }
             break;
         case DIR_RU:
-            if (checkBound(x + STEP_SPAN, y - STEP_SPAN)) {
-                setDX(x + STEP_SPAN);
-                setDY(y - STEP_SPAN);
+            if (checkBound(startX + STEP_SPAN, startY - STEP_SPAN)) {
+                setDX(STEP_SPAN);
+                setDY(-STEP_SPAN);
                 step++;
                 setAngle(NORTHEAST);
+                endX += STEP_SPAN;
+                endY -= STEP_SPAN;
             }
             break;
         default:
             break;
     }
+    moving = false;
 }
 
 // A* algo generates a string of direction digits.

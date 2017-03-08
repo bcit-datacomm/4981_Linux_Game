@@ -42,6 +42,8 @@ bool GameStateMatch::load() {
     GameManager::instance()->createZombie(game.renderer, 100, 100);
     GameManager::instance()->createZombie(game.renderer, 700, 700);
     GameManager::instance()->createZombie(game.renderer, 800, 1400);
+    GameManager::instance()->createZombie(game.renderer, 100, 1400);
+    GameManager::instance()->createZombie(game.renderer, 800, 100);
     GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 
@@ -55,7 +57,7 @@ bool GameStateMatch::load() {
 
     //player = new Player();
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
-    player.marine->setPosition(newPoint.first, newPoint.second);
+    player.marine->setPosition(700, 0/*newPoint.first, newPoint.second*/);
 
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
         printf("Failed to load the player texture!\n");
