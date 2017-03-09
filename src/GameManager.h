@@ -60,6 +60,7 @@ public:
     int32_t addZombie(const Zombie&);
     bool createZombie(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteZombie(const int32_t id);
+    bool createZombieWave(SDL_Renderer* gRenderer, const int n);
 
     int32_t addWeaponDrop(const WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y);

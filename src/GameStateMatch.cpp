@@ -42,14 +42,6 @@ bool GameStateMatch::load() {
     
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, -800, -800);
-    GameManager::instance()->createZombie(game.renderer, 2800, -800);
-    GameManager::instance()->createZombie(game.renderer, -800, 2800);
-    GameManager::instance()->createZombie(game.renderer, 2800, 2800);
-    GameManager::instance()->createZombie(game.renderer, -800, 1400);
-    GameManager::instance()->createZombie(game.renderer, 1400, 2800);
-    GameManager::instance()->createZombie(game.renderer, 2800, 1400);
-    GameManager::instance()->createZombie(game.renderer, 1400, 2800);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 	
 
@@ -89,6 +81,7 @@ void GameStateMatch::loop() {
     //Start counting frames per second
     unsigned long countedFrames = 0;
     int frameTicks;
+    int second = 0;
     float avgFPS = 0;
     fpsTimer.start();
 
@@ -113,6 +106,11 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
+        if(fpsTimer.getTicks() / 1000 > second) {
+            GameManager::instance()->createZombieWave(game.renderer, 1);
+            second+=5;
+        }
+        
         //If frame finished early
         if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time

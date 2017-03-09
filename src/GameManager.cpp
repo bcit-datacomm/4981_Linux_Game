@@ -170,6 +170,7 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const flo
 // Deletes zombie from level
 void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
+
 }
 
 int32_t GameManager::addObject(const Object& newObject) {
@@ -286,15 +287,14 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 
 // Create zombie add it to manager, returns success
 unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, int w, int h) {
-    unsigned int id = 0;
-
-    if (!objectManager.empty()) {
-        id = objectManager.rbegin()->first + 1;
-    }
+    const int32_t id = generateID();
     objectManager[id] = Wall(w, h);
+    printf("%d\n", id);
     if (!objectManager.at(id).texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
         printf("Failed to load the wall texture!\n");
-    } else {
+        deleteBarricade(id);
+        return -1;
+   } else {
         objectManager.at(id).texture.setDimensions(w, h);
     }
     
@@ -313,14 +313,13 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float start
     float y = startY - 100;
 
     createWall(gRenderer, x, y, width, height);
-    createWall(gRenderer, x, endY + 100, width, height);
+    createWall(gRenderer, x, endY, width, height);
  
     width = 100;
-    height = endY - startY + 200;
+    height = endY - startY + 100;
 
+    createWall(gRenderer, endX, startY, width, height);
     createWall(gRenderer, x, startY, width, height);
-    createWall(gRenderer, endX + 100, startY, width, height);
-    
 
     float sX = (endX + startX)/2 - BASE_WIDTH - 100;
     float eX = (endX + startX)/2 + BASE_WIDTH + 100;
@@ -341,5 +340,38 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float start
     createWall(gRenderer, sX, sY, width, height / 2);
     createWall(gRenderer, sX, sY + (height / 4 * 3), width, height / 4);
     createWall(gRenderer, eX, sY, width, height / 1.5);
-//    createWall(gRenderer, eX, sY + (height / 4 * 3), width, height / 4);
+    createWall(gRenderer, eX, sY + (height / 4 * 3), width, height / 4);
 }
+
+bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
+    std::vector<Point> spawnPoints;
+    
+    spawnPoints.push_back(Point(-900, -900));
+    spawnPoints.push_back(Point(1900, -900));
+    spawnPoints.push_back(Point(2900, -900));
+    spawnPoints.push_back(Point(2900, 2900));
+    spawnPoints.push_back(Point(1900, 2900));
+    spawnPoints.push_back(Point(-900, 2900));
+    
+    if(zombieManager.size() >= spawnPoints.size() * 5) {
+        unsigned int count = 0;
+        std::vector<int32_t> ids;
+        for(auto z : zombieManager) {
+            if(count >= spawnPoints.size())
+                break;            
+            ids.push_back(z.first);
+            count++;
+        }
+        for(auto id : ids)
+            deleteZombie(id);
+    }
+
+    for(int i = 0; i < n ; i ++) {
+        for(auto p : spawnPoints)
+            createZombie(gRenderer, p.first, p.second);
+    }
+
+    return true;
+
+} 
+
