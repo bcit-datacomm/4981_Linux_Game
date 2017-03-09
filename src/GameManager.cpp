@@ -285,17 +285,17 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 }
 
 // Create zombie add it to manager, returns success
-unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, int h, int w) {
+unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, int w, int h) {
     unsigned int id = 0;
 
     if (!objectManager.empty()) {
         id = objectManager.rbegin()->first + 1;
     }
-    objectManager[id] = Wall(h, w);
+    objectManager[id] = Wall(w, h);
     if (!objectManager.at(id).texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
         printf("Failed to load the wall texture!\n");
     } else {
-        objectManager.at(id).texture.setDimensions(h, w);
+        objectManager.at(id).texture.setDimensions(w, h);
     }
     
     objectManager.at(id).setPosition(x,y);
@@ -305,55 +305,41 @@ unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, 
 
 
 void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY){
-    int width = 500;
-    int height = 500;
+
+    int width = endX - startX + 200;
+    int height = 100;
+
+    float x = startX - 100;
+    float y = startY - 100;
+
+    createWall(gRenderer, x, y, width, height);
+    createWall(gRenderer, x, endY + 100, width, height);
+ 
+    width = 100;
+    height = endY - startY + 200;
+
+    createWall(gRenderer, x, startY, width, height);
+    createWall(gRenderer, endX + 100, startY, width, height);
     
-    float x = startX - width;
-    float y = startY - height;
-    while(x <= endX){
-        createWall(gRenderer, x, y, width, height);
-        createWall(gRenderer, x, endY, width, height);
-        x += width;
-    }
 
-    while(y < endY){
-        createWall(gRenderer, startX-width, y, width, height);
-        createWall(gRenderer, endX, y, width, height);
-        y += height;
-    }
+    float sX = (endX + startX)/2 - BASE_WIDTH - 100;
+    float eX = (endX + startX)/2 + BASE_WIDTH + 100;
+    float sY = (endY + startY)/2 - BASE_HEIGHT - 100;
+    float eY = (endY + startY)/2 + BASE_HEIGHT + 100;
 
+    width = eX - sX;
+    height = 100;
 
-    /* For Test map. This code below will be removed */
-    float sX = (endX + startX)/2 - BASE_WIDTH;
-    float eX = (endX + startX)/2 + BASE_WIDTH;
-    float sY = (endY + startY)/2 - BASE_HEIGHT;
-    float eY = (endY + startY)/2 + BASE_HEIGHT;
+    createWall(gRenderer, sX, sY, width / 2, height);
+    createWall(gRenderer, sX + (width / 4 * 3), sY, width / 4, height);
+    createWall(gRenderer, sX, eY, width / 4, height);
+    createWall(gRenderer, sX + width / 2 + 100, eY, width / 2, height);
 
-    x = sX - width;
-    
-    int i = 0;
-    int n = (eX-sX) / width / 2;
-    while(x <= eX) {
-        if(i < n) {
-            createWall(gRenderer, x, sY-height, width, height);
-        } else {
-            createWall(gRenderer, x, eY, width, height);
-        }
-        x += width;
-        i++;
-    }
+    width = 100;
+    height = eY - sY;
 
-    y = sY;
-    i = 0;
-    while(y < eY) {
-        if(i < n) {
-            createWall(gRenderer, eX, y, width, height);
-        } else {
-            createWall(gRenderer, sX - width, y, width, height);
-        }
-        y += height;
-        i++;
-    }
-
-
+    createWall(gRenderer, sX, sY, width, height / 2);
+    createWall(gRenderer, sX, sY + (height / 4 * 3), width, height / 4);
+    createWall(gRenderer, eX, sY, width, height / 1.5);
+//    createWall(gRenderer, eX, sY + (height / 4 * 3), width, height / 4);
 }

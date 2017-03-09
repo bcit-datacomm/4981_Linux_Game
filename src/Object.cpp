@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object(int height, int width, double angle) : Entity(), height(height), width(width), angle(angle){
+Object::Object(int width, int height, double angle) : Entity(), width(width), height(height), angle(angle){
     setHeight(height);
     setWidth(width);
 }
