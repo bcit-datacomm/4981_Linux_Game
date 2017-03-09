@@ -49,9 +49,9 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
                                  NULL, m.second.getAngle());
     }
 
- 	for (const auto& b : barricadeManager) {
-		b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
-	}
+    for (const auto& b : barricadeManager) {
+        b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
+    }
 
 }
 
@@ -261,7 +261,7 @@ void GameManager::updateCollider() {
     collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
     collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
     collisionHandler.quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
-    
+
     for (auto& m : marineManager) {
         collisionHandler.quadtreeMov->insert(m.second.movementHitBox.get());
         collisionHandler.quadtreePro->insert(m.second.projectileHitBox.get());
@@ -286,17 +286,17 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeDam->insert(m.second.damageHitBox.get());
     }
 
-   	for (auto& b : barricadeManager) {
+    for (auto& b : barricadeManager) {
         if(b.second.isPlaced()) {
             collisionHandler.quadtreeMov->insert(b.second.movementHitBox.get());
             collisionHandler.quadtreeDam->insert(b.second.damageHitBox.get());
         }
-	}
+ }
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp->insert(m.second.pickupHitBox.get());
     }
-    
+
 }
 
 // Create barricade add it to manager, returns success
@@ -317,7 +317,7 @@ unsigned int GameManager::createBarricade(SDL_Renderer* gRenderer, float x, floa
 
 
 void GameManager::deleteBarricade(unsigned int id) {
-	barricadeManager.erase(id);
+    barricadeManager.erase(id);
 }
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(unsigned int id) {
