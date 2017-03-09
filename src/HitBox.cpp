@@ -2,8 +2,8 @@
 
 
 HitBox::HitBox(float x, float y, SDL_Rect rect, Entity* attached) : attached(attached) {
-	setRect(rect);
-	move(x,y);
+    setRect(rect);
+    move(x,y);
 }
 
 HitBox::~HitBox() {

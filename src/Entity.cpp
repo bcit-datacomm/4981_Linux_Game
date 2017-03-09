@@ -45,8 +45,8 @@ void Entity::setPosition(float px, float py) {
 }
 
 void Entity::updateHitBoxes() {
-	movementHitBox->move(x, y);
-	projectileHitBox->move(x, y);
-	damageHitBox->move(x, y);
-	pickupHitBox->move(x, y);
+    movementHitBox->move(x, y);
+    projectileHitBox->move(x, y);
+    damageHitBox->move(x, y);
+    pickupHitBox->move(x, y);
 }
