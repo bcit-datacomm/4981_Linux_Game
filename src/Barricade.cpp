@@ -4,9 +4,9 @@
 #include <random>
 #define PI 3.14159265
 
-Barricade::Barricade(int health, int state, bool boolPlaceable, bool boolPlaced) 
+Barricade::Barricade(int health, int state, bool boolPlaceable, bool boolPlaced)
                     : Object(BARRICADE_HEIGHT, BARRICADE_WIDTH),
-                      health(health), state(state), 
+                      health(health), state(state),
                       boolPlaceable(boolPlaceable), boolPlaced(boolPlaced) {
 	printf("Create Barricade\n");
 }
@@ -27,7 +27,7 @@ bool Barricade::checkPlaceablePosition(float playerX, float playerY, float moveX
 	if(boolPlaceable){
         if(ch.detectMovementCollision(movementHitBox.get()))
 			boolPlaceable = false;
- 
+
 	}
 	return boolPlaceable;
 }

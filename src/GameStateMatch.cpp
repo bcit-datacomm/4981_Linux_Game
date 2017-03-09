@@ -10,6 +10,7 @@
 #include "LTimer.h"
 #include "LTexture.h"
 #include "Window.h"
+#include "SpriteManager.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
@@ -19,6 +20,7 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 bool GameStateMatch::load() {
 
     bool success = true;
+
 
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );

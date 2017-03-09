@@ -14,6 +14,7 @@
 #include "GameManager.h"
 #include "CollisionHandler.h"
 #include "Window.h"
+#include "SpriteManager.h"
 
 class GameStateMatch : public GameState {
 public:
@@ -36,10 +37,12 @@ public:
 
 private:
 
+    SpriteManager spriteManager;
     Player player;
     Level level;
     Base base;
     Camera camera;
+
 
     virtual void sync();
     virtual void handle();
