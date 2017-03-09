@@ -47,15 +47,20 @@ typedef std::map<std::string, Mix_Chunk*> chunkMap;
 
 class AudioManager {
 public:
-    AudioManager();
-    ~AudioManager();
+
+    static AudioManager& instance();
 
     void playMusic(const char * fileName);
     void playEffect(const char * fileName);
 
 private:
+	static AudioManager sInstance;
+
     musicMap  _music;
     chunkMap  _chunks;
+
+    AudioManager();
+    ~AudioManager();
 
     void loadFiles();
     void loadMusic(const char * fileName);
