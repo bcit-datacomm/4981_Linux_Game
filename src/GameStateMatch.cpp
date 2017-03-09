@@ -33,7 +33,7 @@ bool GameStateMatch::load() {
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
- 	
+
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
@@ -42,7 +42,7 @@ bool GameStateMatch::load() {
     GameManager::instance()->createZombie(game.renderer, 700, 700);
     GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
-	
+
 
     //base = Base();
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
@@ -145,6 +145,9 @@ void GameStateMatch::handle() {
 			case SDLK_b:
 				player.handleTempBarricade(game.renderer);
 				break;
+      case SDLK_t:
+        player.handleTempTurret(game.renderer);
+        break;
 			default:
                 break;
             }

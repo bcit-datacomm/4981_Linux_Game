@@ -19,7 +19,7 @@ public:
 
     bool placementCheckTurret(); // checks if turret placement is within bounds
 
-    bool collisionCheckTurret(float x, float y, CollisionHandler& ch); // checks if the turret placement overlaps with any currently existing objects
+    bool collisionCheckTurret(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch); // checks if the turret placement overlaps with any currently existing objects
 
     void activateTurret(); // activates the turret
 
@@ -39,6 +39,12 @@ public:
 
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
+    void move(float, float, float, float, CollisionHandler&);
+
+    void placeTurret();
+
+    bool isPlaceable();
+
     void removeTurret(); // removes the turret
 
     Turret();
@@ -48,6 +54,8 @@ private:
     bool activated = false; // turret activated state
     int health = 200; // turret health pool
     int ammo = 100; // turret ammo pool
+    bool placeable = false;
+    bool placed = false;
 };
 
 #endif

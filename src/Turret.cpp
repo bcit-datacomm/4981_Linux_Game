@@ -17,14 +17,19 @@ bool Turret::placementCheckTurret(){
 }
 
 // checks if the turret placement overlaps with any currently existing objects
-bool Turret::collisionCheckTurret(float x, float y, CollisionHandler& ch) {
-    SDL_Rect checkBox;
-    checkBox.h = 100;
-    checkBox.w = 100;
-    checkBox.x = x;
-    checkBox.y = y;
-    HitBox hitBox(x, y, checkBox, nullptr);
-    return !ch.detectMovementCollision(&hitBox);
+bool Turret::collisionCheckTurret(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
+  float distanceX = (playerX - moveX) * (playerX - moveX);
+	float distanceY = (playerY - moveY) * (playerY - moveY);
+	float distance = sqrt(abs(distanceX+distanceY));
+	if(distance>200) {
+		placeable = false;
+	}else
+		placeable = true;
+	if(placeable) {
+        if(ch.detectMovementCollision(movementHitBox.get()))
+	        placeable = false;
+	}
+	return placeable;
 }
 
 // activates the turret
@@ -58,6 +63,23 @@ bool Turret::ammoCheckTurret() {
  // returns true if turret has >=1 health, false otherwise
 bool Turret::healthCheckTurret() {
     return (health > 0);
+}
+
+void Turret::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
+    setPosition(moveX, moveY);
+    if(this->collisionCheckTurret(playerX, playerY, moveX, moveY, ch))
+        texture.setAlpha(200);
+    else
+        texture.setAlpha(30);
+}
+
+void Turret::placeTurret() {
+    texture.setAlpha(255);
+    placed = true;
+}
+
+bool Turret::isPlaceable() {
+    return placeable;
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined
