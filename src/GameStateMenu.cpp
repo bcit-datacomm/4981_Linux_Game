@@ -72,31 +72,29 @@ bool GameStateMenu::load() {
     bool success = true;
 
     menuFont = TTF_OpenFont( "assets/fonts/Overdrive Sunset.otf", 110);
-    if ( menuFont == NULL ) {
-            printf( "Failed to load font - Overdrive Sunset.otf! SDL_ttf Error: %s\n", TTF_GetError() );
-            success = false;
+    if ( menuFont == nullptr ) {
+        printf( "Failed to load font - Overdrive Sunset.otf! SDL_ttf Error: %s\n", TTF_GetError() );
+        success = false;
     }
 
     headingFont = TTF_OpenFont( "assets/fonts/SEGUISB.ttf", 30);
-    if ( headingFont == NULL ) {
-            printf( "Failed to load font - SEGUISB.TTF! SDL_ttf Error: %s\n", TTF_GetError() );
-            success = false;
+    if ( headingFont == nullptr ) {
+        printf( "Failed to load font - SEGUISB.TTF! SDL_ttf Error: %s\n", TTF_GetError() );
+        success = false;
     }
 
     textboxFont = TTF_OpenFont( "assets/fonts/SEGOEUISL.ttf", 30);
-    if ( textboxFont == NULL ) {
-            printf( "Failed to load font - SEGOEUISL.ttf! SDL_ttf Error: %s\n", TTF_GetError() );
-            success = false;
+    if ( textboxFont == nullptr ) {
+        printf( "Failed to load font - SEGOEUISL.ttf! SDL_ttf Error: %s\n", TTF_GetError() );
+        success = false;
     }
 
     if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", game.renderer)) {
-            printf("Failed to load the level texture!\n");
-            success = false;
+        printf("Failed to load the level texture!\n");
+        success = false;
     } else {
-            level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
+        level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
     }
-
-
     return success;
 }
 
@@ -123,11 +121,11 @@ bool GameStateMenu::load() {
 */
 void GameStateMenu::loop() {
 
-	// State Loop
-	while (play) {
-		handle();	// Handle user input
-		render();	// Render game state to window
-	}
+    // State Loop
+    while (play) {
+        handle(); // Handle user input
+        render(); // Render game state to window
+    }
 }
 
 /**
@@ -172,14 +170,14 @@ void GameStateMenu::sync() {
 * functionality of the main menu
 */
 void GameStateMenu::handle() {
-	int x,y;
-	SDL_Keycode keyCode;
+ int x,y;
+ SDL_Keycode keyCode;
 
-	//Handle events on queue
-	SDL_WaitEvent( &event );
-	game.window.handleEvent(event);
-		switch ( event.type ) {
-      	case SDL_KEYDOWN:
+ //Handle events on queue
+ SDL_WaitEvent( &event );
+ game.window.handleEvent(event);
+    switch ( event.type ) {
+        case SDL_KEYDOWN:
             keyCode = event.key.keysym.sym;
             if (keyCode == SDLK_ESCAPE) {
                 play = false;
@@ -188,24 +186,21 @@ void GameStateMenu::handle() {
 
             for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
                 if (activeTextbox[i]) {
-
                     //Handling backspace
                     if (keyCode == SDLK_BACKSPACE && textInput[i].length() > 0) {
                         textInput[i].pop_back();
                     }
-
                     //Handle copy
                     else if (keyCode == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
                         SDL_SetClipboardText( textInput[i].c_str() );
                     }
-
                     //Handle paste
                     else if (keyCode == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
                         textInput[i] = SDL_GetClipboardText();
                     }
                 }
             }
-        	break;
+        break;
         case SDL_TEXTINPUT:
             for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
                 if (activeTextbox[i]) {
@@ -221,41 +216,37 @@ void GameStateMenu::handle() {
                 }
             }
             break;
-      	case SDL_KEYUP: //Do nothing on key release
-       		switch ( event.key.keysym.sym ) {
-				default:
-	               	break;
-			}
-        	break;
+        case SDL_KEYUP: //Do nothing on key release
+            break;
         case SDL_MOUSEMOTION:
-        	x = event.motion.x;
-        	y = event.motion.y;
-        	for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
+            x = event.motion.x;
+            y = event.motion.y;
+            for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
                 //Check if mouse is above one of the menu uptions
-        		if (x >= menuItemPos[i].x && x <= menuItemPos[i].x + menuTextTextures[i].getWidth() &&
-        			y >= menuItemPos[i].y && y <= menuItemPos[i].y + menuTextTextures[i].getHeight()) {
+                if (x >= menuItemPos[i].x && x <= menuItemPos[i].x + menuTextTextures[i].getWidth() &&
+                    y >= menuItemPos[i].y && y <= menuItemPos[i].y + menuTextTextures[i].getHeight()) {
                     selected[i] = true;  //Activate the button
-        		} else {
+                } else {
                     selected[i] = false; //deactivate the button
-        		}
-        	}
-        	break;
+                }
+            }
+            break;
         case SDL_MOUSEBUTTONDOWN:
-        	x = event.button.x;
-        	y = event.button.y;
-        	for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
+            x = event.button.x;
+            y = event.button.y;
+            for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
                 if (selected[i]) {
                     update(i);
-        			play = false;
+                    play = false;
                 }
-        	}
-        	for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
+            }
+            for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
                 //Check if the mouse was clicked inside the textbox area
-        		if (x >= textboxPos[i].x && x <= textboxPos[i].x + textboxPos[i].w &&
-        			y >= textboxPos[i].y && y <= textboxPos[i].y + textboxPos[i].h) {
+                if (x >= textboxPos[i].x && x <= textboxPos[i].x + textboxPos[i].w &&
+                    y >= textboxPos[i].y && y <= textboxPos[i].y + textboxPos[i].h) {
                     activeTextbox[i] = true; //Activate the textbox to enable typing
                     //If default string is detected, delete it
-                    if (!strcmp(textInput[i].c_str(), defaultText[i].c_str())) {
+                    if (textInput[i].compare(defaultText[i]) == 0) {
                         textInput[i] = "";
                     }
                 } else {
@@ -264,25 +255,23 @@ void GameStateMenu::handle() {
                     if (textInput[i].empty()) {
                         textInput[i] = defaultText[i];
                     }
-        		}
-        	}
-
-        	break;
+                }
+            }
+            break;
         case SDL_WINDOWEVENT:
-        	switch (event.window.event) {
-	    		case SDL_WINDOWEVENT_RESIZED:
+            switch (event.window.event) {
+                case SDL_WINDOWEVENT_RESIZED:
                     //Adjust the dimensions of the window if resized
-	    			level.levelTexture.setDimensions(game.window.getWidth(),
-                                                    game.window.getHeight());
-	    			break;
-	        }
-        	break;
-		case SDL_QUIT:
-			play = false;
-			break;
-      	default:
-        	break;
-	}
+                    level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
+                    break;
+            }
+            break;
+    case SDL_QUIT:
+        play = false;
+        break;
+    default:
+        break;
+    }
 }
 
 /**
@@ -306,13 +295,13 @@ void GameStateMenu::handle() {
 */
 void GameStateMenu::update(const float& delta) {
 
-	if(delta == JOIN) {
-		game.stateID = 2;
-	} else if (delta == OPTIONS) {
+    if(delta == JOIN) {
+        game.stateID = 2;
+    } else if (delta == OPTIONS) {
         game.stateID = 2; //TEMPORARY: change to correct state ID once implemented
-	} else {
+    } else {
         game.stateID = 0;
-	}
+    }
 }
 
 /**
@@ -336,50 +325,50 @@ void GameStateMenu::update(const float& delta) {
 */
 void GameStateMenu::positionElements() {
 
-    int         windowWidth     = game.window.getWidth();
-    int         windowHeight    = game.window.getHeight();
-    int         maxTextWidth    = 0;
-    int         maxTextHeight   = 0;
-    int         vertPadding     = 50;
-    int         horzPadding     = 10;
-    std::string longestString   = "";
-    char        largestChar     = 'W';
+    int windowWidth = game.window.getWidth();
+    int windowHeight = game.window.getHeight();
+    int maxTextWidth = 0;
+    int maxTextHeight = 0;
+    int vertPadding = 50;
+    int horzPadding = 10;
+    std::string longestString = "";
+    char largestChar = 'W';
 
 
     //Check if TTF was initialized correctly
-    if(!TTF_WasInit() && TTF_Init()==-1) {
+    if(!TTF_WasInit() && TTF_Init()== -1) {
         printf("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
     //Calculate the pixel length and height of the largest possible string
-    longestString.resize(maxLength+1, largestChar);
-	TTF_SizeText(textboxFont, longestString.c_str(), &maxTextWidth, &maxTextHeight);
+    longestString.resize(maxLength + 1, largestChar);
+    TTF_SizeText(textboxFont, longestString.c_str(), &maxTextWidth, &maxTextHeight);
 
     //Position the menu text
-    menuItemPos[JOIN].x     = windowWidth/2  - menuTextTextures[JOIN].getWidth()/2;
-    menuItemPos[JOIN].y     = windowHeight/2 + menuTextTextures[JOIN].getHeight();
-    menuItemPos[OPTIONS].x  = windowWidth/2  - menuTextTextures[OPTIONS].getWidth()/2;
-    menuItemPos[OPTIONS].y  = windowHeight/2 + menuTextTextures[OPTIONS].getHeight()*2.2;
+    menuItemPos[JOIN].x = windowWidth / 2  - menuTextTextures[JOIN].getWidth() / 2;
+    menuItemPos[JOIN].y = windowHeight / 2 + menuTextTextures[JOIN].getHeight();
+    menuItemPos[OPTIONS].x = windowWidth / 2  - menuTextTextures[OPTIONS].getWidth() / 2;
+    menuItemPos[OPTIONS].y = windowHeight / 2 + menuTextTextures[OPTIONS].getHeight() * 2.2;
 
     //Create a textbox for the server IP
     textboxPos[IP].w = maxTextWidth;
     textboxPos[IP].h = maxTextHeight;
-    textboxPos[IP].x = windowWidth/2  - textboxPos[IP].w/2;
+    textboxPos[IP].x = windowWidth / 2  - textboxPos[IP].w / 2;
     textboxPos[IP].y = menuItemPos[JOIN].y - vertPadding;
 
     //Create a textbox for the Username
     textboxPos[USERNAME].w = maxTextWidth;
     textboxPos[USERNAME].h = maxTextHeight;
-    textboxPos[USERNAME].x = windowWidth/2  - textboxPos[USERNAME].w/2;
+    textboxPos[USERNAME].x = windowWidth / 2  - textboxPos[USERNAME].w / 2;
     textboxPos[USERNAME].y = textboxPos[IP].y - vertPadding;
 
     //position the text for the IP Address textbox
     textboxTextPos[IP].x = textboxPos[IP].x + horzPadding;
-    textboxTextPos[IP].y = textboxPos[IP].y - ((textboxPos[IP].h - maxTextHeight)/2);
+    textboxTextPos[IP].y = textboxPos[IP].y - ((textboxPos[IP].h - maxTextHeight) / 2);
 
     //position the text for the Username textbox
     textboxTextPos[USERNAME].x = textboxPos[USERNAME].x + horzPadding;
-    textboxTextPos[USERNAME].y = textboxPos[USERNAME].y - ((textboxPos[USERNAME].h - maxTextHeight)/2);
+    textboxTextPos[USERNAME].y = textboxPos[USERNAME].y - ((textboxPos[USERNAME].h - maxTextHeight) / 2);
 }
 
 
@@ -406,32 +395,31 @@ void GameStateMenu::positionElements() {
 * Calls helper function to position elements in the window
 */
 void GameStateMenu::render() {
-	//Only draw when not minimized
-	if ( !game.window.isMinimized() ) {
+    //Only draw when not minimized
+    if ( !game.window.isMinimized() ) {
 
-		//Clear screen
-		SDL_RenderClear( game.renderer );
+        //Clear screen
+        SDL_RenderClear( game.renderer );
 
- 		//Render textures
-		level.levelTexture.render(game.renderer, 0-camera.getX(), 0-camera.getY());
+        //Render textures
+        level.levelTexture.render(game.renderer, 0 - camera.getX(), 0 - camera.getY());
 
         //Position all screen elements in the window
-		positionElements();
-        //sleep(1);
+        positionElements();
 
-		//Render Menu option text
-		for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
-			if(selected[i]) {
+        //Render Menu option text
+        for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
+            if(selected[i]) {
                 renderText(&menuTextTextures[i], menuItems[i].c_str(), fontColors[GREEN], menuFont, menuItemPos[i]);
-			} else {
+            } else {
                 renderText(&menuTextTextures[i], menuItems[i].c_str(), fontColors[RED], menuFont, menuItemPos[i]);
-			}
-			menuTextTextures[i].render(game.renderer, menuItemPos[i].x, menuItemPos[i].y);
-		}
+            }
+            menuTextTextures[i].render(game.renderer, menuItemPos[i].x, menuItemPos[i].y);
+        }
 
         //Change the color of the textbox when active
         //Used so User knows when textbox is can accept input
-		for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
+        for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
             if (activeTextbox[i]) {
                 SDL_SetRenderDrawColor(game.renderer, LT_GREEN_RGB[0], LT_GREEN_RGB[1], LT_GREEN_RGB[2], OPAQUE);
                 SDL_RenderFillRect(game.renderer, &textboxPos[i]);
@@ -439,19 +427,19 @@ void GameStateMenu::render() {
                 SDL_SetRenderDrawColor(game.renderer, WHITE_RGB[0], WHITE_RGB[1], WHITE_RGB[2], OPAQUE);
                 SDL_RenderFillRect(game.renderer, &textboxPos[i]);
             }
-		}
+        }
 
         //Render the Textfield text to the screen
-		for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
+        for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
             if (!textInput[i].empty()) {
                 renderText(&textboxTextures[i], textInput[i].c_str(), fontColors[BLACK],
-                            textboxFont, textboxTextPos[i]);
-			}
-		}
+                textboxFont, textboxTextPos[i]);
+            }
+        }
 
-		//Update screen
-		SDL_RenderPresent( game.renderer );
-	}
+        //Update screen
+        SDL_RenderPresent( game.renderer );
+    }
 }
 
 /**
@@ -467,11 +455,11 @@ void GameStateMenu::render() {
 * Jacob Frank
 *
 * Interface: renderText(LTexture *fontTexture, const char* text, SDL_Color color, TTF_Font* font, SDL_Rect rect)
-*                       LTexture *fontTexture:  Wrapper for the font texture to be rendered to the screen window
-*                       const char* text:       Text to be rendered to the screen
-*                       SDL_Color color:        Color of the text to be rendered
-*                       TTF_Font* font:         The font to be used to write the text
-*                       SDL_Rect rect:          structure that defines the bounding box of the rectangle for the text
+*                       LTexture *fontTexture: Wrapper for the font texture to be rendered to the screen window
+*                       const char* text: Text to be rendered to the screen
+*                       SDL_Color color: Color of the text to be rendered
+*                       TTF_Font* font: The font to be used to write the text
+*                       SDL_Rect rect: Structure that defines the bounding box of the rectangle for the text
 *
 * Returns: void
 *
@@ -483,7 +471,7 @@ void GameStateMenu::render() {
 void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
                                 SDL_Color color, TTF_Font* font, SDL_Rect rect) {
     if ( !fontTexture->loadFromRenderedText( text, color, game.renderer, font ) ) {
-                printf( "Unable to render text texture!\n" );
+        printf( "Unable to render text texture!\n" );
     }
     fontTexture->render(game.renderer, rect.x, rect.y);
 }
@@ -506,13 +494,13 @@ void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
 * Deconstructor, frees all allocated memory for textures and fonts
 */
 GameStateMenu::~GameStateMenu() {
-	// Free texture and font
-	menuTextTextures[1].free();
-	menuTextTextures[0].free();
-	TTF_CloseFont(textboxFont);
-	TTF_CloseFont(headingFont);
-	TTF_CloseFont(menuFont);
-	menuFont = NULL;
-	textboxFont = NULL;
-	headingFont = NULL;
+    // Free texture and font
+    menuTextTextures[1].free();
+    menuTextTextures[0].free();
+    TTF_CloseFont(textboxFont);
+    TTF_CloseFont(headingFont);
+    TTF_CloseFont(menuFont);
+    menuFont = nullptr;
+    textboxFont = nullptr;
+    headingFont = nullptr;
 }

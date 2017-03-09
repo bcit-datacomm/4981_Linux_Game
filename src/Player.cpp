@@ -50,11 +50,11 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
-	    if (tempBarricade.isPlaceable()) {
-		    tempBarricade.placeBarricade();
+        if (tempBarricade.isPlaceable()) {
+            tempBarricade.placeBarricade();
             tempBarricadeID = -1;
-	    }
-	    return;
+        }
+        return;
     }
 
     unsigned int tid = GameManager::instance()->createTurret();
@@ -67,27 +67,27 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 
     // calculates which spot to place turret based on player mouse direction
     if (angle <= 22.5 && angle >= -22.5) {
-       turretPlaceCheck(marineX, marineY-100, GameManager::instance()->getCollisionHandler(), dumbTurret, tid);
+        turretPlaceCheck(marineX, marineY-100, GameManager::instance()->getCollisionHandler(), dumbTurret, tid);
     } else if (angle > 22.5 && angle <= 67.5) {
-       turretPlaceCheck(marineX + 100, marineY - 100, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX + 100, marineY - 100, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     } else if (angle > 67.5 && angle <= 112.5) {
-       turretPlaceCheck(marineX + 100, marineY, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX + 100, marineY, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     } else if (angle > 112.5 && angle <= 157.5) {
-       turretPlaceCheck(marineX + 100, marineY + 100, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX + 100, marineY + 100, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     } else if (angle < -157.5 || angle > 157.5) {
-       turretPlaceCheck(marineX, marineY+100, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX, marineY+100, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     } else if (angle >= -67.5 && angle < -22.5) {
-       turretPlaceCheck(marineX - 100, marineY - 100, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX - 100, marineY - 100, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     } else if (angle >= -112.5 && angle <= -67.5) {
-       turretPlaceCheck(marineX-100, marineY, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX-100, marineY, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     } else if (angle >= -157.5 && angle <= -112.5) {
-       turretPlaceCheck(marineX - 100, marineY + 100, GameManager::instance()->getCollisionHandler()
+        turretPlaceCheck(marineX - 100, marineY + 100, GameManager::instance()->getCollisionHandler()
                         , dumbTurret, tid);
     }
 }
@@ -135,7 +135,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     if(tempBarricadeID < 0) {
         double angle = marine->getAngle();
         int distance = 100;
-        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle), 
+        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle),
         marine->getY() + distance*sin(angle));
     }
     else {
@@ -149,9 +149,9 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
 // checks for collision and to whether or not to place the turret
 void Player::turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
                       unsigned int tid){
-   if(dumbTurret.collisionCheckTurret(x, y, collisionHandler)){
+    if(dumbTurret.collisionCheckTurret(x, y, collisionHandler)){
           dumbTurret.setPosition(x, y);
-   } else {
+    } else {
         printf("\nCANNOT PLACE TURRET HERE\n");
         GameManager::instance()->deleteTurret(tid);
     }
