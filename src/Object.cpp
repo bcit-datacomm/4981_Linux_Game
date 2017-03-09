@@ -4,17 +4,20 @@ Object::Object(int height, int width, double angle) : Entity(), height(height), 
     setHeight(height);
     setWidth(width);
 }
+
 Object::~Object() {
-    printf("Destory Object\n");
+//    printf("Destory Object\n");
 }
 
 void Object::setHeight(int h) {
     height = h;
     spriteClips[0].h = height;
+    updateRectHitBoxes();
 }
 void Object::setWidth(int w) {
     width = w;
     spriteClips[0].w = width;
+    updateRectHitBoxes();
 }
 int Object::getHeight(){
     return height;

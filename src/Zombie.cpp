@@ -1,6 +1,7 @@
 #include "Zombie.h"
 #include <math.h>
 #include <random>
+#include "GameManager.h"
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
@@ -33,18 +34,25 @@ int Zombie::getRandomAngle(){
 }
 
 void Zombie::generateRandomMove(){
-    int tx = getX()+50;
-    int ty = getY()+50;
-    if(tx<=0 || tx>=2000 || ty<=0 || ty>=2000){
-        setAngle(getRandomAngle());
-    }
-
     double cosVal = cos(getAngle()*PI/180.0);
     double sinVal = sin(getAngle()*PI/180.0);
-
+    
     int x = getVelocity();
     int y = getVelocity();
 
+    int tx = (getX())+(20*cosVal);
+    int ty = (getY())+(20*sinVal);
+
+    movementHitBox->move(tx,ty);
+    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();    
+    if(ch.detectMovementCollision(movementHitBox.get())){
+        setAngle(getRandomAngle());
+        cosVal = cos(getAngle()*PI/180.0);
+        sinVal = sin(getAngle()*PI/180.0);
+    }
+    movementHitBox->move(getX(),getY());
+
     setDX(x*cosVal);
     setDY(y*sinVal);
-}
+
+ }

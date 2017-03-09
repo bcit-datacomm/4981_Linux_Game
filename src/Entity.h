@@ -17,12 +17,14 @@ public:
     void setY(float py); //set y coordinate
     float getX() const; // get x coordinate
     float getY() const; // get y coordinate
-	void updateHitBoxes(); // update hitbox positions
+    void updateHitBoxes(); // update hitbox positions
+    void updateRectHitBoxes(); // update hitbox sizes
 
     std::shared_ptr<HitBox> movementHitBox;
-	std::shared_ptr<HitBox> projectileHitBox;
-	std::shared_ptr<HitBox> damageHitBox;
-	std::shared_ptr<HitBox> pickupHitBox;
+    std::shared_ptr<HitBox> projectileHitBox;
+    std::shared_ptr<HitBox> damageHitBox;
+    std::shared_ptr<HitBox> pickupHitBox;
+
     LTexture texture;
     SDL_Rect spriteClips[1];
 

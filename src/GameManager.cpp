@@ -36,9 +36,11 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
                 nullptr, m.second.getAngle());
     }
+
     for (const auto& o : objectManager) {
         o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
     }
+
     for (const auto& z : zombieManager) {
         z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
                 nullptr, z.second.getAngle());
@@ -280,4 +282,78 @@ void GameManager::deleteBarricade(const int32_t id) {
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(const int32_t id) {
     return barricadeManager.find(id)->second;
+}
+
+// Create zombie add it to manager, returns success
+unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, int h, int w) {
+    unsigned int id = 0;
+
+    if (!objectManager.empty()) {
+        id = objectManager.rbegin()->first + 1;
+    }
+    objectManager[id] = Wall(h, w);
+    if (!objectManager.at(id).texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
+        printf("Failed to load the wall texture!\n");
+    } else {
+        objectManager.at(id).texture.setDimensions(h, w);
+    }
+    
+    objectManager.at(id).setPosition(x,y);
+    
+    return id;
+}
+
+
+void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY){
+    int width = 500;
+    int height = 500;
+    
+    float x = startX - width;
+    float y = startY - height;
+    while(x <= endX){
+        createWall(gRenderer, x, y, width, height);
+        createWall(gRenderer, x, endY, width, height);
+        x += width;
+    }
+
+    while(y < endY){
+        createWall(gRenderer, startX-width, y, width, height);
+        createWall(gRenderer, endX, y, width, height);
+        y += height;
+    }
+
+
+    /* For Test map. This code below will be removed */
+    float sX = (endX + startX)/2 - BASE_WIDTH;
+    float eX = (endX + startX)/2 + BASE_WIDTH;
+    float sY = (endY + startY)/2 - BASE_HEIGHT;
+    float eY = (endY + startY)/2 + BASE_HEIGHT;
+
+    x = sX - width;
+    
+    int i = 0;
+    int n = (eX-sX) / width / 2;
+    while(x <= eX) {
+        if(i < n) {
+            createWall(gRenderer, x, sY-height, width, height);
+        } else {
+            createWall(gRenderer, x, eY, width, height);
+        }
+        x += width;
+        i++;
+    }
+
+    y = sY;
+    i = 0;
+    while(y < eY) {
+        if(i < n) {
+            createWall(gRenderer, eX, y, width, height);
+        } else {
+            createWall(gRenderer, sX - width, y, width, height);
+        }
+        y += height;
+        i++;
+    }
+
+
 }
