@@ -34,6 +34,11 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
         tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY, GameManager::instance()->getCollisionHandler());
     }
 
+    //fire weapon on left mouse click
+    if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+        marine->fireWeapon();
+    }
+
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){
