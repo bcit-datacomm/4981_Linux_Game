@@ -9,25 +9,22 @@
 
 class GameStateMenu : public GameState {
 public:
+    GameStateMenu(Game& g): GameState(g) {}
+    virtual ~GameStateMenu();
 
     virtual bool load();
     virtual void loop();
 
-    GameStateMenu(Game& g);
-    virtual ~GameStateMenu();
-
     // Frame Display
     std::stringstream frameTimeText;
-    TTF_Font* frameFont = NULL;
+    TTF_Font* frameFont = nullptr;
     LTexture frameFPSTextTexture;
 
 private:
-
-    virtual void sync();
-    virtual void handle();
-    virtual void update(const float& delta);
-    virtual void render();
-
+    virtual void sync() override;
+    virtual void handle() override;
+    virtual void update(const float delta) override;
+    virtual void render() override;
 };
 
 #endif

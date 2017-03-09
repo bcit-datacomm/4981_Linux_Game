@@ -17,12 +17,11 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 }
 
 bool GameStateMatch::load() {
-
     bool success = true;
 
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
-    if ( frameFont == NULL ) {
+    if (frameFont == nullptr) {
         printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
@@ -35,7 +34,7 @@ bool GameStateMatch::load() {
         level.levelTexture.setDimensions(2000, 2000);
     }
  	
-    unsigned int playerMarineID = GameManager::instance()->createMarine();
+    const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
@@ -80,6 +79,7 @@ void GameStateMatch::loop() {
 
     //Start counting frames per second
     unsigned long countedFrames = 0;
+    int frameTicks;
     float avgFPS = 0;
     fpsTimer.start();
 
@@ -105,8 +105,7 @@ void GameStateMatch::loop() {
         ++countedFrames;
 
         //If frame finished early
-        int frameTicks = capTimer.getTicks();
-        if ( frameTicks < SCREEN_TICK_PER_FRAME ) {
+        if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
             SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
         }
@@ -119,14 +118,14 @@ void GameStateMatch::sync() {
 }
 
 void GameStateMatch::handle() {
-    const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
+    const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
     //Handle events on queue
-    while ( SDL_PollEvent( &event )) {
+    while ( SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
-           switch( event.type ) {
+           switch(event.type) {
         case SDL_WINDOWEVENT:
             camera.setViewSize(game.window.getWidth(), game.window.getHeight());
             break;
@@ -139,7 +138,7 @@ void GameStateMatch::handle() {
             }
             break;
       	case SDL_KEYDOWN:
-        	switch( this->event.key.keysym.sym ) {
+        	switch(event.key.keysym.sym) {
 			case SDLK_ESCAPE:
 				play = false;
 				break;
@@ -165,7 +164,7 @@ void GameStateMatch::handle() {
     }
 }
 
-void GameStateMatch::update(const float& delta) {
+void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 
     // Move player
@@ -209,11 +208,10 @@ void GameStateMatch::render() {
 }
 
 GameStateMatch::~GameStateMatch() {
-
     // Free texture and font
     delete GameManager::instance();
     frameFPSTextTexture.free();
     TTF_CloseFont(frameFont);
-    frameFont = NULL;
+    frameFont = nullptr;
 
 }
