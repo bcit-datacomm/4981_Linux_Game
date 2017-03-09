@@ -142,7 +142,7 @@ void initSync(int sock) {
     ssize_t nbytes = 0;
     int nevents = 0;
     for (;;) {
-        if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
+        if ((nevents = epoll_wait(epollfd, events, 100, -1)) == -1) {
             perror("epoll_wait");
             exit(1);
         }
@@ -160,6 +160,7 @@ void initSync(int sock) {
             }
             if (events[i].events & EPOLLIN) {
                 if (events[i].data.fd == listenSocketTCP) {
+                    logv("Accepting player\n");
                     PlayerJoin cli{0};
 
                     sockaddr_in addr;
@@ -181,6 +182,7 @@ void initSync(int sock) {
                         continue;
                     }
                 } else {
+                    logv("Reading data\n");
                     while ((nbytes = recv(events[i].data.fd, buff, USHRT_MAX - 1, 0)) > 0) {
                         //Handle message
                         if (nbytes < 4) {
@@ -191,6 +193,7 @@ void initSync(int sock) {
                         processTCPMessage(buff, nbytes, events[i].data.fd);
                     }
                     if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                        logv("Safe error\n");
                         continue;
                     }
                     perror("Packet read failure");
@@ -396,9 +399,9 @@ void sendTCPClientMessage(const int32_t id, const char *mesg, const size_t mesgS
 
     strncpy(outBuff + 5, mesg, mesgSize);
 
-    for (auto& clients : clientList) {
+    for (const auto& clients : clientList) {
         if (clients.first != id && clients.second.hasSentUsername) {
-            if (send(clients.second.entry.sock, outBuff, sizeof(outBuff), 0) < 0) {
+            if (send(clients.second.entry.sock, outBuff, mesgSize + 5, 0) < 0) {
                 perror("Failed to send client messasge");
             }
         }
@@ -419,7 +422,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
             bool foundClient = false;
             std::pair<int32_t, PlayerJoin> tempMapEntry;
             for (auto& it : clientList) {
-                if (!it.first && it.second.entry.sock == sock) {
+                if (it.second.entry.sock == sock) {
                     //This is the client that is sending the connect message
                     tempMapEntry = it;
                     tempMapEntry.first = getPlayerId();
@@ -434,6 +437,17 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                     //Insert newly compelted entry
                     clientList.insert(tempMapEntry);
                     foundClient = true;
+
+                    char outBuff[37];
+                    memset(outBuff, '\0', 37);
+                    reinterpret_cast<int32_t *>(outBuff)[0] = tempMapEntry.first;
+                    outBuff[4] = '/';
+
+                    strncpy(outBuff + 5, tempMapEntry.second.entry.username, 32);
+
+                    if (send(sock, outBuff, 37, 0) < 0) {
+                        perror("Failed to send client messasge");
+                    }
 
                     sendTCPClientMessage(tempMapEntry.first, tempMapEntry.second.entry.username, 32);
                     break;
