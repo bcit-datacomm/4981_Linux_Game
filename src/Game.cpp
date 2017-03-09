@@ -34,7 +34,7 @@ void Game::loadState() {
     switch(stateID) {
         case 1:
             printf("Menu State\n");
-            state = new GameStateMenu(*this);
+            state = new GameStateMenu(*this, window.getWidth(), window.getHeight());
             break;
         case 2:
             printf("Match State\n");
