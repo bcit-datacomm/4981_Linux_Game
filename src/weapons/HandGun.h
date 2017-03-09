@@ -11,7 +11,7 @@ using std::string;
 
 namespace HandgunVars {
     const string TYPE  = "HandGun";
-    const int RANGE    = 100;
+    const int RANGE    = 500;
     const int DAMAGE   = 500;
     const int CLIP     = 2;
     const int CLIPMAX  = 2;

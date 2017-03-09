@@ -79,8 +79,8 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
     
     const double degrees = marine.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
-    const int playerX = marine.getX();
-    const int playerY = marine.getY();
+    const int playerX = marine.getX() + (MARINE_WIDTH / 2);
+    const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
     const int deltaX  = range * cos(radians);
     const int deltaY  = range * sin(radians);
     int aX, aY, bX, bY;

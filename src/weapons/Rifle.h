@@ -10,7 +10,7 @@ using std::string;
 
 namespace RifleVars {
     const string TYPE  = "Rifle";
-    const int RANGE    = 500;
+    const int RANGE    = 800;
     const int DAMAGE   = 200;
     const int CLIP     = 2;
     const int CLIPMAX  = 2;
