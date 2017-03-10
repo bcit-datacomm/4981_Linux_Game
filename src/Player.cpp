@@ -60,8 +60,7 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
     unsigned int tid = GameManager::instance()->createTurret();
 
     Turret &dumbTurret = GameManager::instance()->getTurret(tid);
-    if (!dumbTurret.texture.loadFromFile("assets/texture/turret.png",
-                                                                    renderer)) {
+    if (!dumbTurret.texture.loadFromFile("assets/texture/turret.png", renderer)) {
         printf("Failed to load the player texture!\n");
     }
 

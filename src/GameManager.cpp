@@ -85,11 +85,13 @@ bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
         id = marineManager.rbegin()->first + 1;
     }
     marineManager[id] = Marine();
+#ifndef SERVER
     if (!marineManager.at(id).texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
         printf("Failed to load the marine texture!\n");
         deleteMarine(id);
         return false;
     }
+#endif
     marineManager[id].setPosition(x,y);
     return true;
 }
@@ -146,11 +148,13 @@ bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
         id = turretManager.rbegin()->first + 1;
     }
     turretManager[id] = Turret();
+#ifndef SERVER
     if (!turretManager.at(id).texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
         printf("Failed to load the turret texture!\n");
         deleteTurret(id);
         return false;
     }
+#endif
     turretManager.at(id).setPosition(x,y);
     return true;
 }
@@ -176,11 +180,13 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
         id = zombieManager.rbegin()->first + 1;
     }
     zombieManager[id] = Zombie();
+#ifndef SERVER
     if (!zombieManager.at(id).texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
         printf("Failed to load the player texture!\n");
         deleteZombie(id);
         return false;
     }
+#endif
     zombieManager.at(id).setPosition(x,y);
     return true;
 }
@@ -230,11 +236,13 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, float x, float y) {
 
     weaponDropManager.insert(std::make_pair(id, WeaponDrop(w)));
 
+#ifndef SERVER
     if(!weaponDropManager.at(id).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
         printf("Failed to load the player texture!\n");
         deleteWeaponDrop(id);
         return false;
     }
+#endif
     weaponDropManager.at(id).setPosition(x,y);
     return true;
 }
@@ -306,11 +314,13 @@ unsigned int GameManager::createBarricade(SDL_Renderer* gRenderer, float x, floa
         id = barricadeManager.rbegin()->first + 1;
     }
     barricadeManager[id] = Barricade();
+#ifndef SERVER
     if (!barricadeManager.at(id).texture.loadFromFile("assets/texture/barricade.png", gRenderer)) {
         printf("Failed to load the barricade texture!\n");
         deleteBarricade(id);
         return -1;
     }
+#endif
     barricadeManager.at(id).setPosition(x,y);
     return id;
 }
