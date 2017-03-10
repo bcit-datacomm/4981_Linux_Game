@@ -37,7 +37,6 @@ public:
 
 private:
 
-    SpriteManager spriteManager;
     Player player;
     Level level;
     Base base;

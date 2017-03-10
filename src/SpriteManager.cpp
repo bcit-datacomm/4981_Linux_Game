@@ -1,29 +1,44 @@
 #include "SpriteManager.h"
 
 SpriteManager::SpriteManager() {
-	//create 2d map
-		//1: string, naming sprite sheet
-		//2: png, naming sprite sheet 
-
-	loadSpriteCollection();
-//	spriteCollection.insert(std::pair<int, LTexture>(1, "assets/texture/mohawk_sprite_sheet_0.25.png"));
+   loadFiles();
 }
 
 SpriteManager::~SpriteManager() {
-	//free map
+    for(auto const& surface : _sprites) {
+        SDL_FreeSurface(surface.second);
+    }
 }
 
-void SpriteManager::loadSpriteCollection() {
-	//load map floor textures
-	//load map objects
-	//load characters (zombies + players)
-	//load weapons
-	//load turret
-
-	
-//"assets/texture/mohawk_sprite_sheet_0.25.png"
-	SDL_Surface* loadedSurface = IMG_Load( "assets/texture/mohawk_sprite_sheet_0.25.png");
-	spriteCollection.insert(std::pair<int, SDL_Surface* >(1, loadedSurface));	
+//load all sprites sheets
+void SpriteManager::loadFiles() {
+ loadSprite(MAP_OBJECTS);
+ loadSprite(ZOMBIE_BABYZ);
+ loadSprite(ZOMBIE_DIGGER);
+ loadSprite(ZOMBIE_BOSS);
+ loadSprite(PLAYER_MOHAWK);
+ loadSprite(WEAPONS);
+ loadSprite(LASER);
 }
 
-//get sprite collection
+//Adds a texture to the _sprites map
+void SpriteManager::loadSprite(const char * fileName) {
+
+    SDL_Surface * sprite = NULL;
+    sprite = IMG_Load(fileName);
+    if (sprite == NULL ) {
+        printf( "Failed to load sprite: %s\n", fileName);
+    }
+
+    _sprites[fileName] = sprite;
+}
+
+//Load the spirte sheet
+SDL_Surface* SpriteManager::getSurface(const char * fileName) {
+    
+    SDL_Surface * sprite = _sprites[fileName];    
+
+    printf("Loading: %s\t- %s\n", fileName, SDL_GetError());
+
+    return sprite;
+}
