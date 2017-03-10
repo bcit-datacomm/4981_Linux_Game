@@ -242,9 +242,11 @@ void GameManager::updateCollider() {
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+        if (m.second.isPlaced()) {
+          collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+          collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+          collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+        }
     }
 
    	for (auto& b : barricadeManager) {
