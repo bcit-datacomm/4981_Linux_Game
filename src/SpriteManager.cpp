@@ -33,7 +33,7 @@ void SpriteManager::loadSprite(const char * fileName) {
     _sprites[fileName] = sprite;
 }
 
-//Load the spirte sheet
+//Gets a specific sprite sheet
 SDL_Surface* SpriteManager::getSurface(const char * fileName) {
     
     SDL_Surface * sprite = _sprites[fileName];    
