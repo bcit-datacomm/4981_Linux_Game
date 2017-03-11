@@ -5,7 +5,7 @@ SpriteManager::SpriteManager() {
 }
 
 SpriteManager::~SpriteManager() {
-    for (auto const& surface : _sprites) {
+    for (const auto& surface : _sprites) {
         SDL_FreeSurface(surface.second);
     }
 }
@@ -24,7 +24,7 @@ void SpriteManager::loadFiles() {
 //Adds a texture to the _sprites map
 void SpriteManager::loadSprite(const char * fileName) {
 
-    SDL_Surface * sprite = NULL;
+    SDL_Surface * sprite = nullptr;
     sprite = IMG_Load(fileName);
     if (sprite == nullptr ) {
         printf( "Failed to load sprite: %s\n", fileName);
@@ -35,10 +35,6 @@ void SpriteManager::loadSprite(const char * fileName) {
 
 //Gets a specific sprite sheet
 SDL_Surface* SpriteManager::getSurface(const char * fileName) {
-
-    SDL_Surface * sprite = _sprites[fileName];    
-
     printf("Loading: %s\t- %s\n", fileName, SDL_GetError());
-
-    return sprite;
+    return _sprites[fileName];
 }
