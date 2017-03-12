@@ -1,20 +1,11 @@
 #include <omp.h>
-#include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
-#include <getopt.h>
-#include <errno.h>
-#include <sys/types.h>
 #include <sys/epoll.h>
-#include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/signal.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <cstdarg>
-#include <climits>
+
 #include <unordered_map>
 #include <atomic>
 #include <thread>
@@ -29,7 +20,6 @@ int listen_port_tcp = LISTEN_PORT_TCP;
 size_t client_count = CLIENT_COUNT;
 int outputLength = 0;
 
-const long long microSecPerTick = (1000 * 1000) / TICK_RATE;
 char outputPacket[OUT_PACKET_SIZE];
 int listenSocketUDP;
 int listenSocketTCP;
@@ -80,15 +70,12 @@ int main(int argc, char **argv) {
                 break;
         }
     }
-    if(listen_port_udp == listen_port_tcp){
+    if (listen_port_udp == listen_port_tcp){
         printf("l cannot be the same port as L\n");
         exit(2);
     }
 
-    logv("UDP port: %d, TCP port: %d, Max clients %d\n",
-            listen_port_udp,
-            listen_port_tcp,
-            client_count);
+    logv("UDP port: %d, TCP port: %d, Max clients %d\n", listen_port_udp, listen_port_tcp, client_count);
 
     if ((listenSocketUDP = createSocket(true, true)) == -1) {
         perror("ListenSocket UDP");
@@ -104,12 +91,8 @@ int main(int argc, char **argv) {
     }
 
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
-
     logv("Sockets created and bound\n");
-
     initSync(listenSocketTCP);
-
-    listenUDP(listenSocketUDP, INADDR_ANY, listen_port_udp);
     return 0;
 }
 
@@ -138,7 +121,7 @@ void initSync(int sock) {
         exit(1);
     }
 
-    char buff[USHRT_MAX];
+    char buff[IN_PACKET_SIZE];
     ssize_t nbytes = 0;
     int nevents = 0;
     for (;;) {
@@ -183,7 +166,7 @@ void initSync(int sock) {
                     }
                 } else {
                     logv("Reading data\n");
-                    while ((nbytes = recv(events[i].data.fd, buff, USHRT_MAX - 1, 0)) > 0) {
+                    while ((nbytes = recv(events[i].data.fd, buff, IN_PACKET_SIZE - 1, 0)) > 0) {
                         //Handle message
                         if (nbytes < 4) {
                             perror("Packet read was too small");
@@ -208,13 +191,6 @@ void initSync(int sock) {
 int32_t getPlayerId() {
     static std::atomic<int32_t> counter{0};
     return ++counter;
-}
-
-void alarmHandler(int signo) {
-    startTimer();
-    genOutputPacket();
-    sendSyncPacket(sendSocketUDP);
-    clearMoveActions();
 }
 
 void listenForPackets(const struct sockaddr_in servaddr) {
@@ -245,7 +221,7 @@ void listenForPackets(const struct sockaddr_in servaddr) {
     ssize_t nbytes = 0;
     int nevents = 0;
     for (;;) {
-        if ((epoll_wait(epollfd, &ev, 1, -1)) == -1) {
+        if ((nevents = epoll_wait(epollfd, events, MAXEVENTS, -1)) == -1) {
             perror("epoll_wait");
             exit(1);
         }
@@ -281,7 +257,7 @@ void processPacket(const char *data) {
 
 //Isaac Morneau Feb 28th, 2017
 void genOutputPacket() {
-    int32_t *pBuff = (int32_t*)outputPacket;
+    int32_t *pBuff = (int32_t *) outputPacket;
     //get all the players
     const auto& players = getPlayers();
     //get all the zombies
@@ -292,40 +268,31 @@ void genOutputPacket() {
     //construct the sub header for players
     *pBuff++ = PLAYERH;
     *pBuff++ = players.size();
-    PlayerData* pPlayer = reinterpret_cast<PlayerData*>(pBuff);
+    PlayerData *pPlayer = reinterpret_cast<PlayerData *>(pBuff);
     //write all the players to the buffer
     for(auto p : players) {
         p.nmoves = 0;
         p.nattacks = 0;
         memcpy(pPlayer++, &p, sizeof(PlayerData));
     }
-    pBuff = reinterpret_cast<int32_t*>(pPlayer);
+    pBuff = reinterpret_cast<int32_t *>(pPlayer);
     //construct the sub header for zombies
     *pBuff++ = ZOMBIEH;
     *pBuff++ = zombies.size();
-    ZombieData* pZombie = reinterpret_cast<ZombieData*>(pBuff);
+    ZombieData* pZombie = reinterpret_cast<ZombieData *>(pBuff);
     //write all the zombies to the buffer
     for(auto z : zombies) {
-        memcpy(pZombie++, &z,sizeof(ZombieData));
+        memcpy(pZombie++, &z, sizeof(ZombieData));
     }
-    pBuff = reinterpret_cast<int32_t*>(pZombie);
+    pBuff = reinterpret_cast<int32_t *>(pZombie);
     //calculate how full the packet is for when its sent
-    outputLength = pBuff - (int32_t*)outputPacket;
+    outputLength = pBuff - (int32_t *) outputPacket;
 }
 
 void sendSyncPacket(int sock) {
     for (const auto& client : clientList) {
-        sendto(client.second.entry.sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
+        sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
     }
-}
-
-void startTimer() {
-    signal(SIGALRM, &alarmHandler);
-    struct itimerval duration;
-    memset(&duration, 0, sizeof(duration));
-    duration.it_interval.tv_usec = microSecPerTick;
-    setitimer(ITIMER_REAL, &duration, NULL);
-    logv("Timer started\n");
 }
 
 void listenTCP(int socket, unsigned long ip, unsigned short port) {
@@ -359,7 +326,6 @@ void listenUDP(int socket, unsigned long ip, unsigned short port) {
         perror("Bind UDP");
         exit(1);
     }
-    startTimer();
     logv("UDP server started\n");
     listenForPackets(servaddrudp);
 }
@@ -369,7 +335,7 @@ int createSocket(bool useUDP, bool nonblocking) {
 }
 
 void logv(const char *msg, ...) {
-    if(!verbose) {
+    if (!verbose) {
         return;
     }
     va_list args;
@@ -389,20 +355,20 @@ void transitionToGameStart() {
 
 void sendTCPClientMessage(const int32_t id, const bool isConnectMessage, const char *mesg, const size_t mesgSize) {
     char *outBuff;
-    if ((outBuff = (char *) malloc(mesgSize + 6)) == nullptr) {
+    if ((outBuff = (char *) malloc(mesgSize + TCP_HEADER_SIZE + 1)) == nullptr) {
         perror("Malloc failure");
         exit(1);
     }
-    memset(outBuff, '\0', mesgSize + 6);
+    memset(outBuff, '\0', mesgSize + TCP_HEADER_SIZE + 1);
     reinterpret_cast<int32_t *>(outBuff)[0] = id;
     outBuff[4] = (isConnectMessage) ? 'C' : 'T';
     outBuff[5] = '/';
 
-    strncpy(outBuff + 6, mesg, mesgSize);
+    strncpy(outBuff + TCP_HEADER_SIZE + 1, mesg, mesgSize);
 
     for (const auto& clients : clientList) {
         if (clients.first != id && clients.second.hasSentUsername) {
-            if (send(clients.second.entry.sock, outBuff, mesgSize + 6, 0) < 0) {
+            if (send(clients.second.entry.sock, outBuff, mesgSize + TCP_HEADER_SIZE + 1, 0) < 0) {
                 perror("Failed to send client messasge");
             }
         }
@@ -433,7 +399,8 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                 tempMapEntry.first = getPlayerId();
                 tempMapEntry.second.hasSentUsername = true;
                 tempMapEntry.second.isPlayerReady = false;
-                strncpy(tempMapEntry.second.entry.username, buff + 6, NAMELEN);
+                tempMapEntry.second.entry.addr = it.second.entry.addr;
+                strncpy(tempMapEntry.second.entry.username, buff + TCP_HEADER_SIZE + 1, NAMELEN);
                 strcat(tempMapEntry.second.entry.username, "\0");
                 logv("Server received username: %s\n", tempMapEntry.second.entry.username);
 
@@ -442,7 +409,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                 //Insert newly compelted entry
                 clientList.insert(tempMapEntry);
 
-                const size_t bufferSize = NAMELEN + 4 + 2;
+                const size_t bufferSize = NAMELEN + TCP_HEADER_SIZE + 1;
                 char outBuff[bufferSize];
                 memset(outBuff, '\0', bufferSize);
                 int32_t *id = reinterpret_cast<int32_t *>(outBuff);
@@ -450,7 +417,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                 outBuff[4] = 'C';
                 outBuff[5] = '/';
 
-                strncpy(outBuff + 6, tempMapEntry.second.entry.username, NAMELEN);
+                strncpy(outBuff + TCP_HEADER_SIZE + 1, tempMapEntry.second.entry.username, NAMELEN);
                 //Send client their allocated id and username
                 if (send(sock, outBuff, bufferSize, 0) < 0) {
                     perror("Failed to send client message");
@@ -465,7 +432,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                         *id = it.first;
                         outBuff[4] = 'C';
                         outBuff[5] = '/';
-                        strncpy(outBuff + 6, tempMapEntry.second.entry.username, NAMELEN);
+                        strncpy(outBuff + TCP_HEADER_SIZE + 1, tempMapEntry.second.entry.username, NAMELEN);
 
                         if (send(sock, outBuff, bufferSize, 0) < 0) {
                             perror("Failed to send client message");
@@ -476,7 +443,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
             } else {
                 if (buff[5] == '/') {
                     //Command message
-                    if (strncmp(buff + 6, "ready", nbytes - 6) == 0) {
+                    if (strncmp(buff + TCP_HEADER_SIZE + 1, "ready", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
                         //Ready command
                         if (clientList.count(idReceived)) {
                             clientList[idReceived].isPlayerReady = true;
@@ -495,7 +462,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                         if (areAllReady) {
                             transitionToGameStart();
                         }
-                    } else if (strncmp(buff + 6, "unready", nbytes - 6) == 0) {
+                    } else if (strncmp(buff + TCP_HEADER_SIZE + 1, "unready", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
                         //Unready command
                         if (clientList.count(idReceived)) {
                             clientList[idReceived].isPlayerReady = false;
@@ -504,7 +471,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                         } else {
                             perror("Client not found in list");
                         }
-                    } else if (strncmp(buff + 6, "start", nbytes - 6) == 0) {
+                    } else if (strncmp(buff + TCP_HEADER_SIZE + 1, "start", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
                         //Start game command
                         transitionToGameStart();
                     }

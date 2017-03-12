@@ -11,6 +11,8 @@
 #include "LTexture.h"
 #include "Window.h"
 #include "Movable.h"
+#include "server/server.h"
+#include "server/servergamestate.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
@@ -112,6 +114,11 @@ void GameStateMatch::loop() {
 #ifndef SERVER
         sync();    // Sync game to server
         render();    // Render game state to window
+#else
+        //Server side sync packet sending
+        genOutputPacket();
+        sendSyncPacket(sendSocketUDP);
+        clearMoveActions();
 #endif
 
         ++countedFrames;
