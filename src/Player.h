@@ -22,11 +22,8 @@ public:
     // Added by Mark.C 02/07/2017
     void handlePlacementClick(SDL_Renderer *renderer);
 
-    // determines whether turret can be placed
-    void turretPlaceCheck(float x, float y, CollisionHandler& collisionHandler, Turret& dumbTurret,
-                          unsigned int tid);
-
     void handleTempBarricade(SDL_Renderer *renderer);
+    void handleTempTurret(SDL_Renderer *renderer);
 
     Player();
     ~Player();
@@ -36,6 +33,7 @@ public:
 
 private:
     int tempBarricadeID;
+    int tempTurretID;
 };
 
 #endif

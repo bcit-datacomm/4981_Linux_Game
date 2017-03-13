@@ -5,6 +5,7 @@
 #include "../HitBox.h"
 #include "../GameManager.h"
 #include "../CollisionHandler.h"
+#include "../AudioManager.h"
 #include <queue>
 #include <stdio.h>
 #include <iostream>
@@ -28,6 +29,8 @@ void InstantWeapon::fire(Marine &marine){
     if(!reduceAmmo(1)){
      return;
     }
+
+    //AudioManager::instance().playEffect(EFX_WLPISTOL);
 
     //get all targets in line with the shot
     std::priority_queue<HitBox*> targets;

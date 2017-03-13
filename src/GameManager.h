@@ -1,6 +1,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
-#include<SDL2/SDL.h>
+
+#include <SDL2/SDL.h>
 #include "Zombie.h"
 #include "Marine.h"
 #include "Turret.h"
@@ -44,7 +45,7 @@ public:
     void deleteTurret(const int32_t id);
 
     bool addTurret(const int32_t id, const Turret& newTurret);
-    bool createTurret(SDL_Renderer* gRenderer, const float x, const float y) ;
+    int32_t createTurret(SDL_Renderer* gRenderer, const float x, const float y) ;
     Turret& getTurret(const int32_t id);
 
     // Method for getting collisionHandler

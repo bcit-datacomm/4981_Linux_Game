@@ -131,16 +131,16 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
 }
 
 // Create turret add it to turret, returns if success
-bool GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const float y) {
+int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
     turretManager[id] = Turret();
     if (!turretManager.at(id).texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
         printf("Failed to load the turret texture!\n");
         deleteTurret(id);
-        return false;
+        return -1;
     }
     turretManager.at(id).setPosition(x,y);
-    return true;
+    return id;
 }
 
 // Get a tower by its id
@@ -245,9 +245,11 @@ void GameManager::updateCollider() {
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+        if (m.second.isPlaced()) {
+            collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+            collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+            collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+        }
     }
 
     for (auto& b : barricadeManager) {
@@ -260,7 +262,7 @@ void GameManager::updateCollider() {
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(m.second.pickupHitBox.get());
     }
-    
+
 }
 
 // Create barricade add it to manager, returns success

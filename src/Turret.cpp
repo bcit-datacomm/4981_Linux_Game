@@ -1,10 +1,12 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
 
-Turret::Turret() : Movable(MARINE_VELOCITY){
+Turret::Turret(bool activated, int health, int ammo, bool placed)
+        :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
+    printf("Turret created\n");
 }
 
 Turret::~Turret() {
@@ -17,14 +19,19 @@ bool Turret::placementCheckTurret(){
 }
 
 // checks if the turret placement overlaps with any currently existing objects
-bool Turret::collisionCheckTurret(float x, float y, CollisionHandler& ch) {
+bool Turret::collisionCheckTurret(const float playerX, const float playerY, const float moveX,
+        const float moveY, CollisionHandler &ch) {
     SDL_Rect checkBox;
-    checkBox.h = 100;
-    checkBox.w = 100;
-    checkBox.x = x;
-    checkBox.y = y;
-    HitBox hitBox(x, y, checkBox, nullptr);
-    return !ch.detectMovementCollision(&hitBox);
+    checkBox.h = TURRET_HEIGHT;
+    checkBox.w = TURRET_WIDTH;
+    checkBox.x = moveX;
+    checkBox.y = moveY;
+    HitBox hitBox(moveX, moveY, checkBox, nullptr);
+    const float distanceX = (playerX - moveX) * (playerX - moveX);
+    const float distanceY = (playerY - moveY) * (playerY - moveY);
+    const float distance = sqrt(abs(distanceX+distanceY));
+
+    return (distance <= 200 && !ch.detectMovementCollision(&hitBox));
 }
 
 // activates the turret
@@ -36,12 +43,12 @@ void Turret::onCollision() {
     // Does nothing for now
 }
 
-void Turret::collidingProjectile(int damage) {
+void Turret::collidingProjectile(const int damage) {
     health -= damage;
 }
 
 // turret ammo pool decrements by this amount
-void Turret::decrementAmmo(int amount) {
+void Turret::decrementAmmo(const int amount) {
     ammo -= amount;
 }
 
@@ -58,6 +65,30 @@ bool Turret::ammoCheckTurret() {
  // returns true if turret has >=1 health, false otherwise
 bool Turret::healthCheckTurret() {
     return (health > 0);
+}
+
+void Turret::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
+    setPosition(moveX, moveY);
+    if(this->collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
+        texture.setAlpha(PASS_ALPHA);
+    } else {
+        texture.setAlpha(FAIL_ALPHA);
+    }
+}
+
+void Turret::placeTurret() {
+    texture.setAlpha(PLACED_ALPHA);
+    boolPlaced = true;
+}
+
+bool Turret::isPlaced() {
+  return boolPlaced;
+}
+
+void Turret::pickUpTurret() {
+    activated = false;
+    setPosition(0, 0);
+    texture.setAlpha(0);
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined
