@@ -258,6 +258,7 @@ void listenForPackets(const struct sockaddr_in servaddr) {
             if (events[i].events & EPOLLIN) {
                 while ((nbytes = recvfrom(listenSocketUDP, buff, IN_PACKET_SIZE, 
                         0, (sockaddr *) &servaddr, &servAddrLen)) > 0) {
+                    logv("Received %d bytes\n", nbytes);
 #pragma omp task
                     processPacket(buff);
                 }
@@ -269,6 +270,7 @@ void listenForPackets(const struct sockaddr_in servaddr) {
 void processPacket(const char *data) {
     //Actual implementation TBD
     const MoveAction *ma = reinterpret_cast<const MoveAction *>(data);
+    logv("Move actions packets contents:\nID:%d\nXpos:%f\n, Ypos:%f\n, Vel:%f\n, Direction:%f\n", ma->id, ma->xpos, ma->ypos, ma->vel, ma->direction);
     updateMarine(*ma);
     saveMoveAction(ma->id, *ma);
 }
