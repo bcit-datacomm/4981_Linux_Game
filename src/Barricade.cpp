@@ -24,12 +24,20 @@ bool Barricade::checkPlaceablePosition(float playerX, float playerY, float moveX
     }else
         boolPlaceable = true;
 
-    if(boolPlaceable){
-        if(ch.detectMovementCollision(movementHitBox.get()))
-            boolPlaceable = false;
 
-    }
-    return boolPlaceable;
+    SDL_Rect checkBox;
+    checkBox.h = 100;
+    checkBox.w = 100;
+    checkBox.x = getX();
+    checkBox.y = getY();
+    HitBox hitBox(getX(), getY(), checkBox, nullptr);
+
+	if(boolPlaceable){
+        if(ch.detectMovementCollision(&hitBox))
+			boolPlaceable = false;
+ 
+	}
+	return boolPlaceable;
 }
 
 bool Barricade::isPlaceable(){
