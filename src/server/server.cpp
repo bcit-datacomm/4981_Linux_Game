@@ -169,19 +169,21 @@ void initSync(int sock) {
                     while ((nbytes = recv(events[i].data.fd, buff, IN_PACKET_SIZE - 1, 0)) > 0) {
                         //Handle message
                         if (nbytes < 4) {
-                            perror("Packet read was too small");
+                            logv("Packet read was too small\n");
                             continue;
                         }
                         buff[nbytes] = '\0';
                         processTCPMessage(buff, nbytes, events[i].data.fd);
                     }
-                    if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                        logv("Safe error\n");
-                        continue;
-                    } else {
+                    if (nbytes == -1) {
+                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                            continue;
+                        }
                         perror("Packet read failure");
-                        close(events[i].data.fd);
+                    } else {
+                        logv("Client %d closed connection\n", static_cast<int>(events[i].data.fd));
                     }
+                    close(events[i].data.fd);
                 }
             }
         }
