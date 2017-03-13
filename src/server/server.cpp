@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 
     listenSocketUDP = createSocket(true, true);
     sendSocketUDP = createSocket(true, true);
-    listenSocketTCP = createSocket(false, false);
+    listenSocketTCP = createSocket(false, true);
 
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
     logv("Sockets created and bound\n");
@@ -138,13 +138,32 @@ void initSync(int sock) {
                     PlayerJoin cli{0};
 
                     sockaddr_in addr;
-                    socklen_t addrLen;
-                    ev.data.fd = accept(listenSocketTCP, (sockaddr *) &addr, &addrLen);
-
-                    if (fcntl(ev.data.fd, F_SETFL, O_NONBLOCK) == -1) {
-                        perror("fcntl");
-                        exit(1);
+                    socklen_t addrLen = sizeof(addr);
+                    int clientSock = accept(listenSocketTCP, (sockaddr *) &addr, &addrLen);
+                    if (clientSock == -1) {
+                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                            continue;
+                        }
+                        perror("Accept");
+                        continue;
                     }
+
+                    if (fcntl(clientSock, F_SETFL, O_NONBLOCK) == -1) {
+                        perror("fcntl");
+                        close(clientSock);
+                        continue;
+                    }
+
+                    if (getpeername(clientSock, (sockaddr *) &addr, &addrLen) == -1) {
+                        perror("GetPeerName");
+                        close(clientSock);
+                        continue;
+                    }
+
+                    epoll_event clientEv;
+                    memset(&clientEv, 0, sizeof(epoll_event));
+                    clientEv.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
+                    clientEv.data.fd = clientSock;
 
                     logv("New client has joined the server\n");
 
@@ -155,9 +174,9 @@ void initSync(int sock) {
                     
                     clientList.insert({getPlayerId(), cli});
 
-                    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, ev.data.fd, &ev) < 0) {
+                    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, clientSock, &clientEv) < 0) {
                         perror("Epoll_ctl");
-                        close(ev.data.fd);
+                        close(clientSock);
                         continue;
                     }
                 } else {
