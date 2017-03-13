@@ -73,6 +73,7 @@ bool Turret::healthCheckTurret() {
  * Revised by Rob, March 5
  */
 bool Turret::targetScanTurret() {
+    //Get map of all zombies
     const auto& mapZombies = GameManager::instance()->getZombies();
 
     unsigned int closestZombieId = 0;
@@ -114,6 +115,7 @@ bool Turret::targetScanTurret() {
     float deltaX = getX() - target->second->getX();
     float deltaY = getY() - target->second->getY();
 
+    // Set angle so turret points at zombie
     double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * -1;
     setAngle(angle);
     //detectList[closestZombieId]->damage(this->attackDmg);

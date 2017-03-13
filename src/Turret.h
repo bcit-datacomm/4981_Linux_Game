@@ -41,18 +41,6 @@ public:
 
     void removeTurret(); // removes the turret
 
-    float getRange() const; // returns the turret's range.
-  
-    void setX(float px); //set x coordinate
-
-    void setY(float py); //set y coordinate
-
-    void setAngle(double a);//sets angle of sprite to
-
-    double getAngle(); //returns sprites angle
-
-    void removeTurret(); // removes the turret
-
     inline float getRange() const; // returns the turret's range.
 
     Turret();
