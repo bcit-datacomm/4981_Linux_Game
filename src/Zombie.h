@@ -12,8 +12,8 @@
 #include "Window.h"
 #include "Movable.h"
 
-const int ZOMBIE_HEIGHT = 125;
-const int ZOMBIE_WIDTH = 75;
+constexpr int ZOMBIE_HEIGHT = 125;
+constexpr int ZOMBIE_WIDTH = 75;
 
 class Zombie : public Movable {
 public:

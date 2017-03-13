@@ -36,11 +36,12 @@ bool GameStateMatch::load() {
  	
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
+
+    //set the boundary on the map
+    GameManager::instance()->setBoundary(game.renderer, -1000, -1000, 3000, 3000);
+    
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 100, 100);
-    GameManager::instance()->createZombie(game.renderer, 700, 700);
-    GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 	
 
@@ -80,6 +81,7 @@ void GameStateMatch::loop() {
     //Start counting frames per second
     unsigned long countedFrames = 0;
     int frameTicks;
+    unsigned int second = 0;
     float avgFPS = 0;
     fpsTimer.start();
 
@@ -104,6 +106,11 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
+        if(fpsTimer.getTicks() / 1000 > second) {
+            GameManager::instance()->createZombieWave(game.renderer, 1);
+            second+=5;
+        }
+        
         //If frame finished early
         if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time

@@ -21,8 +21,8 @@ public:
     void collidingProjectile(int damage){};
 
 private:
-    int height; // Height of object
     int width; // Width of object
+    int height; // Height of object
     double angle;
 };
 
