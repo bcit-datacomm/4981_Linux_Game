@@ -33,17 +33,17 @@ bool GameStateMatch::load() {
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
- 	
+
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
 
     //set the boundary on the map
     GameManager::instance()->setBoundary(game.renderer, -1000, -1000, 3000, 3000);
-    
+
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
-	
+
 
     //base = Base();
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
@@ -110,7 +110,7 @@ void GameStateMatch::loop() {
             GameManager::instance()->createZombieWave(game.renderer, 1);
             second+=5;
         }
-        
+
         //If frame finished early
         if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
@@ -132,41 +132,44 @@ void GameStateMatch::handle() {
     //Handle events on queue
     while ( SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
-           switch(event.type) {
-        case SDL_WINDOWEVENT:
-            camera.setViewSize(game.window.getWidth(), game.window.getHeight());
-            break;
-        case SDL_MOUSEWHEEL:
-            player.handleMouseWheelInput(&(event));
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_RIGHT) {
-                player.handlePlacementClick(game.renderer);
-            }
-            break;
-      	case SDL_KEYDOWN:
-        	switch(event.key.keysym.sym) {
-			case SDLK_ESCAPE:
-				play = false;
-				break;
-			case SDLK_b:
-				player.handleTempBarricade(game.renderer);
-				break;
-			default:
+        switch(event.type) {
+            case SDL_WINDOWEVENT:
+                camera.setViewSize(game.window.getWidth(), game.window.getHeight());
                 break;
-            }
-            break;
-          case SDL_KEYUP:
+            case SDL_MOUSEWHEEL:
+                player.handleMouseWheelInput(&(event));
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_RIGHT) {
+                    player.handlePlacementClick(game.renderer);
+                }
+                break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        play = false;
+                        break;
+                    case SDLK_b:
+                        player.handleTempBarricade(game.renderer);
+                        break;
+                    case SDLK_t:
+                        player.handleTempTurret(game.renderer);
+                        break;
+                    default:
+                        break;
+              }
+              break;
+            case SDL_KEYUP:
                switch( event.key.keysym.sym ) {
+                   default:
+                       break;
+                }
+                break;
+            case SDL_QUIT:
+                  play = false;
+                  break;
             default:
-                   break;
-            }
-            break;
-        case SDL_QUIT:
-            play = false;
-            break;
-          default:
-            break;
+                break;
         }
     }
 }
