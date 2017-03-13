@@ -16,7 +16,7 @@ public:
     void onCollision();
 
     void collidingProjectile(int damage);
-	
+ 
     int getX() const;
     int getY() const;
     Weapon& getWeapon();

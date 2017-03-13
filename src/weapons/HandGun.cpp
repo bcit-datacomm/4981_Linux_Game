@@ -4,7 +4,8 @@
 */
 #include "HandGun.h"
 
-HandGun::HandGun() : InstantWeapon(HandgunVars::TYPE, HandgunVars::RANGE, HandgunVars::DAMAGE, 
-        HandgunVars::CLIP, HandgunVars::CLIPMAX, HandgunVars::AMMO, HandgunVars::AOE, HandgunVars::RELOAD) {
+HandGun::HandGun() : InstantWeapon(HandgunVars::TYPE, HandgunVars::RANGE, HandgunVars::DAMAGE,
+        HandgunVars::CLIP, HandgunVars::CLIPMAX, HandgunVars::AMMO, HandgunVars::AOE, 
+        HandgunVars::RELOAD, HandgunVars::FIRERATE, HandgunVars::READY) {
 
 }

@@ -9,7 +9,7 @@ Entity::Entity() {
     projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
     damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
     pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
-    
+
 }
 
 Entity::~Entity() {
@@ -46,10 +46,10 @@ void Entity::setPosition(float px, float py) {
 }
 
 void Entity::updateHitBoxes() {
-	movementHitBox->move(x, y);
-	projectileHitBox->move(x, y);
-	damageHitBox->move(x, y);
-	pickupHitBox->move(x, y);
+    movementHitBox->move(x, y);
+    projectileHitBox->move(x, y);
+    damageHitBox->move(x, y);
+    pickupHitBox->move(x, y);
 }
 
 void Entity::updateRectHitBoxes() {
