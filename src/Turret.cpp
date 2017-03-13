@@ -112,8 +112,8 @@ bool Turret::targetScanTurret() {
         return false;
     }
 
-    float deltaX = getX() - target->second->getX();
-    float deltaY = getY() - target->second->getY();
+    float deltaX = getX() - target->second.getX();
+    float deltaY = getY() - target->second.getY();
 
     // Set angle so turret points at zombie
     double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * -1;
@@ -126,5 +126,5 @@ bool Turret::targetScanTurret() {
 // returns the turret's range.
 // Jamie, 2017-03-01.
 float Turret::getRange() const {
-    return this->range;
+    return range;
 }

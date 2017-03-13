@@ -56,7 +56,6 @@ public:
     unsigned int addObject(Object&);
     void deleteObject(unsigned int id);
 
-    const std::map<unsigned int, Zombie*>& getZombies(); // returns the list of zombies.
     unsigned int addZombie(Zombie&);
     bool createZombie(SDL_Renderer* gRenderer, float x, float y);
     void deleteZombie(unsigned int id);

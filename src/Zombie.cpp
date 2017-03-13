@@ -69,8 +69,8 @@ float Zombie::getEndX() {
  * February 14
  */
 int Zombie::getDir() {
-    int sp = this->getStep();
-    string pth = this->getPath();
+    int sp = getStep();
+    string pth = getPath();
     //char c = pth.at(sp);
     return (sp < (int) pth.length() ? stoi(pth.substr(sp,1)) : -1);
 }
