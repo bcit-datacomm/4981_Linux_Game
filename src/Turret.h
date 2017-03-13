@@ -50,7 +50,7 @@ public:
 
     bool isPlaced();
 
-    void pickUpTurret(const int32_t);
+    void pickUpTurret();
 
     void removeTurret(); // removes the turret
 

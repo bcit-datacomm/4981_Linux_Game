@@ -85,7 +85,7 @@ bool Turret::isPlaced() {
   return boolPlaced;
 }
 
-void Turret::pickUpTurret(const int32_t id) {
+void Turret::pickUpTurret() {
     activated = false;
     setPosition(0, 0);
     texture.setAlpha(0);

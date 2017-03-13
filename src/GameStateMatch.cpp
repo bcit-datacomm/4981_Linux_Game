@@ -144,8 +144,6 @@ void GameStateMatch::handle() {
                     player.handlePlacementClick(game.renderer);
                 }
                 break;
-            default:
-                break;
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym) {
                     case SDLK_ESCAPE:
@@ -164,7 +162,7 @@ void GameStateMatch::handle() {
             case SDL_KEYUP:
                switch( event.key.keysym.sym ) {
                    default:
-                       break;`
+                       break;
                 }
                 break;
             case SDL_QUIT:
