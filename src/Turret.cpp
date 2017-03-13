@@ -74,15 +74,15 @@ bool Turret::healthCheckTurret() {
  */
 bool Turret::targetScanTurret() {
     //Get map of all zombies
-    const std::map<unsigned int, Zombie>& mapZombies = GameManager::instance()->getZombies();
+    const auto& mapZombies = GameManager::instance()->getZombies();
 
     unsigned int closestZombieId = 0;
     float closestZombieDist = std::numeric_limits<float>::max();
 
-    // Detect zombies;
-    // TODO: Improve the algorithm that selects zombie(s) to attack.
+    // Detect zombies
     bool bDetect = false;
-    for (const auto& item : mapZombies) {
+    for (const auto& item : mapZombies)
+    {
         const auto& zombie = item.second;
         float zombieX = zombie.getX();
         float zombieY = zombie.getY();
@@ -107,24 +107,24 @@ bool Turret::targetScanTurret() {
     }
 
     const auto& target = mapZombies.find(closestZombieId);
-    if (target == mapZombies.end()) {
+    if (target == mapZombies.end())
+    {
         return false;
     }
 
-    float deltaX = getX() - target->second.getX();
-    float deltaY = getY() - target->second.getY();
+    float deltaX = getX() - target->second->getX();
+    float deltaY = getY() - target->second->getY();
 
     // Set angle so turret points at zombie
-    double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * - 1;
+    double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * -1;
     setAngle(angle);
-     //detectList[closestZombieId]->damage(this->attackDmg);
+    //detectList[closestZombieId]->damage(this->attackDmg);
 
     return true;
 }
 
 // returns the turret's range.
 // Jamie, 2017-03-01.
-inline float Turret::getRange() const
-{
+float Turret::getRange() const {
     return this->range;
 }

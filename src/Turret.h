@@ -41,17 +41,22 @@ public:
 
     void removeTurret(); // removes the turret
 
-    float getRange() const; // returns the turret's range.
+    inline float getRange() const; // returns the turret's range.
 
     Turret();
     virtual ~Turret();
 
+    SDL_Rect turretSpriteClips[1];
+    HitBox movementHitBox;	// Hit box for movement
+    HitBox projectileHitBox; // Hit box for projectiles
+    HitBox damageHitBox; // Hit box for damage
+
 private:
-    double angle = 0.0; // turret direction angle in which it is pointing
-    float range = 300.0f; // turret's range.
     bool activated = false; // turret activated state
+    double angle = 0.0; // turret direction angle in which it is pointing
     int health = 200; // turret health pool
     int ammo = 100; // turret ammo pool
+    float range = 300.0f; // turret's range.
 };
 
 #endif
