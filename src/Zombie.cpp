@@ -7,11 +7,11 @@
 
 Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
-    printf("Create Zombie\n");
+    //printf("Create Zombie\n");
 }
 
 Zombie::~Zombie() {
-    printf("Destory Zombie\n");
+    //printf("Destory Zombie\n");
 }
 
 void Zombie::onCollision() {

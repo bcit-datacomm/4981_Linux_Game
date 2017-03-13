@@ -22,27 +22,37 @@ void Marine::collidingProjectile(int damage) {
 
 // Created by DericM 3/8/2017
 void Marine::fireWeapon() {
-    inventory.getCurrent()->fire(*this);
+    Weapon* w = inventory.getCurrent();
+    if( w != nullptr){
+        w->fire(*this);
+    } else {
+        printf("Slot Empty\n");
+    }
 }
 
 
-int32_t Marine::checkForPickUp(){
-     int32_t id = -1;
-     Entity *ep;
-     GameManager *gm = GameManager::instance();
+void Marine::checkForPickUp(){
 
-     CollisionHandler &ch = gm->getCollisionHandler();
 
-     ep =  ch.detectPickUpCollision(this);
+    int currentTime = SDL_GetTicks();
 
-     if(ep != nullptr){
-         id = ep->getId();
-         WeaponDrop wd = gm->getWeaponDrop(id);
-         id = wd.getWeaponId();
-         inventory.pickUp(id);
+    if(currentTime > (pickupTick + pickupDelay)){
+        int32_t PickId = -1;
+        Entity *ep;
+        GameManager *gm = GameManager::instance();
+        CollisionHandler &ch = gm->getCollisionHandler();
+        pickupTick = currentTime;
 
-         return 1;
-     }
+        ep =  ch.detectPickUpCollision(this);
 
-     return id;
- }
+        if(ep != nullptr){
+            //get Weapon drop Id
+            PickId = ep->getId();
+            WeaponDrop wd = gm->getWeaponDrop(PickId);
+
+            //Get Weaopn id from weapon drop
+            PickId = wd.getWeaponId();
+            inventory.pickUp(PickId);
+        }
+    }
+}

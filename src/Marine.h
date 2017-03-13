@@ -23,7 +23,7 @@ public:
     void onCollision();
     void collidingProjectile(int damage);
     void fireWeapon();
-    int32_t checkForPickUp();
+    void checkForPickUp();
 
     Marine();
     virtual ~Marine();
@@ -33,6 +33,8 @@ public:
 private:
     int health = 100;
     int state; //used to select sprite to display
+    int pickupTick = 0;
+    int pickupDelay = 200;
 
 };
 

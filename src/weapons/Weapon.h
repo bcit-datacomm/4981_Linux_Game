@@ -29,6 +29,7 @@ public:
     void reloadClip();//resets clip to max amount
     bool reduceAmmo(int rounds);
     int32_t getId();
+    void setId(int32_t num);
     virtual void fire(Marine &marine);
 
 protected:

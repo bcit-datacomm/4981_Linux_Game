@@ -1,6 +1,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
-#include<SDL2/SDL.h>
+
+#include <SDL2/SDL.h>
 #include "Zombie.h"
 #include "Marine.h"
 #include "Turret.h"
@@ -44,7 +45,7 @@ public:
     void deleteTurret(const int32_t id);
 
     bool addTurret(const int32_t id, const Turret& newTurret);
-    bool createTurret(SDL_Renderer* gRenderer, const float x, const float y) ;
+    int32_t createTurret(SDL_Renderer* gRenderer, const float x, const float y) ;
     Turret& getTurret(const int32_t id);
 
     // Method for getting collisionHandler
@@ -66,7 +67,8 @@ public:
     bool createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteWeaponDrop(const int32_t id);
     WeaponDrop& getWeaponDrop(int32_t id);
-    Weapon& getWeapon(int32_t id);
+    std::shared_ptr<Weapon> getWeapon(int32_t id);
+    int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);
 
     int32_t createBarricade(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteBarricade(const int32_t id);
@@ -86,7 +88,7 @@ private:
     std::map<int32_t, Zombie> zombieManager;
     std::map<int32_t, Turret> turretManager;
     std::map<int32_t, WeaponDrop> weaponDropManager;
-    std::map<int32_t, Weapon> weaponManager;
+    std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
     std::map<int32_t, Barricade> barricadeManager;
 
 };

@@ -21,12 +21,12 @@ public:
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
     int32_t getId(); //returns the id of the entity
+    void setId(int32_t num);//Sets the ID, ONLY USE SPARINGLY
 
 
 
     LTexture texture;
     SDL_Rect spriteClips[1];
-    int32_t id; //is the index num of the entity in its respective manager
     std::shared_ptr<HitBox> movementHitBox;
     std::shared_ptr<HitBox> projectileHitBox;
     std::shared_ptr<HitBox> damageHitBox;
@@ -34,6 +34,8 @@ public:
 
 private:
 
+
+    int32_t id; //is the index num of the entity in its respective manager
     float x = 0; //x coordinate
     float y = 0; //y coordinate
 

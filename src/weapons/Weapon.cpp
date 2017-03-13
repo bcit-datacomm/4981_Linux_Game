@@ -15,6 +15,7 @@ Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, i
 Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage), ammo(w.ammo),
     rAOE(w.rAOE), reloadSpeed(w.reloadSpeed), reloadTick(w.reloadTick), reloadDelay(w.reloadDelay), id(w.id){
 
+
 }
 
 
@@ -87,6 +88,10 @@ void Weapon::fire(Marine &marine){
 
 int32_t Weapon::getId(){
     return id;
+}
+
+void Weapon::setId(int32_t num){
+     id = num;
 }
 
 int32_t generateWID() {

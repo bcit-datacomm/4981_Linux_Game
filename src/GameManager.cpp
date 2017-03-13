@@ -131,16 +131,16 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
 }
 
 // Create turret add it to turret, returns if success
-bool GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const float y) {
+int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
     turretManager[id] = Turret();
     if (!turretManager.at(id).texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
         printf("Failed to load the turret texture!\n");
         deleteTurret(id);
-        return false;
+        return -1;
     }
     turretManager.at(id).setPosition(x,y);
-    return true;
+    return id;
 }
 
 // Get a tower by its id
@@ -184,6 +184,17 @@ void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
 }
 
+
+int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
+
+    const int32_t id = weapon->getId();
+    weaponManager.insert({id, weapon});
+    weaponManager.at(id)->setId(weapon->getId());
+
+    return id;
+
+}
+
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
 
@@ -191,19 +202,24 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     return id;
 }
 
+
+
 // Create weapon drop add it to manager, returns success
 bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y) {
 
+    Rifle w;
 
-    const int32_t wid = generateID();
-    w = Rifle();
+    const int32_t wid = w.getId();
 
-
-    weaponManager.insert({wid, w});
+    addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
     WeaponDrop wd(wid);
     const int32_t id = wd.getId();
     weaponDropManager.insert({id, wd});
+
+    weaponDropManager.at(wd.getId()).setX(x);
+    weaponDropManager.at(wd.getId()).setY(y);
+    weaponDropManager.at(wd.getId()).setId(id);
 
     if(!weaponDropManager.at(wd.getId()).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
         printf("Failed to load the player texture!\n");
@@ -211,17 +227,35 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
         return false;
     }
     weaponDropManager.at(id).setPosition(x,y);
+
     return true;
 }
 
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(int32_t id){
+    std::map<int32_t, WeaponDrop>::iterator it;
+    it = weaponDropManager.find(id);
+    if(it != weaponDropManager.end()){
+        return weaponDropManager.at(id);
+    } else {
+        printf("Couldnt find Weapondrop\n");
+    }
+
     return weaponDropManager.at(id);
 }
 
 //returns weapon in weaponManager
-Weapon& GameManager::getWeapon(int32_t id){
-    return weaponManager.at(id);
+std::shared_ptr<Weapon> GameManager::getWeapon(int32_t id){
+    printf("Weapon id Searching for: %d", id);
+    std::map<int32_t, std::shared_ptr<Weapon>>::iterator it;
+    it = weaponManager.find(id);
+    if(it != weaponManager.end()){
+        return weaponManager.at(id);
+    } else {
+        printf("Couldnt find Weapon\n");
+        return nullptr;
+    }
+
 }
 
 // Deletes weapon from level
@@ -260,6 +294,7 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeMov.insert(&m.second);
         collisionHandler.quadtreePro.insert(&m.second);
         collisionHandler.quadtreeDam.insert(&m.second);
+
     }
 
    	for (auto& b : barricadeManager) {

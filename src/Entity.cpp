@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include <atomic>
 
-Entity::Entity(): id(generateID()) {
+Entity::Entity():id(generateID()) {
     spriteClips[0].x = 0;
     spriteClips[0].y = 0;
     spriteClips[0].w = 100;
@@ -76,6 +76,10 @@ void Entity::collidingProjectile(int damage){
 
 int32_t Entity::getId(){
     return id;
+}
+
+void Entity::setId(int32_t num){
+    id = num;
 }
 
 int32_t generateID() {
