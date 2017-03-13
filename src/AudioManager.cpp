@@ -15,6 +15,11 @@
 #include "AudioManager.h"
 
 
+AudioManager AudioManager::sInstance;
+
+AudioManager& AudioManager::instance() {
+    return sInstance;
+}
 
 AudioManager::AudioManager(){
  

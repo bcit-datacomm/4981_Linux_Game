@@ -1,6 +1,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
-#include<SDL2/SDL.h>
+
+#include <SDL2/SDL.h>
 #include "Zombie.h"
 #include "Marine.h"
 #include "Turret.h"
