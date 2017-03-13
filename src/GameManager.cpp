@@ -32,13 +32,16 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
     for (const auto& m : weaponDropManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY);
     }
+
     for (const auto& m : marineManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
                                  NULL, m.second.getAngle());
     }
+
     for (const auto& o : objectManager) {
         o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
     }
+
     for (const auto& z : zombieManager) {
         z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
                                  NULL, z.second.getAngle());
@@ -65,10 +68,32 @@ void GameManager::updateMarines(const float& delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float& delta) {
     for (auto& z : zombieManager) {
-        z.second.generateRandomMove();
+        // Check if the zombie is allowed to move
+        z.second.checkMove();
+
+        if (z.second.isMoving()) {
+            z.second.generateMove();
+        }
+
         z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
     }
 }
+
+// Update turret actions.
+// Jamie, 2017-03-01.
+void GameManager::updateTurrets(const float& delta) {
+	static bool bi_frame = false;
+	bi_frame = !bi_frame;
+	if (!bi_frame) {
+		return;
+    }
+
+	for (auto& t : turretManager) {
+		//z.second->generateRandomMove();
+		t.second.targetScanTurret();
+	}
+}
+
 // Create marine add it to manager, returns marine id
 unsigned int GameManager::createMarine() {
     unsigned int id = 0;
@@ -175,13 +200,21 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
     if (!zombieManager.empty()) {
         id = zombieManager.rbegin()->first + 1;
     }
+
     zombieManager[id] = Zombie();
     if (!zombieManager.at(id).texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
         printf("Failed to load the player texture!\n");
         deleteZombie(id);
         return false;
     }
+
     zombieManager.at(id).setPosition(x,y);
+
+    //Hard coded for now.  Each coordinate value must be divided by the tile size
+    zombieManager.at(id).generatePath((int) x / 50, (int) y / 50, 900 / 50, 900 / 50);
+
+    // Set end coordinates to spawn coordinates so the zombie moves on spawn
+    zombieManager.at(id).setEnd(x, y);
     return true;
 }
 
@@ -215,7 +248,7 @@ unsigned int GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 
 // Create weapon drop add it to manager, returns success
 bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, float x, float y) {
-    int id;
+    int id;const
     int randGun = rand() % 2 + 1;
 
     if(randGun == 1){
@@ -322,4 +355,10 @@ void GameManager::deleteBarricade(unsigned int id) {
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(unsigned int id) {
     return barricadeManager.find(id)->second;
+}
+
+// returns the list of zombies.
+// Jamie, 2017-03-01.
+const std::map<unsigned int, Zombie>& GameManager::getZombies() {
+    return zombieManager;
 }

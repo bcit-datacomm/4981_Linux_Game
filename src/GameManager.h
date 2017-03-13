@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "Zombie.h"
 #include "Barricade.h"
+#include "Base.h"
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -47,7 +48,10 @@ public:
 
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float& delta); // Update marine actions
-    void updateZombies(const float& delta); // Update zombie actions
+    void updateZombies(const float& delta); // Update zombie actionss
+    void updateTurrets(const float& delta); // Update turret actions
+
+    const std::map<unsigned int, Zombie>& getZombies(); // returns the list of zombies.
 
     unsigned int addObject(Object&);
     void deleteObject(unsigned int id);
