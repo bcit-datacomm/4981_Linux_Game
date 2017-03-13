@@ -3,10 +3,6 @@
 #include <SDL2/SDL.h>
 #include <array>
 #include <memory>
-#include "Weapon.h"
-#include "HandGun.h"
-#include "Rifle.h"
-#include "ShotGun.h"
 #include "Consumable.h"
 #include "BasicMedkit.h"
 #include "weapons/Weapon.h"
