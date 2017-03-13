@@ -54,7 +54,7 @@ public:
     void playEffect(const char * fileName);
 
 private:
-	static AudioManager sInstance;
+    static AudioManager sInstance;
 
     musicMap  _music;
     chunkMap  _chunks;
