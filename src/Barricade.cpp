@@ -29,13 +29,13 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
     checkBox.y = getY();
     HitBox hitBox(getX(), getY(), checkBox, nullptr);
 
-	if(boolPlaceable){
+ if(boolPlaceable){
         if(ch.detectMovementCollision(&hitBox)) {
-			boolPlaceable = false;
+   boolPlaceable = false;
         }
 
-	}
-	return boolPlaceable;
+ }
+ return boolPlaceable;
 }
 
 bool Barricade::isPlaceable(){

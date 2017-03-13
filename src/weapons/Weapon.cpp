@@ -5,15 +5,16 @@
 #include "Weapon.h"
 #include <iostream>
 
-Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE, int reloadSpeed, int fireRate, bool isReadyToFire)
-               :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed),
-               reloadTick(0), reloadDelay(200), fireRate(fireRate), fireTick(0), isReadyToFire(isReadyToFire){
+Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE,
+        int reloadSpeed, int fireRate, bool isReadyToFire)
+        :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed),
+        reloadTick(0), reloadDelay(200), fireRate(fireRate), fireTick(0), isReadyToFire(isReadyToFire){
 
 }
 
 Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage), ammo(w.ammo),
-    rAOE(w.rAOE), reloadSpeed(w.reloadSpeed), reloadTick(w.reloadTick), reloadDelay(w.reloadDelay), fireRate(w.fireRate),
-    fireTick(w.fireTick), isReadyToFire(w.isReadyToFire) {
+        rAOE(w.rAOE), reloadSpeed(w.reloadSpeed), reloadTick(w.reloadTick), reloadDelay(w.reloadDelay),
+        fireRate(w.fireRate), fireTick(w.fireTick), isReadyToFire(w.isReadyToFire) {
 
 }
 
