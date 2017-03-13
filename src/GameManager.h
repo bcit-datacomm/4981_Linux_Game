@@ -1,11 +1,13 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 #include<SDL2/SDL.h>
+#include "Zombie.h"
 #include "Marine.h"
 #include "Turret.h"
 #include "CollisionHandler.h"
 #include "Object.h"
-#include "Zombie.h"
+#include "Base.h"
+#include "Wall.h"
 #include "Barricade.h"
 #include <map>
 #include <unordered_map>
@@ -18,6 +20,7 @@
 #include "weapons/HandGun.h"
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
+
 
 class GameManager {
 public:
@@ -57,6 +60,7 @@ public:
     int32_t addZombie(const Zombie&);
     bool createZombie(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteZombie(const int32_t id);
+    bool createZombieWave(SDL_Renderer* gRenderer, const int n);
 
     int32_t addWeaponDrop(const WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y);
@@ -65,6 +69,10 @@ public:
     int32_t createBarricade(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteBarricade(const int32_t id);
     Barricade& getBarricade(const int32_t id);
+
+    int32_t createWall(SDL_Renderer* gRenderer, const float x, const float y, const int h, const int w); // create Wall object
+    void setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
+
 private:
     static GameManager *sInstance;
 
