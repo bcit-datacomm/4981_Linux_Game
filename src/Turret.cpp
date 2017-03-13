@@ -20,8 +20,8 @@ bool Turret::placementCheckTurret(){
 }
 
 // checks if the turret placement overlaps with any currently existing objects
-bool Turret::collisionCheckTurret(float playerX, float playerY, float moveX,
-    float moveY, CollisionHandler &ch) {
+bool Turret::collisionCheckTurret(const float playerX, const float playerY, const float moveX,
+        const float moveY, CollisionHandler &ch) {
     SDL_Rect checkBox;
     checkBox.h = TURRET_HEIGHT;
     checkBox.w = TURRET_WIDTH;
@@ -31,16 +31,8 @@ bool Turret::collisionCheckTurret(float playerX, float playerY, float moveX,
     float distanceX = (playerX - moveX) * (playerX - moveX);
   	float distanceY = (playerY - moveY) * (playerY - moveY);
   	float distance = sqrt(abs(distanceX+distanceY));
-  	if(distance>PLACE_DISTANCE) {
-  		placeable = false;
-  	}else
-  		placeable = true;
-  	if(placeable) {
-          if(ch.detectMovementCollision(&hitBox))
-  	        placeable = false;
-  	}
-    return placeable;
-  	//return (distance <= 200 && !ch.detectMovementCollision(&hitbox));
+    
+  	return (distance <= 200 && !ch.detectMovementCollision(&hitBox));
 }
 
 // activates the turret
@@ -78,10 +70,11 @@ bool Turret::healthCheckTurret() {
 
 void Turret::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
-    if(this->collisionCheckTurret(playerX, playerY, moveX, moveY, ch))
+    if(this->collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
         texture.setAlpha(PASS_ALPHA);
-    else
+    } else {
         texture.setAlpha(FAIL_ALPHA);
+    }
 }
 
 void Turret::placeTurret() {

@@ -31,12 +31,22 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
-        tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY, GameManager::instance()->getCollisionHandler());
+        tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
+                           GameManager::instance()->getCollisionHandler());
     }
 
     if (tempTurretID > -1) {
         Turret &tempTurret = GameManager::instance()->getTurret(tempTurretID);
-        tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY, GameManager::instance()->getCollisionHandler());
+        tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
+                        GameManager::instance()->getCollisionHandler());
+
+        if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+            if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
+                                                GameManager::instance()->getCollisionHandler())) {
+                tempTurret.placeTurret();
+                tempTurretID = -1;
+            }
+        }
     }
 
     //fire weapon on left mouse click
@@ -55,19 +65,9 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
-	    if (tempBarricade.isPlaceable()) {
-		    tempBarricade.placeBarricade();
+        if (tempBarricade.isPlaceable()) {
+            tempBarricade.placeBarricade();
             tempBarricadeID = -1;
-	    }
-	    return;
-    }
-
-    if (tempTurretID > -1) {
-        Turret &tempTurret = GameManager::instance()->getTurret(tempTurretID);
-        // calculates which spot to place turret based on player mouse direction
-        if (tempTurret.isPlaceable()) {
-            tempTurret.placeTurret();
-            tempTurretID = -1;
         }
         return;
     }

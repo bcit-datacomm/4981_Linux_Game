@@ -137,18 +137,18 @@ void GameStateMatch::handle() {
                 player.handlePlacementClick(game.renderer);
             }
             break;
-      	case SDL_KEYDOWN:
-        	switch(event.key.keysym.sym) {
-			case SDLK_ESCAPE:
-				play = false;
-				break;
-			case SDLK_b:
-				player.handleTempBarricade(game.renderer);
-				break;
-      case SDLK_t:
-        player.handleTempTurret(game.renderer);
-        break;
-			default:
+          case SDL_KEYDOWN:
+            switch(event.key.keysym.sym) {
+            case SDLK_ESCAPE:
+                play = false;
+                break;
+            case SDLK_b:
+                player.handleTempBarricade(game.renderer);
+                break;
+            case SDLK_t:
+                player.handleTempTurret(game.renderer);
+                break;
+            default:
                 break;
             }
             break;

@@ -10,11 +10,11 @@
 #include <SDL2/SDL.h>
 #include "Window.h"
 
-const int TURRET_HEIGHT = 100;
-const int TURRET_WIDTH = 100;
-const int PASS_ALPHA = 200;
-const int FAIL_ALPHA = 30;
-const int PLACED_ALPHA = 255;
+constexpr int TURRET_HEIGHT = 100;
+constexpr int TURRET_WIDTH = 100;
+constexpr int PASS_ALPHA = 200;
+constexpr int FAIL_ALPHA = 30;
+constexpr int PLACED_ALPHA = 255;
 constexpr int PLACE_DISTANCE = 200;
 
 class Turret : public Movable {
@@ -24,7 +24,7 @@ public:
     bool placementCheckTurret(); // checks if turret placement is within bounds
 
     // checks if the turret placement overlaps with any currently existing objects
-    bool collisionCheckTurret(float , float , float , float , CollisionHandler &);
+    bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &);
 
     void activateTurret(); // activates the turret
 
