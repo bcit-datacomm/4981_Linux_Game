@@ -77,18 +77,9 @@ int main(int argc, char **argv) {
 
     logv("UDP port: %d, TCP port: %d, Max clients %d\n", listen_port_udp, listen_port_tcp, client_count);
 
-    if ((listenSocketUDP = createSocket(true, true)) == -1) {
-        perror("ListenSocket UDP");
-        exit(1);
-    }
-    if ((sendSocketUDP = createSocket(true, true)) == -1) {
-        perror("sendSocket UDP");
-        exit(1);
-    }
-    if ((listenSocketTCP = createSocket(false, false)) == -1) {
-        perror("ListenSocket TCP");
-        exit(1);
-    }
+    listenSocketUDP = createSocket(true, true);
+    sendSocketUDP = createSocket(true, true);
+    listenSocketTCP = createSocket(false, false);
 
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
     logv("Sockets created and bound\n");
@@ -334,7 +325,17 @@ void listenUDP(int socket, unsigned long ip, unsigned short port) {
 }
 
 int createSocket(bool useUDP, bool nonblocking) {
-    return socket(AF_INET, ((useUDP) ? SOCK_DGRAM : SOCK_STREAM) | (nonblocking * SOCK_NONBLOCK), 0);
+    int sock = socket(AF_INET, ((useUDP) ? SOCK_DGRAM : SOCK_STREAM) | (nonblocking * SOCK_NONBLOCK), 0);
+    if (sock == -1) {
+        perror("Create socket");
+        exit(1);
+    }
+    int enable = 1;
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
+        perror("setsockopt(SO_REUSEADDR) failed");
+        exit(1);
+    }
+    return sock;
 }
 
 void logv(const char *msg, ...) {
@@ -403,6 +404,7 @@ void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
                 tempMapEntry.second.hasSentUsername = true;
                 tempMapEntry.second.isPlayerReady = false;
                 tempMapEntry.second.entry.addr = it.second.entry.addr;
+                tempMapEntry.second.entry.addr.sin_port = htons(listen_port_udp);
                 strncpy(tempMapEntry.second.entry.username, buff + TCP_HEADER_SIZE + 1, NAMELEN);
                 strcat(tempMapEntry.second.entry.username, "\0");
                 logv("Server received username: %s\n", tempMapEntry.second.entry.username);
