@@ -19,16 +19,22 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
     const float distanceX = (playerX - moveX) * (playerX - moveX);
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX+distanceY));
-    
+
     boolPlaceable = (distance <= 200);
 
-    if(boolPlaceable){
-        if(ch.detectMovementCollision(movementHitBox.get())) {
-            boolPlaceable = false;
-        }
+    SDL_Rect checkBox;
+    checkBox.h = 100;
+    checkBox.w = 100;
+    checkBox.x = getX();
+    checkBox.y = getY();
+    HitBox hitBox(getX(), getY(), checkBox, nullptr);
 
-    }
-    return boolPlaceable;
+	if(boolPlaceable){
+        if(ch.detectMovementCollision(&hitBox))
+			boolPlaceable = false;
+
+	}
+	return boolPlaceable;
 }
 
 bool Barricade::isPlaceable(){

@@ -11,8 +11,8 @@
 #include <SDL2/SDL.h>
 #include "Window.h"
 
-const int BARRICADE_WIDTH = 100;
-const int BARRICADE_HEIGHT = 100;
+constexpr int BARRICADE_WIDTH = 100;
+constexpr int BARRICADE_HEIGHT = 100;
 
 class Barricade : public Object {
 public:
