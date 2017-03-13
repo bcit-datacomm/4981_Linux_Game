@@ -1,3 +1,4 @@
+#include <memory>
 #include "GameManager.h"
 #include "HitBox.h"
 #include <memory>
@@ -359,6 +360,6 @@ Barricade& GameManager::getBarricade(unsigned int id) {
 
 // returns the list of zombies.
 // Jamie, 2017-03-01.
-const std::map<unsigned int, Zombie>& GameManager::getZombies() {
+const std::map<unsigned int, Zombie*>& GameManager::getZombies() {
     return zombieManager;
 }
