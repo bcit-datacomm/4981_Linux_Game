@@ -7,10 +7,10 @@ BasicMedkit::BasicMedkit() : Consumable() {
     printf("BasicMedkit Created\n");
 }
 
-void BasicMedkit::OnConsume() {
-    printf("BasicMedkit Consumed\n");
-}
-
 BasicMedkit::~BasicMedkit() {
     printf("BasicMedkit Destroyed\n");
+}
+
+void BasicMedkit::OnConsume() {
+    printf("BasicMedkit Consumed\n");
 }

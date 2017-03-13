@@ -17,10 +17,10 @@ class BasicMedkit: public Consumable {
 public:
     //standard ctor
     BasicMedkit();
-    //Consumable specific OnConsume Method
-    void OnConsume() override;
     //standard dtor
     ~BasicMedkit();
+    //Consumable specific OnConsume Method
+    void OnConsume() override;
 };
 
 #endif
