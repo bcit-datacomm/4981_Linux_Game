@@ -24,13 +24,13 @@ public:
     float getX() const; // get x coordinate
 
     float getY() const; // get y coordinate
-	
-	void updateHitBoxes(); // update hitbox positions
+
+    void updateHitBoxes(); // update hitbox positions
 
     std::shared_ptr<HitBox> movementHitBox = nullptr;
-	std::shared_ptr<HitBox> projectileHitBox = nullptr;
-	std::shared_ptr<HitBox> damageHitBox = nullptr;
-	std::shared_ptr<HitBox> pickupHitBox = nullptr;
+    std::shared_ptr<HitBox> projectileHitBox = nullptr;
+    std::shared_ptr<HitBox> damageHitBox = nullptr;
+    std::shared_ptr<HitBox> pickupHitBox = nullptr;
 
     LTexture texture;
     SDL_Rect spriteClips[1];

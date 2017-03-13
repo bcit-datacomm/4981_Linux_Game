@@ -77,4 +77,3 @@ server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*
 # Deletes the executable and all .o and .d files in the bin folder
 clean: | $(ODIR)
 	$(RM) $(EXEC) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
-
