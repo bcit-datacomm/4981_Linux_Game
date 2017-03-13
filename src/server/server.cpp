@@ -178,9 +178,10 @@ void initSync(int sock) {
                     if (errno == EAGAIN || errno == EWOULDBLOCK) {
                         logv("Safe error\n");
                         continue;
+                    } else {
+                        perror("Packet read failure");
+                        close(events[i].data.fd);
                     }
-                    perror("Packet read failure");
-                    close(events[i].data.fd);
                 }
             }
         }
