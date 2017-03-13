@@ -70,8 +70,8 @@ public:
     void deleteBarricade(const int32_t id);
     Barricade& getBarricade(const int32_t id);
 
-    unsigned int createWall(SDL_Renderer* gRenderer, float x, float y, int h, int w); // create Wall object
-    void setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY); // place walls for the boundaries
+    int32_t createWall(SDL_Renderer* gRenderer, const float x, const float y, const int h, const int w); // create Wall object
+    void setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
 
 private:
     static GameManager *sInstance;

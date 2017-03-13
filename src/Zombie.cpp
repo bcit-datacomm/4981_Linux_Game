@@ -40,8 +40,8 @@ void Zombie::generateRandomMove(){
     int x = getVelocity();
     int y = getVelocity();
 
-    int tx = (getX())+(20*cosVal);
-    int ty = (getY())+(20*sinVal);
+    int tx = getX() + 20 * cosVal;
+    int ty = getY() + 20 * sinVal;
 
     movementHitBox->move(tx,ty);
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();    

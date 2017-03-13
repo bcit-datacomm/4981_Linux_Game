@@ -3,6 +3,7 @@
 Object::Object(int width, int height, double angle) : Entity(), width(width), height(height), angle(angle){
     setHeight(height);
     setWidth(width);
+    updateRectHitBoxes();
 }
 
 Object::~Object() {
@@ -12,12 +13,10 @@ Object::~Object() {
 void Object::setHeight(int h) {
     height = h;
     spriteClips[0].h = height;
-    updateRectHitBoxes();
 }
 void Object::setWidth(int w) {
     width = w;
     spriteClips[0].w = width;
-    updateRectHitBoxes();
 }
 int Object::getHeight(){
     return height;

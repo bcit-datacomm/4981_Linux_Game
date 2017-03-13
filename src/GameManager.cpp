@@ -286,7 +286,7 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 }
 
 // Create zombie add it to manager, returns success
-unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, int w, int h) {
+int32_t GameManager::createWall(SDL_Renderer* gRenderer, const float x, const float y, const int w, const int h) {
     const int32_t id = generateID();
     objectManager[id] = Wall(w, h);
     printf("%d\n", id);
@@ -304,13 +304,13 @@ unsigned int GameManager::createWall(SDL_Renderer* gRenderer, float x, float y, 
 }
 
 
-void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float startY, float endX, float endY){
+void GameManager::setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY){
 
     int width = endX - startX + 200;
     int height = 100;
 
-    float x = startX - 100;
-    float y = startY - 100;
+    const float x = startX - 100;
+    const float y = startY - 100;
 
     createWall(gRenderer, x, y, width, height);
     createWall(gRenderer, x, endY, width, height);
@@ -321,10 +321,10 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer, float startX, float start
     createWall(gRenderer, endX, startY, width, height);
     createWall(gRenderer, x, startY, width, height);
 
-    float sX = (endX + startX)/2 - BASE_WIDTH - 100;
-    float eX = (endX + startX)/2 + BASE_WIDTH + 100;
-    float sY = (endY + startY)/2 - BASE_HEIGHT - 100;
-    float eY = (endY + startY)/2 + BASE_HEIGHT + 100;
+    const float sX = (endX + startX)/2 - BASE_WIDTH - 100;
+    const float eX = (endX + startX)/2 + BASE_WIDTH + 100;
+    const float sY = (endY + startY)/2 - BASE_HEIGHT - 100;
+    const float eY = (endY + startY)/2 + BASE_HEIGHT + 100;
 
     width = eX - sX;
     height = 100;
@@ -356,18 +356,19 @@ bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
     if(zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
-        for(auto z : zombieManager) {
+        for(const auto z : zombieManager) {
             if(count >= spawnPoints.size())
                 break;            
             ids.push_back(z.first);
             count++;
         }
-        for(auto id : ids)
+        for(const auto id : ids) {
             deleteZombie(id);
+        }
     }
 
     for(int i = 0; i < n ; i ++) {
-        for(auto p : spawnPoints)
+        for(const auto p : spawnPoints)
             createZombie(gRenderer, p.first, p.second);
     }
 
