@@ -27,10 +27,14 @@ bool GameStateMatch::load() {
     char users[MAX_USERS][UNAME_SIZE];
     NetworkManager::instance().handshake(ip.c_str(), username.c_str(), numPlayers, users);
 
+    float x = 0;
+    float y = 0;
     for(int i  = 0; i < numPlayers; i++) {
-        Marine& marine = GameManager::instance()->createMarine(i, game.renderer, 0, 0);
+        Marine& marine = GameManager::instance()->createMarine(i, game.renderer, x, y);
+        x += 100;
+        y += 100;
         if(strcmp(users[i], username.c_str()) == 0) {
-            std::cout << "control set" << std::endl;
+            marine.setID(i);
             player.setControl(marine);
         }
     }
@@ -119,10 +123,9 @@ void GameStateMatch::loop() {
 
         // Process frame
         handle();    // Handle user input
+        update(stepTimer.getTicks() / 1000.f); // Update state values
+        updateServ();
 
-        updateServ(stepTimer.getTicks() / 1000.f);
-        camera.move(player.marine->getX(), player.marine->getY());
-        //update(stepTimer.getTicks() / 1000.f); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
         render();    // Render game state to window
@@ -139,8 +142,8 @@ void GameStateMatch::loop() {
     }
 }
 
-void GameStateMatch::updateServ(float delta) {
-    MoveAction moveAction = player.getMoveAction(delta);
+void GameStateMatch::updateServ() {
+    MoveAction moveAction = player.getMoveAction();
     NetworkManager::instance()
         .getSockUDP()
         .sendToServ((char *)&moveAction, sizeof(MoveAction));
@@ -199,14 +202,14 @@ void GameStateMatch::handle() {
 
 void GameStateMatch::update(const float& delta) {
     GameManager::instance()->updateCollider();
-
+    player.marine->move(player.marine->getDX() * delta, player.marine->getDY() * delta,
+        GameManager::instance()->getCollisionHandler());
     // Move player
-    GameManager::instance()->updateMarines(delta);
-    GameManager::instance()->updateZombies(delta);
+    //GameManager::instance()->updateMarines(delta);
+    //GameManager::instance()->updateZombies(delta);
 
     // Move Camera
-
-
+    camera.move(player.marine->getX(), player.marine->getY());
 }
 
 void GameStateMatch::render() {

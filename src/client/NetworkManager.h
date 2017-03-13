@@ -30,9 +30,8 @@ public:
     static NetworkManager& instance();
 
     UDPSocket& getSockUDP() {return _sockUDP;};
-    void handshake(const char *, const char *, int, char users[MAX_USERS][UNAME_SIZE]);
-
-    void setUDPRunning(bool running) {_UDPRunning = running;};
+    void runTCPClient(const char *, const char *, char users[MAX_USERS][UNAME_SIZE]);
+    void runUDPClient(bool running) {_UDPRunning = running;};
 private:
     int _sockTCP;
     UDPSocket _sockUDP;

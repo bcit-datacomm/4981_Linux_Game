@@ -46,9 +46,7 @@ the client's username, receives the integer id assigned to the client, and
 then received the integer ids and usernames of other clients connecting to
 the server.
 --------------------------------------------------------------------------*/
-void NetworkManager::handshake(const char *ip, const char *username, int numPlayers,
-    char users[MAX_USERS][UNAME_SIZE]) {
-
+void NetworkManager::runTCPClient(const char *ip, const char *username, char users[MAX_USERS][UNAME_SIZE]) {
     _sockUDP = UDPSocket(ip);
     std::thread t(&NetworkManager::runUDPClient, this);
     t.detach();
@@ -83,7 +81,7 @@ void NetworkManager::runUDPClient() {
 }
 
 /*--------------------------------------------------------------------------
--- FUNCTION: writeTCPSocket
+-- FUNCTION: writeTCPSock
 --
 -- DATE: FEB. 01, 2017
 --

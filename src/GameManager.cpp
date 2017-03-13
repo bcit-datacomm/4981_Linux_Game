@@ -69,15 +69,6 @@ void GameManager::updateZombies(const float& delta) {
         //z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
     }
 }
-// Create marine add it to manager, returns marine id
-unsigned int GameManager::createMarine() {
-    unsigned int id = 0;
-    if (!marineManager.empty()) {
-        id = marineManager.rbegin()->first + 1;
-    }
-    marineManager[id] = Marine();
-    return id;
-}
 
 /*
 bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
@@ -105,6 +96,7 @@ Marine& GameManager::createMarine(int id, SDL_Renderer* gRenderer, float x, floa
         exit(1);
     }
 
+    marineManager[id].setPosition(x, y);
     return marineManager[id];
 }
 
@@ -265,17 +257,6 @@ CollisionHandler& GameManager::getCollisionHandler() {
 void GameManager::updateCollider() {
     collisionHandler = CollisionHandler();
 
-/*
-    delete collisionHandler.quadtreeMov;
-    delete collisionHandler.quadtreePro;
-    delete collisionHandler.quadtreeDam;
-    delete collisionHandler.quadtreePickUp;
-
-    collisionHandler.quadtreeMov = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler.quadtreePro = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler.quadtreeDam = new Quadtree(0, {0,0,2000,2000});
-    collisionHandler.quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
-*/
     for (auto& m : marineManager) {
         collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
         collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());

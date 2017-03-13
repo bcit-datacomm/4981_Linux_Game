@@ -15,7 +15,6 @@ void Movable::move(float moveX, float moveY, CollisionHandler &ch){
     if (ch.detectMovementCollision(movementHitBox.get())) {
         setY(getY() - moveY);
     }
-
 }
 
 // Set delta x coordinate

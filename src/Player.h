@@ -29,18 +29,16 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
 
-    MoveAction getMoveAction(float delta);
+    MoveAction getMoveAction();
 
     Player();
     ~Player();
+
 
     //Stays as pointer cause the player gets a marine object after the ctor is called
     Marine *marine = NULL;
 
 private:
-    MoveAction moveAction;
-    int dx;
-    int dy;
     int tempBarricadeID;
 };
 

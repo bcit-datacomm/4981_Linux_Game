@@ -25,11 +25,9 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
     mouseDeltaX = w.getWidth()/2 - mouseX;
     mouseDeltaY = w.getHeight()/2 - mouseY;
 
-
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
 
-    moveAction.direction = angle;
-    //marine.setAngle(angle);
+    marine->setAngle(angle);
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
@@ -95,22 +93,23 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 }
 
 void Player::handleKeyboardInput(const Uint8 *state) {
-    //float x = 0;
-    //float y = 0;
+    float x = 0;
+    float y = 0;
+
     float velocity = marine->getVelocity();
 
     // Check for move inputs
     if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
-        dy -= velocity;
+        y -= velocity;
     }
     if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
-        dy += velocity;
+        y += velocity;
     }
     if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
-        dx -= velocity;
+        x -= velocity;
     }
     if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
-        dx += velocity;
+        x += velocity;
     }
 
     //Inventory inputs
@@ -129,8 +128,9 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_E]){
         marine->inventory.pickUp();
     }
-    //marine->setDY(y);
-    //marine->setDX(x);
+
+    marine->setDY(y);
+    marine->setDX(x);
 }
 
 void Player::handleTempBarricade(SDL_Renderer *renderer) {
@@ -159,11 +159,11 @@ void Player::turretPlaceCheck(float x, float y, CollisionHandler& collisionHandl
     }
 }
 
-MoveAction Player::getMoveAction(float delta) {
+MoveAction Player::getMoveAction() {
     MoveAction moveAction;
     moveAction.id = marine->getID();
-    moveAction.xpos = marine->getX() + (delta * dx);
-    moveAction.ypos = marine->getY() + (delta * dy);
+    moveAction.xpos = marine->getX();
+    moveAction.ypos = marine->getY();
     moveAction.vel = marine->getVelocity();
     moveAction.direction = marine->getAngle();
 

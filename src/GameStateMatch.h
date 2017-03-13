@@ -25,7 +25,7 @@ public:
 
     virtual ~GameStateMatch();
 
-    void updateServ(float delta);
+    void updateServ();
 
     GameManager* gameManager = NULL;
 
