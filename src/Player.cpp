@@ -106,10 +106,6 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine->inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
-      if(marine->checkTouch(GameManager::instance()->getCollisionHandler()))
-        {
-          printf("Touching\n");
-        }
         marine->inventory.pickUp();
     }
     marine->setDY(y);

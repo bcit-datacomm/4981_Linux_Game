@@ -12,6 +12,10 @@
 
 const int TURRET_HEIGHT = 100;
 const int TURRET_WIDTH = 100;
+const int PASS_ALPHA = 200;
+const int FAIL_ALPHA = 30;
+const int PLACED_ALPHA = 255;
+constexpr int PLACE_DISTANCE = 200;
 
 class Turret : public Movable {
 public:
@@ -19,7 +23,8 @@ public:
 
     bool placementCheckTurret(); // checks if turret placement is within bounds
 
-    bool collisionCheckTurret(float , float , float , float , CollisionHandler &); // checks if the turret placement overlaps with any currently existing objects
+    // checks if the turret placement overlaps with any currently existing objects
+    bool collisionCheckTurret(float , float , float , float , CollisionHandler &);
 
     void activateTurret(); // activates the turret
 
@@ -51,15 +56,16 @@ public:
 
     void removeTurret(); // removes the turret
 
-    Turret();
+    Turret(bool activated = false, int health = 200, int ammo = 100,
+        bool placeable = false, bool placed = false);
     virtual ~Turret();
 
 private:
-    bool activated = false; // turret activated state
-    int health = 200; // turret health pool
-    int ammo = 100; // turret ammo pool
-    bool placeable = false;
-    bool placed = false;
+    bool activated; // turret activated state
+    int health; // turret health pool
+    int ammo; // turret ammo pool
+    bool placeable;
+    bool placed;
 };
 
 #endif

@@ -1,10 +1,13 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
 
-Turret::Turret() : Movable(MARINE_VELOCITY){
+Turret::Turret(bool activated, int health, int ammo, bool placeable, bool placed)
+                : Movable(MARINE_VELOCITY), activated(activated), ammo(ammo),
+                placeable(placeable), placed(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
+    printf("Turret created\n");
 }
 
 Turret::~Turret() {
@@ -17,25 +20,27 @@ bool Turret::placementCheckTurret(){
 }
 
 // checks if the turret placement overlaps with any currently existing objects
-bool Turret::collisionCheckTurret(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
-  SDL_Rect checkBox;
-  checkBox.h = 100;
-  checkBox.w = 100;
-  checkBox.x = moveX;
-  checkBox.y = moveY;
-  HitBox hitBox(moveX, moveY, checkBox, nullptr);
-  float distanceX = (playerX - moveX) * (playerX - moveX);
-	float distanceY = (playerY - moveY) * (playerY - moveY);
-	float distance = sqrt(abs(distanceX+distanceY));
-	if(distance>200) {
-		placeable = false;
-	}else
-		placeable = true;
-	if(placeable) {
-        if(ch.detectMovementCollision(&hitBox))
-	        placeable = false;
-	}
-	return placeable;
+bool Turret::collisionCheckTurret(float playerX, float playerY, float moveX,
+    float moveY, CollisionHandler &ch) {
+    SDL_Rect checkBox;
+    checkBox.h = TURRET_HEIGHT;
+    checkBox.w = TURRET_WIDTH;
+    checkBox.x = moveX;
+    checkBox.y = moveY;
+    HitBox hitBox(moveX, moveY, checkBox, nullptr);
+    float distanceX = (playerX - moveX) * (playerX - moveX);
+  	float distanceY = (playerY - moveY) * (playerY - moveY);
+  	float distance = sqrt(abs(distanceX+distanceY));
+  	if(distance>PLACE_DISTANCE) {
+  		placeable = false;
+  	}else
+  		placeable = true;
+  	if(placeable) {
+          if(ch.detectMovementCollision(&hitBox))
+  	        placeable = false;
+  	}
+    return placeable;
+  	//return (distance <= 200 && !ch.detectMovementCollision(&hitbox));
 }
 
 // activates the turret
@@ -74,13 +79,13 @@ bool Turret::healthCheckTurret() {
 void Turret::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
     if(this->collisionCheckTurret(playerX, playerY, moveX, moveY, ch))
-        texture.setAlpha(200);
+        texture.setAlpha(PASS_ALPHA);
     else
-        texture.setAlpha(30);
+        texture.setAlpha(FAIL_ALPHA);
 }
 
 void Turret::placeTurret() {
-    texture.setAlpha(255);
+    texture.setAlpha(PLACED_ALPHA);
     placed = true;
 }
 

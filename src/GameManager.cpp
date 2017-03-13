@@ -129,13 +129,13 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
 }
 
 // Create turret add it to turret, returns if success
-int32_t GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
+int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
     turretManager[id] = Turret();
     if (!turretManager.at(id).texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
-            printf("Failed to load the turret texture!\n");
-            deleteTurret(id);
-            return -1;
+        printf("Failed to load the turret texture!\n");
+        deleteTurret(id);
+        return -1;
     }
     turretManager.at(id).setPosition(x,y);
     return id;
@@ -243,9 +243,9 @@ void GameManager::updateCollider() {
 
     for (auto& m : turretManager) {
         if (m.second.isPlaced()) {
-          collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
-          collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
-          collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+            collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
+            collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
+            collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
         }
     }
 
