@@ -1,9 +1,8 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
 
-Turret::Turret(bool activated, int health, int ammo, bool placeable, bool placed)
-                : Movable(MARINE_VELOCITY), activated(activated), ammo(ammo),
-                placeable(placeable), placed(placed) {
+Turret::Turret(bool activated, int health, int ammo, bool placed)
+        :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -28,11 +27,11 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     checkBox.x = moveX;
     checkBox.y = moveY;
     HitBox hitBox(moveX, moveY, checkBox, nullptr);
-    float distanceX = (playerX - moveX) * (playerX - moveX);
-  	float distanceY = (playerY - moveY) * (playerY - moveY);
-  	float distance = sqrt(abs(distanceX+distanceY));
-    
-  	return (distance <= 200 && !ch.detectMovementCollision(&hitBox));
+    const float distanceX = (playerX - moveX) * (playerX - moveX);
+    const float distanceY = (playerY - moveY) * (playerY - moveY);
+    const float distance = sqrt(abs(distanceX+distanceY));
+
+    return (distance <= 200 && !ch.detectMovementCollision(&hitBox));
 }
 
 // activates the turret
@@ -44,12 +43,12 @@ void Turret::onCollision() {
     // Does nothing for now
 }
 
-void Turret::collidingProjectile(int damage) {
+void Turret::collidingProjectile(const int damage) {
     health -= damage;
 }
 
 // turret ammo pool decrements by this amount
-void Turret::decrementAmmo(int amount) {
+void Turret::decrementAmmo(const int amount) {
     ammo -= amount;
 }
 
@@ -79,15 +78,11 @@ void Turret::move(float playerX, float playerY, float moveX, float moveY, Collis
 
 void Turret::placeTurret() {
     texture.setAlpha(PLACED_ALPHA);
-    placed = true;
-}
-
-bool Turret::isPlaceable() {
-  return placeable;
+    boolPlaced = true;
 }
 
 bool Turret::isPlaced() {
-  return placed;
+  return boolPlaced;
 }
 
 void Turret::pickUpTurret(const int32_t id) {

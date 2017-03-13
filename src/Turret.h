@@ -30,11 +30,11 @@ public:
 
     void onCollision();
 
-    void collidingProjectile(int damage);
+    void collidingProjectile(const int damage);
 
-    void damageTurret(int damage); // decrements the turrets health by damage parameter
+    void damageTurret(const int damage); // decrements the turrets health by damage parameter
 
-    void decrementAmmo(int amount); // turret ammo pool decrements by this amount
+    void decrementAmmo(const int amount); // turret ammo pool decrements by this amount
 
     void shootTurret(); // turret shoots, this is not yet defined
 
@@ -48,8 +48,6 @@ public:
 
     void placeTurret();
 
-    bool isPlaceable();
-
     bool isPlaced();
 
     void pickUpTurret(const int32_t);
@@ -57,15 +55,14 @@ public:
     void removeTurret(); // removes the turret
 
     Turret(bool activated = false, int health = 200, int ammo = 100,
-        bool placeable = false, bool placed = false);
+         bool boolPlaced = false);
     virtual ~Turret();
 
 private:
     bool activated; // turret activated state
     int health; // turret health pool
     int ammo; // turret ammo pool
-    bool placeable;
-    bool placed;
+    bool boolPlaced;
 };
 
 #endif

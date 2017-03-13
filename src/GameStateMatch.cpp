@@ -153,9 +153,9 @@ void GameStateMatch::handle() {
             }
             break;
           case SDL_KEYUP:
-               switch( event.key.keysym.sym ) {
-            default:
-                   break;
+             switch( event.key.keysym.sym ) {
+             default:
+                 break;
             }
             break;
         case SDL_QUIT:

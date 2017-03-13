@@ -19,12 +19,12 @@ public:
     Barricade(int health = 100, int state = 0, bool booPlaceable = false, bool boolPlaced = false);
     virtual ~Barricade();
 
-    void move(float, float, float, float, CollisionHandler&); // Moves Zombie
+    void move(const float, const float, const float, const float, CollisionHandler&); // Moves Zombie
     void onCollision();
-    void collidingProjectile(int damage);
+    void collidingProjectile(const int damage);
     bool isPlaceable();
     bool isPlaced();
-    bool checkPlaceablePosition(float, float, float, float, CollisionHandler&);
+    bool checkPlaceablePosition(const float,const float,const float,const float, CollisionHandler&);
     void placeBarricade();
 
 private:

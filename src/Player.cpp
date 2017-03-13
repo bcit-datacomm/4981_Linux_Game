@@ -32,17 +32,17 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
         tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
-                           GameManager::instance()->getCollisionHandler());
+            GameManager::instance()->getCollisionHandler());
     }
 
     if (tempTurretID > -1) {
         Turret &tempTurret = GameManager::instance()->getTurret(tempTurretID);
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
-                        GameManager::instance()->getCollisionHandler());
+            GameManager::instance()->getCollisionHandler());
 
-        if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
-                                                GameManager::instance()->getCollisionHandler())) {
+                    GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
                 tempTurretID = -1;
             }
@@ -69,7 +69,6 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
             tempBarricade.placeBarricade();
             tempBarricadeID = -1;
         }
-        return;
     }
 }
 
@@ -117,9 +116,8 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
         double angle = marine->getAngle();
         int distance = 100;
         tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle),
-        marine->getY() + distance*sin(angle));
-    }
-    else {
+            marine->getY() + distance*sin(angle));
+    } else {
         GameManager::instance()->deleteBarricade(tempBarricadeID);
         tempBarricadeID = -1;
     }
@@ -130,9 +128,8 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
        double angle = marine->getAngle();
        int distance = 100;
        tempTurretID = GameManager::instance()->createTurret(renderer, marine->getX() + distance*cos(angle),
-       marine->getY() + distance*sin(angle));
-   }
-   else {
+           marine->getY() + distance*sin(angle));
+   } else {
        GameManager::instance()->deleteTurret(tempTurretID);
        tempTurretID = -1;
    }
