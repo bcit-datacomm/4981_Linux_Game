@@ -292,7 +292,7 @@ void GameStateMenu::handle() {
 * Notes:
 * Function positions all screen elements in the window
 */
-void GameStateMenu::update(const float& delta) {
+void GameStateMenu::update(const float delta) {
 
     if(delta == JOIN) {
         game.stateID = 2;

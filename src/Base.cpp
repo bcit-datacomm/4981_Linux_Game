@@ -3,8 +3,8 @@
 #include<random>
 
 Base::Base(int health) : Object(BASE_HEIGHT, BASE_WIDTH), health(health) {
-    setX((MAP_WIDTH / 2) - BASE_WIDTH/2);
-    setY((MAP_HEIGHT / 2) - BASE_HEIGHT/2);
+    setX((MAP_WIDTH / 2) - BASE_WIDTH / 2);
+    setY((MAP_HEIGHT / 2) - BASE_HEIGHT / 2);
 
     printf("Create Base\n");
 }

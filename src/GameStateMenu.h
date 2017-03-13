@@ -54,10 +54,10 @@ private:
     Level level;
     Camera camera;
 
-    virtual void sync();
-    virtual void handle();
-    virtual void update(const float& delta);
-    virtual void render();
+    virtual void sync() override;
+    virtual void handle() override;
+    virtual void update(const float delta) override;
+    virtual void render() override;
     void positionElements();
     void renderText(LTexture *fontTexture, const char* text, SDL_Color color, TTF_Font* font, SDL_Rect rect);
 

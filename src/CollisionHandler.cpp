@@ -20,11 +20,11 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
 HitBox *CollisionHandler::detectDamageCollision(const HitBox *hb) {
     std::vector<HitBox *> returnObjects;
     returnObjects = quadtreeDam.retrieve(hb);
-    for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
-            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
-                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-            return returnObjects.at(x);
+    for (unsigned int x = 0, length = returnObjects.size(); x < length; x++) {
+        if (returnObjects[x] != nullptr && hb->attached != returnObjects[x]->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects[x]->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects[x]->isPlayerFriendly()) ) {
+            return returnObjects[x];
         }
     }
     return nullptr;
@@ -34,11 +34,11 @@ HitBox *CollisionHandler::detectDamageCollision(const HitBox *hb) {
 HitBox *CollisionHandler::detectProjectileCollision(const HitBox *hb) {
     std::vector<HitBox*> returnObjects;
     returnObjects = quadtreePro.retrieve(hb);
-    for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
-            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
-                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-            return returnObjects.at(x);
+    for (unsigned int x = 0, length = returnObjects.size(); x < length; x++) {
+        if (returnObjects[x] != nullptr && hb->attached != returnObjects[x]->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects[x]->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects[x]->isPlayerFriendly()) ) {
+            return returnObjects[x];
         }
     }
     return nullptr;
@@ -48,10 +48,10 @@ HitBox *CollisionHandler::detectProjectileCollision(const HitBox *hb) {
 bool CollisionHandler::detectMovementCollision(const HitBox *hb) {
     std::vector<HitBox *> returnObjects;
     returnObjects = quadtreeMov.retrieve(hb);
-    for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
-            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
-                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
+    for (unsigned int x = 0, length = returnObjects.size(); x < length; x++) {
+        if (returnObjects[x] != nullptr && hb->attached != returnObjects[x]->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects[x]->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects[x]->isPlayerFriendly()) ) {
             return true;
         }
     }
@@ -62,11 +62,11 @@ bool CollisionHandler::detectMovementCollision(const HitBox *hb) {
 HitBox *CollisionHandler::detectPickUpCollision(const HitBox *hb) {
     std::vector<HitBox*> returnObjects;
     returnObjects = quadtreeMov.retrieve(hb);
-    for (unsigned int x = 0; x < returnObjects.size(); x++) {
-        if (returnObjects.at(x) != nullptr && hb->attached != returnObjects.at(x)->attached 
-            && SDL_HasIntersection(&hb->getRect(), &returnObjects.at(x)->getRect()) 
-                && !(hb->isPlayerFriendly() && returnObjects.at(x)->isPlayerFriendly()) ) {
-            return returnObjects.at(x);
+    for (unsigned int x = 0, length = returnObjects.size(); x < length; x++) {
+        if (returnObjects[x] != nullptr && hb->attached != returnObjects[x]->attached 
+            && SDL_HasIntersection(&hb->getRect(), &returnObjects[x]->getRect()) 
+                && !(hb->isPlayerFriendly() && returnObjects[x]->isPlayerFriendly()) ) {
+            return returnObjects[x];
         }
     }
     return nullptr;
@@ -84,9 +84,8 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
     const int deltaX  = range * cos(radians);
     const int deltaY  = range * sin(radians);
     int aX, aY, bX, bY;
-
-    std::vector<HitBox*> allHitBoxes;
-    allHitBoxes = quadtreePro.objects;
+        
+    std::vector<HitBox *> allHitBoxes = quadtreePro.objects;
 
     std::priority_queue<HitBox*> targetsInSights;
     for (unsigned int x = 0; x < allHitBoxes.size(); x++) {
