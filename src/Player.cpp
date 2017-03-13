@@ -128,6 +128,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     }
 }
 
+
 void Player::handleTempTurret(SDL_Renderer *renderer) {
    if(tempTurretID < 0) {
        double angle = marine->getAngle();

@@ -1,5 +1,6 @@
 #include "HitBox.h"
 
+
 HitBox::HitBox(const float& x, const float& y, SDL_Rect rect, Entity* attached) : attached(attached) {
     setRect(rect);
     move(x,y);
