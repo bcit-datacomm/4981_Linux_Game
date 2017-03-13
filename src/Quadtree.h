@@ -7,8 +7,8 @@
 #include <memory>
 
 constexpr unsigned int BRANCHSIZE = 4;
-constexpr unsigned int MAX_OBJECTS = 10;
-constexpr unsigned int MAX_LEVELS = 5;
+constexpr unsigned int MAX_OBJECTS = 1000;
+constexpr unsigned int MAX_LEVELS = 50;
 
 class Quadtree {
 public:
