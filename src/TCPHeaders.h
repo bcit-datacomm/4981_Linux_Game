@@ -12,35 +12,35 @@ enum TCP_ID {
 };
 
 // ConnectPack
-typedef struct {
+struct ConnectPack {
     int  id;
     char username[32];
-} ConnectPack;
+};
 
 // ReadyPack
-typedef struct {
+struct ReadyPack {
     int  id;
     char ready;
-} ReadyPack;
+};
 
 // AcceptPack
-typedef struct {
+struct AcceptPack {
     int  id;
     int  playerid;
     char username[32];
-} AcceptPack;
+};
 
 // PlayerPosition
-typedef struct {
+struct PlayerPosition {
     int playerid;
     int xpos;
     int ypos;
-} PlayerPosition;
+};
 
 // GameStart
-typedef struct {
+struct GameStart {
     int id;
     PlayerPosition * pPositions; // array of player positions
-} GameStart;
+};
 
 #endif

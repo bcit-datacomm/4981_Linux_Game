@@ -31,7 +31,7 @@
 ------------------------------------------------------------------------------*/
 #ifndef UDPHEADER_H
 #define UDPHEADER_H
-#include <stdint.h>
+#include <cstdint>
 /*------------------------------------------------------------------------------
 -- enum: UDPHeaders
 --
@@ -48,8 +48,7 @@
 -- NOTES:
 -- this is the enum to hold all the terspecifiers that will indicate the packets
 --------------------------------------------------------------------------*/
-enum UDPHeaders
-{
+enum UDPHeaders {
     //(Main Header indicators in the 0 - 99 domain )
     ATTACK, // 'A'?
     MOVE, // 'M'?
@@ -194,7 +193,7 @@ typedef struct {
 	//Action * actions;
 //} PlayerData;
 
-typedef struct {
+struct PlayerData {
 	int32_t   playerid;
 	float xpos;
 	float ypos;
@@ -206,7 +205,7 @@ typedef struct {
 	MoveAction *moves;
 	int32_t   nattacks;
 	AttackAction *attacks;
-} PlayerData;
+};
 /*------------------------------------------------------------------------------
 -- Struct: ZombieData
 --
@@ -230,13 +229,13 @@ typedef struct {
 --
 --------------------------------------------------------------------------*/
 
-typedef struct {
+struct ZombieData {
 	int32_t zombieid;
 	int32_t health;
 	float xpos;
 	float ypos;
 	float direction;
-}  ZombieData;
+};
 
 /*------------------------------------------------------------------------------
 -- Struct: GameSync
@@ -260,8 +259,7 @@ typedef struct {
     --  Zombie * zombies -- point32_ter to the list of zombies
 --
 --------------------------------------------------------------------------*/
-typedef struct
-{
+struct GameSync {
 	int32_t id = SYNC; //packet
     int32_t playerheaderid = PLAYERH;
     int32_t nplayers;
@@ -269,6 +267,17 @@ typedef struct
     int32_t zombieheaderid = ZOMBIEH;
     int32_t nzombies;
     ZombieData * zombies;
-} GameSync;
+};
+
+union PacketTypes {
+    MoveAction ma;
+    AttackAction aa;
+};
+
+struct ClientUpdate{
+    UDPHeaders packetType;
+    PacketTypes data;
+};
+
 
 #endif
