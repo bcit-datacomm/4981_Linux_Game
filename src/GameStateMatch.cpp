@@ -115,10 +115,12 @@ void GameStateMatch::loop() {
         sync();    // Sync game to server
         render();    // Render game state to window
 #else
-        //Server side sync packet sending
-        genOutputPacket();
-        sendSyncPacket(sendSocketUDP);
-        clearMoveActions();
+        if (countedFrames % 3 == 0) {
+            //Server side sync packet sending
+            genOutputPacket();
+            sendSyncPacket(sendSocketUDP);
+            clearMoveActions();
+        }
 #endif
 
         ++countedFrames;
