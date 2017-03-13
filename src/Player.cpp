@@ -36,7 +36,9 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        marine->fireWeapon();
+        if(marine->inventory.getCurrent()->getFireState()){
+            marine->fireWeapon();
+        }
     }
 
 }
@@ -55,11 +57,11 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
-	    if (tempBarricade.isPlaceable()) {
-		    tempBarricade.placeBarricade();
+     if (tempBarricade.isPlaceable()) {
+      tempBarricade.placeBarricade();
             tempBarricadeID = -1;
-	    }
-	    return;
+     }
+     return;
     }
 
     unsigned int tid = GameManager::instance()->createTurret();
@@ -140,7 +142,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     if(tempBarricadeID < 0) {
         double angle = marine->getAngle();
         int distance = 100;
-        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle), 
+        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle),
         marine->getY() + distance*sin(angle));
     }
     else {

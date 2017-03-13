@@ -17,6 +17,8 @@ namespace RifleVars {
     const int AMMO     = 1000;
     const int AOE      = 1;
     const int RELOAD   = 3;
+    const int FIRERATE = 1000;
+    const int READY    = true;
 }
 
 class Rifle: public InstantWeapon {

@@ -51,9 +51,9 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const
                 nullptr, m.second.getAngle());
     }
 
- 	for (const auto& b : barricadeManager) {
-		b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
-	}
+  for (const auto& b : barricadeManager) {
+  b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
+ }
 
 }
 
@@ -250,12 +250,12 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
     }
 
-   	for (auto& b : barricadeManager) {
+    for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
             collisionHandler.quadtreeMov.insert(b.second.movementHitBox.get());
             collisionHandler.quadtreeDam.insert(b.second.damageHitBox.get());
         }
-	}
+ }
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(m.second.pickupHitBox.get());
@@ -278,7 +278,7 @@ int32_t GameManager::createBarricade(SDL_Renderer* gRenderer, const float x, con
 
 
 void GameManager::deleteBarricade(const int32_t id) {
-	barricadeManager.erase(id);
+ barricadeManager.erase(id);
 }
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(const int32_t id) {

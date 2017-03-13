@@ -33,7 +33,7 @@ bool GameStateMatch::load() {
     } else {
         level.levelTexture.setDimensions(2000, 2000);
     }
- 	
+  
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
 
@@ -43,7 +43,7 @@ bool GameStateMatch::load() {
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
-	
+ 
 
     //base = Base();
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
@@ -144,15 +144,15 @@ void GameStateMatch::handle() {
                 player.handlePlacementClick(game.renderer);
             }
             break;
-      	case SDL_KEYDOWN:
-        	switch(event.key.keysym.sym) {
-			case SDLK_ESCAPE:
-				play = false;
-				break;
-			case SDLK_b:
-				player.handleTempBarricade(game.renderer);
-				break;
-			default:
+       case SDL_KEYDOWN:
+         switch(event.key.keysym.sym) {
+   case SDLK_ESCAPE:
+    play = false;
+    break;
+   case SDLK_b:
+    player.handleTempBarricade(game.renderer);
+    break;
+   default:
                 break;
             }
             break;

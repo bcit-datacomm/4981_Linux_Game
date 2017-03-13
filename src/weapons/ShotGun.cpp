@@ -4,7 +4,7 @@
 */
 #include "ShotGun.h"
 
-ShotGun::ShotGun() : InstantWeapon(ShotgunVars::TYPE, ShotgunVars::RANGE, ShotgunVars::DAMAGE, 
-        ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::AOE, ShotgunVars::RELOAD) {
+ShotGun::ShotGun() : InstantWeapon(ShotgunVars::TYPE, ShotgunVars::RANGE, ShotgunVars::DAMAGE,
+        ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::AOE, ShotgunVars::RELOAD, ShotgunVars::FIRERATE, ShotgunVars::READY) {
 
 }
