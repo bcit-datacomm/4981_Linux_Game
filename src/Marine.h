@@ -24,6 +24,8 @@ public:
 
     void collidingProjectile(int damage);
 
+    void fireWeapon();
+
     Marine();
     virtual ~Marine();
 

@@ -5,6 +5,8 @@
 
 class GameState {
 public:
+    GameState(Game& g) : game(g) {};
+    virtual ~GameState() = default;
 
     virtual bool load() = 0;
     virtual void loop() = 0;
@@ -18,16 +20,11 @@ public:
     //Main loop flag
     bool play = true;
 
-    GameState(Game& g): game(g){};
-    virtual ~GameState() {};
-
 private:
-
     virtual void handle() = 0;
-    virtual void update(const float& delta) = 0;
+    virtual void update(const float delta) = 0;
     virtual void render() = 0;
     virtual void sync() = 0;
-
 };
 
 #endif

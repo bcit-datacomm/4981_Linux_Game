@@ -9,6 +9,11 @@
 #include "ShotGun.h"
 #include "Consumable.h"
 #include "BasicMedkit.h"
+#include "weapons/Weapon.h"
+#include "weapons/HandGun.h"
+#include "weapons/Rifle.h"
+#include "weapons/ShotGun.h"
+
 
 class Inventory {
 public:
@@ -26,7 +31,7 @@ private:
     HandGun defaultGun;
     Rifle tempRifle;
     ShotGun tempShotGun;
-    //temp for now
+    //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());
     int slotScrollTick = 0;
     int scrollDelay = 200;

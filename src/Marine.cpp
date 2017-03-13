@@ -18,3 +18,8 @@ void Marine::onCollision() {
 void Marine::collidingProjectile(int damage) {
     health = health - damage;
 }
+
+// Created by DericM 3/8/2017
+void Marine::fireWeapon() {
+    inventory.getCurrent()->fire(*this);
+}
