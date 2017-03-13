@@ -184,32 +184,44 @@ void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
 }
 
-int32_t GameManager::addWeaponDrop(const WeaponDrop& newWeaponDrop) {
-    const int32_t id = generateID();
+int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
+    const int32_t id = newWeaponDrop.getId();
+
     weaponDropManager.insert({id, newWeaponDrop});
     return id;
 }
 
 // Create weapon drop add it to manager, returns success
 bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y) {
-    const int32_t id = generateID();
-    const int randGun = rand() % 2 + 1;
 
-    if(randGun == 1){
-        w = Rifle();
-    } else if(randGun == 2){
-        w = ShotGun();
-    }
 
-    weaponDropManager.insert({id, WeaponDrop(w)});
+    const int32_t wid = generateID();
+    w = Rifle();
 
-    if(!weaponDropManager.at(id).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
+
+    weaponManager.insert({wid, w});
+
+    WeaponDrop wd(wid);
+    const int32_t id = wd.getId();
+    weaponDropManager.insert({id, wd});
+
+    if(!weaponDropManager.at(wd.getId()).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
         printf("Failed to load the player texture!\n");
         deleteWeaponDrop(id);
         return false;
     }
     weaponDropManager.at(id).setPosition(x,y);
     return true;
+}
+
+//returns weapon drop in  weaponDropManager
+WeaponDrop& GameManager::getWeaponDrop(int32_t id){
+    return weaponDropManager.at(id);
+}
+
+//returns weapon in weaponManager
+Weapon& GameManager::getWeapon(int32_t id){
+    return weaponManager.at(id);
 }
 
 // Deletes weapon from level
@@ -227,40 +239,40 @@ void GameManager::updateCollider() {
     collisionHandler = CollisionHandler();
 
     for (auto& m : marineManager) {
-        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(&m.second);
+        collisionHandler.quadtreePro.insert(&m.second);
+        collisionHandler.quadtreeDam.insert(&m.second);
     }
 
     for (auto& z : zombieManager) {
-        collisionHandler.quadtreeMov.insert(z.second.movementHitBox.get());
-        collisionHandler.quadtreePro.insert(z.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam.insert(z.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(&z.second);
+        collisionHandler.quadtreePro.insert(&z.second);
+        collisionHandler.quadtreeDam.insert(&z.second);
     }
 
     for (auto& o : objectManager) {
-        collisionHandler.quadtreeMov.insert(o.second.movementHitBox.get());
-        collisionHandler.quadtreePro.insert(o.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam.insert(o.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(&o.second);
+        collisionHandler.quadtreePro.insert(&o.second);
+        collisionHandler.quadtreeDam.insert(&o.second);
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov.insert(m.second.movementHitBox.get());
-        collisionHandler.quadtreePro.insert(m.second.projectileHitBox.get());
-        collisionHandler.quadtreeDam.insert(m.second.damageHitBox.get());
+        collisionHandler.quadtreeMov.insert(&m.second);
+        collisionHandler.quadtreePro.insert(&m.second);
+        collisionHandler.quadtreeDam.insert(&m.second);
     }
 
    	for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
-            collisionHandler.quadtreeMov.insert(b.second.movementHitBox.get());
-            collisionHandler.quadtreeDam.insert(b.second.damageHitBox.get());
+            collisionHandler.quadtreeMov.insert(&b.second);
+            collisionHandler.quadtreeDam.insert(&b.second);
         }
 	}
 
     for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp.insert(m.second.pickupHitBox.get());
+        collisionHandler.quadtreePickUp.insert(&m.second);
     }
-    
+
 }
 
 // Create barricade add it to manager, returns success
@@ -297,9 +309,9 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer, const float x, const fl
    } else {
         objectManager.at(id).texture.setDimensions(w, h);
     }
-    
+
     objectManager.at(id).setPosition(x,y);
-    
+
     return id;
 }
 
@@ -314,7 +326,7 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer, const float startX, const
 
     createWall(gRenderer, x, y, width, height);
     createWall(gRenderer, x, endY, width, height);
- 
+
     width = 100;
     height = endY - startY + 100;
 
@@ -345,20 +357,20 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer, const float startX, const
 
 bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
     std::vector<Point> spawnPoints;
-    
+
     spawnPoints.push_back(Point(-900, -900));
     spawnPoints.push_back(Point(1900, -900));
     spawnPoints.push_back(Point(2900, -900));
     spawnPoints.push_back(Point(2900, 2900));
     spawnPoints.push_back(Point(1900, 2900));
     spawnPoints.push_back(Point(-900, 2900));
-    
+
     if(zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
         for(const auto z : zombieManager) {
             if(count >= spawnPoints.size())
-                break;            
+                break;
             ids.push_back(z.first);
             count++;
         }
@@ -374,5 +386,4 @@ bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
 
     return true;
 
-} 
-
+}

@@ -1,6 +1,7 @@
 //created 2/5/17 Maitiu
 #include <memory>
 #include "Inventory.h"
+#include "GameManager.h"
 
 Inventory::Inventory(){
     weapons[0] = std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun));
@@ -19,7 +20,7 @@ void Inventory::switchCurrent(int slot){
     }
 }
 
-void Inventory::pickUp(){
+void Inventory::pickUp(int32_t weaponId){
     int currentTime = SDL_GetTicks();
 
     if(currentTime > (pickupTick + pickupDelay)){
@@ -27,17 +28,12 @@ void Inventory::pickUp(){
         if(current == 0){
             printf("Can't Swap default gun \n");
         } else{
+            //Weapon w = GameManager::instance()->getWeapon(weaponId);
+            printf("Swapped from %s ", weapons[current]->getType().c_str());
 
-            int randGun = rand() % 2 + 1;
-            if(randGun == 1){
-                printf("Swapped from %s ", weapons[current]->getType().c_str());
-                weapons[current] = std::make_shared<Weapon>(tempRifle);
-                printf("to %s\n", weapons[current]->getType().c_str());
-            } else if(randGun == 2){
-                printf("Swapped from %s ", weapons[current]->getType().c_str());
-                weapons[current] = std::make_shared<Weapon>(tempShotGun);
-                printf("to %s\n", weapons[current]->getType().c_str());
-            }
+            //weapons[current] = std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w));
+            printf("to %s\n", weapons[current]->getType().c_str());
+
         }
 
     }

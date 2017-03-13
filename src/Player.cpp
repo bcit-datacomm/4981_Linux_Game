@@ -130,7 +130,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine->inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
-        marine->inventory.pickUp();
+        marine->checkForPickUp();
     }
     marine->setDY(y);
     marine->setDX(x);
@@ -140,7 +140,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     if(tempBarricadeID < 0) {
         double angle = marine->getAngle();
         int distance = 100;
-        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle), 
+        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle),
         marine->getY() + distance*sin(angle));
     }
     else {

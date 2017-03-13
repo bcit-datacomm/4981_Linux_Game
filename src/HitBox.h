@@ -2,11 +2,9 @@
 #define HITBOX_H
 #include <SDL2/SDL.h>
 
-class Entity;
-
 class HitBox {
 public:
-    HitBox(const float& x, const float& y, SDL_Rect rect, Entity *attached);
+    HitBox(const float& x, const float& y, SDL_Rect rect);
     ~HitBox() = default;
 
     void move(const float& x, const float& y);
@@ -16,7 +14,6 @@ public:
     void setFriendly(const bool isFriendly);
     bool isPlayerFriendly() const;
 
-    Entity *attached; // Entity that it is linked to
 
     friend bool operator!=(const HitBox& first, const HitBox& second);
 

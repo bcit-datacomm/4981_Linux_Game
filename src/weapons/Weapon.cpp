@@ -4,15 +4,16 @@
 */
 #include "Weapon.h"
 #include <iostream>
+#include <atomic>
 
 Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE, int reloadSpeed)
                :type(type), range(range), damage(damage), ammo(ammo), rAOE(rAOE), reloadSpeed(reloadSpeed),
-               reloadTick(0), reloadDelay(200){
+               reloadTick(0), reloadDelay(200), id(generateWID()){
 
 }
 
-Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage), ammo(w.ammo), 
-    rAOE(w.rAOE), reloadSpeed(w.reloadSpeed), reloadTick(w.reloadTick), reloadDelay(w.reloadDelay) {
+Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage), ammo(w.ammo),
+    rAOE(w.rAOE), reloadSpeed(w.reloadSpeed), reloadTick(w.reloadTick), reloadDelay(w.reloadDelay), id(w.id){
 
 }
 
@@ -81,5 +82,14 @@ bool Weapon::reduceAmmo(int rounds){
 }
 
 void Weapon::fire(Marine &marine){
-        
+
+}
+
+int32_t Weapon::getId(){
+    return id;
+}
+
+int32_t generateWID() {
+    static std::atomic<int32_t> counter{-1};
+    return ++counter;
 }

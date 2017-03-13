@@ -23,8 +23,8 @@ bool Turret::collisionCheckTurret(float x, float y, CollisionHandler& ch) {
     checkBox.w = 100;
     checkBox.x = x;
     checkBox.y = y;
-    HitBox hitBox(x, y, checkBox, nullptr);
-    return !ch.detectMovementCollision(&hitBox);
+    HitBox hitBox(x, y, checkBox);
+    return !ch.detectMovementCollision(this);
 }
 
 // activates the turret

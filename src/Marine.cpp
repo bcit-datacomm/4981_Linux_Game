@@ -1,4 +1,5 @@
 #include "Marine.h"
+#include "GameManager.h"
 
 Marine::Marine() : Movable(MARINE_VELOCITY) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
@@ -23,3 +24,25 @@ void Marine::collidingProjectile(int damage) {
 void Marine::fireWeapon() {
     inventory.getCurrent()->fire(*this);
 }
+
+
+int32_t Marine::checkForPickUp(){
+     int32_t id = -1;
+     Entity *ep;
+     GameManager *gm = GameManager::instance();
+
+     CollisionHandler &ch = gm->getCollisionHandler();
+
+     ep =  ch.detectPickUpCollision(this);
+
+     if(ep != nullptr){
+         id = ep->getId();
+         WeaponDrop wd = gm->getWeaponDrop(id);
+         id = wd.getWeaponId();
+         inventory.pickUp(id);
+
+         return 1;
+     }
+
+     return id;
+ }

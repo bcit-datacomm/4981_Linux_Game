@@ -10,22 +10,24 @@
 
 class WeaponDrop: public Entity{
 public:
-    WeaponDrop(Weapon &w);
+    WeaponDrop(int32_t wId);
+    WeaponDrop(const WeaponDrop &wd);
     ~WeaponDrop();
     void setPosition(int x, int y);
     void onCollision();
+    int32_t getId();
 
     void collidingProjectile(int damage);
-	
+
     int getX() const;
     int getY() const;
-    Weapon& getWeapon();
+    int32_t getWeaponId();
 
 
 private:
     int xCoord;
     int yCoord;
-    Weapon &weapon;
+    int32_t weaponId;
 };
 
 

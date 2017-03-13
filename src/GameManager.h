@@ -62,9 +62,11 @@ public:
     void deleteZombie(const int32_t id);
     bool createZombieWave(SDL_Renderer* gRenderer, const int n);
 
-    int32_t addWeaponDrop(const WeaponDrop& newWeaponDrop);
+    int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteWeaponDrop(const int32_t id);
+    WeaponDrop& getWeaponDrop(int32_t id);
+    Weapon& getWeapon(int32_t id);
 
     int32_t createBarricade(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteBarricade(const int32_t id);
@@ -84,6 +86,7 @@ private:
     std::map<int32_t, Zombie> zombieManager;
     std::map<int32_t, Turret> turretManager;
     std::map<int32_t, WeaponDrop> weaponDropManager;
+    std::map<int32_t, Weapon> weaponManager;
     std::map<int32_t, Barricade> barricadeManager;
 
 };

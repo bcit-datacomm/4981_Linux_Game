@@ -1,6 +1,6 @@
 #include "HitBox.h"
 
-HitBox::HitBox(const float& x, const float& y, SDL_Rect rect, Entity* attached) : attached(attached) {
+HitBox::HitBox(const float& x, const float& y, SDL_Rect rect){
     setRect(rect);
     move(x,y);
 }
@@ -27,7 +27,7 @@ bool HitBox::isPlayerFriendly() const {
 }
 
 bool operator!=(const HitBox& first, const HitBox& second) {
-    return first.rect != second.rect && first.attached != second.attached && first.playerFriendly != second.playerFriendly;
+    return first.rect != second.rect && first.playerFriendly != second.playerFriendly;
 }
 
 bool operator!=(const SDL_Rect& first, const SDL_Rect& second) {

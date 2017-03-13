@@ -18,13 +18,12 @@ const int MARINE_WIDTH = 100;
 
 class Marine : public Movable {
 public:
+
     void create(); //function displays character
-
     void onCollision();
-
     void collidingProjectile(int damage);
-
     void fireWeapon();
+    int32_t checkForPickUp();
 
     Marine();
     virtual ~Marine();

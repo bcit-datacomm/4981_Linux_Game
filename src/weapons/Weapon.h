@@ -28,6 +28,7 @@ public:
     int getRAOE(); //returns radius of effect
     void reloadClip();//resets clip to max amount
     bool reduceAmmo(int rounds);
+    int32_t getId();
     virtual void fire(Marine &marine);
 
 protected:
@@ -43,7 +44,10 @@ protected:
     LTexture UiTexture;
     int reloadTick;
     int reloadDelay;
+    int32_t id;
 
 };
+
+int32_t generateWID();
 
 #endif
