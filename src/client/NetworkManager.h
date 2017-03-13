@@ -1,16 +1,18 @@
 #ifndef NETWORKMANAGER_HPP
 #define NETWORKMANAGER_HPP
 
-#include "UDPSocket.h"
+#include <string>
 #include <stdio.h>
 #include <iostream>
-
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <limits.h>
 #include <atomic>
 #include <memory>
+#include <map>
 
+#define STDIN           0
 #define TCP_PORT 		35223
 #define UDP_PORT 		35222
 #define UNAME_SIZE 	    32
@@ -28,21 +30,27 @@
 class NetworkManager {
 public:
     static NetworkManager& instance();
-
-    UDPSocket& getSockUDP() {return _sockUDP;};
-    void runTCPClient(const char *, const char *, char users[MAX_USERS][UNAME_SIZE]);
-    void runUDPClient(bool running) {_UDPRunning = running;};
+    void initClients(const char *ip);
+    void closeConnection();
+    int writeSocket(int, const char *, int);
+    void writeUDPSocket(const char *, int);
 private:
-    int _sockTCP;
-    UDPSocket _sockUDP;
-    std::atomic<bool> _UDPRunning;
+    int sockTCP;
+    int sockUDP;
+    in_addr_t serverIP;
+    NetworkManager() {};
 
-    NetworkManager() : _UDPRunning(false) {};
 
+    void bindSocket(int sock, struct sockaddr_in addr);
+    struct sockaddr_in createAddress(const in_addr_t ip, const int port) const;
+    void runTCPClient();
     void runUDPClient();
-    int TCPConnect(const char *);
-    int writeTCPSocket(const char *, int);
-	int readTCPSocket(char *, int);
+    int connectSocket(const char *) const;
+    int createSocket(int) const;
+    int readSocket(int sock, char *buf, int len) const;
+
+    void connectSocket(int sock, const struct sockaddr_in& addr) const;
+
 };
 
 #endif

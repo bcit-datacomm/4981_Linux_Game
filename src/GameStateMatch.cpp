@@ -13,43 +13,31 @@
 #include "client/NetworkManager.h"
 #include <thread>
 
+bool GameStateMatch::gameStart = false;
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
 
 }
 
 bool GameStateMatch::load() {
-    std::string username, ip;
-    int numPlayers;
-    std::cout << "Enter username (max 32 chars), server IP, and number of players: " << std::endl;
-    std::cin >> username >> ip >> numPlayers;
-
-    char users[MAX_USERS][UNAME_SIZE];
-    NetworkManager::instance().handshake(ip.c_str(), username.c_str(), numPlayers, users);
-
-    float x = 0;
-    float y = 0;
-    for(int i  = 0; i < numPlayers; i++) {
-        Marine& marine = GameManager::instance()->createMarine(i, game.renderer, x, y);
-        x += 100;
-        y += 100;
-        if(strcmp(users[i], username.c_str()) == 0) {
-            marine.setID(i);
-            player.setControl(marine);
-        }
-    }
+    std::string ip;
+    std::cout << "enter ip" << std::endl;
+    std::cin >> ip;
+    NetworkManager::instance().initClients(ip.c_str());
 
     bool success = true;
 
+
+    //start handhsake here
+
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
-    if ( frameFont == NULL ) {
-        //printf( "Failed to load font! SDL_invalid use of non-static member function ttf Error: %s\n",
-        //    TTF_GetError() );
+    if (frameFont == nullptr) {
+        printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
 
-    //level = new Level();
+    //level = new Level();() / 1000.f)
     if (!level.levelTexture.loadFromFile("assets/texture/checkerboard.png", game.renderer)) {
         //printf("Failed to load the level texture!\n");
         success = false;
@@ -57,44 +45,10 @@ bool GameStateMatch::load() {
         level.levelTexture.setDimensions(2000, 2000);
     }
 
-
-/*
-    // Create Dummy Entitys
-    GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 100, 100);
-    GameManager::instance()->createZombie(game.renderer, 700, 700);
-    GameManager::instance()->createTurret(game.renderer, 1000, 500);
-    GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
-
-    //base = Base();
-    if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
-        printf("Failed to load the base texture!\n");
-        success = false;
-    }
-    GameManager::instance()->addObject(base);
-    Point newPoint = base.getSpawnPoint();
-
-*/
-    //player = new Player();
-
-    //player.marine->setPosition(newPoint.first, newPoint.second);
-
-/*
-    if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
-        printf("Failed to load the player texture!\n");
-        success = false;
-    }
-
-    //camera = Camera(game.window.getWidth(), game.window.getHeight());
-
-    GameManager::instance()->printMarineCount();
-    */
-
     return success;
 }
 
 void GameStateMatch::loop() {
-    NetworkManager::instance().setUDPRunning(true);
     //The frames per second timer
     LTimer fpsTimer;
 
@@ -106,6 +60,8 @@ void GameStateMatch::loop() {
 
     //Start counting frames per second
     unsigned long countedFrames = 0;
+    int frameTicks;
+    unsigned int second = 0;
     float avgFPS = 0;
     fpsTimer.start();
 
@@ -132,9 +88,13 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
+        if(fpsTimer.getTicks() / 1000 > second) {
+            GameManager::instance()->createZombieWave(game.renderer, 1);
+            second+=5;
+        }
+
         //If frame finished early
-        int frameTicks = capTimer.getTicks();
-        if ( frameTicks < SCREEN_TICK_PER_FRAME ) {
+        if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
             SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
         }
@@ -144,9 +104,7 @@ void GameStateMatch::loop() {
 
 void GameStateMatch::updateServ() {
     MoveAction moveAction = player.getMoveAction();
-    NetworkManager::instance()
-        .getSockUDP()
-        .sendToServ((char *)&moveAction, sizeof(MoveAction));
+    NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(MoveAction));
 }
 
 void GameStateMatch::sync() {
@@ -154,14 +112,14 @@ void GameStateMatch::sync() {
 }
 
 void GameStateMatch::handle() {
-    const Uint8 *state = SDL_GetKeyboardState(NULL); // Keyboard state
+    const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
     //Handle events on queue
-    while ( SDL_PollEvent( &event )) {
+    while ( SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
-           switch( event.type ) {
+           switch(event.type) {
         case SDL_WINDOWEVENT:
             camera.setViewSize(game.window.getWidth(), game.window.getHeight());
             break;
@@ -174,7 +132,7 @@ void GameStateMatch::handle() {
             }
             break;
       	case SDL_KEYDOWN:
-        	switch( this->event.key.keysym.sym ) {
+        	switch(event.key.keysym.sym) {
 			case SDLK_ESCAPE:
 				play = false;
 				break;
@@ -200,7 +158,7 @@ void GameStateMatch::handle() {
     }
 }
 
-void GameStateMatch::update(const float& delta) {
+void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
     player.marine->move(player.marine->getDX() * delta, player.marine->getDY() * delta,
         GameManager::instance()->getCollisionHandler());
@@ -247,5 +205,5 @@ GameStateMatch::~GameStateMatch() {
     delete GameManager::instance();
     frameFPSTextTexture.free();
     TTF_CloseFont(frameFont);
-    frameFont = NULL;
+    frameFont = nullptr;
 }

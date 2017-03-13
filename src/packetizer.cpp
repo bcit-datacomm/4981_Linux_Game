@@ -26,9 +26,45 @@
 
 #include <iostream>
 #include <stdint.h>
+#include <string>
+#include <string.h>
 #include "packetizer.h"
 #include "UDPHeaders.h"
-#include "GameManager.h"
+
+int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
+{
+    //insert the id of user
+    *(reinterpret_cast<int32_t *>(buff)) = id;
+    *(buff+4) = type;
+    *(buff+5) = '/';
+    strcpy(buff+6, msg);
+    return static_cast<int>(strlen(msg))+6;
+}
+
+void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
+    char *pBuff;
+    int32_t id;
+    id = *(reinterpret_cast<const int32_t *>(msgBuff));
+    pBuff = reinterpret_cast<char *>(const_cast<void *>(msgBuff));
+    pBuff += sizeof(int32_t);
+    switch(*pBuff++)
+    {
+        case 'C':
+            if(*pBuff++ == '/'){
+                std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
+                //insertplayer(id,msg);
+            }
+            break;
+
+        case 'T':
+            std::cout << "\nId: " << id << "\tMsg: " << pBuff;
+            break;
+
+        default:
+            std::cerr << "cannot parse control message.";
+    }
+}
+
 /*------------------------------------------------------------------------------
 -- FUNCTION: parse
 --
@@ -56,7 +92,7 @@
 -- note: the packet passed from the server must match
 -- the gamesync packet exactly
 --------------------------------------------------------------------------*/
-void Packetizer::parse(const void * syncBuff, size_t bytesReads)
+ void Packetizer::parseGameSync(const void * syncBuff, size_t bytesReads)
 {
   int32_t *pBuff;
   int32_t *pEnd;
@@ -87,14 +123,15 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
           std::cout << std::endl;
           pBuff = reinterpret_cast<int32_t *>(&(player->moves));
           moves = player->moves;
-
-          GameManager::instance()->updateMarine(*player);
-
+          /*
+          UpdatePlayer (player->playerid,
+                          player->xpos,
+                          player->ypos,
+                          player->xvel,
+                          player->yvel,
+                          player->direction);
+          */
           for(int32_t j = 0; j  < player->nmoves; j++) {
-            //std::cout << "\n\tAction #:" << j;
-            //std::cout << "\n\t\tAction xpos:" << action->xpos;
-            //std::cout << "\n\t\tAction ypos:" << action->ypos;
-            //std::cout << "\n\t\tAction direction:" << action->direction;
             /*
             UpdatePlayerAction (player->playerid,
                             action->actionid,
@@ -108,10 +145,6 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
           attacks = player->attacks;
 
           for(int32_t j = 0; j  < player->nattacks; j++) {
-            //std::cout << "\n\tAction #:" << j;
-            //std::cout << "\n\t\tAction xpos:" << action->xpos;
-            //std::cout << "\n\t\tAction ypos:" << action->ypos;
-            //std::cout << "\n\t\tAction direction:" << action->direction;
             /*
             UpdatePlayerAction (player->playerid,
                             action->actionid,
@@ -136,8 +169,13 @@ void Packetizer::parse(const void * syncBuff, size_t bytesReads)
           std::cout << "\n\tZombie health:" << zombie->health;
           std::cout << std::endl;
           pBuff = reinterpret_cast<int32_t *>(++zombie);
-
-          GameManager::instance()->updateZombie(*zombie);
+          /*
+          UpdateZombie (zombie->zombieid,
+                          zombie->xpos,
+                          zombie->ypos,
+                          zombie->health,
+                          zombie->direction);
+          */
         }
         break;
       }

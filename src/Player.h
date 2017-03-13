@@ -36,7 +36,7 @@ public:
 
 
     //Stays as pointer cause the player gets a marine object after the ctor is called
-    Marine *marine = NULL;
+    Marine *marine = nullptr;
 
 private:
     int tempBarricadeID;

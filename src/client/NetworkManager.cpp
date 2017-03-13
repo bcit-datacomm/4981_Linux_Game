@@ -13,8 +13,13 @@
 #include <thread>
 #include <errno.h>
 #include <sys/epoll.h>
+#include <string>
+#include <iterator>
+
 #include "NetworkManager.h"
 #include "../packetizer.h"
+
+using namespace std;
 
 NetworkManager& NetworkManager::instance() {
     static NetworkManager sInstance;
@@ -46,42 +51,76 @@ the client's username, receives the integer id assigned to the client, and
 then received the integer ids and usernames of other clients connecting to
 the server.
 --------------------------------------------------------------------------*/
-void NetworkManager::runTCPClient(const char *ip, const char *username, char users[MAX_USERS][UNAME_SIZE]) {
-    _sockUDP = UDPSocket(ip);
-    std::thread t(&NetworkManager::runUDPClient, this);
-    t.detach();
 
-	TCPConnect(ip);
+void NetworkManager::initClients(const char *ip) {
+    serverIP = inet_addr(ip);
 
-	char sendline[UNAME_SIZE];
-	char recvline[PLAYERPACK_SIZE];
+    std::thread UDPThread(&NetworkManager::runUDPClient, this);
+    UDPThread.detach();
 
-    memset(sendline, '\0', UNAME_SIZE);
-	strcpy(sendline, username);
-
-	writeTCPSocket(sendline, UNAME_SIZE);
-
-	while(numPlayers--) {
-        readTCPSocket(recvline, sizeof(recvline));
-		strncpy(users[(int)recvline[PLAYERPACK_SIZE - 1]], recvline, UNAME_SIZE);
-	}
-
-	close(_sockTCP);
+    std::thread TCPThread(&NetworkManager::runTCPClient, this);
+    TCPThread.detach();
 }
 
-void NetworkManager::runUDPClient() {
-    char buffer[SYNC_PACKET_MAX];
-    Packetizer packetizer;
+void NetworkManager::runTCPClient() {
+    fd_set readSet, initSet;
+    char buffer[USHRT_MAX];
+    int bytesRead;
+
+    sockTCP = createSocket(SOCK_STREAM);
+    bindSocket(sockTCP, createAddress(INADDR_ANY, TCP_PORT));
+    connectSocket(sockTCP, createAddress(serverIP, TCP_PORT));
+
+    FD_ZERO(&initSet);
+    FD_SET(STDIN, &initSet);
+    FD_SET(sockTCP, &initSet);
     for(;;) {
-        if(_UDPRunning) {
-            int packetSize = _sockUDP.recvFromServ(buffer, SYNC_PACKET_MAX);
-            packetizer.parse(buffer, packetSize);
+        readSet = initSet;
+        if(select(sockTCP + 1, &readSet, NULL, NULL, NULL) < 0) {
+            perror("select");
+            exit(1);
+        }
+
+        if(FD_ISSET(STDIN, &readSet)) {
+            //get command
+            fgets(buffer, USHRT_MAX, stdin);
+            //replace new line with null
+            buffer[strlen(buffer) - 1] = '\0';
+            //send command
+            writeSocket(sockTCP, buffer, strlen(buffer));
+        }
+
+        if(FD_ISSET(sockTCP, &readSet)) {
+            if((bytesRead = readSocket(sockTCP, buffer, USHRT_MAX)) == 0) {
+                std::cout << "Server disconnected." << std::endl;
+                exit(1);
+            }
+            Packetizer::parseControlMsg(buffer, bytesRead);
         }
     }
 }
 
+void NetworkManager::closeConnection()
+{
+    close(sockTCP);
+}
+
+void NetworkManager::runUDPClient() {
+    sockUDP = createSocket(SOCK_DGRAM);
+    bindSocket(sockUDP, createAddress(INADDR_ANY, UDP_PORT));
+    connectSocket(sockUDP, createAddress(serverIP, UDP_PORT));
+
+    char buffer[SYNC_PACKET_MAX];
+    int packetSize;
+    //Packetizer packetizer;
+    for(;;) {
+        packetSize = readSocket(sockUDP, buffer, SYNC_PACKET_MAX);
+        Packetizer::parseGameSync(buffer, packetSize);
+    }
+}
+
 /*--------------------------------------------------------------------------
--- FUNCTION: writeTCPSock
+-- FUNCTION: writeTCPSocket
 --
 -- DATE: FEB. 01, 2017
 --
@@ -103,18 +142,18 @@ void NetworkManager::runUDPClient() {
 -- NOTES:
 -- This function loops the writing to the TCP Socket
 --------------------------------------------------------------------------*/
-int NetworkManager::writeTCPSocket(const char * msg, int len) {
-	int res = 0;
-	int ttlsent = 0, bytesleft = len;
-	while (ttlsent < len) {
-			if ((res = send(_sockTCP, msg + ttlsent, bytesleft, 0)) < 0 ) {
-				perror("TCP write error");
-				return res;
-			}
-			ttlsent += res;
-			bytesleft -= res;
-	}
-	return 0;
+int NetworkManager::writeSocket(int sock, const char *msg, int len) {
+    int res = 0;
+    int ttlsent = 0, bytesleft = len;
+    while (ttlsent < len) {
+        if ((res = send(sockTCP, msg + ttlsent, bytesleft, 0)) < 0 ) {
+            perror("TCP write error");
+            return res;
+        }
+        ttlsent += res;
+        bytesleft -= res;
+    }
+    return 0;
 }
 
 /*------------------------------------------------------------------------------
@@ -142,19 +181,15 @@ NOTES:
 This read method reads the amount specified by the param len from the TCP
 socket stored as a private member of the Client object.
 --------------------------------------------------------------------------*/
-int NetworkManager::readTCPSocket(char *buf, int len) {
-	int res = 0;
-	int ttlsent = 0, bytesleft = len;
-	while (ttlsent < len) {
-			if ((res = read(_sockTCP, buf + ttlsent, bytesleft)) < 0 ) {
-				perror("read");
-				return res;
-			}
-			ttlsent += res;
-			bytesleft -= res;
-	}
-	return res;
+int NetworkManager::readSocket(int sock, char *buf, int len) const {
+    int res = 0;
+    if ( (res = read(sock, buf, len) ) < 0 ) {
+        perror("read");
+        return res;
+    }
+    return res;
 }
+
 /*--------------------------------------------------------------------------
 -- FUNCTION: TCPConnect
 --
@@ -176,31 +211,118 @@ int NetworkManager::readTCPSocket(char *buf, int len) {
 -- NOTES:
 -- This is afunction that connects the user with via TCP
 --------------------------------------------------------------------------*/
-int NetworkManager::TCPConnect(const char * ip_addr) {
-	if (ip_addr == NULL || inet_addr(ip_addr) == 0 ) {
-		std::cerr << "Missing or Incorrect IP addr."
-			<< "\n IP Address must be in the form x.x.x.x"
-			<< std::endl;
-		return -1;
-	}
-
-	struct sockaddr_in serv_addr;
-	//set server addr struct
-	memset(&serv_addr, '0', sizeof(struct sockaddr_in));
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(TCP_PORT);
-	serv_addr.sin_addr.s_addr = inet_addr(ip_addr);
-
-	if ((_sockTCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		std::cerr << "Error opening socket" << std::endl;
-		exit(1);
-	}
-
-	if((connect(_sockTCP, (struct sockaddr *)&serv_addr,
-        sizeof(struct sockaddr_in))) < 0) {
-		perror("Error Connecting");
-		exit(1);
-	}
-
-	return 0;
+void NetworkManager::connectSocket(int sock, const struct sockaddr_in& addr) const {
+    if((connect(sock, (struct sockaddr *)&addr, sizeof(struct sockaddr_in))) < 0) {
+        perror("connect");
+        exit(1);
+    }
 }
+
+struct sockaddr_in NetworkManager::createAddress(const in_addr_t ip, const int port) const {
+    struct sockaddr_in addr;
+    //set server addr struct
+    memset(&addr, '0', sizeof(struct sockaddr_in));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(TCP_PORT);
+    addr.sin_addr.s_addr = ip;
+
+    return addr;
+}
+
+int NetworkManager::createSocket(int sockType) const {
+    int sock = socket(AF_INET, sockType, 0);
+    if(sock < 0) {
+        perror("sock");
+        exit(1);
+    }
+    return sock;
+}
+
+void NetworkManager::bindSocket(int sock, struct sockaddr_in addr) {
+    if(bind(sock, (sockaddr *)&addr, sizeof(addr)) < 0) {
+        perror("bind");
+        exit(1);
+    }
+}
+
+void NetworkManager::writeUDPSocket(const char *buf, int len) {
+    writeSocket(sockUDP, buf, len);
+}
+
+/*-----------------------------------------------------------------------_servAddr---
+METHOD: sendTo
+
+DATE: Feb. 7, 2017
+
+REVISIONS:
+Version, Date and Description
+
+DESIGNER: Brody McCrone
+
+PROGRAMMER: Brody McCrone
+
+PARAMS:
+buf: Data to be sent.
+len: Amount of data. Must be equal to or less than buf size.
+servAddr: Address of receiver.
+
+RETURNS:
+void
+
+NOTES:
+Sends buf to servAddr. Reliable even when len exceeds MTU.
+--------------------------------------------------------------------------*/
+/*
+void NetworkManager::writeUDPSocket(const char *buf, const int &len) {
+    socklen_t addrLen = sizeof(_servAddr);
+    int res = 0;
+	int ttlsent = 0, bytesleft = len;
+	while (ttlsent < len) {
+        if ((res = sendto(sockUDP, buf + ttlsent, bytesleft, 0,
+            (struct sockaddr *)&_servAddr, addrLen)) < 0 ) {
+			perror("read");
+            exit(1);
+		}
+		ttlsent += res;
+		bytesleft -= res;
+	}
+}
+*/
+
+/*--------------------------------------------------------------------------
+METHOD: receiveFrom
+
+DATE: Feb. 7, 2017
+
+REVISIONS:
+Version, Date and Description
+
+DESIGNER: Brody McCrone
+
+PROGRAMMER: Brody McCrone
+
+PARAMS:
+buf: Buffer to store data received in.
+len: Amount of data to receive. Must be less than or equal to buf size.
+servAddr: Address of sender.
+
+RETURNS:
+void
+
+NOTES:
+Receives data from servAddr and stores it in buf. Reliable even when data
+being received exceeds MTU.
+--------------------------------------------------------------------------*/
+/*
+int NetworkManager::readUDPSocket(char *buf, const int& len) {
+    socklen_t addrLen = sizeof(_servAddr);
+    int res = recvfrom(sockUDP, buf, len, 0,
+        (struct sockaddr *)&_servAddr, &addrLen);
+    if(res < 0 ) {
+		perror("recvfrom");
+        exit(1);
+	}
+
+    return res;
+}
+*/

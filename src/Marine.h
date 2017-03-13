@@ -25,13 +25,18 @@ public:
 
     void collidingProjectile(int damage);
 
+    void fireWeapon();
+
     Marine();
     virtual ~Marine();
 
     Inventory inventory;
 
     void setHealth(const int& hlth) {health = hlth;};
+    void setUsername(const std::string& uname) {username = uname;};
+    std::string& getUsername() {return username;};
 private:
+    std::string username;
     int health = 100;
     int state; //used to select sprite to display
 

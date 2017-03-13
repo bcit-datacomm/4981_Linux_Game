@@ -17,35 +17,32 @@
 
 class GameStateMatch : public GameState {
 public:
-
-    virtual bool load();
-    virtual void loop();
-
     GameStateMatch(Game& g, int gameWidth, int gameHeight);
-
     virtual ~GameStateMatch();
 
     void updateServ();
+    virtual bool load();
+    virtual void loop();
 
-    GameManager* gameManager = NULL;
+    GameManager* gameManager = nullptr;
 
     // Frame Display
     std::stringstream frameTimeText;
-    TTF_Font* frameFont = NULL;
+    TTF_Font* frameFont = nullptr;
     LTexture frameFPSTextTexture;
 
-private:
 
+private:
     Player player;
     Level level;
     Base base;
     Camera camera;
 
-    virtual void sync();
-    virtual void handle();
-    virtual void update(const float& delta);
-    virtual void render();
-
+    static bool gameStart;
+    virtual void sync() override;
+    virtual void handle() override;
+    virtual void update(const float delta) override;
+    virtual void render() override;
 };
 
 #endif

@@ -3,9 +3,9 @@
 #include "Inventory.h"
 
 Inventory::Inventory(){
-    weapons[0] = std::make_shared<Weapon>(defaultGun);
-    weapons[1] = std::make_shared<Weapon>(tempRifle);
-    weapons[2] = std::make_shared<Weapon>(tempShotGun);
+    weapons[0] = std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun));
+    weapons[1] = std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(tempRifle));
+    weapons[2] = std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(tempShotGun));
 }
 
 Inventory::~Inventory(){
