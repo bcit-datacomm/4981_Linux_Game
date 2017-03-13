@@ -159,11 +159,17 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const flo
     const int32_t id = generateID();
     zombieManager[id] = Zombie();
     if (!zombieManager.at(id).texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
-        printf("Failed to load the player texture!\n");
+        printf("Failed to load the Zombie texture!\n");
         deleteZombie(id);
         return false;
     }
     zombieManager.at(id).setPosition(x,y);
+    //printf("zombie manager size : %d\n", zombieManager.size());
+    int counter = 0;
+    for(const auto id : zombieManager) {
+        counter++;
+    }
+    //printf("zombie manager counter size : %d\n", counter);
     return true;
 }
 
@@ -246,7 +252,6 @@ WeaponDrop& GameManager::getWeaponDrop(int32_t id){
 
 //returns weapon in weaponManager
 std::shared_ptr<Weapon> GameManager::getWeapon(int32_t id){
-    printf("Weapon id Searching for: %d", id);
     std::map<int32_t, std::shared_ptr<Weapon>>::iterator it;
     it = weaponManager.find(id);
     if(it != weaponManager.end()){
@@ -308,6 +313,7 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreePickUp.insert(&m.second);
     }
 
+    //printf("pro size: %d\n", collisionHandler.quadtreePro.objects.size());
 }
 
 // Create barricade add it to manager, returns success

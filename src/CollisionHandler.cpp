@@ -90,21 +90,20 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
     allEntities = quadtreePro.objects;
 
     std::priority_queue<HitBox*> targetsInSights;
-    for (unsigned int x = 0; x < allEntities.size(); x++) {
-        if (allEntities.at(x)->projectileHitBox != marine.projectileHitBox) {
+    for (unsigned int x = 0, len = allEntities.size(); x < len; x++) {
+        //if (allEntities.at(x) != marine) {
+        //printf("Entity: %d x:%d y:%d\n", x, allEntities.at(x)->projectileHitBox->getRect().x, allEntities.at(x)->projectileHitBox->getRect().y);
             aX = playerX;
             aY = playerY;
             bX = aX + deltaX;
             bY = aY + deltaY;
 
-            if (SDL_IntersectRectAndLine(&allEntities.at(x)->projectileHitBox->getRect(), &aX, &aY , &bX, &bY) &&
-                    !(allEntities.at(x)->projectileHitBox->isPlayerFriendly()) ) {
+            if (SDL_IntersectRectAndLine(&(allEntities.at(x)->projectileHitBox->getRect()), &aX, &aY , &bX, &bY)) {
                 std::cout << "Shot target at (" << aX << ", " << aY << ")" << std::endl;
                 targetsInSights.push(allEntities.at(x)->projectileHitBox.get());
             }
-        }
+        //}
 
     }
-
     return targetsInSights;
 }
