@@ -168,7 +168,7 @@ void initSync(int sock) {
                     logv("New client has joined the server\n");
 
                     cli.entry.addr = addr;
-                    cli.entry.sock = ev.data.fd;
+                    cli.entry.sock = clientSock;
                     cli.hasSentUsername = false;
                     cli.isPlayerReady = false;
                     
