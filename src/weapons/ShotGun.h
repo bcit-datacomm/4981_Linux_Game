@@ -19,7 +19,7 @@ namespace ShotgunVars {
     const int AOE      = 1;
     const int RELOAD   = 3;
     const int FIRERATE = 600;
-    const int READY    = true;
+    constexpr READY    = true;
 }
 
 class ShotGun: public InstantWeapon {

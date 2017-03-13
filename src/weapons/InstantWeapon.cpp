@@ -11,7 +11,7 @@
 
 InstantWeapon::InstantWeapon(std::string type, int range, int damage,
         int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire)
-: Weapon(type, range, damage, clip, clipMax, ammo, AOE, reloadSpeed, fireRate, isReadyToFire) {
+        : Weapon(type, range, damage, clip, clipMax, ammo, AOE, reloadSpeed, fireRate, isReadyToFire) {
 
 }
 
@@ -42,25 +42,4 @@ void InstantWeapon::fire(Marine &marine){
     //targets.top()->attached->collidingProjectile(getDamage()); //broken
     targets.pop();
     //=======================================================
-}
-
-void InstantWeapon::melee(Marine &marine){
-    printf("InstantWeapon::melee\n");
-
-    CollisionHandler ch = GameManager::instance()->getCollisionHandler();
-
-    int x = marine.getX();
-    int y = marine.getY();
-    SDL_Rect checkBox;
-    checkBox.h = 100;
-    checkBox.w = 100;
-    checkBox.x = x;
-    checkBox.y = y;
-    HitBox hitBox(x, y, checkBox, nullptr);
-
-    if(ch.detectMovementCollision(&hitBox)){
-        printf("melee hit");
-    }
-
-
 }

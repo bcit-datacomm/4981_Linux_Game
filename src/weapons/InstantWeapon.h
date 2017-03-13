@@ -16,8 +16,6 @@ public:
 
     void fire(Marine &marine);
 
-    void melee(Marine &marine);
-
 protected:
 
 };
