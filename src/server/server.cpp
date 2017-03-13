@@ -141,6 +141,11 @@ void initSync(int sock) {
                     socklen_t addrLen;
                     ev.data.fd = accept(listenSocketTCP, (sockaddr *) &addr, &addrLen);
 
+                    if (fcntl(ev.data.fd, F_SETFL, O_NONBLOCK) == -1) {
+                        perror("fcntl");
+                        exit(1);
+                    }
+
                     logv("New client has joined the server\n");
 
                     cli.entry.addr = addr;
