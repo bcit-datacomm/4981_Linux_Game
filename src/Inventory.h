@@ -11,7 +11,7 @@
 class Inventory {
 public:
     void switchCurrent(int slot);//switches currently selected slot based on key input
-    void pickUp(int32_t weaponId);//picks up weapon in to current slot
+    bool pickUp(int32_t weaponId);//picks up weapon in to current slot
     Weapon *getCurrent();//Returns current weapon
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     Inventory();
