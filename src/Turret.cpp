@@ -104,7 +104,7 @@ bool Turret::targetScanTurret() {
     // TODO: Attack a zombie;
     if (!bDetect) {
         return false;
-    }}
+    }
 
     const auto& target = mapZombies.find(closestZombieId);
     if (target == mapZombies.end())
