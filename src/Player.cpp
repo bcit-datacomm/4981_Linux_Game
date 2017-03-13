@@ -52,11 +52,7 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
     //fire weapon on left mouse click
     if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if(marine->inventory.getCurrent()->getFireState()){
-            if(marine->inventory.getType = "ZombieHand"){
-                marine->melee();
-            }else{
-                marine->fireWeapon();
-            }
+            marine->fireWeapon();
         }
     }
 
