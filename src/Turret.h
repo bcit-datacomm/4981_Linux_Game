@@ -57,13 +57,6 @@ private:
     int health = 200; // turret health pool
     int ammo = 100; // turret ammo pool
     float range = 300.0f; // turret's range.
-
-private:
-    double angle = 0.0; // turret direction angle in which it is pointing
-    float range = 300.0f; // turret's range.
-    bool activated = false; // turret activated state
-    int health = 200; // turret health pool
-    int ammo = 100; // turret ammo pool
 };
 
 #endif
