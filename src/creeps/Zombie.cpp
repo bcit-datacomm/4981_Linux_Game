@@ -11,7 +11,7 @@ Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health)
 }
 
 Zombie::~Zombie() {
-    //printf("Destory Zombie\n");
+    //printf("Destroy Zombie\n");
 }
 
 void Zombie::onCollision() {
