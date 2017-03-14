@@ -54,8 +54,9 @@ public:
 
     void removeTurret(); // removes the turret
 
-    Turret(bool activated = false, int health = 200, int ammo = 100,
-         bool boolPlaced = false);
+    Turret(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
+            int ammo = 100, bool boolPlaced = false);
     virtual ~Turret();
 
 private:

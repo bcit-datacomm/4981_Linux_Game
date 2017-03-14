@@ -1,8 +1,10 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
 
-Turret::Turret(bool activated, int health, int ammo, bool placed)
-        :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
+Turret::Turret(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated, int health, int ammo,
+        bool placed):Movable(int32_t id, spriteSize, movementSize, projectileSize, damageSize,
+        pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire

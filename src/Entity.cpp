@@ -8,22 +8,19 @@ Entity::Entity(int32_t nid, const SDL_Rect &spriteSize):id(nid), spriteClips[0](
     spriteClips[0].y = 0;
     spriteClips[0].w = 100;
     spriteClips[0].h = 100;*/
-    //movementHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    //projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    //damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    //pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
 }
 
 Entity::Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize): id(nid),
         spriteClips[0](spriteSize), movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
-        projectileHitBox(nullptr), damageHitBox(nullptr), pickupHitBox(nullptr){
+        projectileHitBox(std::make_shared<HitBox>(x, y, spriteSize)), damageHitBox(std::make_shared<HitBox>(x, y, spriteSize)), pickupHitBox(std::make_shared<HitBox>(x, y, spriteSize)){
 
 }
 
 
+//Weapon drops
 Entity::Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &pickupSize):
         id(nid), spriteClips[0](spriteSize), movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
-        projectileHitBox(nullptr), damageHitBox(nullptr), pickupHitBox(std::make_shared<HitBox>(x, y, pickupSize)){
+        projectileHitBox(std::make_shared<HitBox>(x, y, spriteSize)), damageHitBox(std::make_shared<HitBox>(x, y, spriteSize)), pickupHitBox(std::make_shared<HitBox>(x, y, pickupSize)){
 
 }
 
@@ -36,6 +33,8 @@ Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, co
 
 }
 
+
+//movables and marines
 Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), spriteClips[0](spriteSize), movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
         projectileHitBox(std::make_shared<HitBox>(x, y, projectileSize)),
