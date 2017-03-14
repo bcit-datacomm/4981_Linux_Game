@@ -1,6 +1,7 @@
 #include "Quadtree.h"
 #include "CollisionHandler.h"
 #include "Marine.h"
+#include "Entity.h"
 #include <iostream>
 
 CollisionHandler::CollisionHandler() : quadtreeMov(0, {0,0,2000,2000}), quadtreePro(0, {0,0,2000,2000}),
@@ -17,28 +18,28 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
 }
 
 // Check for projectile collisions, return object it hits
-HitBox *CollisionHandler::detectDamageCollision(const Entity *entity) {
+const HitBox *CollisionHandler::detectDamageCollision(const Entity *entity) {
     std::vector<Entity*> returnObjects;
     returnObjects = quadtreeDam.retrieve(entity);
     for (unsigned int x = 0; x < returnObjects.size(); x++) {
         if (returnObjects.at(x) != nullptr && entity != returnObjects.at(x)
-            && SDL_HasIntersection(&entity->damageHitBox->getRect(), &returnObjects.at(x)->damageHitBox->getRect())
-                && !(entity->damageHitBox->isPlayerFriendly() && returnObjects.at(x)->damageHitBox->isPlayerFriendly()) ) {
-            return returnObjects.at(x)->damageHitBox.get();
+            && SDL_HasIntersection(&entity->getDamHitBox().getRect(), &returnObjects.at(x)->getDamHitBox().getRect())
+                && !(entity->getDamHitBox().isPlayerFriendly() && returnObjects.at(x)->getDamHitBox().isPlayerFriendly()) ) {
+            return &(returnObjects.at(x)->getDamHitBox());
         }
     }
     return nullptr;
 }
 
 // Check for projectile collisions, return object it hits
-HitBox *CollisionHandler::detectProjectileCollision(const Entity *entity) {
+const HitBox *CollisionHandler::detectProjectileCollision(const Entity *entity) {
     std::vector<Entity*> returnObjects;
     returnObjects = quadtreePro.retrieve(entity);
     for (unsigned int x = 0; x < returnObjects.size(); x++) {
         if (returnObjects.at(x) != nullptr && entity != returnObjects.at(x)
-            && SDL_HasIntersection(&entity->projectileHitBox->getRect(), &returnObjects.at(x)->projectileHitBox->getRect())
-                && !(entity->projectileHitBox->isPlayerFriendly() && returnObjects.at(x)->projectileHitBox->isPlayerFriendly()) ) {
-            return returnObjects.at(x)->projectileHitBox.get();
+            && SDL_HasIntersection(&entity->getProHitBox().getRect(), &returnObjects.at(x)->getProHitBox().getRect())
+                && !(entity->getProHitBox().isPlayerFriendly() && returnObjects.at(x)->getProHitBox().isPlayerFriendly()) ) {
+            return &(returnObjects.at(x)->getProHitBox());
         }
     }
     return nullptr;
@@ -50,8 +51,8 @@ bool CollisionHandler::detectMovementCollision(const Entity *entity) {
     returnObjects = quadtreeMov.retrieve(entity);
     for (unsigned int x = 0; x < returnObjects.size(); x++) {
         if (returnObjects.at(x) != nullptr && entity != returnObjects.at(x)
-            && SDL_HasIntersection(&entity->movementHitBox->getRect(), &returnObjects.at(x)->movementHitBox->getRect())
-                && !(entity->movementHitBox->isPlayerFriendly() && returnObjects.at(x)->movementHitBox->isPlayerFriendly()) ) {
+            && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &returnObjects.at(x)->getMoveHitBox().getRect())
+                && !(entity->getMoveHitBox().isPlayerFriendly() && returnObjects.at(x)->getMoveHitBox().isPlayerFriendly()) ) {
             return true;
         }
     }
@@ -59,15 +60,15 @@ bool CollisionHandler::detectMovementCollision(const Entity *entity) {
 }
 
 //check for pickup collision
-Entity *CollisionHandler::detectPickUpCollision(const Entity *entity) {
+Entity* CollisionHandler::detectPickUpCollision(const Entity *entity) {
 
     std::vector<Entity*> returnObjects;
     returnObjects = quadtreePickUp.retrieve(entity);
 
     for (unsigned int x = 0; x < returnObjects.size(); x++) {
         if (returnObjects.at(x) != nullptr && entity != returnObjects.at(x)
-            && SDL_HasIntersection(&entity->movementHitBox->getRect(), &returnObjects.at(x)->pickupHitBox->getRect())
-                && !(entity->movementHitBox->isPlayerFriendly() && returnObjects.at(x)->pickupHitBox->isPlayerFriendly()) ) {
+            && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &returnObjects.at(x)->getPickUpHitBox().getRect())
+                && !(entity->getMoveHitBox().isPlayerFriendly() && returnObjects.at(x)->getPickUpHitBox().isPlayerFriendly()) ) {
             return returnObjects.at(x);
         }
     }
@@ -75,7 +76,7 @@ Entity *CollisionHandler::detectPickUpCollision(const Entity *entity) {
 }
 
 // Created by DericM 3/8/2017
-std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
+std::priority_queue<const HitBox*> CollisionHandler::detectLineCollision(
         Marine &marine, const int range) {
 
     const double degrees = marine.getAngle() - 90;
@@ -89,7 +90,7 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
     std::vector<Entity*> allEntities;
     allEntities = quadtreePro.objects;
 
-    std::priority_queue<HitBox*> targetsInSights;
+    std::priority_queue<const HitBox*> targetsInSights;
     for (unsigned int x = 0, len = allEntities.size(); x < len; x++) {
         //if (allEntities.at(x) != marine) {
         //printf("Entity: %d x:%d y:%d\n", x, allEntities.at(x)->projectileHitBox->getRect().x, allEntities.at(x)->projectileHitBox->getRect().y);
@@ -98,9 +99,9 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
             bX = aX + deltaX;
             bY = aY + deltaY;
 
-            if (SDL_IntersectRectAndLine(&(allEntities.at(x)->projectileHitBox->getRect()), &aX, &aY , &bX, &bY)) {
+            if (SDL_IntersectRectAndLine(&(allEntities.at(x)->getProHitBox().getRect()), &aX, &aY , &bX, &bY)) {
                 std::cout << "Shot target at (" << aX << ", " << aY << ")" << std::endl;
-                targetsInSights.push(allEntities.at(x)->projectileHitBox.get());
+                targetsInSights.push(&(allEntities.at(x)->getProHitBox()));
             }
         //}
 

@@ -35,16 +35,22 @@ public:
     void updateRectHitBoxes(); // update hitbox sizes
     int32_t getId(); //returns the id of the entity
     void setId(int32_t num);//Sets the ID, ONLY USE SPARINGLY
-    HitBox& getMoveHitBox()const {return movementHitBox;};
-    HitBox& getProHitBox()const {return projectileHitBox;};
-    HitBox& getDamHitBox()const {return damageHitBox;};
-    HitBox& getPickUpHutBox()const {return pickupHitBox;};
+    const HitBox& getMoveHitBox() const {return movementHitBox;};
+    const HitBox& getProHitBox() const {return projectileHitBox;};
+    const HitBox& getDamHitBox() const {return damageHitBox;};
+    const HitBox& getPickUpHitBox() const {return pickupHitBox;};
+    const SDL_Rect& getDestRect() const {return destRect;};
+    const SDL_Rect& getSrcRect() const {return srcRect;};
+    void setDestRect(int x, int y, int width, int height);
+    void setSrcRect(int x, int y, int width, int height);
 
     LTexture texture;
 
 private:
 
     int32_t id; //is the index num of the entity in its respective manager
+    SDL_Rect destRect;
+    SDL_Rect srcRect;
     HitBox movementHitBox;
     HitBox projectileHitBox;
     HitBox damageHitBox;

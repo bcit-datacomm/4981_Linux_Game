@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include <atomic>
 
-Entity::Entity(int32_t nid, const SDL_Rect &spriteSize):id(nid), movementHitBox(sspriteSize),
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize):id(nid), destRect(dest), srcRect(0,0, dest.w, dest.h), movementHitBox(sspriteSize),
         projectileHitBox(spriteSize), damageHitBox(spriteSize), pickupHitBox(spriteSize){
 }
 
@@ -34,8 +34,6 @@ Entity::Entity(const Entity &e): spriteClips(e.spriteClips), movementHitBox(e.mo
         projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox),
         id(e.id){
 }
-
-
 
 Entity::~Entity() {
     texture.free();
@@ -99,4 +97,18 @@ int32_t Entity::getId(){
 
 void Entity::setId(int32_t num){
     id = num;
+}
+
+void Entity::setDestRect(int x, int y, int width, int height){
+    destRect.x = x;
+    destRect.y = y;
+    destRect.w = width;
+    destRect.h = height;
+}
+
+void Entity::setSrcRect(int x, int y, int width, int height){
+    srcRect.x = x;
+    srcRect.y = y;
+    srcRect.w = width;
+    srcRect.h = height;
 }

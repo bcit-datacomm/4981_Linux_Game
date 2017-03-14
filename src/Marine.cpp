@@ -39,7 +39,7 @@ void Marine::checkForPickUp(){
 
     if(currentTime > (pickupTick + pickupDelay)){
         int32_t PickId = -1;
-        Entity *ep;
+        Entity* ep;
         GameManager *gm = GameManager::instance();
         CollisionHandler &ch = gm->getCollisionHandler();
         pickupTick = currentTime;
