@@ -1,15 +1,46 @@
 #include "Entity.h"
 #include <atomic>
 
-Entity::Entity():id(generateID()) {
-    spriteClips[0].x = 0;
+Entity::Entity(int32_t nid, const SDL_Rect &spriteSize):id(nid), spriteClips[0](spriteSize),
+        movementHitBox(std::make_shared<HitBox>(x, y, spriteSize)), projectileHitBox(std::make_shared<HitBox>(x, y, spriteSize)),
+        damageHitBox(std::make_shared<HitBox>(x, y, spriteSize)), pickupHitBox(std::make_shared<HitBox>(x, y, spriteSize)){
+    /*spriteClips[0].x = 0;
     spriteClips[0].y = 0;
     spriteClips[0].w = 100;
-    spriteClips[0].h = 100;
-    movementHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    spriteClips[0].h = 100;*/
+    //movementHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    //projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    //damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    //pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+}
+
+Entity::Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize): id(nid),
+        spriteClips[0](spriteSize), movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
+        projectileHitBox(nullptr), damageHitBox(nullptr), pickupHitBox(nullptr){
+
+}
+
+
+Entity::Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &pickupSize):
+        id(nid), spriteClips[0](spriteSize), movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
+        projectileHitBox(nullptr), damageHitBox(nullptr), pickupHitBox(std::make_shared<HitBox>(x, y, pickupSize)){
+
+}
+
+Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize): id(nid), spriteClips[0](spriteSize),
+        movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
+        projectileHitBox(std::make_shared<HitBox>(x, y, projectileSize)),
+        damageHitBox(std::make_shared<HitBox>(x, y, damageSize)),
+        pickupHitBox(std::make_shared<HitBox>(x, y, spriteSize)){
+
+}
+
+Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), spriteClips[0](spriteSize), movementHitBox(std::make_shared<HitBox>(x, y, movementSize)),
+        projectileHitBox(std::make_shared<HitBox>(x, y, projectileSize)),
+        damageHitBox(std::make_shared<HitBox>(x, y, damageSize)),
+        pickupHitBox(std::make_shared<HitBox>(x, y, pickupSize)){
 
 }
 
@@ -17,6 +48,8 @@ Entity::Entity(const Entity &e): spriteClips(e.spriteClips),movementHitBox(e.mov
         projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox),
         id(e.id){
 }
+
+
 
 Entity::~Entity() {
     texture.free();
