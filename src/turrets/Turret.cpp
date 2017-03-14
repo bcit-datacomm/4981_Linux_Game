@@ -1,16 +1,17 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
+#include "../log/log.h"
 
 Turret::Turret(bool activated, int health, int ammo, bool placed)
         :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
-    printf("Turret created\n");
+    logv("Turret created\n");
 }
 
 Turret::~Turret() {
-    printf("Destroy Turret\n");
+    logv("Destroy Turret\n");
 }
 
 // checks if turret placement is within bounds, currently does nothing

@@ -2,16 +2,17 @@
 #include <math.h>
 #include <random>
 #include "../game/GameManager.h"
+#include "../log/log.h"
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
-    //printf("Create Zombie\n");
+    //logv("Create Zombie\n");
 }
 
 Zombie::~Zombie() {
-    //printf("Destroy Zombie\n");
+    //logv("Destroy Zombie\n");
 }
 
 void Zombie::onCollision() {

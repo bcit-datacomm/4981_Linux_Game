@@ -5,6 +5,7 @@
 #include "Weapon.h"
 #include <iostream>
 #include <atomic>
+#include "../../log/log.h"
 
 Weapon::Weapon(std::string type, int range, int damage, int clip, int clipMax, int ammo,int rAOE,
         int reloadSpeed, int fireRate, bool isReadyToFire): type(type), range(range), damage(damage),
@@ -36,12 +37,12 @@ void Weapon::reloadClip(){
     int currentTime = SDL_GetTicks();
 
 
-    printf("currentTime: %d, reloadTick: %d, reloadDelay: %d fireTick: %d\n", currentTime, reloadTick, reloadDelay, fireTick);
+    logv("currentTime: %d, reloadTick: %d, reloadDelay: %d fireTick: %d\n", currentTime, reloadTick, reloadDelay, fireTick);
 
     if(currentTime > (reloadTick + reloadDelay)){
         reloadTick = currentTime;
         fireTick += reloadDelay; //must wait extra time to fire from reloading
-        printf("RELOADED\n");
+        logv("RELOADED\n");
         isReadyToFire = true;
         ammo = 50; //for testing isReadyToFire
         /*if(ammo >= clipMax){
@@ -80,7 +81,7 @@ int Weapon::getRAOE(){
 
 //Deric M       3/3/2017
 bool Weapon::reduceAmmo(int rounds){
-    std::cout << "Current ammo:" << ammo << std::endl;
+    logv("Current ammo: %d\n", ammo);
     if(ammo < rounds){
         return false;
     }
@@ -99,10 +100,10 @@ bool Weapon::getFireState(){
 
     if (ammo == 0){
         isReadyToFire = false;
-        printf("isReadyToFire = false, ammo = 0\n");
+        logv("isReadyToFire = false, ammo = 0\n");
     }
 
-    //  printf("currentTime: %d, fireTick: %d, fireRate: %d\n", currentTime, fireTick, fireRate);
+    //  logv("currentTime: %d, fireTick: %d, fireRate: %d\n", currentTime, fireTick, fireRate);
     if(currentTime > (fireTick + fireRate)){
         fireTick = currentTime;
         isReadyToFire = true;

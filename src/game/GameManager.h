@@ -26,7 +26,6 @@
 class GameManager {
 public:
     static GameManager *instance();
-    ~GameManager();
 
     int32_t generateID();
 
@@ -78,9 +77,10 @@ public:
     void setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
 
 private:
-    static GameManager *sInstance;
-
     GameManager();
+    ~GameManager();
+    static GameManager sInstance;
+
     CollisionHandler collisionHandler;
     std::unique_ptr<WeaponDrop> wdPointer;
     std::map<int32_t, Marine> marineManager;

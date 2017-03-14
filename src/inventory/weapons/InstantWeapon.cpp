@@ -9,6 +9,7 @@
 #include <queue>
 #include <stdio.h>
 #include <iostream>
+#include "../../log/log.h"
 
 InstantWeapon::InstantWeapon(std::string type, int range, int damage,
         int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire)
@@ -22,9 +23,9 @@ InstantWeapon::InstantWeapon(std::string type, int range, int damage,
 void InstantWeapon::fire(Marine &marine){
  //check ammo
 
-    printf("InstantWeapon::fire()\n");
+    logv("InstantWeapon::fire()\n");
 
-    CollisionHandler collisionHandler = GameManager::instance()->getCollisionHandler();
+    CollisionHandler &collisionHandler = GameManager::instance()->getCollisionHandler();
 
     if(!reduceAmmo(1)){
      return;

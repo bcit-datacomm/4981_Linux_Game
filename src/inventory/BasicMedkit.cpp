@@ -2,15 +2,16 @@
     Created by Matt Goerwell 3/8/2017
 */
 #include "BasicMedkit.h"
+#include "../log/log.h"
 
 BasicMedkit::BasicMedkit() : Consumable() {
-    printf("BasicMedkit Created\n");
+    logv("BasicMedkit Created\n");
 }
 
 BasicMedkit::~BasicMedkit() {
-    printf("BasicMedkit Destroyed\n");
+    logv("BasicMedkit Destroyed\n");
 }
 
 void BasicMedkit::OnConsume() {
-    printf("BasicMedkit Consumed\n");
+    logv("BasicMedkit Consumed\n");
 }

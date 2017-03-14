@@ -1,12 +1,13 @@
 #include "WeaponDrop.h"
 #include "../basic/Entity.h"
+#include "../log/log.h"
 #include <atomic>
 
 using namespace std;
 
 
 WeaponDrop::WeaponDrop(int32_t wId): weaponId(wId){
-    printf("Created Weapon Drop\n");
+    logv("Created Weapon Drop\n");
 }
 
 WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
@@ -14,7 +15,7 @@ WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
 }
 
 WeaponDrop::~WeaponDrop() {
-    printf("Destroy WeaponDrop\n");
+    logv("Destroy WeaponDrop\n");
 }
 void WeaponDrop::setPosition(int x, int y){
     xCoord = x;

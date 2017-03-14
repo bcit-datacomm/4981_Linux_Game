@@ -1,4 +1,5 @@
 #include "SpriteManager.h"
+#include "../log/log.h"
 
 SpriteManager::SpriteManager() {
    loadFiles();
@@ -27,7 +28,7 @@ void SpriteManager::loadSprite(const char * fileName) {
     SDL_Surface * sprite = nullptr;
     sprite = IMG_Load(fileName);
     if (sprite == nullptr ) {
-        printf( "Failed to load sprite: %s\n", fileName);
+        logv( "Failed to load sprite: %s\n", fileName);
     }
 
     _sprites[fileName] = sprite;
@@ -35,6 +36,6 @@ void SpriteManager::loadSprite(const char * fileName) {
 
 //Gets a specific sprite sheet
 SDL_Surface* SpriteManager::getSurface(const char * fileName) {
-    printf("Loading: %s\t- %s\n", fileName, SDL_GetError());
+    logv("Loading: %s\t- %s\n", fileName, SDL_GetError());
     return _sprites[fileName];
 }
