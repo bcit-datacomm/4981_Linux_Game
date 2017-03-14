@@ -10,7 +10,7 @@ Base::Base(int health) : Object(BASE_HEIGHT, BASE_WIDTH), health(health) {
 }
 
 Base::~Base() {
-    printf("Destory Base\n");
+    printf("Destroy Base\n");
 }    
 void Base::onCollision() {
     printf("Base collision\n");

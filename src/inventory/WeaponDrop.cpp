@@ -14,7 +14,7 @@ WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
 }
 
 WeaponDrop::~WeaponDrop() {
-    printf("Destory WeaponDrop\n");
+    printf("Destroy WeaponDrop\n");
 }
 void WeaponDrop::setPosition(int x, int y){
     xCoord = x;

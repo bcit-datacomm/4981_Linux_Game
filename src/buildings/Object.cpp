@@ -7,7 +7,7 @@ Object::Object(int width, int height, double angle) : Entity(), width(width), he
 }
 
 Object::~Object() {
-//    printf("Destory Object\n");
+//    printf("Destroy Object\n");
 }
 
 void Object::setHeight(int h) {

@@ -5,7 +5,7 @@ Wall::Wall(int height, int width) : Object(height, width) {
 }
 
 Wall::~Wall() {
-    printf("Destory Wall\n");
+    printf("Destroy Wall\n");
 }    
 void Wall::onCollision() {
     printf("Wall collision\n");

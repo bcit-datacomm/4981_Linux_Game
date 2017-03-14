@@ -11,7 +11,7 @@ Barricade::Barricade(int health, int state, bool placeable, bool placed)
 }
 
 Barricade::~Barricade() {
-    printf("Destory Barricade\n");
+    printf("Destroy Barricade\n");
 }
 
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
