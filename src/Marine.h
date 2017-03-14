@@ -25,7 +25,7 @@ public:
     void fireWeapon();
     void checkForPickUp();
 
-    Marine();
+    Marine(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize, const SDL_Rect &damageSize);
     virtual ~Marine();
 
     Inventory inventory;

@@ -5,7 +5,10 @@
 
 class Movable : public virtual Entity {
 public:
-    Movable(int vel) : velocity(vel), dx(0), dy(0), angle(0.0) {};
+    Movable(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+            const SDL_Rect &damageSize, int vel) : Entity(id, spriteSize, movementSize, projectileSize,
+            damageSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
+
     virtual ~Movable() {};
     void move(float moveX, float moveY, CollisionHandler& ch); // Moves Marine
     void setDX(float px); //set delta x coordinate
