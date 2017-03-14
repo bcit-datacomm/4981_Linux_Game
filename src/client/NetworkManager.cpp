@@ -62,6 +62,79 @@ void NetworkManager::initClients(const char *ip) {
     TCPThread.detach();
 }
 
+void NetworkManager::run(const char *ip, const char  * username)
+{
+    sockTCP = createSocket(SOCK_STREAM);
+    bindSocket(sockTCP, createAddress(INADDR_ANY, TCP_PORT));
+    connectSocket(sockTCP, createAddress(serverIP, TCP_PORT));
+    connected = true;
+
+    handshake(ip,username); //handshake
+    waitRecvId();
+
+    std::thread UDPThread(&NetworkManager::runUDPClient, this);
+
+    /***************************************************/
+    /*FOLLOWING TO BE REMOVED WHEN GAME IS INTEGRATED:*/
+    fd_set readSet, initSet;
+    char buffrecv[STD_BUFFSIZE], buffsend[STD_BUFFSIZE];
+    int bRead;
+
+    FD_ZERO(&initSet);
+    FD_SET(STDIN, &initSet);
+    FD_SET(sockTCP, &initSet);
+
+    do {
+        readSet = initSet;
+
+        if(select(sockTCP + 1, &readSet, NULL, NULL, NULL) < 0) {
+            perror("select");
+            exit(1);
+        }
+
+        if(FD_ISSET(STDIN, &readSet)) {
+            int bytesToSend;
+            string str;
+            getline(cin, str);
+            bytesToSend = Packetizer::packControlMsg(buffsend, STD_BUFFSIZE, str.c_str(), _myid);
+            writeSocket(sockTCP, buffsend, bytesToSend);
+        }
+
+        if(FD_ISSET(sockTCP, &readSet)) {
+            if ((bRead = readSocket(sockTCP, buffrecv, STD_BUFFSIZE)) == 0 ) {
+                perror("Connection Closed");
+                connected = false;
+                break;
+            }
+
+            if(!running){
+                cout << "\nNew player detected! username: " << (buffrecv + 6);
+            }else{ // if game is going, must be player message
+                cout << "\nChat Recieved! msg: " << (buffrecv + 6);
+            }
+        }
+    } while(connected);
+    UDPThread.join();
+    /***************************************************/
+}
+
+void NetworkManager::handshake(const char *ip, const char *username) {
+
+    char sendline[STD_BUFFSIZE] = {0};
+    int bytesToSend;
+    //packetize the username first
+    bytesToSend = Packetizer::packControlMsg(sendline, STD_BUFFSIZE, username);
+    writeSocket(sockTCP, sendline, bytesToSend); //send the username to server.
+}
+
+void NetworkManager::waitRecvId()
+{
+    char buffrecv[STD_BUFFSIZE];
+    readSocket(sockTCP, buffrecv, STD_BUFFSIZE);
+    // !!!!replace with parseControlMsg
+        _myid = *(reinterpret_cast<const int32_t *>(buffrecv));
+}
+
 void NetworkManager::runTCPClient() {
     fd_set readSet, initSet;
     char buffer[USHRT_MAX];
@@ -112,10 +185,17 @@ void NetworkManager::runUDPClient() {
 
     char buffer[SYNC_PACKET_MAX];
     int packetSize;
+
+    packetSize = readSocket(sockUDP, buffer, SYNC_PACKET_MAX);
+    cout << "\nRecevied Dgram. Bytes read: " << packetSize;
+    running = true;
     //Packetizer packetizer;
-    for(;;) {
+    while(running) {
         packetSize = readSocket(sockUDP, buffer, SYNC_PACKET_MAX);
-        Packetizer::parseGameSync(buffer, packetSize);
+        writeSocket(sockUDP, buffer, packetSize);
+        cout << "\nRecevied Dgram. Bytes read: " << packetSize;
+        /*TEMP:*/
+        //Packetizer::parseGameSync(buffer, packetSize);
     }
 }
 

@@ -30,26 +30,31 @@
 class NetworkManager {
 public:
     static NetworkManager& instance();
+    void run(const char *ip, const char  * username);
     void initClients(const char *ip);
     void closeConnection();
     int writeSocket(int, const char *, int);
     void writeUDPSocket(const char *, int);
 private:
+    int32_t _myid;  // EY: March 14 - to be removed for game intergration
+    bool connected, running; // EY: March 14 - to be removed for game intergration
     int sockTCP;
     int sockUDP;
     in_addr_t serverIP;
     NetworkManager() {};
 
-
-    void bindSocket(int sock, struct sockaddr_in addr);
-    struct sockaddr_in createAddress(const in_addr_t ip, const int port) const;
     void runTCPClient();
     void runUDPClient();
-    int connectSocket(const char *) const;
-    int createSocket(int) const;
-    int readSocket(int sock, char *buf, int len) const;
 
+    int createSocket(int) const;
+    int connectSocket(const char *) const;
     void connectSocket(int sock, const struct sockaddr_in& addr) const;
+    void bindSocket(int sock, struct sockaddr_in addr);
+    void handshake(const char * ip, const char * uname);
+    void waitRecvId();
+
+    struct sockaddr_in createAddress(const in_addr_t ip, const int port) const;
+    int readSocket(int sock, char *buf, int len) const;
 
 };
 
