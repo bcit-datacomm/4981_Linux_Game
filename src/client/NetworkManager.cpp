@@ -223,7 +223,7 @@ struct sockaddr_in NetworkManager::createAddress(const in_addr_t ip, const int p
     //set server addr struct
     memset(&addr, '0', sizeof(struct sockaddr_in));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(TCP_PORT);
+    addr.sin_port = htons(port);
     addr.sin_addr.s_addr = ip;
 
     return addr;
