@@ -18,15 +18,18 @@
 #define NODE_H
 #include <math.h>
 #include <queue>
-#include "Common.h"
+#include "Zombie.h"
 
 // horizontal/vertical & diagonal cost
-#define BASE_COST   10
-#define EXTEND_COST 14
+static constexpr int BASE_COST   = 10;
+static constexpr int EXTEND_COST = 14;
+
+// The size of a tile/node
+static constexpr int TILE_SIZE   = 50;
 
 // map row & column
-const int row = TILE_SIZE;
-const int col = TILE_SIZE;
+static constexpr int row = TILE_SIZE;
+static constexpr int col = TILE_SIZE;
 static int map[row][col];
 
 static int closedNodes[row][col]; // array of closed nodes (evaluated)
@@ -70,17 +73,17 @@ public:
     }
 
     // current level plus remaining cost
-    void updatePriority(const int& xDest, const int &yDest) {
+    void updatePriority(const int xDest, const int yDest) {
          pri_ = lv_ + estimate(xDest, yDest) * BASE_COST;
     }
 
     // calculate next level based on direction
-    void nextLevel(const int& dir) {
+    void nextLevel(const int dir) {
          lv_ += (dir%2 ==0 ? BASE_COST : EXTEND_COST);
     }
 
     // calculate cost per the remaining distance to the destination
-    const int& estimate(const int& xDest, const int& yDest) const {
+    const int& estimate(const int xDest, const int yDest) const {
         static int xDist, yDist, dist;
         xDist = xDest - xPos_;
         yDist = yDest - yPos_;

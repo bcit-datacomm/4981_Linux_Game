@@ -5,7 +5,9 @@
 
 #include "Turret.h"
 
-Turret::Turret() : Movable(MARINE_VELOCITY) {
+Turret::Turret(bool activated, int health, int ammo, float range)
+        : Movable(MARINE_VELOCITY), activated(activated),
+        health(health), ammo(ammo), range(range) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -80,29 +82,30 @@ bool Turret::targetScanTurret() {
     float closestZombieDist = std::numeric_limits<float>::max();
 
     // Detect zombies
-    bool bDetect = false;
+    bool detect = false;
     for (const auto& item : mapZombies)
     {
         const auto& zombie = item.second;
         float zombieX = zombie.getX();
         float zombieY = zombie.getY();
 
-        float xDelta = zombieX - getX();
-        float yDelta = zombieY - getY();
-        float sqrDist = xDelta * xDelta + yDelta * yDelta;
-        float sqrRange = getRange() * getRange();
+        float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
+        float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
+        xDelta *= xDelta;
+        yDelta *= yDelta;
+        float distance = sqrt(xDelta + yDelta);
 
-        if (sqrDist < sqrRange) {
-            if (sqrDist < closestZombieDist) {
+        if (distance < getRange()) {
+            if (distance < closestZombieDist) {
                 closestZombieId = item.first;
-                closestZombieDist = sqrDist;
-                bDetect = true;
+                closestZombieDist = distance;
+                detect = true;
             }
         }
     }
 
     // TODO: Attack a zombie;
-    if (!bDetect) {
+    if (!detect) {
         return false;
     }
 
