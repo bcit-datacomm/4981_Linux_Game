@@ -448,16 +448,3 @@ bool Zombie::overlapped(const float x1, const float y1,
 
     return false;
 }
-    /*
-    movementHitBox->move(tx,ty);
-    projectileHitBox->move(tx,ty);
-
-    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-    if(ch.detectMovementCollision(this)){
-        setAngle(getRandomAngle());
-        cosVal = cos(getAngle()*PI/180.0);
-        sinVal = sin(getAngle()*PI/180.0);
-    }
-    movementHitBox->move(getX(),getY());
-    projectileHitBox->move(getX(),getY());
-    */

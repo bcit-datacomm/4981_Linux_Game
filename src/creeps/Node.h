@@ -83,7 +83,7 @@ public:
     }
 
     // calculate cost per the remaining distance to the destination
-    const int& estimate(const int xDest, const int yDest) const {
+    const int estimate(const int xDest, const int yDest) const {
         static int xDist, yDist, dist;
         xDist = xDest - xPos_;
         yDist = yDest - yPos_;
