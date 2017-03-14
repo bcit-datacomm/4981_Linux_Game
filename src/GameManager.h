@@ -1,6 +1,11 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 #include<SDL2/SDL.h>
+#include <memory>
+#include <map>
+#include <unordered_map>
+#include <vector>
+#include "Common.h"
 #include "Marine.h"
 #include "Turret.h"
 #include "CollisionHandler.h"
@@ -8,11 +13,7 @@
 #include "Zombie.h"
 #include "Barricade.h"
 #include "Base.h"
-#include <map>
-#include <unordered_map>
-#include <vector>
 #include "WeaponDrop.h"
-#include <memory>
 
 //just for tesing weapon drop
 #include "Weapon.h"

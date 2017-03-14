@@ -18,40 +18,11 @@
 #define NODE_H
 #include <math.h>
 #include <queue>
-#include <stdio.h>
-
-// screen width/height
-#define SCREEN_W    2000
-#define SCREEN_H    2000
-
-// The size of a tile/node and how large each zombie step is
-#define TILE_SIZE   50
-#define STEP_SPAN   50
+#include "Common.h"
 
 // horizontal/vertical & diagonal cost
 #define BASE_COST   10
 #define EXTEND_COST 14
-
-// 8 possible directions
-#define DIR_CAP     8
-#define DIR_R       0
-#define DIR_RD      1
-#define DIR_D       2
-#define DIR_LD      3
-#define DIR_L       4
-#define DIR_LU      5
-#define DIR_U       6
-#define DIR_RU      7
-
-// Cardinal directions for setting angles
-#define NORTH 0
-#define NORTHEAST 45
-#define EAST 90
-#define SOUTHEAST 135
-#define SOUTH 180
-#define SOUTHWEST 225
-#define WEST 270
-#define NORTHWEST 315
 
 // map row & column
 const int row = TILE_SIZE;

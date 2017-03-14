@@ -1,6 +1,6 @@
 #include "Base.h"
 #include "Marine.h"
-#include<random>
+#include <random>
 
 Base::Base(int health) : Object(BASE_HEIGHT, BASE_WIDTH), health(health) {
     setX((MAP_WIDTH / 2) - BASE_WIDTH);
