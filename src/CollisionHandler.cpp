@@ -101,8 +101,6 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
                 std::cout << "Shot target at (" << aX << ", " << aY << ")" << std::endl;
                 targetsInSights.push(allEntities.at(x)->projectileHitBox.get());
             }
-        //}
-
     }
     return targetsInSights;
 }

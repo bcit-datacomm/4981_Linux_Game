@@ -29,8 +29,8 @@ public:
     void reloadClip();//resets clip to max amount
     bool reduceAmmo(int rounds);
 
-    int32_t getId()const{return id;};
-    void setId(const int32_t num){id = num;};
+    int32_t getId()const{return wID;};
+    void setId(const int32_t num){wID = num;};
 
     int getFireRate(); //returns weapon rate of fire
     bool getFireState(); //returns gun ready to fire
@@ -53,7 +53,7 @@ protected:
     int fireRate;
     int fireTick;
     bool isReadyToFire;
-    int32_t id;
+    int32_t wID;
 
 };
 
