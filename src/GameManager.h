@@ -29,6 +29,7 @@ public:
 	// Methods for creating, getting, and deleting marines from the level.
 	unsigned int createMarine();
 	bool createMarine(SDL_Renderer* gRenderer, float x, float y);
+    void createMarine(int32_t id);
 	void deleteMarine(unsigned int id);
     bool addMarine(unsigned int id, Marine& newMarine);
     Marine& getMarine(unsigned int id);

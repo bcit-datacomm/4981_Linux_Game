@@ -79,6 +79,10 @@ unsigned int GameManager::createMarine() {
     return id;
 }
 
+void GameManager::createMarine(int32_t id) {
+    marineManager[id] = Marine();
+}
+
 bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
     unsigned int id = 0;
     if (!marineManager.empty()) {

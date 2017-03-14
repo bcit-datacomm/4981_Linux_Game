@@ -2,10 +2,10 @@
 #define SERVER_H
 
 #include <netinet/in.h>
-#include <sys/time.h>
 #include <cstdarg>
 #include <climits>
 #include <atomic>
+#include <unordered_map>
 
 //Temp variable to represent client count
 #define CLIENT_COUNT 10
@@ -42,19 +42,18 @@ extern int listenSocketTCP;
 extern int sendSocketUDP;
 extern std::unordered_map<int32_t, PlayerJoin> clientList;
 extern std::atomic_bool isGameRunning;
+extern int listen_port_udp;
+extern int listen_port_tcp;
+extern size_t client_count;
+extern int outputLength;
 
-void initSync(int sock);
+void initSync(const int sock);
 void processPacket(const char *data);
 void genOutputPacket();
-void sendSyncPacket(int sock);
-void listenForPackets(const struct sockaddr_in servaddr);
-void listenTCP(int socket, unsigned long ip, unsigned short port);
-void listenUDP(int socket, unsigned long ip, unsigned short port);
-int createSocket(bool useUDP, bool nonblocking);
-int32_t getPlayerId();
-void transitionToGameStart();
-void sendTCPClientMessage(const int32_t id, const bool isConnectMessage, const char *mesg, const size_t mesgSize);
-void processTCPMessage(const char *buff, const size_t nbytes, int sock);
+void sendSyncPacket(const int sock);
+void listenForPackets(const sockaddr_in servaddr);
+void listenTCP(const int socket, const unsigned long ip, const unsigned short port);
+void listenUDP(const int socket, const unsigned long ip, const unsigned short port);
 
 //off by default
 extern bool verbose;

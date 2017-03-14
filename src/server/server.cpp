@@ -1,17 +1,10 @@
 #include <omp.h>
-#include <cstdlib>
-#include <fcntl.h>
 #include <unistd.h>
 #include <sys/epoll.h>
-#include <sys/socket.h>
-#include <sys/signal.h>
-
-#include <unordered_map>
-#include <atomic>
-#include <thread>
 
 #include "../UDPHeaders.h"
 #include "server.h"
+#include "serverwrappers.h"
 #include "servergamestate.h"
 
 //declared here so they can be overriden with flags at run time as needed
@@ -87,39 +80,22 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void initSync(int sock) {
-    int epollfd;
-    epoll_event ev;
-    epoll_event *events;
-
+void initSync(const int sock) {
     logv("Starting TCP sync\n");
 
-    if (!(events = (epoll_event *) calloc(MAXEVENTS, sizeof(epoll_event)))) {
-        perror("Calloc failure");
-        exit(1);
-    }
+    epoll_event *events = createEpollEventList();
 
-    if ((epollfd = epoll_create1(0)) == -1) {
-        perror("Epoll create");
-        exit(1);
-    }
-
+    epoll_event ev;
     ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
     ev.data.fd = listenSocketTCP;
 
-    if ((epoll_ctl(epollfd, EPOLL_CTL_ADD, ev.data.fd, &ev)) == -1) {
-        perror("epoll_ctl");
-        exit(1);
-    }
+    int epollfd = createEpollFD();
+    addEpollSocket(epollfd, ev.data.fd, &ev);
 
-    char buff[IN_PACKET_SIZE];
-    ssize_t nbytes = 0;
     int nevents = 0;
     for (;;) {
-        if ((nevents = epoll_wait(epollfd, events, 100, -1)) == -1) {
-            perror("epoll_wait");
-            exit(1);
-        }
+        nevents = waitForEpollEvent(epollfd, events);
+#pragma omp parallel for schedule (static)
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
                 perror("Socket error");
@@ -134,71 +110,11 @@ void initSync(int sock) {
             }
             if (events[i].events & EPOLLIN) {
                 if (events[i].data.fd == listenSocketTCP) {
-                    logv("Accepting player\n");
-                    PlayerJoin cli{0};
-
-                    sockaddr_in addr;
-                    socklen_t addrLen = sizeof(addr);
-                    int clientSock = accept(listenSocketTCP, (sockaddr *) &addr, &addrLen);
-                    if (clientSock == -1) {
-                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                            continue;
-                        }
-                        perror("Accept");
-                        continue;
-                    }
-
-                    if (fcntl(clientSock, F_SETFL, O_NONBLOCK) == -1) {
-                        perror("fcntl");
-                        close(clientSock);
-                        continue;
-                    }
-
-                    if (getpeername(clientSock, (sockaddr *) &addr, &addrLen) == -1) {
-                        perror("GetPeerName");
-                        close(clientSock);
-                        continue;
-                    }
-
-                    epoll_event clientEv;
-                    memset(&clientEv, 0, sizeof(epoll_event));
-                    clientEv.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
-                    clientEv.data.fd = clientSock;
-
-                    logv("New client has joined the server\n");
-
-                    cli.entry.addr = addr;
-                    cli.entry.sock = clientSock;
-                    cli.hasSentUsername = false;
-                    cli.isPlayerReady = false;
-                    
-                    clientList.insert({getPlayerId(), cli});
-
-                    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, clientSock, &clientEv) < 0) {
-                        perror("Epoll_ctl");
-                        close(clientSock);
-                        continue;
-                    }
+#pragma omp task
+                    handleIncomingTCP(epollfd);
                 } else {
-                    logv("Reading data\n");
-                    while ((nbytes = recv(events[i].data.fd, buff, IN_PACKET_SIZE - 1, 0)) > 0) {
-                        //Handle message
-                        if (nbytes < 4) {
-                            logv("Packet read was too small\n");
-                            continue;
-                        }
-                        buff[nbytes] = '\0';
-                        processTCPMessage(buff, nbytes, events[i].data.fd);
-                    }
-                    if (nbytes == -1) {
-                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                            continue;
-                        }
-                        perror("Packet read failure");
-                    } else {
-                        logv("Client %d closed connection\n", static_cast<int>(events[i].data.fd));
-                    }
-                    close(events[i].data.fd);
+#pragma omp task
+                    readTCP(events[i].data.fd);
                 }
             }
         }
@@ -206,43 +122,21 @@ void initSync(int sock) {
     free(events);
 }
 
-int32_t getPlayerId() {
-    static std::atomic<int32_t> counter{0};
-    return ++counter;
-}
-
-void listenForPackets(const struct sockaddr_in servaddr) {
-    int epollfd;
-    epoll_event ev;
-    epoll_event *events;
+void listenForPackets(const sockaddr_in servaddr) {
     socklen_t servAddrLen = sizeof(servaddr);
 
-    if (!(events = (epoll_event *) calloc(MAXEVENTS, sizeof(epoll_event)))) {
-        perror("Calloc failure");
-        exit(1);
-    }
+    epoll_event *events = createEpollEventList();
 
-    if ((epollfd = epoll_create1(0)) == -1) {
-        perror("Epoll create");
-        exit(1);
-    }
-
+    epoll_event ev;
     ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
     ev.data.fd = listenSocketUDP;
 
-    if ((epoll_ctl(epollfd, EPOLL_CTL_ADD, listenSocketUDP, &ev)) == -1) {
-        perror("epoll_ctl");
-        exit(1);
-    }
+    int epollfd = createEpollFD();
+    addEpollSocket(epollfd, listenSocketUDP, &ev);
 
-    char buff[IN_PACKET_SIZE];
-    ssize_t nbytes = 0;
     int nevents = 0;
     for (;;) {
-        if ((nevents = epoll_wait(epollfd, events, MAXEVENTS, -1)) == -1) {
-            perror("epoll_wait");
-            exit(1);
-        }
+        nevents = waitForEpollEvent(epollfd, events);
 #pragma omp parallel for schedule (static)
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
@@ -256,12 +150,8 @@ void listenForPackets(const struct sockaddr_in servaddr) {
                 continue;
             }
             if (events[i].events & EPOLLIN) {
-                while ((nbytes = recvfrom(listenSocketUDP, buff, IN_PACKET_SIZE, 
-                        0, (sockaddr *) &servaddr, &servAddrLen)) > 0) {
-                    logv("Received %d bytes\n", nbytes);
 #pragma omp task
-                    processPacket(buff);
-                }
+                readUDP(events[i].data.fd, (sockaddr *) &servaddr, &servAddrLen);
             }
         }
     }
@@ -282,7 +172,7 @@ void genOutputPacket() {
     const auto& players = getPlayers();
     //get all the zombies
     const auto& zombies = getZombies();
-    
+
     //start of every sync is the packet header
     *pBuff++ = SYNC;
     //construct the sub header for players
@@ -309,209 +199,23 @@ void genOutputPacket() {
     outputLength = pBuff - (int32_t *) outputPacket;
 }
 
-void sendSyncPacket(int sock) {
+void sendSyncPacket(const int sock) {
     for (const auto& client : clientList) {
         sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
     }
 }
 
-void listenTCP(int socket, unsigned long ip, unsigned short port) {
-    //TCP Setup
-    struct sockaddr_in servaddrtcp;
-    memset(&servaddrtcp, 0, sizeof(servaddrtcp));
-    servaddrtcp.sin_family = AF_INET;
-    servaddrtcp.sin_addr.s_addr = htonl(ip);
-    servaddrtcp.sin_port = htons(port); 
-
-    if ((bind(socket, (struct sockaddr *) &servaddrtcp, sizeof(servaddrtcp))) == -1) {
-        perror("Bind TCP");
-        exit(1);
-    }
-
+void listenTCP(const int socket, const unsigned long ip, const unsigned short port) {
+    bindSocket(socket, ip, port);
     if (listen(socket, LISTENQ) == -1) {
         perror("Listen TCP");
         exit(1);
     }
 }
 
-void listenUDP(int socket, unsigned long ip, unsigned short port) {
-    //UDP Setup
-    struct sockaddr_in servaddrudp;
-    memset(&servaddrudp, 0, sizeof(servaddrudp));
-    servaddrudp.sin_family = AF_INET;
-    servaddrudp.sin_addr.s_addr = htonl(ip);
-    servaddrudp.sin_port = htons(port); 
-
-    if ((bind(socket, (struct sockaddr *) &servaddrudp, sizeof(servaddrudp))) == -1) {
-        perror("Bind UDP");
-        exit(1);
-    }
+void listenUDP(const int socket, const unsigned long ip, const unsigned short port) {
+    const auto& servaddrudp = bindSocket(socket, ip, port);
     logv("UDP server started\n");
     listenForPackets(servaddrudp);
 }
 
-int createSocket(bool useUDP, bool nonblocking) {
-    int sock = socket(AF_INET, ((useUDP) ? SOCK_DGRAM : SOCK_STREAM) | (nonblocking * SOCK_NONBLOCK), 0);
-    if (sock == -1) {
-        perror("Create socket");
-        exit(1);
-    }
-    int enable = 1;
-    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
-        perror("setsockopt(SO_REUSEADDR) failed");
-        exit(1);
-    }
-    return sock;
-}
-
-void logv(const char *msg, ...) {
-    if (!verbose) {
-        return;
-    }
-    va_list args;
-    va_start(args, msg);
-    vprintf(msg, args);
-    va_end(args);
-    fflush(stdout);
-}
-
-void transitionToGameStart() {
-    logv("Starting the game\n");
-    std::thread(startGame).detach();
-    //Spinlock
-    while (!isGameRunning.load());
-    listenUDP(listenSocketUDP, INADDR_ANY, listen_port_udp);
-}
-
-void sendTCPClientMessage(const int32_t id, const bool isConnectMessage, const char *mesg, const size_t mesgSize) {
-    char *outBuff;
-    if ((outBuff = (char *) malloc(mesgSize + TCP_HEADER_SIZE + 1)) == nullptr) {
-        perror("Malloc failure");
-        exit(1);
-    }
-    memset(outBuff, '\0', mesgSize + TCP_HEADER_SIZE + 1);
-    reinterpret_cast<int32_t *>(outBuff)[0] = id;
-    outBuff[4] = (isConnectMessage) ? 'C' : 'T';
-    outBuff[5] = '/';
-
-    strncpy(outBuff + TCP_HEADER_SIZE + 1, mesg, mesgSize);
-
-    for (const auto& clients : clientList) {
-        if (clients.first != id && clients.second.hasSentUsername) {
-            if (send(clients.second.entry.sock, outBuff, mesgSize + TCP_HEADER_SIZE + 1, 0) < 0) {
-                perror("Failed to send client messasge");
-            }
-        }
-    }
-    free(outBuff);
-}
-
-/*
- * buff[4] will be either T or C
- * T - Text typed by the user, either server commands or text chat
- * C - Connection information like lobby contents, people being ready, etc.
- * Server ignores messages marked as connection as it is the only one that sends them
- * Server sends T & C messages and ignores flag on receive
- * Client sends T messages and receives T&C messages
- */
-void processTCPMessage(const char *buff, const size_t nbytes, int sock) {
-    //Convert first 4 chars to 32 bit int representing id
-    const int32_t idReceived = reinterpret_cast<const int32_t *>(buff)[0];
-
-    logv("Read packet with id: %d\n", idReceived);
-
-    for (const auto& it : clientList) {
-        if (it.second.entry.sock == sock) {
-            if (!it.second.hasSentUsername) {
-                //Handle initial username read
-                std::pair<int32_t, PlayerJoin> tempMapEntry;
-                tempMapEntry = it;
-                tempMapEntry.first = getPlayerId();
-                tempMapEntry.second.hasSentUsername = true;
-                tempMapEntry.second.isPlayerReady = false;
-                tempMapEntry.second.entry.addr = it.second.entry.addr;
-                tempMapEntry.second.entry.addr.sin_port = htons(listen_port_udp);
-                strncpy(tempMapEntry.second.entry.username, buff + TCP_HEADER_SIZE + 1, NAMELEN);
-                strcat(tempMapEntry.second.entry.username, "\0");
-                logv("Server received username: %s\n", tempMapEntry.second.entry.username);
-
-                //Erase temporary entry in client list
-                clientList.erase(clientList.find(it.first));
-                //Insert newly compelted entry
-                clientList.insert(tempMapEntry);
-
-                const size_t bufferSize = NAMELEN + TCP_HEADER_SIZE + 1;
-                char outBuff[bufferSize];
-                memset(outBuff, '\0', bufferSize);
-                int32_t *id = reinterpret_cast<int32_t *>(outBuff);
-                *id = tempMapEntry.first;
-                outBuff[4] = 'C';
-                outBuff[5] = '/';
-
-                strncpy(outBuff + TCP_HEADER_SIZE + 1, tempMapEntry.second.entry.username, NAMELEN);
-                //Send client their allocated id and username
-                if (send(sock, outBuff, bufferSize, 0) < 0) {
-                    perror("Failed to send client message");
-                    break;
-                }
-
-                //Send new client a list of already existing clients 
-                for (const auto& it : clientList) {
-                    if (it.second.entry.sock != sock && it.second.hasSentUsername) {
-                        memset(outBuff, '\0', bufferSize);
-                        id = reinterpret_cast<int32_t *>(outBuff);
-                        *id = it.first;
-                        outBuff[4] = 'C';
-                        outBuff[5] = '/';
-                        strncpy(outBuff + TCP_HEADER_SIZE + 1, tempMapEntry.second.entry.username, NAMELEN);
-
-                        if (send(sock, outBuff, bufferSize, 0) < 0) {
-                            perror("Failed to send client message");
-                            break;
-                        }
-                    }
-                }
-            } else {
-                if (buff[5] == '/') {
-                    //Command message
-                    if (strncmp(buff + TCP_HEADER_SIZE + 1, "ready", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
-                        //Ready command
-                        if (clientList.count(idReceived)) {
-                            clientList[idReceived].isPlayerReady = true;
-                            logv("Player id %d is ready to start\n", idReceived);
-                            sendTCPClientMessage(idReceived, true, "ready", 5);
-                        } else {
-                            perror("Client not found in list");
-                        }
-                        bool areAllReady = true;
-                        for (const auto& elem : clientList) {
-                            if (!elem.second.isPlayerReady) {
-                                areAllReady = false;
-                                break;
-                            }
-                        }
-                        if (areAllReady) {
-                            transitionToGameStart();
-                        }
-                    } else if (strncmp(buff + TCP_HEADER_SIZE + 1, "unready", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
-                        //Unready command
-                        if (clientList.count(idReceived)) {
-                            clientList[idReceived].isPlayerReady = false;
-                            logv("Player id %d is NOT ready to start\n", idReceived);
-                            sendTCPClientMessage(idReceived, true, "unready", 7);
-                        } else {
-                            perror("Client not found in list");
-                        }
-                    } else if (strncmp(buff + TCP_HEADER_SIZE + 1, "start", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
-                        //Start game command
-                        transitionToGameStart();
-                    }
-                } else {
-                    //Regular chat message - processing TBD
-                    logv("Server received: %s\n", buff + 4);
-                }
-            }
-            break;
-        }
-    }
-}
