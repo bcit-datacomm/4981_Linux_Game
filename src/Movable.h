@@ -5,7 +5,7 @@
 
 class Movable : public virtual Entity {
 public:
-    Movable(int vel) : velocity(vel), dx(0), dy(0), angle(0.0) {};
+    Movable(int vel) : dx(0), dy(0), velocity(vel), angle(0.0) {};
     virtual ~Movable() {};
 
     void move(float moveX, float moveY, CollisionHandler& ch); // Moves Marine
@@ -20,17 +20,16 @@ public:
 
     float getDY() const; //get delta y coordinate
 
-    int    getVelocity() const; // get velocity of Marine movement
+    int getVelocity() const; // get velocity of Marine movement
 
     void setAngle(double a);//sets angle of sprite to
 
     double getAngle() const; //returns sprites angle
 private:
-
-    int velocity; // velocity of Marine movement
-    float dx; // delta x coordinat
-    float dy; //delta ycoordinate
-    double angle;
+    float dx;     // delta x coordinat
+    float dy;     // delta ycoordinate
+    int velocity; // velocity of object
+    double angle; // moving angle
 };
 
 #endif

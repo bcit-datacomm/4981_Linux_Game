@@ -1,4 +1,3 @@
-#include <memory>
 #include "GameManager.h"
 #include "HitBox.h"
 #include <memory>
@@ -63,20 +62,6 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY)
 void GameManager::updateMarines(const float& delta) {
     for (auto& m : marineManager) {
         m.second.move((m.second.getDX()*delta), (m.second.getDY()*delta), collisionHandler);
-    }
-}
-
-// Update zombie movements.
-void GameManager::updateZombies(const float& delta) {
-    for (auto& z : zombieManager) {
-        // Check if the zombie is allowed to move
-        z.second.checkMove();
-
-        if (z.second.isMoving()) {
-            z.second.generateMove();
-        }
-
-        z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
     }
 }
 
@@ -186,6 +171,16 @@ Turret& GameManager::getTurret(unsigned int id) {
     return turretManager.find(id)->second;
 }
 
+// Update zombie movements.
+void GameManager::updateZombies(const float& delta) {
+    for (auto& z : zombieManager) {
+        z.second.generateMove();
+        if (z.second.isMoving()) {
+            z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
+        }
+    }
+}
+
 unsigned int GameManager::addZombie(Zombie& newZombie) {
     unsigned int id = 0;
     if (!zombieManager.empty()) {
@@ -211,11 +206,11 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
 
     zombieManager.at(id).setPosition(x,y);
 
-    //Hard coded for now.  Each coordinate value must be divided by the tile size
-    zombieManager.at(id).generatePath((int) x / 50, (int) y / 50, 900 / 50, 900 / 50);
-
-    // Set end coordinates to spawn coordinates so the zombie moves on spawn
-    zombieManager.at(id).setEnd(x, y);
+    // generate A* path (from zombie to base). 
+    // How many bases are there on the map? How does GM maintain BASE?
+    zombieManager.at(id).generatePath(x, y, MAP_WIDTH/2 - BASE_WIDTH, MAP_HEIGHT/2 - BASE_HEIGHT);
+    zombieManager.at(id).setState(ZOMBIE_MOVE);
+    
     return true;
 }
 

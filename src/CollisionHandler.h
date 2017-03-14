@@ -1,5 +1,6 @@
 #ifndef COLLISION_H
 #define COLLISION_H
+#include "Common.h"
 #include "HitBox.h"
 #include "Quadtree.h"
 #include <vector>

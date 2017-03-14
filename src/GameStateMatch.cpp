@@ -21,7 +21,7 @@ bool GameStateMatch::load() {
     bool success = true;
 
     //Open the font
-    frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
+    frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", FONT_SIZE);
     if ( frameFont == NULL ) {
         printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
@@ -32,18 +32,15 @@ bool GameStateMatch::load() {
         printf("Failed to load the level texture!\n");
         success = false;
     } else {
-        level.levelTexture.setDimensions(2000, 2000);
+        level.levelTexture.setDimensions(MAP_WIDTH, MAP_HEIGHT);
     }
 
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 100, 100);
-    GameManager::instance()->createZombie(game.renderer, 700, 700);
-    GameManager::instance()->createZombie(game.renderer, 800, 1400);
-    GameManager::instance()->createZombie(game.renderer, 100, 1400);
-    GameManager::instance()->createZombie(game.renderer, 800, 100);
+    GameManager::instance()->createZombie(game.renderer, SPAWN_X1, SPAWN_Y1);
+    GameManager::instance()->createZombie(game.renderer, SPAWN_X2, SPAWN_Y2);    
     GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 
@@ -91,7 +88,7 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         //Calculate and correct fps
-        avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
+        avgFPS = countedFrames / ( fpsTimer.getTicks() / TICK_SEC);
 
         //Set FPS text to be rendered
         frameTimeText.str( "" );
@@ -99,7 +96,7 @@ void GameStateMatch::loop() {
 
         // Process frame
         handle();    // Handle user input
-        update(stepTimer.getTicks() / 1000.f); // Update state values
+        update(stepTimer.getTicks() / TICK_SEC); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
         render();    // Render game state to window

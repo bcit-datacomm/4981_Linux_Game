@@ -1,10 +1,10 @@
 #include "CollisionHandler.h"
 
 CollisionHandler::CollisionHandler() {
-    quadtreeMov = new Quadtree(0, {0,0,2000,2000});
-    quadtreePro = new Quadtree(0, {0,0,2000,2000});
-    quadtreeDam = new Quadtree(0, {0,0,2000,2000});
-    quadtreePickUp = new Quadtree(0, {0,0,2000,2000});
+    quadtreeMov = new Quadtree(0, {0, 0, MAP_WIDTH, MAP_HEIGHT});
+    quadtreePro = new Quadtree(0, {0, 0, MAP_WIDTH, MAP_HEIGHT});
+    quadtreeDam = new Quadtree(0, {0, 0, MAP_WIDTH, MAP_HEIGHT});
+    quadtreePickUp = new Quadtree(0, {0, 0, MAP_WIDTH, MAP_HEIGHT});
 }
 
 CollisionHandler::~CollisionHandler() {
