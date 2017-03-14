@@ -10,9 +10,9 @@
 #include <stdio.h>
 #include <iostream>
 
-InstantWeapon::InstantWeapon(std::string type, int range, int damage, 
-        int clip, int clipMax, int ammo, int AOE, int reloadSpeed)
-: Weapon(type, range, damage, clip, clipMax, ammo, AOE, reloadSpeed) {
+InstantWeapon::InstantWeapon(std::string type, int range, int damage,
+        int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire)
+        : Weapon(type, range, damage, clip, clipMax, ammo, AOE, reloadSpeed, fireRate, isReadyToFire) {
 
 }
 
@@ -20,14 +20,14 @@ InstantWeapon::InstantWeapon(std::string type, int range, int damage,
 
 // DericM, 01/03/17
 void InstantWeapon::fire(Marine &marine){
-	//check ammo    
+ //check ammo
 
     printf("InstantWeapon::fire()\n");
 
     CollisionHandler collisionHandler = GameManager::instance()->getCollisionHandler();
 
     if(!reduceAmmo(1)){
-    	return;
+     return;
     }
 
     //AudioManager::instance().playEffect(EFX_WLPISTOL);
@@ -36,7 +36,7 @@ void InstantWeapon::fire(Marine &marine){
     std::priority_queue<HitBox*> targets;
     targets = collisionHandler.detectLineCollision(marine, getRange());
     if(targets.empty()){
-    	return;
+     return;
     }
 
     //=======================================================
@@ -45,5 +45,4 @@ void InstantWeapon::fire(Marine &marine){
     //targets.top()->attached->collidingProjectile(getDamage()); //broken
     targets.pop();
     //=======================================================
-    
 }

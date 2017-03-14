@@ -4,9 +4,10 @@
 #include <random>
 #define PI 3.14159265
 
-Barricade::Barricade(int health, int state, bool boolPlaceable, bool boolPlaced):Object(BARRICADE_HEIGHT,
-            BARRICADE_WIDTH), health(health), state(state), boolPlaceable(boolPlaceable), boolPlaced(boolPlaced) {
-	printf("Create Barricade\n");
+Barricade::Barricade(int health, int state, bool placeable, bool placed)
+        : Object(BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state), placeable(placeable),
+        placed(placed) {
+    printf("Create Barricade\n");
 }
 
 Barricade::~Barricade() {
@@ -14,12 +15,12 @@ Barricade::~Barricade() {
 }
 
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
-        const float moveX, const float moveY, CollisionHandler  &ch){
+        const float moveX, const float moveY, CollisionHandler  &ch) {
     const float distanceX = (playerX - moveX) * (playerX - moveX);
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX+distanceY));
 
-    boolPlaceable = (distance <= 200);
+    placeable = (distance <= 200);
 
     SDL_Rect checkBox;
     checkBox.h = 100;
@@ -28,21 +29,20 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
     checkBox.y = getY();
     HitBox hitBox(getX(), getY(), checkBox);
 
-	if(boolPlaceable){
-        if(ch.detectMovementCollision(this))
-
-        boolPlaceable = false;
-
+    if(placeable && ch.detectMovementCollision(this)){
+        placeable = false;
     }
-    return boolPlaceable;
+
+
+    return placeable;
 }
 
 bool Barricade::isPlaceable(){
-    return boolPlaceable;
+    return placeable;
 }
 
 bool Barricade::isPlaced(){
-    return boolPlaced;
+    return placed;
 }
 
 // Move Zombie by x and y amount
@@ -51,7 +51,7 @@ void Barricade::move(const float playerX, const float playerY, const float moveX
     setPosition(moveX, moveY);
     //`setX(100);
 
-    if(this->checkPlaceablePosition(playerX, playerY, moveX, moveY, ch)) {
+    if(checkPlaceablePosition(playerX, playerY, moveX, moveY, ch)) {
         texture.setAlpha(200);
     } else {
         texture.setAlpha(30);
@@ -69,5 +69,5 @@ void Barricade::collidingProjectile(const int damage) {
 
 void Barricade::placeBarricade(){
     texture.setAlpha(255);
-    boolPlaced=true;
+    placed=true;
 }

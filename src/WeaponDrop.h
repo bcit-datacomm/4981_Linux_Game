@@ -18,7 +18,7 @@ public:
     int32_t getId();
 
     void collidingProjectile(int damage);
-
+    
     int getX() const;
     int getY() const;
     int32_t getWeaponId();

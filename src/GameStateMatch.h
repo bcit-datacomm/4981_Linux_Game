@@ -14,6 +14,7 @@
 #include "GameManager.h"
 #include "CollisionHandler.h"
 #include "Window.h"
+#include "SpriteManager.h"
 
 class GameStateMatch : public GameState {
 public:
@@ -40,6 +41,7 @@ private:
     virtual void handle() override;
     virtual void update(const float delta) override;
     virtual void render() override;
+
 };
 
 #endif

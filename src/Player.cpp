@@ -51,7 +51,10 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        marine->fireWeapon();
+        if(marine->inventory.getCurrent() != nullptr){
+            if(marine->inventory.getCurrent()->getFireState())
+            marine->fireWeapon();
+        }
     }
 
 }
@@ -107,6 +110,9 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_E]){
         marine->checkForPickUp();
     }
+    if(state[SDL_SCANCODE_I]) {
+        marine->inventory.useItem();
+    }
     marine->setDY(y);
     marine->setDX(x);
 }
@@ -123,6 +129,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
         tempBarricadeID = -1;
     }
 }
+
 
 void Player::handleTempTurret(SDL_Renderer *renderer) {
    if(tempTurretID < 0) {

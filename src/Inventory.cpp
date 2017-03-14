@@ -47,6 +47,14 @@ Weapon* Inventory::getCurrent() {
     }
 }
 
+void Inventory::useItem() {
+    if (medkit != nullptr) {
+        medkit->OnConsume();
+        medkit = nullptr;
+    }
+
+}
+
 void Inventory::scrollCurrent(int direction){
     int currentTime = SDL_GetTicks();
 
@@ -60,7 +68,7 @@ void Inventory::scrollCurrent(int direction){
         } else {
             current = direction;
         }
-        printf("Switched to %s slot:%d\n", weapons[current]->getType().c_str(), current);
+        printf("Switched to slot:%d\n", current);
     }
 
 }

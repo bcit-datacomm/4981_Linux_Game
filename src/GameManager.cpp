@@ -29,6 +29,7 @@ GameManager::~GameManager() {
 
 // Render all objects in level
 void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const float camY) {
+
     for (const auto& m : weaponDropManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY);
     }
@@ -51,9 +52,9 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const
                 nullptr, m.second.getAngle());
     }
 
- 	for (const auto& b : barricadeManager) {
-		b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
-	}
+    for (const auto& b : barricadeManager) {
+        b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
+    }
 
 }
 
@@ -239,7 +240,6 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
 
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(int32_t id){
-
     return weaponDropManager.at(id);
 }
 
@@ -303,12 +303,12 @@ void GameManager::updateCollider() {
 
     }
 
-   	for (auto& b : barricadeManager) {
+    for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
             collisionHandler.quadtreeMov.insert(&b.second);
             collisionHandler.quadtreeDam.insert(&b.second);
         }
-	}
+ }
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(&m.second);
@@ -332,7 +332,7 @@ int32_t GameManager::createBarricade(SDL_Renderer* gRenderer, const float x, con
 
 
 void GameManager::deleteBarricade(const int32_t id) {
-	barricadeManager.erase(id);
+    barricadeManager.erase(id);
 }
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(const int32_t id) {
@@ -340,7 +340,9 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 }
 
 // Create zombie add it to manager, returns success
-int32_t GameManager::createWall(SDL_Renderer* gRenderer, const float x, const float y, const int w, const int h) {
+int32_t GameManager::createWall(SDL_Renderer* gRenderer,
+                                const float x, const float y, const int w, const int h) {\
+
     const int32_t id = generateID();
     objectManager[id] = Wall(w, h);
     printf("%d\n", id);
@@ -348,17 +350,17 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer, const float x, const fl
         printf("Failed to load the wall texture!\n");
         deleteBarricade(id);
         return -1;
-   } else {
-        objectManager.at(id).texture.setDimensions(w, h);
     }
 
+    objectManager.at(id).texture.setDimensions(w, h);
     objectManager.at(id).setPosition(x,y);
 
     return id;
 }
 
 
-void GameManager::setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY){
+void GameManager::setBoundary(SDL_Renderer* gRenderer,
+                              const float startX, const float startY, const float endX, const float endY) {
 
     int width = endX - startX + 200;
     int height = 100;

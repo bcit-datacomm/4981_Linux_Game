@@ -16,7 +16,7 @@ constexpr int BARRICADE_HEIGHT = 100;
 
 class Barricade : public Object {
 public:
-    Barricade(int health = 100, int state = 0, bool booPlaceable = false, bool boolPlaced = false);
+    Barricade(int health = 100, int state = 0, bool placeable = false, bool placed = false);
     virtual ~Barricade();
 
     void move(const float, const float, const float, const float, CollisionHandler&); // Moves Zombie
@@ -30,8 +30,8 @@ public:
 private:
     int health;
     int state; //used to select sprite to display
-    bool boolPlaceable;
-    bool boolPlaced;
+    bool placeable;
+    bool placed;
 };
 
 #endif

@@ -10,14 +10,16 @@
 using std::string;
 
 namespace ShotgunVars {
-    const string TYPE  = "Shotgun";
-    const int RANGE    = 200;
-    const int DAMAGE   = 400;
-    const int CLIP     = 2;
-    const int CLIPMAX  = 2;
-    const int AMMO     = 1000;
-    const int AOE      = 1;
-    const int RELOAD   = 3;
+    const string TYPE       = "Shotgun";
+    const int RANGE         = 200;
+    const int DAMAGE        = 400;
+    const int CLIP          = 2;
+    const int CLIPMAX       = 2;
+    const int AMMO          = 1000;
+    const int AOE           = 1;
+    const int RELOAD        = 3;
+    const int FIRERATE      = 600;
+    constexpr bool READY    = true;
 }
 
 class ShotGun: public InstantWeapon {
