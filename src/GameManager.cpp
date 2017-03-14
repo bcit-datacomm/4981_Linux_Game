@@ -165,12 +165,7 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const flo
         return false;
     }
     zombieManager.at(id).setPosition(x,y);
-    //printf("zombie manager size : %d\n", zombieManager.size());
-    int counter = 0;
-    for(const auto id : zombieManager) {
-        counter++;
-    }
-    //printf("zombie manager counter size : %d\n", counter);
+
     return true;
 }
 
@@ -196,7 +191,7 @@ int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
 
     const int32_t id = weapon->getId();
     weaponManager.insert({id, weapon});
-    weaponManager.at(id)->setId(weapon->getId());
+    weaponManager.at(id)->setId(id);
 
     return id;
 
@@ -228,39 +223,35 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
     weaponDropManager.at(id).setY(y);
     weaponDropManager.at(id).setId(id);
 
-    if(!weaponDropManager.at(wd.getId()).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
+    if(!weaponDropManager.at(id).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
         printf("Failed to load the player texture!\n");
         deleteWeaponDrop(id);
         return false;
     }
     weaponDropManager.at(id).setPosition(x,y);
-    printf("Weapon Drop Id after manger: %d\n",weaponDropManager.at(id).getId());
     return true;
 }
 
 //returns weapon drop in  weaponDropManager
-WeaponDrop& GameManager::getWeaponDrop(int32_t id){
+WeaponDrop& GameManager::getWeaponDrop(const int32_t id){
     return weaponDropManager.at(id);
 }
 
 //returns weapon in weaponManager
-std::shared_ptr<Weapon> GameManager::getWeapon(int32_t id){
-    std::map<int32_t, std::shared_ptr<Weapon>>::iterator it;
-    it = weaponManager.find(id);
+std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
+    const auto& it = weaponManager.find(id);
     if(it != weaponManager.end()){
         return weaponManager.at(id);
-    } else {
-        printf("Couldnt find Weapon\n");
-        return nullptr;
     }
+    printf("Couldnt find Weapon\n");
+    return nullptr;
 
 }
 
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
-    std::map<int32_t, WeaponDrop>::iterator it;
-    printf("Delete Weapon Drop Id : %d\n",id);
-    it = weaponDropManager.find(id);
+
+    const auto& it = weaponDropManager.find(id);
     if(it != weaponDropManager.end()){
         weaponDropManager.erase(id);
     } else {
@@ -341,7 +332,7 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 
 // Create zombie add it to manager, returns success
 int32_t GameManager::createWall(SDL_Renderer* gRenderer,
-                                const float x, const float y, const int w, const int h) {\
+        const float x, const float y, const int w, const int h) {\
 
     const int32_t id = generateID();
     objectManager[id] = Wall(w, h);
@@ -360,7 +351,7 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer,
 
 
 void GameManager::setBoundary(SDL_Renderer* gRenderer,
-                              const float startX, const float startY, const float endX, const float endY) {
+        const float startX, const float startY, const float endX, const float endY) {
 
     int width = endX - startX + 200;
     int height = 100;
@@ -413,8 +404,9 @@ bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
         unsigned int count = 0;
         std::vector<int32_t> ids;
         for(const auto z : zombieManager) {
-            if(count >= spawnPoints.size())
+            if(count >= spawnPoints.size()){
                 break;
+            }
             ids.push_back(z.first);
             count++;
         }

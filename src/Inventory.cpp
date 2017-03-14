@@ -29,14 +29,13 @@ bool Inventory::pickUp(int32_t weaponId){
     if(current == 0){
         printf("Can't Swap default gun \n");
         return false;
-    } else{
-        printf("Picked up weapon\n");
-        printf("Swapped from %d ", weaponIds[current]);
-
-        weaponIds[current] = weaponId;
-        printf("to %d\n", weaponIds[current]);
-        return true;
     }
+    printf("Picked up weapon\n");
+    printf("Swapped from %d ", weaponIds[current]);
+
+    weaponIds[current] = weaponId;
+    printf("to %d\n", weaponIds[current]);
+    return true;
 }
 
 Weapon* Inventory::getCurrent() {

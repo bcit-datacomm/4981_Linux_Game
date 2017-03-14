@@ -15,7 +15,7 @@ Entity::Entity():id(generateID()) {
 
 Entity::Entity(const Entity &e): spriteClips(e.spriteClips),movementHitBox(e.movementHitBox),
         projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox),
-        id(e.id){
+        id(e.getId()){
 }
 
 Entity::~Entity() {
@@ -69,17 +69,8 @@ void Entity::onCollision(){
     //do nothing
 }
 
-void Entity::collidingProjectile(int damage){
+void Entity::collidingProjectile(const int damage){
     //do nothing
-}
-
-
-int32_t Entity::getId(){
-    return id;
-}
-
-void Entity::setId(int32_t num){
-    id = num;
 }
 
 int32_t generateID() {
