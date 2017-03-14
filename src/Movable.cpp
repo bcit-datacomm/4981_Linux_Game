@@ -5,14 +5,14 @@ void Movable::move(float moveX, float moveY, CollisionHandler &ch){
     //Move the Movable left or right
     setX(getX() + moveX);
 
-    if (ch.detectMovementCollision(movementHitBox.get())) {
+    if (ch.detectMovementCollision(this)) {
         setX(getX() - moveX);
     }
 
     //Move the Movable up or down
     setY(getY()+moveY);
 
-    if (ch.detectMovementCollision(movementHitBox.get())) {
+    if (ch.detectMovementCollision(this)) {
         setY(getY() - moveY);
     }
 

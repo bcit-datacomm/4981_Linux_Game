@@ -1,15 +1,21 @@
 #include "Entity.h"
+#include <atomic>
 
-Entity::Entity() {
+Entity::Entity():id(generateID()) {
     spriteClips[0].x = 0;
     spriteClips[0].y = 0;
     spriteClips[0].w = 100;
     spriteClips[0].h = 100;
-    movementHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
-    projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
-    damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
-    pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0], this);
+    movementHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+    pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
 
+}
+
+Entity::Entity(const Entity &e): spriteClips(e.spriteClips),movementHitBox(e.movementHitBox),
+        projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox),
+        id(e.getId()){
 }
 
 Entity::~Entity() {
@@ -57,4 +63,17 @@ void Entity::updateRectHitBoxes() {
     projectileHitBox->setRect(spriteClips[0]);
     damageHitBox->setRect(spriteClips[0]);
     pickupHitBox->setRect(spriteClips[0]);
+}
+
+void Entity::onCollision(){
+    //do nothing
+}
+
+void Entity::collidingProjectile(const int damage){
+    //do nothing
+}
+
+int32_t generateID() {
+    static std::atomic<int32_t> counter{-1};
+    return ++counter;
 }

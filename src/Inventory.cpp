@@ -1,11 +1,17 @@
 //created 2/5/17 Maitiu
 #include <memory>
 #include "Inventory.h"
+#include "GameManager.h"
 
 Inventory::Inventory(){
     weapons[0] = std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun));
     weapons[1] = std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(tempRifle));
     weapons[2] = std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(tempShotGun));
+    weaponIds[0] = defaultGun.getId();
+    weaponIds[1] = -1;
+    weaponIds[2] = -1;
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
+
 }
 
 Inventory::~Inventory(){
@@ -14,37 +20,30 @@ Inventory::~Inventory(){
 
 void Inventory::switchCurrent(int slot){
     if (current != slot) {
-        printf("Switched to %s  slot: %d\n", weapons[slot]->getType().c_str(), slot);
+        printf("Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
-void Inventory::pickUp(){
-    int currentTime = SDL_GetTicks();
-
-    if(currentTime > (pickupTick + pickupDelay)){
-        pickupTick = currentTime;
-        if(current == 0){
-            printf("Can't Swap default gun \n");
-        } else{
-
-            int randGun = rand() % 2 + 1;
-            if(randGun == 1){
-                printf("Swapped from %s ", weapons[current]->getType().c_str());
-                weapons[current] = std::make_shared<Weapon>(tempRifle);
-                printf("to %s\n", weapons[current]->getType().c_str());
-            } else if(randGun == 2){
-                printf("Swapped from %s ", weapons[current]->getType().c_str());
-                weapons[current] = std::make_shared<Weapon>(tempShotGun);
-                printf("to %s\n", weapons[current]->getType().c_str());
-            }
-        }
-
+bool Inventory::pickUp(int32_t weaponId){
+    if(current == 0){
+        printf("Can't Swap default gun \n");
+        return false;
     }
+    printf("Picked up weapon\n");
+    printf("Swapped from %d ", weaponIds[current]);
+
+    weaponIds[current] = weaponId;
+    printf("to %d\n", weaponIds[current]);
+    return true;
 }
 
-Weapon *Inventory::getCurrent() {
-    return weapons[current].get();
+Weapon* Inventory::getCurrent() {
+    if(weaponIds[current] >= 0){
+        return GameManager::instance()->getWeapon(weaponIds[current]).get();
+    } else {
+        return nullptr;
+    }
 }
 
 void Inventory::useItem() {
@@ -52,7 +51,7 @@ void Inventory::useItem() {
         medkit->OnConsume();
         medkit = nullptr;
     }
-    
+
 }
 
 void Inventory::scrollCurrent(int direction){
@@ -68,7 +67,7 @@ void Inventory::scrollCurrent(int direction){
         } else {
             current = direction;
         }
-        printf("Switched to %s slot:%d\n", weapons[current]->getType().c_str(), current);
+        printf("Switched to slot:%d\n", current);
     }
 
 }

@@ -18,13 +18,12 @@ const int MARINE_WIDTH = 100;
 
 class Marine : public Movable {
 public:
+
     void create(); //function displays character
-
     void onCollision();
-
     void collidingProjectile(int damage);
-
     void fireWeapon();
+    void checkForPickUp();
 
     Marine();
     virtual ~Marine();
@@ -34,6 +33,8 @@ public:
 private:
     int health = 100;
     int state; //used to select sprite to display
+    int pickupTick = 0;
+    int pickupDelay = 200;
 
 };
 

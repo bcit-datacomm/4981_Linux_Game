@@ -28,8 +28,13 @@ public:
     int getRAOE(); //returns radius of effect
     void reloadClip();//resets clip to max amount
     bool reduceAmmo(int rounds);
+
+    int32_t getId()const{return wID;};
+    void setId(const int32_t num){wID = num;};
+
     int getFireRate(); //returns weapon rate of fire
     bool getFireState(); //returns gun ready to fire
+
     virtual void fire(Marine &marine);
 
 protected:
@@ -48,7 +53,10 @@ protected:
     int fireRate;
     int fireTick;
     bool isReadyToFire;
+    int32_t wID;
 
 };
+
+int32_t generateWID();
 
 #endif

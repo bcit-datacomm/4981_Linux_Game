@@ -7,11 +7,11 @@
 
 Zombie::Zombie(int health, int state) : Movable(ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
-    printf("Create Zombie\n");
+    //printf("Create Zombie\n");
 }
 
 Zombie::~Zombie() {
-    printf("Destory Zombie\n");
+    //printf("Destory Zombie\n");
 }
 
 void Zombie::onCollision() {
@@ -36,7 +36,7 @@ int Zombie::getRandomAngle(){
 void Zombie::generateRandomMove(){
     double cosVal = cos(getAngle()*PI/180.0);
     double sinVal = sin(getAngle()*PI/180.0);
-    
+
     int x = getVelocity();
     int y = getVelocity();
 
@@ -44,15 +44,17 @@ void Zombie::generateRandomMove(){
     int ty = getY() + 20 * sinVal;
 
     movementHitBox->move(tx,ty);
-    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();    
-    if(ch.detectMovementCollision(movementHitBox.get())){
+    projectileHitBox->move(tx,ty);
+
+    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
+    if(ch.detectMovementCollision(this)){
         setAngle(getRandomAngle());
         cosVal = cos(getAngle()*PI/180.0);
         sinVal = sin(getAngle()*PI/180.0);
     }
     movementHitBox->move(getX(),getY());
+    projectileHitBox->move(getX(),getY());
 
     setDX(x*cosVal);
     setDY(y*sinVal);
-
  }

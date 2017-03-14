@@ -14,7 +14,7 @@
 class Inventory {
 public:
     void switchCurrent(int slot);//switches currently selected slot based on key input
-    void pickUp();//picks up weapon in to current slot
+    bool pickUp(int32_t weaponId);//picks up weapon in to current slot
     Weapon *getCurrent();//Returns current weapon
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     void useItem(); //uses current inventory item
@@ -23,6 +23,7 @@ public:
 
 private:
     int current = 0;//current weapon
+    int32_t weaponIds[3];
     std::array<std::shared_ptr<Weapon>, 3> weapons;
     HandGun defaultGun;
     Rifle tempRifle;

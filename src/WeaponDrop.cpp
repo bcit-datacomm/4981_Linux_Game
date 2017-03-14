@@ -1,12 +1,17 @@
 #include "WeaponDrop.h"
+#include "Entity.h"
+#include <atomic>
 
 using namespace std;
 
 
-WeaponDrop::WeaponDrop(Weapon &w): weapon(w){
+WeaponDrop::WeaponDrop(int32_t wId): weaponId(wId){
     printf("Created Weapon Drop\n");
 }
 
+WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
+
+}
 
 WeaponDrop::~WeaponDrop() {
     printf("Destory WeaponDrop\n");
@@ -24,8 +29,8 @@ int WeaponDrop::getY() const{
     return yCoord;
 }
 
-Weapon&  WeaponDrop::getWeapon(){
-    return weapon;
+int32_t WeaponDrop::getWeaponId(){
+    return weaponId;
 }
 
 void WeaponDrop::onCollision() {
@@ -33,4 +38,8 @@ void WeaponDrop::onCollision() {
 }
 
 void WeaponDrop::collidingProjectile(int damage) {
+}
+
+int32_t WeaponDrop::getId() {
+    return Entity::getId();
 }

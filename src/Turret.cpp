@@ -22,16 +22,17 @@ bool Turret::placementCheckTurret(){
 bool Turret::collisionCheckTurret(const float playerX, const float playerY, const float moveX,
         const float moveY, CollisionHandler &ch) {
     SDL_Rect checkBox;
+
     checkBox.h = TURRET_HEIGHT;
     checkBox.w = TURRET_WIDTH;
     checkBox.x = moveX;
     checkBox.y = moveY;
-    HitBox hitBox(moveX, moveY, checkBox, nullptr);
+    HitBox hitBox(moveX, moveY, checkBox);
     const float distanceX = (playerX - moveX) * (playerX - moveX);
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX+distanceY));
 
-    return (distance <= 200 && !ch.detectMovementCollision(&hitBox));
+    return (distance <= 200 && !ch.detectMovementCollision(this));
 }
 
 // activates the turret

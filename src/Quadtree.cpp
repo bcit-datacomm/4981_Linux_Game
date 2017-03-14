@@ -72,17 +72,17 @@ int Quadtree::getIndex(const HitBox *pRect) const{
     return index;
 }
 
-void Quadtree::insert(HitBox *pRect) {
+void Quadtree::insert(Entity *entity) {
     objectCounter++;
     if (nodes[0] != nullptr) {
-        int index = getIndex(pRect);
+        int index = getIndex(entity->movementHitBox.get());
         if (index != -1) {
-            nodes[index]->insert(pRect);
+            nodes[index]->insert(entity);
             return;
         }
     }
 
-    objects.push_back(pRect);
+    objects.push_back(entity);
 
     if (objects.size() > MAX_OBJECTS && level < MAX_LEVELS) {
         if (nodes[0] == nullptr) {
@@ -91,7 +91,7 @@ void Quadtree::insert(HitBox *pRect) {
 
         unsigned int i = 0;
         while (i < objects.size()) {
-            int index = getIndex(objects.at(i));
+            int index = getIndex(objects.at(i)->movementHitBox.get());
             if (index != -1) {
                 nodes[index]->insert(objects.at(i));
                 objects.erase(objects.begin()+i);
@@ -103,11 +103,11 @@ void Quadtree::insert(HitBox *pRect) {
 }
 
 
-std::vector<HitBox *> Quadtree::retrieve(const HitBox *pRect) {
-    std::vector<HitBox *> returnObjects;
-    int index = getIndex(pRect);
+std::vector<Entity *> Quadtree::retrieve(const Entity *entity) {
+    std::vector<Entity *> returnObjects;
+    int index = getIndex(entity->movementHitBox.get());
     if (index != -1 && nodes[0] != nullptr) {
-        returnObjects = nodes[index]->retrieve(pRect);
+        returnObjects = nodes[index]->retrieve(entity);
     }
     returnObjects.insert(std::end(returnObjects), std::begin(objects), std::end(objects));
     return returnObjects;
