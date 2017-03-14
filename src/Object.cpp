@@ -21,11 +21,9 @@ Object::~Object() {
 
 void Object::setHeight(int h) {
     height = h;
-    spriteClips[0].h = height;
 }
 void Object::setWidth(int w) {
     width = w;
-    spriteClips[0].w = width;
 }
 int Object::getHeight(){
     return height;

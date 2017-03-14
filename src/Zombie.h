@@ -18,7 +18,7 @@ constexpr int ZOMBIE_WIDTH = 75;
 class Zombie : public Movable {
 public:
     Zombie(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, int health = 100, int state = 0);
+        const SDL_Rect &damageSize, int health = 100, int state = 0);
     virtual ~Zombie();
 
     void onCollision();

@@ -6,7 +6,7 @@
 #define ZOMBIE_VELOCITY 200
 
 Zombie::Zombie(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, int health, int state):
+        const SDL_Rect &damageSize, int health, int state):
         Movable(id, spriteSize, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
     //printf("Create Zombie\n");
