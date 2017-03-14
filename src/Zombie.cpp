@@ -3,7 +3,7 @@
 #include <utility>
 using namespace std;
 
-Zombie::Zombie(int health, ZOMBIE_STATE state, int step, int dir, int frame)
+Zombie::Zombie(int health, ZombieState state, int step, int dir, int frame)
       : Movable(ZOMBIE_VELOCITY), health(health), state(state), step(step),
         dir(dir), frame(frame) {
     printf("Create Zombie\n");
@@ -36,7 +36,7 @@ void Zombie::setStep(const int sp) {
  * Fred Yang
  * March 14
  */
-ZOMBIE_STATE Zombie::getState() const {
+ZombieState Zombie::getState() const {
     return state;
 }
 
@@ -45,7 +45,7 @@ ZOMBIE_STATE Zombie::getState() const {
  * Fred Yang
  * March 14
  */
-void Zombie::setState(const ZOMBIE_STATE state_) {
+void Zombie::setState(const ZombieState state_) {
     state = state_;
 }
 
@@ -162,7 +162,7 @@ bool Zombie::checkBase() {
 */
 void Zombie::generateMove() {
     int d = getMoveDir();   //Direction zombie is moving
-    cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
+    //cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
     float startX = getX();
     float startY = getY();
 
@@ -275,8 +275,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
     string path;
 
     // current node & child node
-    static Node* curNode;
-    static Node* childNode;
+    static Node curNode;
+    static Node childNode;
 
     // priority queue
     static priority_queue<Node> pq[2];
@@ -295,18 +295,18 @@ string Zombie::generatePath(const float xStart, const float yStart,
     int yNodeDest = (int) yDest / TILE_SIZE;
 
     // create the start node and push into open list
-    curNode = new Node(xNodeStart, yNodeStart, 0, 0);
-    curNode->updatePriority(xNodeDest, yNodeDest);
-    pq[index].push(*curNode);
+    curNode = Node(xNodeStart, yNodeStart, 0, 0);
+    curNode.updatePriority(xNodeDest, yNodeDest);
+    pq[index].push(curNode);
 
     // A* path finding
     while (!pq[index].empty()) {
         // get the current node with the highest priority from open list
-        curNode = new Node(pq[index].top().getXPos(), pq[index].top().getYPos(),
+        curNode = Node(pq[index].top().getXPos(), pq[index].top().getYPos(),
                            pq[index].top().getLevel(), pq[index].top().getPriority());
 
-        x = curNode->getXPos();
-        y = curNode->getYPos();
+        x = curNode.getXPos();
+        y = curNode.getYPos();
 
         // remove the node from the open list
         pq[index].pop();
@@ -327,8 +327,6 @@ string Zombie::generatePath(const float xStart, const float yStart,
                 x += mx[j];
                 y += my[j];
             }
-            // garbage collection
-            delete curNode;
 
             // empty the leftover nodes
             while (!pq[index].empty()) {
@@ -350,19 +348,19 @@ string Zombie::generatePath(const float xStart, const float yStart,
                 || map[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
 
                 // generate a child node
-                childNode = new Node(xdx, ydy, curNode->getLevel(), curNode->getPriority());
-                childNode->nextLevel(i);
-                childNode->updatePriority(xNodeDest, yNodeDest);
+                childNode = Node(xdx, ydy, curNode.getLevel(), curNode.getPriority());
+                childNode.nextLevel(i);
+                childNode.updatePriority(xNodeDest, yNodeDest);
 
                 // if it is not in the open list then add into that
                 if (openNodes[xdx][ydy] == 0) {
-                    openNodes[xdx][ydy] = childNode->getPriority();
-                    pq[index].push(*childNode);
+                    openNodes[xdx][ydy] = childNode.getPriority();
+                    pq[index].push(childNode);
                     // update the parent direction info
                     dirMap[xdx][ydy] = (i + DIR_CAP/2)%DIR_CAP;
-                } else if (openNodes[xdx][ydy] > childNode->getPriority()) {
+                } else if (openNodes[xdx][ydy] > childNode.getPriority()) {
                     // update the priority info
-                    openNodes[xdx][ydy]= childNode->getPriority();
+                    openNodes[xdx][ydy]= childNode.getPriority();
                     // update the parent direction info
                     dirMap[xdx][ydy] = (i + DIR_CAP/2)%DIR_CAP;
 
@@ -386,13 +384,10 @@ string Zombie::generatePath(const float xStart, const float yStart,
                         pq[index].pop();
                     }
                     index = 1 - index;
-                    pq[index].push(*childNode);
-                } else  {
-                    delete childNode;
+                    pq[index].push(childNode);
                 }
             }
         }
-        delete curNode;
     }
 
     return ""; // no route found
@@ -422,7 +417,7 @@ bool Zombie::overlapped(const float x1, const float y1,
     int width = 0;
     int height = 0;
 
-    if(x1 >= x2){
+    if (x1 >= x2) {
         xb = x1;
         xs = x2;
         width = w2;
@@ -431,7 +426,8 @@ bool Zombie::overlapped(const float x1, const float y1,
         xs = x1;
         width = w1;
     }
-    if(y1 >= y2){
+
+    if (y1 >= y2) {
         yb = y1;
         ys = y2;
         height = h2;
@@ -441,11 +437,11 @@ bool Zombie::overlapped(const float x1, const float y1,
         height = h1;
     }
 
-    if (xb >= xs && xb <= xs+width-1 && yb >= ys && yb <= ys+height-1){
+    if (xb >= xs && xb <= xs+width-1 && yb >= ys && yb <= ys+height-1) {
         float dWidth = width-xb+xs;
         float dHeight = height-yb+ys;
 
-        if (dWidth * dHeight / (w2 * h2) >= OVERLAP){
+        if (dWidth * dHeight / (w2 * h2) >= OVERLAP) {
             return true;
         }
     }

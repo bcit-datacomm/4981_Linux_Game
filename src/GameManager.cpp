@@ -68,12 +68,6 @@ void GameManager::updateMarines(const float& delta) {
 // Update turret actions.
 // Jamie, 2017-03-01.
 void GameManager::updateTurrets(const float& delta) {
-	static bool bi_frame = false;
-	bi_frame = !bi_frame;
-	if (!bi_frame) {
-		return;
-    }
-
 	for (auto& t : turretManager) {
 		//z.second->generateRandomMove();
 		t.second.targetScanTurret();
@@ -206,11 +200,11 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
 
     zombieManager.at(id).setPosition(x,y);
 
-    // generate A* path (from zombie to base). 
+    // generate A* path (from zombie to base).
     // How many bases are there on the map? How does GM maintain BASE?
     zombieManager.at(id).generatePath(x, y, MAP_WIDTH/2 - BASE_WIDTH, MAP_HEIGHT/2 - BASE_HEIGHT);
     zombieManager.at(id).setState(ZOMBIE_MOVE);
-    
+
     return true;
 }
 

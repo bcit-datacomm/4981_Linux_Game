@@ -3,7 +3,6 @@
 //#include <string>
 //#include "LTexture.h"
 //#include "HitBox.h"
-#include "Common.h"
 #include "Entity.h"
 #include "Object.h"
 //#include "CollisionHandler.h"
@@ -14,10 +13,13 @@
 //#include <SDL2/SDL.h>
 
 //TODO :  change later.
-/*const int BASE_HEIGHT = 100;
-const int BASE_WIDTH = 100;
-const int MAP_HEIGHT = 2000;
-const int MAP_WIDTH = 2000;*/
+// base width/height
+static constexpr int BASE_WIDTH  = 100;
+static constexpr int BASE_HEIGHT = 100;
+
+// map width/height
+static constexpr int MAP_WIDTH   = 2000;
+static constexpr int MAP_HEIGHT  = 2000;
 
 typedef std::pair<float, float> Point;
 

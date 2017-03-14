@@ -39,8 +39,9 @@ bool GameStateMatch::load() {
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, SPAWN_X1, SPAWN_Y1);
-    GameManager::instance()->createZombie(game.renderer, SPAWN_X2, SPAWN_Y2);    
+    GameManager::instance()->createZombie(game.renderer, 600, 900);
+    GameManager::instance()->createZombie(game.renderer, 500, 1500);
+    GameManager::instance()->createZombie(game.renderer, 1500, 250);
     GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 

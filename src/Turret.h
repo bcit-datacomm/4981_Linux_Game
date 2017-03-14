@@ -15,6 +15,10 @@ const int TURRET_WIDTH = 100;
 
 class Turret : public Movable {
 public:
+    Turret(bool activated = false, int health = 200, int ammo = 100, float range = 400.0f);
+
+    virtual ~Turret();  //default dtor
+
     void spawnTurret(); // spawns a DEACTIVATED turret
 
     bool placementCheckTurret(); // checks if turret placement is within bounds
@@ -43,15 +47,11 @@ public:
 
     inline float getRange() const; // returns the turret's range.
 
-    Turret();
-    virtual ~Turret();
-
 private:
-    bool activated = false; // turret activated state
-    double angle = 0.0; // turret direction angle in which it is pointing
-    int health = 200; // turret health pool
-    int ammo = 100; // turret ammo pool
-    float range = 300.0f; // turret's range.
+    bool activated; // turret activated state
+    int health; // turret health pool
+    int ammo; // turret ammo pool
+    float range; // turret's range.
 };
 
 #endif
