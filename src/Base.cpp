@@ -30,8 +30,8 @@ Point Base::getSpawnPoint() {
     //range 0 to 3 to be used for choosing North, South, West or East of Base
     std::uniform_int_distribution<> distr(0,3);
 
-    int x;
-    int y;
+    int nx;
+    int ny;
 
     //The gab between the spawn point and base.
     int gab = 100;
@@ -41,37 +41,37 @@ Point Base::getSpawnPoint() {
         case 0://North
 
             //y point is fixed
-            y = getY() - gab;
+            ny = getY() - gab;
             //x point is randomly generated;
-            x = distr(eng, decltype(distr)::param_type(getX() - gab,
+            nx = distr(eng, decltype(distr)::param_type(getX() - gab,
                                                        getX() + getWidth() + gab));
 
             break;
         case 1://South
-            y = getY() + getHeight() + gab;
-            x = distr(eng, decltype(distr)::param_type(getX() - gab,
+            ny = getY() + getHeight() + gab;
+            nx = distr(eng, decltype(distr)::param_type(getX() - gab,
                                                        getX()+  getWidth() + gab));
             break;
         case 2://West
 
             //x point is fixed
-            x = getX() - gab;
+            nx = getX() - gab;
             //y point is randomly generated
-            y = distr(eng, decltype(distr)::param_type(getY() - gab,
+            ny = distr(eng, decltype(distr)::param_type(getY() - gab,
                                                        getY() + getHeight() + gab));
             break;
         case 3://East
-            x = getY() + getWidth() + gab;
-            y = distr(eng, decltype(distr)::param_type(getY() - gab,
+            nx = getY() + getWidth() + gab;
+            ny = distr(eng, decltype(distr)::param_type(getY() - gab,
                                                        getY() + getHeight() + gab));
             break;
     }
 
     //considering the player size
-    if(x < getX())
-        x-=MARINE_WIDTH;
-    if(y < getY())
-        y-=MARINE_HEIGHT;
+    if(nx < getX())
+        nx-=MARINE_WIDTH;
+    if(ny < getY())
+        ny-=MARINE_HEIGHT;
 
-    return Point(x,y);
+    return Point(nx,ny);
 }

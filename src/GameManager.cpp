@@ -39,10 +39,8 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const
     }
 
     for (const auto& o : objectManager) {
-        if(o.second.getId() == 0){
-            printf("Rednering Base at x:%f y:%f\n", o.second.getX() ,o.second.getY());
-        }
-        o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
+            o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
+
     }
 
     for (const auto& z : zombieManager) {

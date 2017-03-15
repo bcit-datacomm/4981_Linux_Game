@@ -3,37 +3,36 @@
 #include <cstdint>
 
 Entity::Entity(int32_t nid, const SDL_Rect dest):id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(dest),
-        projectileHitBox(dest), damageHitBox(dest), pickupHitBox(dest){
+        projectileHitBox(dest), damageHitBox(dest), pickupHitBox(dest), x(dest.x), y(dest.y){
 }
 
 Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
         movementHitBox(movementSize), projectileHitBox(dest), damageHitBox(dest),
-        pickupHitBox(dest){
+        pickupHitBox(dest), x(dest.x), y(dest.y){
 
 }
 
 //Weapon drops
 Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
         const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(dest),
-        damageHitBox(dest),pickupHitBox(pickupSize){
+        damageHitBox(dest),pickupHitBox(pickupSize), x(dest.x), y(dest.y){
 
 }
 
 Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
         const SDL_Rect &damageSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize),
-        damageHitBox(damageSize), pickupHitBox(dest){
+        damageHitBox(damageSize), pickupHitBox(dest), x(dest.x), y(dest.y){
 
 }
 
 
 //movables and marines
-Entity::Entity(int32_t nid,  const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize), damageHitBox(damageSize), pickupHitBox(pickupSize){
+Entity::Entity(int32_t nid,  const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize), damageHitBox(damageSize), pickupHitBox(pickupSize), x(dest.x), y(dest.y){
 
 }
 
 Entity::Entity(const Entity &e): id(e.id), destRect(e.destRect), srcRect(e.srcRect), movementHitBox(e.movementHitBox),
-        projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox)
-        {
+        projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox){
 }
 
 Entity::~Entity() {

@@ -79,6 +79,8 @@ public:
 
     SDL_Rect& createRect(SDL_Rect &rect, int x, int y, int w, int h);
 
+    Object& getBase(){return objectManager.at(0);};
+
 private:
     static GameManager *sInstance;
 

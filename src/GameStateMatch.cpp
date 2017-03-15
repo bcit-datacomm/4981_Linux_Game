@@ -45,12 +45,15 @@ bool GameStateMatch::load() {
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
     //base = Base();
 
-    if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
+    GameManager::instance()->addObject(base);
+
+    Object b = GameManager::instance()->getBase();
+
+    if (!b.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
         printf("Failed to load the base texture!\n");
         success = false;
     }
-    
-    GameManager::instance()->addObject(base);
+
     Point newPoint = base.getSpawnPoint();
 
     //player = new Player();
