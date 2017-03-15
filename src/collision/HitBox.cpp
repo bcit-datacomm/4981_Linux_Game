@@ -1,7 +1,7 @@
 #include "HitBox.h"
 
 
-HitBox::HitBox(const float& x, const float& y, SDL_Rect rect){
+HitBox::HitBox(const float x, const float y, SDL_Rect rect){
     setRect(rect);
     move(x,y);
 }
@@ -10,7 +10,7 @@ const SDL_Rect& HitBox::getRect() const{
     return rect;
 }
 
-void HitBox::move(const float& x, const float& y){
+void HitBox::move(const float x, const float y){
     rect.x = x;
     rect.y = y;
 }
@@ -19,7 +19,7 @@ void HitBox::setRect(const SDL_Rect& rerect) {
     rect = rerect;
 }
 
-void HitBox::setFriendly(bool isFriendly) {
+void HitBox::setFriendly(const bool isFriendly) {
     playerFriendly = isFriendly;
 }
 

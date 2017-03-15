@@ -1,16 +1,18 @@
 #include "Wall.h"
+#include "../log/log.h"
 
 Wall::Wall(int height, int width) : Object(height, width) {
-    printf("Create Wall\n");
+    logv("Create Wall\n");
 }
 
 Wall::~Wall() {
-    printf("Destory Wall\n");
+    logv("Destroy Wall\n");
 }    
 void Wall::onCollision() {
-    printf("Wall collision\n");
+    logv("Wall collision\n");
 }
     
-void Wall::collidingProjectile(int damage) {
+void Wall::collidingProjectile(const int damage) {
+    
 }
 

@@ -10,7 +10,7 @@ Zombie::Zombie(int health, ZombieState state, int step, int dir, int frame)
 }
 
 Zombie::~Zombie() {
-    //printf("Destory Zombie\n");
+    //logv("Destroy Zombie\n");
 }
 
 /**

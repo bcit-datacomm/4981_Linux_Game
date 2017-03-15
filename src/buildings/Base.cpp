@@ -1,19 +1,21 @@
 #include "Base.h"
 #include "../player/Marine.h"
 #include<random>
+#include "../log/log.h"
 
 Base::Base(int health) : Object(BASE_HEIGHT, BASE_WIDTH), health(health) {
     setX((MAP_WIDTH / 2) - BASE_WIDTH / 2);
     setY((MAP_HEIGHT / 2) - BASE_HEIGHT / 2);
 
-    printf("Create Base\n");
+    logv("Create Base\n");
 }
 
 Base::~Base() {
-    printf("Destory Base\n");
+    logv("Destroy Base\n");
 }
+
 void Base::onCollision() {
-    printf("Base collision\n");
+    logv("Base collision\n");
 }
 
 void Base::collidingProjectile(int damage) {

@@ -13,6 +13,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include "AudioManager.h"
+#include "../log/log.h"
 
 
 AudioManager AudioManager::sInstance;
@@ -30,6 +31,7 @@ AudioManager::AudioManager(){
 
 
 AudioManager::~AudioManager(){
+    Mix_CloseAudio();
     //clear all loaded files
     for(auto const& music : _music) {
         Mix_FreeMusic(music.second);
@@ -48,10 +50,10 @@ void AudioManager::playMusic(const char * fileName){
         
     Mix_Music * music = _music[fileName];
 
-    printf("%s\n", fileName);
+    logv("%s\n", fileName);
 
     if(Mix_PlayMusic(music, -1) == -1) {
-        printf("Mix_PlayMusic: %s\n", Mix_GetError());
+        logv("Mix_PlayMusic: %s\n", Mix_GetError());
     }
 }
 
@@ -62,10 +64,10 @@ void AudioManager::playEffect(const char * fileName){
 
     Mix_Chunk * chunk = _chunks[fileName];
     
-    printf("%s\n", fileName);
+    logv("%s\n", fileName);
 
     if (Mix_PlayChannel(-1, chunk, 0) == -1 ){
-        printf("Mix_PlayMusic: %s\n", Mix_GetError());
+        logv("Mix_PlayMusic: %s\n", Mix_GetError());
     }
 }
 
@@ -111,7 +113,7 @@ void AudioManager::loadMusic(const char * fileName){
     Mix_Music * music = NULL;
     music = Mix_LoadMUS(fileName);
     if (music == NULL ) {
-        printf( "Failed to load music: %s\n SDL_mixer Error: %s\n", 
+        logv( "Failed to load music: %s\n SDL_mixer Error: %s\n", 
             fileName, Mix_GetError() );
     }
 
@@ -125,7 +127,7 @@ void AudioManager::loadEffect(const char * fileName){
     Mix_Chunk * sound = NULL;
     sound = Mix_LoadWAV(fileName);
     if (sound == NULL ) {
-        printf( "Failed to load sound: %s\n SDL_mixer Error: %s\n", 
+        logv( "Failed to load sound: %s\n SDL_mixer Error: %s\n", 
             fileName, Mix_GetError() );
     }
 

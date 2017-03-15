@@ -3,15 +3,14 @@
 #include <memory>
 #include <utility>
 #include <atomic>
+#include "../log/log.h"
 
-GameManager *GameManager::sInstance;
 Weapon w;
+GameManager GameManager::sInstance;
 //Returns the already existing GameManager or if there isn't one, makes
 //a new one and returns it.
 GameManager *GameManager::instance() {
-    if (!sInstance)
-        sInstance = new GameManager;
-    return sInstance;
+    return &GameManager::sInstance;
 }
 
 int32_t GameManager::generateID() {
@@ -20,11 +19,11 @@ int32_t GameManager::generateID() {
 }
 
 GameManager::GameManager():collisionHandler() {
-    printf("Create GM\n");
+    logv("Create GM\n");
 }
 
 GameManager::~GameManager() {
-    printf("Destroy GM\n");
+    logv("Destroy GM\n");
 }
 
 // Render all objects in level
@@ -95,7 +94,7 @@ bool GameManager::createMarine(SDL_Renderer* gRenderer, const float x, const flo
     const int32_t id = generateID();
     marineManager[id] = Marine();
     if (!marineManager.at(id).texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
-        printf("Failed to load the marine texture!\n");
+        logv("Failed to load the marine texture!\n");
         deleteMarine(id);
         return false;
     }
@@ -148,7 +147,7 @@ int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const 
     const int32_t id = generateID();
     turretManager[id] = Turret();
     if (!turretManager.at(id).texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
-        printf("Failed to load the turret texture!\n");
+        logv("Failed to load the turret texture!\n");
         deleteTurret(id);
         return -1;
     }
@@ -173,7 +172,7 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const flo
     zombieManager[id] = Zombie();
 
     if (!zombieManager.at(id).texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
-        printf("Failed to load the Zombie texture!\n");
+        logv("Failed to load the Zombie texture!\n");
         deleteZombie(id);
         return false;
     }
@@ -240,7 +239,7 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
     weaponDropManager.at(id).setId(id);
 
     if(!weaponDropManager.at(id).texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
-        printf("Failed to load the player texture!\n");
+        logv("Failed to load the player texture!\n");
         deleteWeaponDrop(id);
         return false;
     }
@@ -259,7 +258,7 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     if(it != weaponManager.end()){
         return weaponManager.at(id);
     }
-    printf("Couldnt find Weapon\n");
+    logv("Couldnt find Weapon\n");
     return nullptr;
 
 }
@@ -271,7 +270,7 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
     if(it != weaponDropManager.end()){
         weaponDropManager.erase(id);
     } else {
-        printf("Couldnt Delete Weapon Drop\n");
+        logv("Couldnt Delete Weapon Drop\n");
     }
 
 }
@@ -321,7 +320,7 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreePickUp.insert(&m.second);
     }
 
-    //printf("pro size: %d\n", collisionHandler.quadtreePro.objects.size());
+    //logv("pro size: %d\n", collisionHandler.quadtreePro.objects.size());
 }
 
 // Create barricade add it to manager, returns success
@@ -329,7 +328,7 @@ int32_t GameManager::createBarricade(SDL_Renderer* gRenderer, const float x, con
     const int32_t id = generateID();
     barricadeManager[id] = Barricade();
     if (!barricadeManager.at(id).texture.loadFromFile("assets/texture/barricade.png", gRenderer)) {
-        printf("Failed to load the barricade texture!\n");
+        logv("Failed to load the barricade texture!\n");
         deleteBarricade(id);
         return -1;
     }
@@ -352,9 +351,9 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer,
 
     const int32_t id = generateID();
     objectManager[id] = Wall(w, h);
-    printf("%d\n", id);
+    logv("%d\n", id);
     if (!objectManager.at(id).texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
-        printf("Failed to load the wall texture!\n");
+        logv("Failed to load the wall texture!\n");
         deleteBarricade(id);
         return -1;
     }
@@ -384,10 +383,10 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer,
     createWall(gRenderer, endX, startY, width, height);
     createWall(gRenderer, x, startY, width, height);
 
-    const float sX = (endX + startX)/2 - BASE_WIDTH - 100;
-    const float eX = (endX + startX)/2 + BASE_WIDTH + 100;
-    const float sY = (endY + startY)/2 - BASE_HEIGHT - 100;
-    const float eY = (endY + startY)/2 + BASE_HEIGHT + 100;
+    const float sX = (endX + startX) / 2 - BASE_WIDTH - 100;
+    const float eX = (endX + startX) / 2 + BASE_WIDTH + 100;
+    const float sY = (endY + startY) / 2 - BASE_HEIGHT - 100;
+    const float eY = (endY + startY) / 2 + BASE_HEIGHT + 100;
 
     width = eX - sX;
     height = 100;
@@ -407,32 +406,32 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer,
 }
 
 bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
+    
     std::vector<Point> spawnPoints;
-
-    spawnPoints.push_back(Point(-900, -900));
-    spawnPoints.push_back(Point(1900, -900));
-    spawnPoints.push_back(Point(2900, -900));
-    spawnPoints.push_back(Point(2900, 2900));
-    spawnPoints.push_back(Point(1900, 2900));
-    spawnPoints.push_back(Point(-900, 2900));
+    spawnPoints.emplace_back(Point(-900, -900));
+    spawnPoints.emplace_back(Point(1900, -900));
+    spawnPoints.emplace_back(Point(2900, -900));
+    spawnPoints.emplace_back(Point(2900, 2900));
+    spawnPoints.emplace_back(Point(1900, 2900));
+    spawnPoints.emplace_back(Point(-900, 2900));
 
     if(zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
-        for(const auto z : zombieManager) {
+        for(const auto& z : zombieManager) {
             if(count >= spawnPoints.size()){
                 break;
             }
             ids.push_back(z.first);
-            count++;
+            ++count;
         }
-        for(const auto id : ids) {
+        for(const auto& id : ids) {
             deleteZombie(id);
         }
     }
 
-    for(int i = 0; i < n ; i ++) {
-        for(const auto p : spawnPoints)
+    for(int i = 0; i < n; ++i) {
+        for(const auto& p : spawnPoints)
             createZombie(gRenderer, p.first, p.second);
     }
 

@@ -1,15 +1,16 @@
 #include "Marine.h"
 #include "../game/GameManager.h"
+#include "../log/log.h"
 
 Marine::Marine() : Movable(MARINE_VELOCITY) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
-    printf("Create Marine\n");
+    logv("Create Marine\n");
 }
 
 Marine::~Marine() {
-    printf("Destroy Marine\n");
+    logv("Destroy Marine\n");
 }
 
 void Marine::onCollision() {
@@ -26,7 +27,7 @@ void Marine::fireWeapon() {
     if( w != nullptr){
         w->fire(*this);
     } else {
-        printf("Slot Empty\n");
+        logv("Slot Empty\n");
     }
 }
 

@@ -10,6 +10,7 @@
 #include "../basic/LTimer.h"
 #include "../sprites/LTexture.h"
 #include "../view/Window.h"
+#include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
@@ -22,13 +23,13 @@ bool GameStateMatch::load() {
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", FONT_SIZE);
     if (frameFont == nullptr) {
-        printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+        logv( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
 
     //level = new Level();
     if (!level.levelTexture.loadFromFile("assets/texture/checkerboard.png", game.renderer)) {
-        printf("Failed to load the level texture!\n");
+        logv("Failed to load the level texture!\n");
         success = false;
     } else {
         level.levelTexture.setDimensions(MAP_WIDTH, MAP_HEIGHT);
@@ -50,7 +51,7 @@ bool GameStateMatch::load() {
     //base = Base();
 
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
-        printf("Failed to load the base texture!\n");
+        logv("Failed to load the base texture!\n");
         success = false;
     }
     GameManager::instance()->addObject(base);
@@ -61,7 +62,7 @@ bool GameStateMatch::load() {
     player.marine->setPosition(newPoint.first, newPoint.second);
 
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
-        printf("Failed to load the player texture!\n");
+        logv("Failed to load the player texture!\n");
         success = false;
     }
 
@@ -94,7 +95,7 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         //Calculate and correct fps
-        avgFPS = countedFrames / ( fpsTimer.getTicks() / TICK_SEC);
+        avgFPS = countedFrames / ( fpsTimer.getTicks() / TIME_SECOND);
 
         //Set FPS text to be rendered
         frameTimeText.str( "" );
@@ -102,14 +103,14 @@ void GameStateMatch::loop() {
 
         // Process frame
         handle();    // Handle user input
-        update(stepTimer.getTicks() / TICK_SEC); // Update state values
+        update(stepTimer.getTicks() / TIME_SECOND); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
         render();    // Render game state to window
 
         ++countedFrames;
 
-        if(fpsTimer.getTicks() / 1000 > second) {
+        if(fpsTimer.getTicks() / TIME_SECOND > second) {
             GameManager::instance()->createZombieWave(game.renderer, 1);
             second+=5;
         }
@@ -133,7 +134,7 @@ void GameStateMatch::handle() {
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
     //Handle events on queue
-    while ( SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
         switch(event.type) {
             case SDL_WINDOWEVENT:
@@ -160,7 +161,7 @@ void GameStateMatch::handle() {
                         break;
                     default:
                         break;
-              }
+                }
               break;
             case SDL_KEYUP:
                switch( event.key.keysym.sym ) {
@@ -210,7 +211,7 @@ void GameStateMatch::render() {
         //Render text
         if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
                 textColor, game.renderer, frameFont ) ) {
-            printf( "Unable to render FPS texture!\n" );
+            logv( "Unable to render FPS texture!\n" );
         }
 
         frameFPSTextTexture.render(game.renderer,
@@ -223,9 +224,6 @@ void GameStateMatch::render() {
 
 GameStateMatch::~GameStateMatch() {
     // Free texture and font
-    delete GameManager::instance();
     frameFPSTextTexture.free();
     TTF_CloseFont(frameFont);
-    frameFont = nullptr;
-
 }

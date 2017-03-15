@@ -1,17 +1,18 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
 #include "../game/GameManager.h"
+#include "../log/log.h"
 
 Turret::Turret(bool activated, int health, int ammo, bool placed, float range)
         :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed), range(range) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
-    printf("Turret created\n");
+    logv("Turret created\n");
 }
 
 Turret::~Turret() {
-    printf("Destroy Turret\n");
+    logv("Destroy Turret\n");
 }
 
 // checks if turret placement is within bounds, currently does nothing
@@ -31,9 +32,9 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     HitBox hitBox(moveX, moveY, checkBox);
     const float distanceX = (playerX - moveX) * (playerX - moveX);
     const float distanceY = (playerY - moveY) * (playerY - moveY);
-    const float distance = sqrt(abs(distanceX+distanceY));
+    const float distance = sqrt(abs(distanceX + distanceY));
 
-    return (distance <= 200 && !ch.detectMovementCollision(this));
+    return (distance <= PLACE_DISTANCE && !ch.detectMovementCollision(this));
 }
 
 // activates the turret
@@ -69,9 +70,10 @@ bool Turret::healthCheckTurret() {
     return (health > 0);
 }
 
-void Turret::move(float playerX, float playerY, float moveX, float moveY, CollisionHandler &ch) {
+void Turret::move(const float playerX, const float playerY,
+                        const float moveX, const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
-    if(this->collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
+    if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
         texture.setAlpha(PASS_ALPHA);
     } else {
         texture.setAlpha(FAIL_ALPHA);
