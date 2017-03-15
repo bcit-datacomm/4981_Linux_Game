@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string>
 
-constexpr float TIME_SECOND = 1000;
+constexpr static float TIME_SECOND = 1000;
 
 //The application time based timer
 class LTimer {

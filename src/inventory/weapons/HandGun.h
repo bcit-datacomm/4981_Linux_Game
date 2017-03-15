@@ -10,16 +10,16 @@
 using std::string;
 
 namespace HandgunVars {
-    const string TYPE       = "HandGun";
-    constexpr int RANGE         = 500;
-    constexpr int DAMAGE        = 500;
-    constexpr int CLIP          = 2;
-    constexpr int CLIPMAX       = 2;
-    constexpr int AMMO          = 50;
-    constexpr int AOE           = 1;
-    constexpr int RELOAD        = 3;
-    constexpr int FIRERATE      = 1000;
-    constexpr bool READY        = true;
+    const string TYPE = "HandGun";
+    constexpr int RANGE = 500;
+    constexpr int DAMAGE = 500;
+    constexpr int CLIP  = 2;
+    constexpr int CLIPMAX = 2;
+    constexpr int AMMO = 50;
+    constexpr int AOE = 1;
+    constexpr int RELOAD = 3;
+    constexpr int FIRERATE = 1000;
+    constexpr bool READY = true;
 }
 
 

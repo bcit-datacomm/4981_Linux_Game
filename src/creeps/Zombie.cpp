@@ -50,8 +50,8 @@ void Zombie::generateRandomMove(){
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
     if(ch.detectMovementCollision(this)){
         setAngle(getRandomAngle());
-        cosVal = cos(getAngle()*PI/180.0);
-        sinVal = sin(getAngle()*PI/180.0);
+        cosVal = cos(getAngle() * PI / 180.0);
+        sinVal = sin(getAngle() * PI / 180.0);
     }
     movementHitBox->move(getX(),getY());
     projectileHitBox->move(getX(),getY());
