@@ -34,7 +34,8 @@ void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                    Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE);
+                    Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY,
+                                                 MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE);
             }
         }
     }
@@ -42,7 +43,9 @@ void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
     for (const auto& m : marineManager) {
          if (m.second.getX() - camX < camW) {
              if (m.second.getY() - camY < camH) {
-                     Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::MARINE, NULL, m.second.getAngle());
+                     Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY,
+                                                  MARINE_SIZE, MARINE_SIZE, TEXTURES::MARINE, NULL,
+                                                  m.second.getAngle());
              }
          }
     }
@@ -51,7 +54,8 @@ void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
     for (const auto& o : objectManager) {
         if (o.second.getX() < camW) {
             if (o.second.getY() - camY < camH) {
-                    Renderer::instance()->render(o.second.getX() - camX, o.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::MARINE);
+                    Renderer::instance()->render(o.second.getX() - camX, o.second.getY() - camY,
+                                                 MARINE_SIZE, MARINE_SIZE, TEXTURES::MARINE);
             }
         }
     }
@@ -59,7 +63,8 @@ void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
     for (const auto& z : zombieManager) {
         if (z.second.getX() - camX < camW) {
             if (z.second.getY() - camY < camH) {
-                    Renderer::instance()->render(z.second.getX() - camX, z.second.getY() - camY, 75, 125, TEXTURES::BABY_ZOMBIE, NULL, z.second.getAngle());
+                    Renderer::instance()->render(z.second.getX() - camX, z.second.getY() - camY,
+                                                 75, 125, TEXTURES::BABY_ZOMBIE);
             }
         }
     }
@@ -67,7 +72,9 @@ void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
     for (const auto& m : turretManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                    Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE, NULL, m.second.getAngle());
+                    Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY,
+                                                 MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE,
+                                                 NULL, m.second.getAngle());
             }
         }
     }
@@ -75,7 +82,8 @@ void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
     for (const auto& b : barricadeManager) {
         if (b.second.getX() - camX < camW) {
             if (b.second.getY() - camY < camH) {
-                    Renderer::instance()->render(b.second.getX() - camX, b.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE);
+                    Renderer::instance()->render(b.second.getX() - camX, b.second.getY() - camY,
+                                                 MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE);
             }
         }
     }

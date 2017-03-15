@@ -13,8 +13,6 @@ SDL_Window * Renderer::_window = nullptr;
 std::array<SDL_Texture *, TOTAL_SPRITES> Renderer::_sprites = {0};
 int Renderer::_index = 0;
 
-Renderer::Renderer() {}
-
 Renderer::~Renderer() {
     for (const auto& s : _sprites) {
         if (s != nullptr) {
@@ -27,6 +25,7 @@ Renderer::~Renderer() {
     free(rInstance);
 }
 
+//returns the instance if it exists, otherwise creates one
 Renderer * Renderer::instance() {
     if (!rInstance) {
         rInstance = new Renderer;
@@ -68,11 +67,6 @@ void Renderer::loadSprites() {
     createTexture(ZOMBIE_BOSS);
 }
 
-//Gets a specific sprite sheet
-SDL_Texture * Renderer::getTexture(int spriteType) {
-    return _sprites.at(spriteType);
-}
-
 //creates a texture and adds it to the array
 void Renderer::createTexture(std::string filePath) {
     printf("Creating texture: %s\n", filePath.c_str());
@@ -99,22 +93,23 @@ void Renderer::createTexture(std::string filePath) {
     }
 }
 
+//sets the game's renderer
 void Renderer::setRenderer() {
-    if ((_renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED)) == NULL) {
+    if ((_renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED)) == nullptr) {
         printf("Renderer could not be created\n");
     }
 }
 
-SDL_Renderer * Renderer::getRenderer() {
-    return _renderer;
-}
-
+//sets the window
 void Renderer::setWindow(SDL_Window * window) {
     _window = window;
     setRenderer();
 }
 
-void Renderer::render(int x, int y, int w, int h, TEXTURES spriteType, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
+//renders an object
+void Renderer::render(int x, int y, int w, int h, TEXTURES spriteType, SDL_Rect* clip, double angle,
+                      SDL_Point* center, SDL_RendererFlip flip) {
+
     //Set rendering space and render to screen
     SDL_Rect renderQuad = { x, y, w, h };
 
@@ -125,5 +120,6 @@ void Renderer::render(int x, int y, int w, int h, TEXTURES spriteType, SDL_Rect*
     }
 
     //Render to screen
-    SDL_RenderCopyEx(_renderer, getTexture(static_cast<int>(spriteType)), clip, &renderQuad, angle, center, flip);
+    SDL_RenderCopyEx(_renderer, getTexture(static_cast<int>(spriteType)), clip, &renderQuad, angle,
+                     center, flip);
 }

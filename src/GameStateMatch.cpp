@@ -187,7 +187,8 @@ void GameStateMatch::render() {
                 if (j * TEXTURE_SIZE - camera.getY() >= camera.getH()) {
                     break;
                 }
-                Renderer::instance()->render(i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE, TEXTURES::BARREN);
+                Renderer::instance()->render(i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(),
+                                             TEXTURE_SIZE, TEXTURE_SIZE, TEXTURES::BARREN);
             }
         }
 
