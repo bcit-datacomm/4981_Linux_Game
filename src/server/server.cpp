@@ -215,7 +215,7 @@ void genOutputPacket() {
     pBuff = reinterpret_cast<int32_t *>(pZombie);
 
     //calculate how full the packet is for when its sent
-    outputLength = pBuff - (int32_t *) outputPacket;
+    outputLength = (pBuff - (int32_t *) outputPacket) * sizeof(int32_t);
 }
 
 void sendSyncPacket(const int sock) {
