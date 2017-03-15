@@ -91,11 +91,6 @@ void Entity::collidingProjectile(int damage){
     //do nothing
 }
 
-
-int32_t Entity::getId(){
-    return id;
-}
-
 void Entity::setId(int32_t num){
     id = num;
 }

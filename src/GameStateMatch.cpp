@@ -41,10 +41,10 @@ bool GameStateMatch::load() {
     GameManager::instance()->setBoundary(game.renderer, -1000, -1000, 3000, 3000);
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(game.renderer, 1500, 1500);
+    GameManager::instance()->createMarine(game.renderer, 1000, 1000);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
     //base = Base();
-    
+
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
         printf("Failed to load the base texture!\n");
         success = false;

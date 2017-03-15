@@ -5,8 +5,8 @@
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
-Zombie::Zombie(int32_t id, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, int health, int state):
+Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, int health, int state):Entity(id, dest, spriteSize, movementSize, projectileSize, damageSize),
         Movable(id, dest, spriteSize, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
     //printf("Create Zombie\n");
@@ -45,8 +45,8 @@ void Zombie::generateRandomMove(){
     int tx = getX() + 20 * cosVal;
     int ty = getY() + 20 * sinVal;
 
-    movementHitBox->move(tx,ty);
-    projectileHitBox->move(tx,ty);
+    Entity::moveMoveHitBox(tx, ty);
+    Entity::moveProHitBox(tx,ty);
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
     if(ch.detectMovementCollision(this)){
@@ -54,8 +54,8 @@ void Zombie::generateRandomMove(){
         cosVal = cos(getAngle()*PI/180.0);
         sinVal = sin(getAngle()*PI/180.0);
     }
-    movementHitBox->move(getX(),getY());
-    projectileHitBox->move(getX(),getY());
+    Entity::moveMoveHitBox(getX(), getY());
+    Entity::moveProHitBox(getX(), getY());
 
     setDX(x*cosVal);
     setDY(y*sinVal);

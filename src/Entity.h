@@ -33,16 +33,21 @@ public:
     float getY() const; // get y coordinate
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
-    int32_t getId(); //returns the id of the entity
     void setId(int32_t num);//Sets the ID, ONLY USE SPARINGLY
-    const HitBox& getMoveHitBox() const {return movementHitBox;};
-    const HitBox& getProHitBox() const {return projectileHitBox;};
-    const HitBox& getDamHitBox() const {return damageHitBox;};
-    const HitBox& getPickUpHitBox() const {return pickupHitBox;};
+    int32_t getId()const{return id;}; //returns the id of the entity
+    const HitBox& getMoveHitBox()const {return movementHitBox;};
+    const HitBox& getProHitBox()const {return projectileHitBox;};
+    const HitBox& getDamHitBox()const {return damageHitBox;};
+    const HitBox& getPickUpHitBox()const {return pickupHitBox;};
     const SDL_Rect& getDestRect() const {return destRect;};
     const SDL_Rect& getSrcRect() const {return srcRect;};
     void setDestRect(int x, int y, int width, int height);
     void setSrcRect(int x, int y, int width, int height);
+
+    void moveMoveHitBox(int x, int y){ movementHitBox.move(x,y);};
+    void moveProHitBox(int x, int y){ projectileHitBox.move(x,y);};
+    void moveDamHitBox(int x, int y){ damageHitBox.move(x,y);};
+    void movePickUpHitBox(int x, int y){ pickupHitBox.move(x,y);};
 
     LTexture texture;
 

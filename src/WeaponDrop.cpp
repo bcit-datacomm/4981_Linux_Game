@@ -5,7 +5,7 @@
 using namespace std;
 
 
-WeaponDrop::WeaponDrop(int32_t id, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &pickupSize,
+WeaponDrop::WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &spriteSize, const SDL_Rect &pickupSize,
         int32_t wId): Entity(id, dest, spriteSize, spriteSize, pickupSize), weaponId(wId){
     printf("Created Weapon Drop\n");
 }

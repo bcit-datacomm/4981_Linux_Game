@@ -3,7 +3,8 @@
 
 Turret::Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated, int health, int ammo,
-        bool placed): Movable(id, dest, spriteSize, movementSize, projectileSize, damageSize,
+        bool placed): Entity(id, dest, spriteSize, movementSize, projectileSize, damageSize,
+        pickupSize), Movable(id, dest, spriteSize, movementSize, projectileSize, damageSize,
         pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -29,7 +30,7 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     checkBox.w = TURRET_WIDTH;
     checkBox.x = moveX;
     checkBox.y = moveY;
-    HitBox hitBox(moveX, moveY, checkBox);
+    HitBox hitBox(checkBox);
     const float distanceX = (playerX - moveX) * (playerX - moveX);
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX+distanceY));
