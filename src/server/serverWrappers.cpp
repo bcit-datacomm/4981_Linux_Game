@@ -270,7 +270,7 @@ void processClientUsername(const int sock, const char *buff, const std::pair<int
     yPos += 150;
 
     //Send client their allocated id and username
-    if (rawClientSend(sock, outBuff, bufferSize)) {
+    if (!rawClientSend(sock, outBuff, bufferSize)) {
         return;
     }
 
@@ -289,7 +289,16 @@ void updateClientWithCurrentLobby(const int sock, char *outBuff, const size_t bu
             outBuff[5] = '/';
             strncpy(outBuff + TCP_HEADER_SIZE + 1, it.second.entry.username, NAMELEN);
 
-            if (rawClientSend(sock, outBuff, bufferSize)) {
+            if (!rawClientSend(sock, outBuff, bufferSize)) {
+                break;
+            }
+            memset(outBuff + TCP_HEADER_SIZE + 1, '\0', NAMELEN);
+            if (it.second.isPlayerReady) {
+                strncpy(outBuff + TCP_HEADER_SIZE + 1, "ready", 5);                
+            } else {
+                strncpy(outBuff + TCP_HEADER_SIZE + 1, "unready", 7);                
+            }
+            if (!rawClientSend(sock, outBuff, bufferSize)) {
                 break;
             }
         }
