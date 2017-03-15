@@ -75,15 +75,10 @@ void GameManager::updateZombies(const float delta) {
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();
-    SDL_Rect marineRect;
-    SDL_Rect moveRect;
-    SDL_Rect projRect;
-    SDL_Rect damRect;
-
-    marineRect = createRect(marineRect,0,0,100,100);
-    moveRect = createRect(moveRect,0,0,100,100);
-    projRect = createRect(projRect,0,0,100,100);
-    damRect = createRect(damRect,0,0,100,100);
+    SDL_Rect marineRect = {0,0,100,100};
+    SDL_Rect moveRect = {0,0,100,100};
+    SDL_Rect projRect = {0,0,100,100};
+    SDL_Rect damRect = {0,0,100,100};
 
     Marine m(id, marineRect, moveRect, projRect, damRect);
     marineManager.insert({id, m});
@@ -92,15 +87,10 @@ int32_t GameManager::createMarine() {
 
 bool GameManager::createMarine(SDL_Renderer* gRenderer, const float x, const float y){
     const int32_t id = generateID();
-    SDL_Rect marineRect;
-    SDL_Rect moveRect;
-    SDL_Rect projRect;
-    SDL_Rect damRect;
-
-    marineRect = createRect(marineRect,0,0,100,100);
-    moveRect = createRect(moveRect,0,0,100,100);
-    projRect = createRect(projRect,0,0,100,100);
-    damRect = createRect(damRect,0,0,100,100);
+    SDL_Rect marineRect = {0,0,100,100};
+    SDL_Rect moveRect = {0,0,100,100};
+    SDL_Rect projRect = {0,0,100,100};
+    SDL_Rect damRect = {0,0,100,100};
 
     Marine m(id, marineRect, moveRect, projRect, damRect);
     marineManager.insert({id, m});
@@ -136,17 +126,11 @@ Marine& GameManager::getMarine(const int32_t id) {
 // Create Turret add it to manager, returns tower id
 int32_t GameManager::createTurret() {
     const int32_t id = generateID();
-    SDL_Rect turretRect;
-    SDL_Rect moveRect;
-    SDL_Rect projRect;
-    SDL_Rect damRect;
-    SDL_Rect pickRect;
-
-    turretRect = createRect(turretRect,0,0,100,100);
-    moveRect = createRect(moveRect,0,0,100,100);
-    projRect = createRect(projRect,0,0,100,100);
-    damRect = createRect(damRect,0,0,100,100);
-    pickRect = createRect(pickRect,0,0,100,100);
+    SDL_Rect turretRect = {0,0,100,100};
+    SDL_Rect moveRect = {0,0,100,100};
+    SDL_Rect projRect = {0,0,100,100};
+    SDL_Rect damRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,100,100};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
     return id;
@@ -169,17 +153,11 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
 // Create turret add it to turret, returns if success
 int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect turretRect;
-    SDL_Rect moveRect;
-    SDL_Rect projRect;
-    SDL_Rect damRect;
-    SDL_Rect pickRect;
-
-    turretRect = createRect(turretRect,0,0,100,100);
-    moveRect = createRect(moveRect,0,0,100,100);
-    projRect = createRect(projRect,0,0,100,100);
-    damRect = createRect(damRect,0,0,100,100);
-    pickRect = createRect(pickRect,0,0,100,100);
+    SDL_Rect turretRect = {0,0,100,100};
+    SDL_Rect moveRect = {0,0,100,100};
+    SDL_Rect projRect = {0,0,100,100};
+    SDL_Rect damRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,100,100};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
 
@@ -208,15 +186,10 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
 
-    SDL_Rect zombieRect;
-    SDL_Rect moveRect;
-    SDL_Rect projRect;
-    SDL_Rect damRect;
-
-    zombieRect = createRect(zombieRect,0,0,100,100);
-    moveRect = createRect(moveRect,0,0,100,100);
-    projRect = createRect(projRect,0,0,100,100);
-    damRect = createRect(damRect,0,0,100,100);
+    SDL_Rect zombieRect = {0,0,100,100};
+    SDL_Rect moveRect = {0,0,100,100};
+    SDL_Rect projRect = {0,0,100,100};
+    SDL_Rect damRect = {0,0,100,100};
 
 
     zombieManager.insert({id, Zombie(id, zombieRect, moveRect, projRect, damRect)});
@@ -274,11 +247,8 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
     const int32_t wid = w.getId();
     const int32_t id = generateID();
 
-    SDL_Rect weaponDropRect;
-    SDL_Rect pickRect;
-
-    weaponDropRect = createRect(weaponDropRect,0,0,100,100);
-    pickRect = createRect(pickRect,0,0,100,100);
+    SDL_Rect weaponDropRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,100,100};
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
@@ -377,13 +347,9 @@ void GameManager::updateCollider() {
 int32_t GameManager::createBarricade(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
 
-    SDL_Rect barricadeRect;
-    SDL_Rect moveRect;
-    SDL_Rect pickRect;
-
-    barricadeRect = createRect(barricadeRect,0,0,100,100);
-    moveRect = createRect(moveRect,0,0,100,100);
-    pickRect = createRect(pickRect,0,0,100,100);
+    SDL_Rect barricadeRect = {0,0,100,100};
+    SDL_Rect moveRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,100,100};
 
     Barricade b(id, barricadeRect, moveRect, pickRect);
     barricadeManager.insert({id, b});
@@ -411,13 +377,9 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer,
 
     const int32_t id = generateID();
 
-    SDL_Rect wallRect;
-    SDL_Rect moveRect;
-    SDL_Rect pickRect;
-
-    wallRect = createRect(wallRect, x, y, w, h);
-    moveRect = createRect(moveRect, x, y, w, h);
-    pickRect = createRect(pickRect, x, y, w, h);
+    SDL_Rect wallRect = {static_cast<int>(x), static_cast<int>(y), w, h};
+    SDL_Rect moveRect = {static_cast<int>(x), static_cast<int>(y), w, h};
+    SDL_Rect pickRect = {static_cast<int>(x), static_cast<int>(y), w, h};
 
     objectManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
 
@@ -506,13 +468,4 @@ bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
 
     return true;
 
-}
-
-SDL_Rect& GameManager::createRect(SDL_Rect &rect, int x, int y, int w, int h){
-    rect.x = x;
-    rect.y = y;
-    rect.w = w;
-    rect.h = h;
-
-    return rect;
 }
