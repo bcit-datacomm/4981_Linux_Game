@@ -11,6 +11,7 @@
 #include "../sprites/LTexture.h"
 #include "../view/Window.h"
 #include <unistd.h>
+#include "../log/log.h"
 
 
 /**
@@ -72,24 +73,24 @@ bool GameStateMenu::load() {
 
     menuFont = TTF_OpenFont( "assets/fonts/Overdrive Sunset.otf", 110);
     if ( menuFont == nullptr ) {
-        printf( "Failed to load font - Overdrive Sunset.otf! SDL_ttf Error: %s\n", TTF_GetError() );
+        logv( "Failed to load font - Overdrive Sunset.otf! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
 
     headingFont = TTF_OpenFont( "assets/fonts/SEGUISB.ttf", 30);
     if ( headingFont == nullptr ) {
-        printf( "Failed to load font - SEGUISB.TTF! SDL_ttf Error: %s\n", TTF_GetError() );
+        logv( "Failed to load font - SEGUISB.TTF! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
 
     textboxFont = TTF_OpenFont( "assets/fonts/SEGOEUISL.ttf", 30);
     if ( textboxFont == nullptr ) {
-        printf( "Failed to load font - SEGOEUISL.ttf! SDL_ttf Error: %s\n", TTF_GetError() );
+        logv( "Failed to load font - SEGOEUISL.ttf! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
 
     if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", game.renderer)) {
-        printf("Failed to load the level texture!\n");
+        logv("Failed to load the level texture!\n");
         success = false;
     } else {
         level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
@@ -336,7 +337,7 @@ void GameStateMenu::positionElements() {
 
     //Check if TTF was initialized correctly
     if(!TTF_WasInit() && TTF_Init()== -1) {
-        printf("TTF_Init: %s\n", TTF_GetError());
+        logv("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
     //Calculate the pixel length and height of the largest possible string
@@ -470,7 +471,7 @@ void GameStateMenu::render() {
 void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
                                 SDL_Color color, TTF_Font* font, SDL_Rect rect) {
     if ( !fontTexture->loadFromRenderedText( text, color, game.renderer, font ) ) {
-        printf( "Unable to render text texture!\n" );
+        logv( "Unable to render text texture!\n" );
     }
     fontTexture->render(game.renderer, rect.x, rect.y);
 }

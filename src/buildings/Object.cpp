@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "../log/log.h"
 
 Object::Object(int width, int height, double angle) : Entity(), width(width), height(height), angle(angle){
     setHeight(height);
@@ -7,7 +8,7 @@ Object::Object(int width, int height, double angle) : Entity(), width(width), he
 }
 
 Object::~Object() {
-//    printf("Destroy Object\n");
+//    logv("Destroy Object\n");
 }
 
 void Object::setHeight(int h) {

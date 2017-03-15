@@ -1,6 +1,7 @@
 #include "Quadtree.h"
 #include "CollisionHandler.h"
 #include "../player/Marine.h"
+#include "../log/log.h"
 #include <iostream>
 
 CollisionHandler::CollisionHandler() : quadtreeMov(0, {0,0,2000,2000}), quadtreePro(0, {0,0,2000,2000}),
@@ -98,7 +99,7 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
             bY = aY + deltaY;
 
             if (SDL_IntersectRectAndLine(&(allEntities.at(x)->projectileHitBox->getRect()), &aX, &aY , &bX, &bY)) {
-                std::cout << "Shot target at (" << aX << ", " << aY << ")" << std::endl;
+                logv("Shot target at (%d, %d)\n", aX, aY);
                 targetsInSights.push(allEntities.at(x)->projectileHitBox.get());
             }
     }

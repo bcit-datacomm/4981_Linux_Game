@@ -10,6 +10,7 @@
 #include "../basic/LTimer.h"
 #include "../sprites/LTexture.h"
 #include "../view/Window.h"
+#include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
@@ -22,13 +23,13 @@ bool GameStateMatch::load() {
     //Open the font
     frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
     if (frameFont == nullptr) {
-        printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+        logv( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
     }
 
     //level = new Level();
     if (!level.levelTexture.loadFromFile("assets/texture/checkerboard.png", game.renderer)) {
-        printf("Failed to load the level texture!\n");
+        logv("Failed to load the level texture!\n");
         success = false;
     } else {
         level.levelTexture.setDimensions(2000, 2000);
@@ -46,7 +47,7 @@ bool GameStateMatch::load() {
     //base = Base();
     
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
-        printf("Failed to load the base texture!\n");
+        logv("Failed to load the base texture!\n");
         success = false;
     }
     GameManager::instance()->addObject(base);
@@ -57,7 +58,7 @@ bool GameStateMatch::load() {
     player.marine->setPosition(newPoint.first, newPoint.second);
 
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
-        printf("Failed to load the player texture!\n");
+        logv("Failed to load the player texture!\n");
         success = false;
     }
 
@@ -205,7 +206,7 @@ void GameStateMatch::render() {
         //Render text
         if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
                 textColor, game.renderer, frameFont ) ) {
-            printf( "Unable to render FPS texture!\n" );
+            logv( "Unable to render FPS texture!\n" );
         }
 
         frameFPSTextTexture.render(game.renderer,
@@ -218,7 +219,6 @@ void GameStateMatch::render() {
 
 GameStateMatch::~GameStateMatch() {
     // Free texture and font
-    delete GameManager::instance();
     frameFPSTextTexture.free();
     TTF_CloseFont(frameFont);
     frameFont = nullptr;

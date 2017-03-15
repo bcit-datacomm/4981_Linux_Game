@@ -2,16 +2,17 @@
 #include "../game/GameManager.h"
 #include <math.h>
 #include <random>
+#include "../log/log.h"
 #define PI 3.14159265
 
 Barricade::Barricade(int health, int state, bool placeable, bool placed)
         : Object(BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state), placeable(placeable),
         placed(placed) {
-    printf("Create Barricade\n");
+    logv("Create Barricade\n");
 }
 
 Barricade::~Barricade() {
-    printf("Destroy Barricade\n");
+    logv("Destroy Barricade\n");
 }
 
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
