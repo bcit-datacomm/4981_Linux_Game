@@ -19,25 +19,13 @@ Weapon::Weapon(const Weapon& w) : type(w.type), range(w.range), damage(w.damage)
             fireRate(w.fireRate), fireTick(w.fireTick), isReadyToFire(w.isReadyToFire), wID(w.getId()){
 }
 
-
-int Weapon::getClip(){
-    return clip;
-}
-
-int Weapon::getDamage(){
-    return damage;
-}
-
-int Weapon::getRange(){
-    return range;
-}
-
 void Weapon::reloadClip(){
 
     int currentTime = SDL_GetTicks();
 
 
-    logv("currentTime: %d, reloadTick: %d, reloadDelay: %d fireTick: %d\n", currentTime, reloadTick, reloadDelay, fireTick);
+    logv("currentTime: %d, reloadTick: %d, reloadDelay: %d fireTick: %d\n", 
+         currentTime, reloadTick, reloadDelay, fireTick);
 
     if(currentTime > (reloadTick + reloadDelay)){
         reloadTick = currentTime;
@@ -45,42 +33,12 @@ void Weapon::reloadClip(){
         logv("RELOADED\n");
         isReadyToFire = true;
         ammo = 50; //for testing isReadyToFire
-        /*if(ammo >= clipMax){
-            clip = clipMax;
-        } if (ammo < clipMax){
-            int nextLoad = clip + ammo;
-            if(nextLoad <= clipMax){
-                clip = nextLoad;
-            } else {
-                clip = clipMax;
-            }
-        }*/
     }
 
 }
 
-int Weapon::getClipMax(){
-    return clipMax;
-}
-
-std::string Weapon::getType(){
-    return type;
-}
-
-int Weapon::getReloadSpeed(){
-    return reloadSpeed;
-}
-
-int Weapon::getAmmo(){
-    return ammo;
-}
-
-int Weapon::getRAOE(){
-    return rAOE;
-}
-
 //Deric M       3/3/2017
-bool Weapon::reduceAmmo(int rounds){
+bool Weapon::reduceAmmo(const int rounds){
     logv("Current ammo: %d\n", ammo);
     if(ammo < rounds){
         return false;
@@ -89,12 +47,8 @@ bool Weapon::reduceAmmo(int rounds){
     return true;
 }
 
-int Weapon::getFireRate(){
-    return fireRate;
-}
-
 //Mark T    3/8/2017
-bool Weapon::getFireState(){
+bool Weapon::getFireState() {
 
     int currentTime = SDL_GetTicks();
 

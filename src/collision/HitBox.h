@@ -4,10 +4,10 @@
 
 class HitBox {
 public:
-    HitBox(const float& x, const float& y, SDL_Rect rect);
+    HitBox(const float x, const float y, SDL_Rect rect);
     ~HitBox() = default;
 
-    void move(const float& x, const float& y);
+    void move(const float x, const float y);
     void setRect(const SDL_Rect& rect);
     const SDL_Rect& getRect() const;
 

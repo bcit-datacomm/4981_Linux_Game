@@ -91,7 +91,7 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         //Calculate and correct fps
-        avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
+        avgFPS = countedFrames / ( fpsTimer.getTicks() / TIME_SECOND);
 
         //Set FPS text to be rendered
         frameTimeText.str( "" );
@@ -99,14 +99,14 @@ void GameStateMatch::loop() {
 
         // Process frame
         handle();    // Handle user input
-        update(stepTimer.getTicks() / 1000.f); // Update state values
+        update(stepTimer.getTicks() / TIME_SECOND); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
         render();    // Render game state to window
 
         ++countedFrames;
 
-        if(fpsTimer.getTicks() / 1000 > second) {
+        if(fpsTimer.getTicks() / TIME_SECOND > second) {
             GameManager::instance()->createZombieWave(game.renderer, 1);
             second+=5;
         }
@@ -130,7 +130,7 @@ void GameStateMatch::handle() {
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
     //Handle events on queue
-    while ( SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
         switch(event.type) {
             case SDL_WINDOWEVENT:
@@ -157,7 +157,7 @@ void GameStateMatch::handle() {
                         break;
                     default:
                         break;
-              }
+                }
               break;
             case SDL_KEYUP:
                switch( event.key.keysym.sym ) {
@@ -221,6 +221,4 @@ GameStateMatch::~GameStateMatch() {
     // Free texture and font
     frameFPSTextTexture.free();
     TTF_CloseFont(frameFont);
-    frameFont = nullptr;
-
 }

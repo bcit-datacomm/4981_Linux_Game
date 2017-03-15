@@ -367,10 +367,10 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer,
     createWall(gRenderer, endX, startY, width, height);
     createWall(gRenderer, x, startY, width, height);
 
-    const float sX = (endX + startX)/2 - BASE_WIDTH - 100;
-    const float eX = (endX + startX)/2 + BASE_WIDTH + 100;
-    const float sY = (endY + startY)/2 - BASE_HEIGHT - 100;
-    const float eY = (endY + startY)/2 + BASE_HEIGHT + 100;
+    const float sX = (endX + startX) / 2 - BASE_WIDTH - 100;
+    const float eX = (endX + startX) / 2 + BASE_WIDTH + 100;
+    const float sY = (endY + startY) / 2 - BASE_HEIGHT - 100;
+    const float eY = (endY + startY) / 2 + BASE_HEIGHT + 100;
 
     width = eX - sX;
     height = 100;
@@ -390,32 +390,32 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer,
 }
 
 bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
+    
     std::vector<Point> spawnPoints;
-
-    spawnPoints.push_back(Point(-900, -900));
-    spawnPoints.push_back(Point(1900, -900));
-    spawnPoints.push_back(Point(2900, -900));
-    spawnPoints.push_back(Point(2900, 2900));
-    spawnPoints.push_back(Point(1900, 2900));
-    spawnPoints.push_back(Point(-900, 2900));
+    spawnPoints.emplace_back(Point(-900, -900));
+    spawnPoints.emplace_back(Point(1900, -900));
+    spawnPoints.emplace_back(Point(2900, -900));
+    spawnPoints.emplace_back(Point(2900, 2900));
+    spawnPoints.emplace_back(Point(1900, 2900));
+    spawnPoints.emplace_back(Point(-900, 2900));
 
     if(zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
-        for(const auto z : zombieManager) {
+        for(const auto& z : zombieManager) {
             if(count >= spawnPoints.size()){
                 break;
             }
             ids.push_back(z.first);
-            count++;
+            ++count;
         }
-        for(const auto id : ids) {
+        for(const auto& id : ids) {
             deleteZombie(id);
         }
     }
 
-    for(int i = 0; i < n ; i ++) {
-        for(const auto p : spawnPoints)
+    for(int i = 0; i < n; ++i) {
+        for(const auto& p : spawnPoints)
             createZombie(gRenderer, p.first, p.second);
     }
 

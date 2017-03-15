@@ -11,11 +11,11 @@ Object::~Object() {
 //    logv("Destroy Object\n");
 }
 
-void Object::setHeight(int h) {
+void Object::setHeight(const int h) {
     height = h;
     spriteClips[0].h = height;
 }
-void Object::setWidth(int w) {
+void Object::setWidth(const int w) {
     width = w;
     spriteClips[0].w = width;
 }
@@ -31,7 +31,7 @@ void Object::onCollision() {
 }
 
 //sets the angle of object's sprite
-void Object::setAngle(double a){
+void Object::setAngle(const double a){
     angle = a;
 }
 

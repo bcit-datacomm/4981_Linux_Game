@@ -28,7 +28,7 @@ void InstantWeapon::fire(Marine &marine){
     CollisionHandler &collisionHandler = GameManager::instance()->getCollisionHandler();
 
     if(!reduceAmmo(1)){
-     return;
+        return;
     }
 
     //AudioManager::instance().playEffect(EFX_WLPISTOL);
@@ -37,7 +37,7 @@ void InstantWeapon::fire(Marine &marine){
     std::priority_queue<HitBox*> targets;
     targets = collisionHandler.detectLineCollision(marine, getRange());
     if(targets.empty()){
-     return;
+        return;
     }
 
     //=======================================================
