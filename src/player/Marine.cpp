@@ -3,7 +3,8 @@
 #include "../log/log.h"
 
 Marine::Marine(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize): Entity(id, dest, movementSize, projectileSize, damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY){
+        const SDL_Rect &damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY){
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire

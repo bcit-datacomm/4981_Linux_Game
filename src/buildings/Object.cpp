@@ -10,7 +10,8 @@ Object::Object(int32_t nid, const SDL_Rect dest, int width, int height, double a
 
 
 Object::Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
-        int width, int height, double angle): Entity(nid, dest,movementSize, pickupSize), width(width), height(height), angle(angle){
+        int width, int height, double angle): Entity(nid, dest,movementSize, pickupSize), width(width),
+        height(height), angle(angle){
     setHeight(height);
     setWidth(width);
     updateRectHitBoxes();

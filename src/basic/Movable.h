@@ -12,8 +12,8 @@ public:
 
     //for turrets
     Movable(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, int vel) : Entity(id, dest, movementSize, projectileSize,
-            damageSize, pickupSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
+            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, int vel) : Entity(id, dest, movementSize,
+            projectileSize, damageSize, pickupSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
 
     virtual ~Movable() {};
     void move(float moveX, float moveY, CollisionHandler& ch); // Moves Marine
