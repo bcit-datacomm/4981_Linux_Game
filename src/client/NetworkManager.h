@@ -18,14 +18,10 @@
 #define STDIN           0
 #define TCP_PORT 		35223
 #define UDP_PORT 		35222
-#define UNAME_SIZE 	    32
-#define PLAYERPACK_SIZE (UNAME_SIZE + 1)
-#define CHAT_BUFFSIZE 	128
 #define STD_BUFFSIZE    1024
 #define MAX_EVENTS 		1
 #define MAX_USERS		23
 #define SYNC_PACKET_MAX USHRT_MAX
-#define SYNC_PACKET
 
 
 //moved enums to the bottom, and commented out

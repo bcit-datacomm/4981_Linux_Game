@@ -17,7 +17,7 @@
 #include <iterator>
 
 #include "NetworkManager.h"
-#include "../packetizer.h"
+#include "packetizer.h"
 
 using namespace std;
 
