@@ -37,11 +37,11 @@ bool GameStateMatch::load() {
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(Renderer::instance()->getRenderer(), 0, 0);
-    GameManager::instance()->createZombie(Renderer::instance()->getRenderer(), 800, 800);
-    GameManager::instance()->createZombie(Renderer::instance()->getRenderer(), 700, 700);
-    GameManager::instance()->createTurret(Renderer::instance()->getRenderer(), 1000, 500);
-    GameManager::instance()->createWeaponDrop(Renderer::instance()->getRenderer(), 1800, 1700);
+    GameManager::instance()->createMarine(0, 0);
+    GameManager::instance()->createZombie(800, 800);
+    GameManager::instance()->createZombie(700, 700);
+    GameManager::instance()->createTurret(1000, 500);
+    GameManager::instance()->createWeaponDrop(1800, 1700);
 
 
     //base = Base();

@@ -30,11 +30,15 @@ GameManager::~GameManager() {
 // Render all objects in level
 
 void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
-/*
+
     for (const auto& m : weaponDropManager) {
-        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY);
+        if (m.second.getX() - camX < camW) {
+            if (m.second.getY() - camY < camH) {
+                    Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE);
+            }
+        }
     }
-    */
+
     for (const auto& m : marineManager) {
          if (m.second.getX() - camX < camW) {
              if (m.second.getY() - camY < camH) {
@@ -101,7 +105,7 @@ unsigned int GameManager::createMarine() {
     return id;
 }
 
-bool GameManager::createMarine(SDL_Renderer* gRenderer, float x, float y){
+bool GameManager::createMarine(float x, float y){
     unsigned int id = 0;
     if (!marineManager.empty()) {
         id = marineManager.rbegin()->first + 1;
@@ -157,7 +161,7 @@ bool GameManager::addTurret (unsigned int id, Turret& newTurret) {
 }
 
 // Create turret add it to truret, returns if success
-bool GameManager::createTurret(SDL_Renderer* gRenderer, float x, float y) {
+bool GameManager::createTurret(float x, float y) {
     unsigned int id = 0;
     if (!turretManager.empty()) {
         id = turretManager.rbegin()->first + 1;
@@ -182,7 +186,7 @@ unsigned int GameManager::addZombie(Zombie& newZombie) {
 }
 
 // Create zombie add it to manager, returns success
-bool GameManager::createZombie(SDL_Renderer* gRenderer, float x, float y) {
+bool GameManager::createZombie(float x, float y) {
     unsigned int id = 0;
     if (!zombieManager.empty()) {
         id = zombieManager.rbegin()->first + 1;
@@ -221,7 +225,7 @@ unsigned int GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 }
 
 // Create weapon drop add it to manager, returns success
-bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, float x, float y) {
+bool GameManager::createWeaponDrop(float x, float y) {
     int id;
     int randGun = rand() % 2 + 1;
 
@@ -302,7 +306,7 @@ void GameManager::updateCollider() {
 }
 
 // Create barricade add it to manager, returns success
-unsigned int GameManager::createBarricade(SDL_Renderer* gRenderer, float x, float y) {
+unsigned int GameManager::createBarricade(float x, float y) {
     unsigned int id = 0;
     if (!barricadeManager.empty()) {
         id = barricadeManager.rbegin()->first + 1;

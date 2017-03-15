@@ -30,7 +30,7 @@ public:
 
     // Methods for creating, getting, and deleting marines from the level.
     unsigned int createMarine();
-    bool createMarine(SDL_Renderer* gRenderer, float x, float y);
+    bool createMarine(float x, float y);
     void deleteMarine(unsigned int id);
 
     bool addMarine(unsigned int id, Marine& newMarine);
@@ -41,7 +41,7 @@ public:
     void deleteTurret(unsigned int id);
 
     bool addTurret(unsigned int id, Turret& newTurret);
-    bool createTurret(SDL_Renderer* gRenderer, float x, float y) ;
+    bool createTurret(float x, float y) ;
     Turret& getTurret(unsigned int id);
 
     // Method for getting collisionHandler
@@ -55,14 +55,14 @@ public:
     void deleteObject(unsigned int id);
 
     unsigned int addZombie(Zombie&);
-    bool createZombie(SDL_Renderer* gRenderer, float x, float y);
+    bool createZombie(float x, float y);
     void deleteZombie(unsigned int id);
 
     unsigned int addWeaponDrop(WeaponDrop& newWeaponDrop);
-    bool createWeaponDrop(SDL_Renderer* gRenderer, float x, float y);
+    bool createWeaponDrop(float x, float y);
     void deleteWeaponDrop(unsigned int id);
 
-    unsigned int createBarricade(SDL_Renderer* gRenderer, float x, float y);
+    unsigned int createBarricade(float x, float y);
     void deleteBarricade(unsigned int id);
     Barricade& getBarricade(unsigned int id);
 private:

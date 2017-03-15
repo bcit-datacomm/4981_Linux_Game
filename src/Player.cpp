@@ -135,7 +135,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     if(tempBarricadeID < 0) {
         double angle = marine->getAngle();
         int distance = 100;
-        tempBarricadeID = GameManager::instance()->createBarricade(renderer, marine->getX() + distance*cos(angle),
+        tempBarricadeID = GameManager::instance()->createBarricade(marine->getX() + distance*cos(angle),
         marine->getY() + distance*sin(angle));
     }
     else {
