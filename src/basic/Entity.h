@@ -8,19 +8,20 @@
 
 class Entity {
 public:
+    
     Entity();
     Entity(const Entity &e);
     virtual ~Entity();
     virtual void onCollision();
     virtual void collidingProjectile(const int damage);
-    void setPosition(float x, float y); // Set marine position
+    void setPosition(const float x, const float y); // Set marine position
     void setX(float px); //set x coordinate
     void setY(float py); //set y coordinate
     float getX() const; // get x coordinate
     float getY() const; // get y coordinate
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
-    int32_t getId()const{return id;}; //returns the id of the entity
+    int32_t getId() const { return id; }; //returns the id of the entity
     void setId(const int32_t num){id = num;};//Sets the ID, ONLY USE SPARINGLY
 
 
