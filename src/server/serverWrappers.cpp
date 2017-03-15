@@ -80,9 +80,7 @@ void sendTCPClientMessage(const int32_t id, const bool isConnectMessage, const c
 
     for (const auto& clients : clientList) {
         if (clients.first != id && clients.second.hasSentUsername) {
-            if (send(clients.second.entry.sock, outBuff, mesgSize + TCP_HEADER_SIZE + 1, 0) < 0) {
-                perror("Failed to send client messasge");
-            }
+            rawClientSend(clients.second.entry.sock, outBuff, mesgSize + TCP_HEADER_SIZE + 1);
         }
     }
     free(outBuff);
@@ -292,6 +290,7 @@ void updateClientWithCurrentLobby(const int sock, char *outBuff, const size_t bu
             if (!rawClientSend(sock, outBuff, bufferSize)) {
                 break;
             }
+            outBuff[4] = 'T';
             memset(outBuff + TCP_HEADER_SIZE + 1, '\0', NAMELEN);
             if (it.second.isPlayerReady) {
                 strncpy(outBuff + TCP_HEADER_SIZE + 1, "ready", 5);                
@@ -336,7 +335,7 @@ void processReadyMessage(const int32_t idReceived) {
     if (clientList.count(idReceived)) {
         clientList[idReceived].isPlayerReady = true;
         logv("Player id %d is ready to start\n", idReceived);
-        sendTCPClientMessage(idReceived, true, "ready", 5);
+        sendTCPClientMessage(idReceived, false, "ready", 5);
     } else {
         perror("Client not found in list");
     }
@@ -349,7 +348,7 @@ void processUnreadyMessage(const int32_t idReceived) {
     if (clientList.count(idReceived)) {
         clientList[idReceived].isPlayerReady = false;
         logv("Player id %d is NOT ready to start\n", idReceived);
-        sendTCPClientMessage(idReceived, true, "unready", 7);
+        sendTCPClientMessage(idReceived, false, "unready", 7);
     } else {
         perror("Client not found in list");
     }
