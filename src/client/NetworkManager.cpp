@@ -62,10 +62,9 @@ void NetworkManager::initClients(const char *ip) {
     TCPThread.detach();
 }
 */
-void NetworkManager::run(const char *ip, const char  *username)
+void NetworkManager::run(Player& player, const char *ip, const char  *username)
 {
     serverIP = inet_addr(ip);
-
 
     sockTCP = createSocket(SOCK_STREAM);
     bindSocket(sockTCP, createAddress(INADDR_ANY, TCP_PORT));
@@ -75,8 +74,13 @@ void NetworkManager::run(const char *ip, const char  *username)
     handshake(ip,username); //handshake
     waitRecvId();
 
+    //links the player to its marine
+    GameManager::instance()->createMarine(_myid, std::string(username));
+    player.setControl(GameManager::instance()->getMarine(_myid));
+    player.setId(_myid);
+
     std::thread TCPThread(&NetworkManager::runTCPClient, this);
-    TCPThread.detatch();
+    TCPThread.detach();
 
     std::thread UDPThread(&NetworkManager::runUDPClient, this);
     UDPThread.detach();
@@ -157,25 +161,16 @@ void NetworkManager::runUDPClient() {
 
     char buffer[SYNC_PACKET_MAX];
     int packetSize;
-    packetSize = readSocket(sockUDP, buffer, SYNC_PACKET_MAX);
+    packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
     Packetizer::parseGameSync(buffer, packetSize);
     cout << "\nRecevied Dgram. Bytes read: " << packetSize << endl;
     running = true;
-    //Packetizer packetizer;
-    MoveAction ma;
-    ma.id = _myid;
-    ma.xpos = 30.0f;
-    ma.ypos = 30.0f;
-    ma.vel = 500.f;
-    ma.direction = 30.0f;
-
-    writeUDPSocket((char *)&ma, sizeof(MoveAction));
 
     while(running) {
         packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
         cout << "Recevied Dgram. Bytes read: " << packetSize << endl;
         /*TEMP:*/
-         Packetizer::parseGameSync(buffer, packetSize);
+        Packetizer::parseGameSync(buffer, packetSize);
     }
 }
 

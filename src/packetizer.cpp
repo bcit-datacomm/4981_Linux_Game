@@ -30,6 +30,7 @@
 #include <string.h>
 #include "packetizer.h"
 #include "UDPHeaders.h"
+#include "game/GameManager.h"
 
 int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
 {
@@ -55,6 +56,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
             if(*pBuff++ == '/'){
                 std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
                 //insertplayer(id,msg);
+                GameManager::instance()->createMarine(id, msg);
             }
             break;
 
