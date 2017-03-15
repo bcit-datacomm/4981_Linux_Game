@@ -101,20 +101,18 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
   int32_t *pBuff;
   int32_t *pEnd;
   PlayerData * player;
-  MoveAction * moves;
-  AttackAction * attacks;
+  AttackAction * attack;
   ZombieData * zombie;
   pBuff = reinterpret_cast<int32_t *>(const_cast<void *>(syncBuff)); // cast the buff to read 4 bytes at a time
 
-  if (*pBuff++ != SYNC) return; // Check that it is a sync pack
+  if (*pBuff++ != static_cast<int32_t>(UDPHeaders::SYNCH)) return; // Check that it is a sync pack
 
   size_t len = bytesReads / sizeof(int32_t); // get end location
   pEnd = pBuff + len;
 
   while (pBuff <= pEnd) {
-    switch(*pBuff++) {
-
-      case PLAYERH: {  // enclose in braces to prevent
+    switch(static_cast<UDPHeaders>(*pBuff++)) {
+      case UDPHeaders::PLAYERH: {  // enclose in braces to prevent
         int32_t pCount = *pBuff++;
         for(int32_t i = 0; i  < pCount; i++) {
           player = reinterpret_cast<PlayerData *>(pBuff);
@@ -125,38 +123,27 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
           std::cout << "\n\tPlayer direction:" << player->direction;
           std::cout << "\n\tPlayer health:" << player->health;
           std::cout << std::endl;
-          pBuff = reinterpret_cast<int32_t *>(&(player->moves));
-          moves = player->moves;
           GameManager::instance()->updateMarine(*player);
-
-          for(int32_t j = 0; j  < player->nmoves; j++) {
-            /*
-            UpdatePlayerAction (player->playerid,
-                            action->actionid,
-                            action->xpos,
-                            action->ypos,
-                            action->direction);
-            */
-            moves++;
-          }
-          pBuff = reinterpret_cast<int32_t *> (&(player->attacks));
-          attacks = player->attacks;
-
-          for(int32_t j = 0; j  < player->nattacks; j++) {
-            /*
-            UpdatePlayerAction (player->playerid,
-                            action->actionid,
-                            action->xpos,
-                            action->ypos,
-                            action->direction);
-            */
-            attacks++;
-          }
           pBuff = reinterpret_cast<int32_t *>(++player);
         }
         break;
       } // End of PLAYERH case, must be enclosed in braces.
-      case ZOMBIEH: {
+      case UDPHeaders::ATTACKACTIONH: {
+          int32_t aCount = *pBuff++;
+          for(int32_t i = 0; i  < aCount; i++) {
+            attack = reinterpret_cast<AttackAction *>(pBuff);
+            std::cout << "\nAction playerid:" << attack->playerid;
+            std::cout << "\n\tAction actionid:" << attack->actionid;
+            std::cout << "\n\tAction weaponid:" << attack->weaponid;
+            std::cout << "\n\tAction xpos:" << attack->xpos;
+            std::cout << "\n\tAction ypos:" << attack->ypos;
+            std::cout << "\n\tAction direction:" << attack->direction;
+            std::cout << std::endl;
+            pBuff = reinterpret_cast<int32_t *>(++attack);
+          }
+          break;
+      }
+      case UDPHeaders::ZOMBIEH: {
         int32_t zCount = *pBuff++;
         for(int32_t i = 0; i  < zCount; i++){
           zombie = reinterpret_cast<ZombieData *>(pBuff);
@@ -177,6 +164,8 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
         }
         break;
       }
+      default:
+        break;
      }
    }
 }
