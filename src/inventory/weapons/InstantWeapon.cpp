@@ -34,7 +34,7 @@ void InstantWeapon::fire(Marine &marine){
     //AudioManager::instance().playEffect(EFX_WLPISTOL);
 
     //get all targets in line with the shot
-    std::priority_queue<HitBox*> targets;
+    std::priority_queue<const HitBox*> targets;
     targets = collisionHandler.detectLineCollision(marine, getRange());
     if(targets.empty()){
         return;

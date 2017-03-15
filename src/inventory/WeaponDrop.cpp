@@ -6,13 +6,10 @@
 using namespace std;
 
 
-WeaponDrop::WeaponDrop(int32_t wId): weaponId(wId){
-    logv("Created Weapon Drop\n");
-}
+WeaponDrop::WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize,
+        int32_t wId): Entity(id, dest, dest, pickupSize), weaponId(wId){
 
-WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
-
-}
+    logv("Created Weapon Drop\n");}
 
 WeaponDrop::~WeaponDrop() {
     logv("Destroy WeaponDrop\n");

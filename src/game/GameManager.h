@@ -76,6 +76,7 @@ public:
     int32_t createWall(SDL_Renderer* gRenderer, const float x, const float y, const int h, const int w); // create Wall object
     void setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
 
+
 private:
     GameManager();
     ~GameManager();
