@@ -52,6 +52,9 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.ypos = marine.getY();
         tempPlayer.vel = marine.getVelocity();
         tempPlayer.direction = marine.getAngle();
+        
+        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.direction);
+
         tempPlayer.health = marine.getHealth();
         tempPlayer.actionid = static_cast<int32_t>(UDPID::ACTIONH);
         tempPlayer.nmoves = moveMap.count(idPlayerPair.first);
