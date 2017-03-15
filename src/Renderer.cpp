@@ -1,6 +1,11 @@
 #include "Renderer.h"
 #include "Window.h"
 
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+*/
+
 Renderer * Renderer::rInstance = nullptr;
 SDL_Renderer * Renderer::_renderer = nullptr;
 SDL_Window * Renderer::_window = nullptr;
@@ -31,6 +36,10 @@ Renderer * Renderer::instance() {
 
 //load all sprites sheets
 void Renderer::loadSprites() {
+    //Main game screen
+    //createTexture(MAIN_SCREEN);
+    //createTexture(LOBBY_SCREEN);
+
     //-------- map textures --------
     createTexture(TEXTURE_BARREN); //barren dirt
     createTexture(TEXTURE_MIDDLE); //dead grass

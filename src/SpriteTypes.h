@@ -1,6 +1,11 @@
 #ifndef SPRITETYPES_H
 #define SPRITETYPES_H
 
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+*/
+
 #include <stdlib.h>
 
 /**
@@ -10,6 +15,10 @@
 */
 
 enum class TEXTURES : int {
+    //--------------------- Menu textures ---------------------
+    //MAIN
+    //LOBBY
+
     //--------------------- Map textures ---------------------
     BARREN,
     DEAD_GRASS,

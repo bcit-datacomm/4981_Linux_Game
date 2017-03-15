@@ -9,7 +9,16 @@
 
 #include "SpriteTypes.h"
 
-//Map textures
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+*/
+
+//-------- Game Screens --------
+#define MAIN_SCREEN "assets/texture/Map/"
+//#define LOBBY_SCREEN "assets/texture/Map/"
+
+//-------- Map Textures --------
 #define MAP_TEXTURE_PATH "assets/texture/Map/"
 
 //terraformed terrain
@@ -30,24 +39,26 @@
 //Sprite Sheet folder path
 #define SPRITE_PATH "assets/texture/SpriteSheets/"
 
-//Sprite Sheets
+//-------- Map Objects Sprite Sheet --------
 #define MAP_OBJECTS SPRITE_PATH "mapObjects.png"
 
-//Zombie Sprites Sheets
+//-------- Zombie Sprite Sheets --------
 #define ZOMBIE_BABYZ  SPRITE_PATH "babyz.png"
 #define ZOMBIE_DIGGER SPRITE_PATH "digger.png"
 #define ZOMBIE_BOSS   SPRITE_PATH "zombieboss.png"
 
-//Player Sprites Sheets
+//-------- Marine Sprite Sheet --------
 #define PLAYER_MOHAWK  SPRITE_PATH "mohawk.png"
 
-//Weapons Sprite Sheets
+//-------- Weapons Sprite Sheet --------
 #define WEAPONS SPRITE_PATH "weapons.png"
 #define LASER   SPRITE_PATH "laser.png"
 //#define TURRETS        SPRITE_PATH ""
 
 #define TOTAL_SPRITES 10 //number of total sprites
 
+//temporary sprite
+//TODO: remove with actual texture
 #define REPLACE_ME "assets/texture/replace_me.png"
 
 
@@ -75,7 +86,6 @@ private:
     static std::array<SDL_Texture *, TOTAL_SPRITES> _sprites;
     static void createTexture(std::string filePath);
     static void setRenderer();
-
 };
 
 #endif

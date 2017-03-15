@@ -45,10 +45,6 @@ bool GameStateMatch::load() {
 
 
     //base = Base();
-    if (!base.texture.loadFromFile("assets/texture/base.png", Renderer::instance()->getRenderer())) {
-        printf("Failed to load the base texture!\n");
-        success = false;
-    }
 
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
@@ -56,11 +52,6 @@ bool GameStateMatch::load() {
     //player = new Player();
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.marine->setPosition(newPoint.first, newPoint.second);
-
-    if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", Renderer::instance()->getRenderer())) {
-        printf("Failed to load the player texture!\n");
-        success = false;
-    }
 
     //camera = Camera(game.window.getWidth(), game.window.getHeight());
 
