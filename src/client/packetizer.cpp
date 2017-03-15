@@ -29,8 +29,8 @@
 #include <string>
 #include <string.h>
 #include "packetizer.h"
-#include "UDPHeaders.h"
-#include "game/GameManager.h"
+#include "../UDPHeaders.h"
+#include "../game/GameManager.h"
 
 int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
 {

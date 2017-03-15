@@ -20,7 +20,7 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 
 bool GameStateMatch::load() {
     player.setControl(GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()));
-
+    player.setId(NetworkManager::instance().getPlayerId());
     bool success = true;
 
     //Open the font
