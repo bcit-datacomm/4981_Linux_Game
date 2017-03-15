@@ -48,7 +48,7 @@
 -- NOTES:
 -- this is the enum to hold all the terspecifiers that will indicate the packets
 --------------------------------------------------------------------------*/
-enum UDPHeaders
+enum class UDPHeaders:int32_t
 {
     SYNCH,
     PLAYERH,
@@ -88,7 +88,6 @@ enum UDPHeaders
 -- float direction - And Angle in relation to -----
 --------------------------------------------------------------------------*/
 typedef struct {
-    int32_t   id;
     int32_t   playerid;
     int32_t   actionid;
     int32_t   weaponid;
@@ -155,7 +154,6 @@ typedef struct
 --------------------------------------------------------------------------*/
 
 typedef struct {
-    int32_t   id;
     int32_t   playerid;
     float     xpos;
     float     ypos;
@@ -187,7 +185,6 @@ typedef struct {
 --------------------------------------------------------------------------*/
 
 typedef struct {
-    int32_t id;
     int32_t zombieid;
     int32_t health;
     float xpos;
@@ -219,14 +216,14 @@ typedef struct {
 --------------------------------------------------------------------------*/
 typedef struct
 {
-    int32_t id = SYNCH; //packet
-    int32_t playerheaderid = PLAYERH;
+    int32_t id = static_cast<int32_t>(UDPHeaders::SYNCH); //packet
+    int32_t playerheaderid = static_cast<int32_t>(UDPHeaders::PLAYERH);
     int32_t nplayers;
     PlayerData * players;
-    int32_t attackheaderid = ATTACKACTIONH;
+    int32_t attackheaderid = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
     int32_t nattacks;
     AttackAction * attacks;
-    int32_t zombieheaderid = ZOMBIEH;
+    int32_t zombieheaderid = static_cast<int32_t>(UDPHeaders::ZOMBIEH);
     int32_t nzombies;
     ZombieData * zombies;
 } GameSync;
