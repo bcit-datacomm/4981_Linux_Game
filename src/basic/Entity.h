@@ -65,8 +65,8 @@ private:
     HitBox projectileHitBox;
     HitBox damageHitBox;
     HitBox pickupHitBox;
-    float x; //x coordinate
-    float y; //y coordinate
+    float x;
+    float y;
 };
 
 #endif

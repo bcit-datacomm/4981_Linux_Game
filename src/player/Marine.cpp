@@ -55,7 +55,9 @@ void Marine::checkForPickUp(){
             //Get Weaopn id from weapon drop
             PickId = wd.getWeaponId();
             if(inventory.pickUp(PickId)){
+                
                 gm->deleteWeaponDrop(wd.getId());
+
             }
         }
     }
