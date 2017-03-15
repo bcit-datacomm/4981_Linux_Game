@@ -1,15 +1,15 @@
 #include "Object.h"
 
-Object::Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, int width, int height, double angle):
-        Entity(nid, dest, spriteSize), width(width), height(height), angle(angle){
+Object::Object(int32_t nid, const SDL_Rect dest, int width, int height, double angle):
+        Entity(nid, dest), width(width), height(height), angle(angle){
     setHeight(height);
     setWidth(width);
     updateRectHitBoxes();
 }
 
 
-Object::Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
-        int width, int height, double angle): Entity(nid, dest, spriteSize, movementSize, pickupSize), width(width), height(height), angle(angle){
+Object::Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
+        int width, int height, double angle): Entity(nid, dest,movementSize, pickupSize), width(width), height(height), angle(angle){
     setHeight(height);
     setWidth(width);
     updateRectHitBoxes();

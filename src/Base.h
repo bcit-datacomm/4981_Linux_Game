@@ -22,7 +22,7 @@ typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
-    Base(int32_t nid = 0, const SDL_Rect dest = {1000, 1000, 500, 500},  const SDL_Rect &spriteSize = {1000, 1000, 500, 500}, int health = 100);
+    Base(int32_t nid = 0, const SDL_Rect dest = {1000, 1000, 500, 500}, int health = 100);
     virtual ~Base();
 
     void onCollision();

@@ -19,6 +19,13 @@ constexpr int PLACE_DISTANCE = 200;
 
 class Turret : public Movable {
 public:
+
+    Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
+            int ammo = 100, bool boolPlaced = false);
+            
+    virtual ~Turret();
+
     void spawnTurret(); // spawns a DEACTIVATED turret
 
     bool placementCheckTurret(); // checks if turret placement is within bounds
@@ -54,10 +61,7 @@ public:
 
     void removeTurret(); // removes the turret
 
-    Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
-            int ammo = 100, bool boolPlaced = false);
-    virtual ~Turret();
+
 
 private:
     bool activated; // turret activated state

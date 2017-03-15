@@ -5,9 +5,9 @@
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
-Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, int health, int state):Entity(id, dest, spriteSize, movementSize, projectileSize, damageSize),
-        Movable(id, dest, spriteSize, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health), state(state) {
+Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, int health, int state):Entity(id, dest, movementSize, projectileSize, damageSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health), state(state) {
     setAngle(getRandomAngle());
     //printf("Create Zombie\n");
 }

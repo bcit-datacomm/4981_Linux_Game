@@ -10,7 +10,7 @@
 
 class WeaponDrop: public Entity{
 public:
-    WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &spriteSize, const SDL_Rect &pickupSize, int32_t wId);
+    WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize, int32_t wId);
 
     ~WeaponDrop();
     void setPosition(int x, int y);

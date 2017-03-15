@@ -49,6 +49,7 @@ bool GameStateMatch::load() {
         printf("Failed to load the base texture!\n");
         success = false;
     }
+    
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 

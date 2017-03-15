@@ -2,7 +2,7 @@
 #include "Marine.h"
 #include<random>
 
-Base::Base(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, int health): Object(nid, dest, spriteSize, BASE_HEIGHT, BASE_WIDTH),
+Base::Base(int32_t nid, const SDL_Rect dest, int health): Object(nid, dest, BASE_HEIGHT, BASE_WIDTH),
         health(health) {
     setX((MAP_WIDTH / 2) - BASE_WIDTH / 2);
     setY((MAP_HEIGHT / 2) - BASE_HEIGHT / 2);
