@@ -54,7 +54,7 @@ UDPSocket::UDPSocket(const char *ip) {
     memset((char *) &_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
     _servAddr.sin_port = htons(LISTEN_PORT_UDP);
-    _servAddr.sin_addr.s_addr = inet_addr(ip);
+    _servAddr.sin_addr.s_addr = INADDR_ANY;
 
     bindSock();
 
@@ -83,6 +83,7 @@ NOTES:
 Closes the socket.
 --------------------------------------------------------------------------*/
 UDPSocket::~UDPSocket() {
+    //close(_sockUDP);
 }
 
 /*--------------------------------------------------------------------------
@@ -110,7 +111,7 @@ void UDPSocket::bindSock() {
     struct sockaddr_in addr;
     memset((char *) &addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(5150);
+    addr.sin_port = htons(LISTEN_PORT_UDP);
     addr.sin_addr.s_addr = INADDR_ANY;
 
     if(bind(_sockUDP, (struct sockaddr *)&addr, sizeof(addr)) < 0) {

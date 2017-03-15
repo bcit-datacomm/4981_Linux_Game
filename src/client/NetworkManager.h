@@ -11,6 +11,7 @@
 #include <atomic>
 #include <memory>
 #include <map>
+#include "../UDPHeaders.h"
 
 #define STDIN           0
 #define TCP_PORT 		35223
@@ -31,10 +32,10 @@ class NetworkManager {
 public:
     static NetworkManager& instance();
     void run(const char *ip, const char  * username);
-    void initClients(const char *ip);
+    //void initClients(const char *ip);
     void closeConnection();
     int writeSocket(int, const char *, int);
-    void writeUDPSocket(const char *, int);
+    //void writeUDPSocket(const char *, int);
 private:
     int32_t _myid;  // EY: March 14 - to be removed for game intergration
     bool connected, running; // EY: March 14 - to be removed for game intergration
@@ -45,7 +46,8 @@ private:
 
     void runTCPClient();
     void runUDPClient();
-
+    void writeUDPSocket(const char *buf, const int &len);
+    int readUDPSocket(char *buf, const int& len);
     int createSocket(int) const;
     int connectSocket(const char *) const;
     void connectSocket(int sock, const struct sockaddr_in& addr) const;

@@ -20,10 +20,11 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 }
 
 bool GameStateMatch::load() {
-    std::string ip;
+    std::cout << "Enter IP and username..." << std::endl;
+    std::string ip, username;
     std::cout << "enter ip" << std::endl;
-    std::cin >> ip;
-    NetworkManager::instance().initClients(ip.c_str());
+    std::cin >> ip, username;
+    NetworkManager::instance().run(ip, username);
 
     bool success = true;
 
@@ -67,6 +68,9 @@ void GameStateMatch::loop() {
 
     // State Loop
     while (play) {
+        if(gameStart == false) {
+            continue;
+        }
         //Start cap timer
         capTimer.start();
 

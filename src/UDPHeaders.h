@@ -118,8 +118,10 @@ typedef struct {
     -- float xpos - the X position`
     -- float ypos - the Y position
     -- float vel - the velocity of the player
+    -- float direction -- the direction the weapon is facing
 --------------------------------------------------------------------------*/
-typedef struct {
+typedef struct
+{
 	int32_t   id;
 	float xpos;
 	float ypos;

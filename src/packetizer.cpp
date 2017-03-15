@@ -33,11 +33,13 @@
 
 int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
 {
-    //insert the id of user
-    *(reinterpret_cast<int32_t *>(buff)) = id;
-    *(buff+4) = type;
-    *(buff+5) = '/';
-    strcpy(buff+6, msg);
+    //make sure buffer can fit message, otherwise, truncate
+    size_t maxmsglen = ( ( bufflen < (strlen(msg) + 7) )? bufflen - 7 : strlen(msg) );
+    *(reinterpret_cast<int32_t *>(buff)) = id; //insert id to buffer
+    buff[4] = type;
+    buff[5] = '/';
+    memcpy(buff+6, msg, maxmsglen);
+    buff[maxmsglen + 6] = '\0';
     return static_cast<int>(strlen(msg))+6;
 }
 
