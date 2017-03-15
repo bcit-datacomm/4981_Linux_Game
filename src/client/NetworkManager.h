@@ -33,12 +33,12 @@
 class NetworkManager {
 public:
     static NetworkManager& instance();
-    void run(Player& player, const char *ip, const char  * username);
-    //void initClients(const char *ip);
+    void run(const char *ip, const char *username);
     void closeConnection();
     int writeSocket(int, const char *, int);
     void writeUDPSocket(const char *buf, const int &len);
 
+    int32_t getPlayerId() const {return _myid;};
 private:
     int32_t _myid;  // EY: March 14 - to be removed for game intergration
     bool connected, running; // EY: March 14 - to be removed for game intergration

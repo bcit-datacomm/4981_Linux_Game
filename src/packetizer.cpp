@@ -53,7 +53,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
     switch(*pBuff++)
     {
         case 'C':
-            if(*pBuff++ == '/'){
+            if(*pBuff++ == '/') {
                 std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
                 //insertplayer(id,msg);
                 GameManager::instance()->createMarine(id, msg);
@@ -127,14 +127,8 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
           std::cout << std::endl;
           pBuff = reinterpret_cast<int32_t *>(&(player->moves));
           moves = player->moves;
-          /*
-          UpdatePlayer (player->playerid,
-                          player->xpos,
-                          player->ypos,
-                          player->xvel,
-                          player->yvel,
-                          player->direction);
-          */
+          GameManager::instance()->updateMarine(*player);
+
           for(int32_t j = 0; j  < player->nmoves; j++) {
             /*
             UpdatePlayerAction (player->playerid,

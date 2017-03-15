@@ -18,6 +18,7 @@
 
 #include "NetworkManager.h"
 #include "../packetizer.h"
+#include "../game/GameStateMatch.h"
 
 using namespace std;
 
@@ -62,7 +63,7 @@ void NetworkManager::initClients(const char *ip) {
     TCPThread.detach();
 }
 */
-void NetworkManager::run(Player& player, const char *ip, const char  *username)
+void NetworkManager::run(const char *ip, const char  *username)
 {
     serverIP = inet_addr(ip);
 
@@ -73,11 +74,6 @@ void NetworkManager::run(Player& player, const char *ip, const char  *username)
 
     handshake(ip,username); //handshake
     waitRecvId();
-
-    //links the player to its marine
-    GameManager::instance()->createMarine(_myid, std::string(username));
-    player.setControl(GameManager::instance()->getMarine(_myid));
-    player.setId(_myid);
 
     std::thread TCPThread(&NetworkManager::runTCPClient, this);
     TCPThread.detach();
@@ -163,9 +159,9 @@ void NetworkManager::runUDPClient() {
     int packetSize;
     packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
     Packetizer::parseGameSync(buffer, packetSize);
+
     cout << "\nRecevied Dgram. Bytes read: " << packetSize << endl;
     running = true;
-
     while(running) {
         packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
         cout << "Recevied Dgram. Bytes read: " << packetSize << endl;

@@ -32,14 +32,12 @@ public:
     TTF_Font* frameFont = nullptr;
     LTexture frameFPSTextTexture;
 
-
 private:
     Player player;
     Level level;
     Base base;
     Camera camera;
 
-    static bool gameStart;
     virtual void sync() override;
     virtual void handle() override;
     virtual void update(const float delta) override;

@@ -13,17 +13,13 @@
 #include "../sprites/LTexture.h"
 #include "../view/Window.h"
 
-bool GameStateMatch::gameStart = false;
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight) {
 
 }
 
 bool GameStateMatch::load() {
-    std::cout << "Enter IP and username..." << std::endl;
-    std::string ip, username;
-    std::cin >> ip >> username;
-    NetworkManager::instance().run(player, ip.c_str(), username.c_str());
+    player.setControl(GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()));
 
     bool success = true;
 
@@ -99,7 +95,8 @@ void GameStateMatch::loop() {
         // Process frame
         handle();    // Handle user input
         update(stepTimer.getTicks() / 1000.f); // Update state values
-        updateServ();
+        if(stepTimer.getTicks() % (SCREEN_TICK_PER_FRAME * (1/30)+1) == 0)
+            updateServ();
 
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server

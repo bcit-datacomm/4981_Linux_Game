@@ -11,6 +11,7 @@
 #include "../sprites/LTexture.h"
 #include "../view/Window.h"
 #include <unistd.h>
+#include "../client/NetworkManager.h"
 
 
 /**
@@ -119,6 +120,10 @@ bool GameStateMenu::load() {
 * Listens for events and renders all assets to the screen
 */
 void GameStateMenu::loop() {
+    std::string ip, username;
+    std::cout << "enter ip and username..." << std::endl;
+    std::cin >> ip >> username;
+    NetworkManager::instance().run(ip.c_str(), username.c_str());
 
     // State Loop
     while (play) {
@@ -293,7 +298,6 @@ void GameStateMenu::handle() {
 * Function positions all screen elements in the window
 */
 void GameStateMenu::update(const float delta) {
-
     if(delta == JOIN) {
         game.stateID = 2;
     } else if (delta == OPTIONS) {
