@@ -11,6 +11,7 @@
 #include "LTexture.h"
 #include "Window.h"
 #include <unistd.h>
+#include "Renderer.h"
 
 
 /**
@@ -89,7 +90,7 @@ bool GameStateMenu::load() {
         success = false;
     }
 
-    if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", game.renderer)) {
+    if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", Renderer::instance()->getRenderer())) {
         printf("Failed to load the level texture!\n");
         success = false;
     } else {
@@ -399,10 +400,10 @@ void GameStateMenu::render() {
     if ( !game.window.isMinimized() ) {
 
         //Clear screen
-        SDL_RenderClear( game.renderer );
+        SDL_RenderClear( Renderer::instance()->getRenderer() );
 
         //Render textures
-        level.levelTexture.render(game.renderer, 0 - camera.getX(), 0 - camera.getY());
+        level.levelTexture.render(Renderer::instance()->getRenderer(), 0 - camera.getX(), 0 - camera.getY());
 
         //Position all screen elements in the window
         positionElements();
@@ -414,18 +415,18 @@ void GameStateMenu::render() {
             } else {
                 renderText(&menuTextTextures[i], menuItems[i].c_str(), fontColors[RED], menuFont, menuItemPos[i]);
             }
-            menuTextTextures[i].render(game.renderer, menuItemPos[i].x, menuItemPos[i].y);
+            menuTextTextures[i].render(Renderer::instance()->getRenderer(), menuItemPos[i].x, menuItemPos[i].y);
         }
 
         //Change the color of the textbox when active
         //Used so User knows when textbox is can accept input
         for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
             if (activeTextbox[i]) {
-                SDL_SetRenderDrawColor(game.renderer, LT_GREEN_RGB[0], LT_GREEN_RGB[1], LT_GREEN_RGB[2], OPAQUE);
-                SDL_RenderFillRect(game.renderer, &textboxPos[i]);
+                SDL_SetRenderDrawColor(Renderer::instance()->getRenderer(), LT_GREEN_RGB[0], LT_GREEN_RGB[1], LT_GREEN_RGB[2], OPAQUE);
+                SDL_RenderFillRect(Renderer::instance()->getRenderer(), &textboxPos[i]);
             } else {
-                SDL_SetRenderDrawColor(game.renderer, WHITE_RGB[0], WHITE_RGB[1], WHITE_RGB[2], OPAQUE);
-                SDL_RenderFillRect(game.renderer, &textboxPos[i]);
+                SDL_SetRenderDrawColor(Renderer::instance()->getRenderer(), WHITE_RGB[0], WHITE_RGB[1], WHITE_RGB[2], OPAQUE);
+                SDL_RenderFillRect(Renderer::instance()->getRenderer(), &textboxPos[i]);
             }
         }
 
@@ -438,7 +439,7 @@ void GameStateMenu::render() {
         }
 
         //Update screen
-        SDL_RenderPresent( game.renderer );
+        SDL_RenderPresent( Renderer::instance()->getRenderer() );
     }
 }
 
@@ -470,10 +471,10 @@ void GameStateMenu::render() {
 */
 void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
                                 SDL_Color color, TTF_Font* font, SDL_Rect rect) {
-    if ( !fontTexture->loadFromRenderedText( text, color, game.renderer, font ) ) {
+    if ( !fontTexture->loadFromRenderedText( text, color, Renderer::instance()->getRenderer(), font ) ) {
         printf( "Unable to render text texture!\n" );
     }
-    fontTexture->render(game.renderer, rect.x, rect.y);
+    fontTexture->render(Renderer::instance()->getRenderer(), rect.x, rect.y);
 }
 
 /**

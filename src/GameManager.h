@@ -12,6 +12,8 @@
 #include <vector>
 #include "WeaponDrop.h"
 #include <memory>
+#include "SpriteTypes.h"
+#include "Renderer.h"
 
 //just for tesing weapon drop
 #include "Weapon.h"
@@ -24,7 +26,7 @@ public:
     static GameManager *instance();
     ~GameManager();
 
-    void renderObjects(SDL_Renderer* gRenderer, float camX, float camY); // Render all objects in level
+    void renderObjects(int camX, int camY, int camW, int camH); // Render all objects in level
 
     // Methods for creating, getting, and deleting marines from the level.
     unsigned int createMarine();

@@ -16,10 +16,10 @@ Window::Window() {
 
 bool Window::init() {
     //Create window
-    mWindow = SDL_CreateWindow( "4981 Linux Game", 
-                               SDL_WINDOWPOS_UNDEFINED, 
-                               SDL_WINDOWPOS_UNDEFINED, 
-                               SCREEN_WIDTH, SCREEN_HEIGHT, 
+    mWindow = SDL_CreateWindow( "4981 Linux Game",
+                               SDL_WINDOWPOS_UNDEFINED,
+                               SDL_WINDOWPOS_UNDEFINED,
+                               SCREEN_WIDTH, SCREEN_HEIGHT,
                                SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
     if( mWindow != NULL ) {
         mMouseFocus = true;
@@ -56,7 +56,7 @@ void Window::handleEvent( SDL_Event& e ) {
                 SDL_SetWindowSize(mWindow, e.window.data1, MIN_SCREEN_HEIGHT);
                 mHeight = MIN_SCREEN_HEIGHT;
             } else {
-                mHeight = e.window.data2;        
+                mHeight = e.window.data2;
             }
             break;
 
@@ -146,4 +146,8 @@ bool Window::hasKeyboardFocus() {
 
 bool Window::isMinimized() {
     return mMinimized;
+}
+
+SDL_Window * Window::getWindow() {
+    return mWindow;
 }

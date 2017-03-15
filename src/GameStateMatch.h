@@ -14,7 +14,8 @@
 #include "GameManager.h"
 #include "CollisionHandler.h"
 #include "Window.h"
-#include "SpriteManager.h"
+#include "SpriteTypes.h"
+#include "Renderer.h"
 
 class GameStateMatch : public GameState {
 public:

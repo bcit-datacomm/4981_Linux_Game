@@ -6,10 +6,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+
 #include "GameStateMatch.h"
 #include "LTimer.h"
 #include "LTexture.h"
 #include "Window.h"
+#include "Renderer.h"
+#include "SpriteTypes.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
                                level(),  base(), camera(gameWidth,gameHeight){
@@ -27,29 +30,26 @@ bool GameStateMatch::load() {
         success = false;
     }
 
-    //level = new Level();
-    if (!level.levelTexture.loadFromFile("assets/texture/checkerboard.png", game.renderer)) {
-        printf("Failed to load the level texture!\n");
-        success = false;
-    } else {
-        level.levelTexture.setDimensions(2000, 2000);
-    }
+    //loads the sprites
+    printf("Loading Sprites\n");
+    Renderer::instance()->loadSprites();
 
     unsigned int playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 100, 100);
-    GameManager::instance()->createZombie(game.renderer, 700, 700);
-    GameManager::instance()->createTurret(game.renderer, 1000, 500);
-    GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
+    GameManager::instance()->createMarine(Renderer::instance()->getRenderer(), 0, 0);
+    GameManager::instance()->createZombie(Renderer::instance()->getRenderer(), 800, 800);
+    GameManager::instance()->createZombie(Renderer::instance()->getRenderer(), 700, 700);
+    GameManager::instance()->createTurret(Renderer::instance()->getRenderer(), 1000, 500);
+    GameManager::instance()->createWeaponDrop(Renderer::instance()->getRenderer(), 1800, 1700);
 
 
     //base = Base();
-    if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
+    if (!base.texture.loadFromFile("assets/texture/base.png", Renderer::instance()->getRenderer())) {
         printf("Failed to load the base texture!\n");
         success = false;
     }
+
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 
@@ -57,7 +57,7 @@ bool GameStateMatch::load() {
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.marine->setPosition(newPoint.first, newPoint.second);
 
-    if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
+    if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", Renderer::instance()->getRenderer())) {
         printf("Failed to load the player texture!\n");
         success = false;
     }
@@ -73,7 +73,7 @@ void GameStateMatch::loop() {
     LTimer fpsTimer;
 
     //The frames per second cap timer
-    LTimer capTimer;
+    //LTimer capTimer;
 
     //Keeps track of time between steps
     LTimer stepTimer;
@@ -86,7 +86,7 @@ void GameStateMatch::loop() {
     // State Loop
     while (play) {
         //Start cap timer
-        capTimer.start();
+        //capTimer.start();
 
         //Calculate and correct fps
         avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
@@ -104,13 +104,14 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
+#if 0
         //If frame finished early
         int frameTicks = capTimer.getTicks();
         if ( frameTicks < SCREEN_TICK_PER_FRAME ) {
             //Wait remaining time
             SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
         }
-
+#endif
     }
 }
 
@@ -135,7 +136,7 @@ void GameStateMatch::handle() {
             break;
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_RIGHT) {
-                player.handlePlacementClick(game.renderer);
+                player.handlePlacementClick(Renderer::instance()->getRenderer());
             }
             break;
         case SDL_KEYDOWN:
@@ -144,7 +145,7 @@ void GameStateMatch::handle() {
                     play = false;
                     break;
                 case SDLK_b:
-                    player.handleTempBarricade(game.renderer);
+                    player.handleTempBarricade(Renderer::instance()->getRenderer());
                     break;
                 default:
                     break;
@@ -183,28 +184,40 @@ void GameStateMatch::render() {
     if ( !game.window.isMinimized() ) {
 
         //Clear screen
-        SDL_SetRenderDrawColor( game.renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-        SDL_RenderClear( game.renderer );
+        SDL_SetRenderDrawColor( Renderer::instance()->getRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_RenderClear( Renderer::instance()->getRenderer() );
 
         //Render textures
-        level.levelTexture.render(game.renderer, 0-camera.getX(), 0-camera.getY());
+        for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
+            if ( i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
+                break;
+            }
+            for (int j = camera.getY() / TEXTURE_SIZE - 1; ; ++j) {
+                if (j * TEXTURE_SIZE - camera.getY() >= camera.getH()) {
+                    break;
+                }
+                Renderer::instance()->render(i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE, TEXTURES::BARREN);
+            }
+        }
+
 
         //renders objects in game
-        GameManager::instance()->renderObjects(game.renderer, camera.getX(), camera.getY());
+        GameManager::instance()->renderObjects(camera.getX(), camera.getY(), camera.getH(), camera.getW());
+
 
         SDL_Color textColor = { 0, 0, 0, 255 };
 
         //Render text
         if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
-                textColor, game.renderer, frameFont ) ) {
+                textColor, Renderer::instance()->getRenderer(), frameFont ) ) {
             printf( "Unable to render FPS texture!\n" );
         }
 
-        frameFPSTextTexture.render(game.renderer,
+        frameFPSTextTexture.render(Renderer::instance()->getRenderer(),
             (game.window.getWidth() - frameFPSTextTexture.getWidth()), 0);
 
         //Update screen
-        SDL_RenderPresent( game.renderer );
+        SDL_RenderPresent( Renderer::instance()->getRenderer() );
     }
 }
 

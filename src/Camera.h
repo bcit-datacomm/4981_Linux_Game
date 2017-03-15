@@ -4,20 +4,22 @@
 
 class Camera {
 public:
-    
+
     void setViewSize(float w, float h); // Set camera width and height
     void move(float x, float  y); // moves the camera based on player
-    
+
     Camera(float w, float h);
     ~Camera();
-    
-    float getX();
-    float getY();
-    
+
+    float getX(){return viewport.x;};
+    float getY(){return viewport.y;};
+    float getW(){return viewport.w;};
+    float getH(){return viewport.h;};
+
 private:
-    
+
     SDL_Rect viewport; // Camera area of view
-    
+
 };
 
 #endif

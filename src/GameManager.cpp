@@ -28,31 +28,53 @@ GameManager::~GameManager() {
 }
 
 // Render all objects in level
-void GameManager::renderObjects(SDL_Renderer* gRenderer, float camX, float camY) {
+
+void GameManager::renderObjects(int camX, int camY, int camH, int camW) {
+/*
     for (const auto& m : weaponDropManager) {
         m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY);
     }
+    */
     for (const auto& m : marineManager) {
-        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
-                                 NULL, m.second.getAngle());
+         if (m.second.getX() - camX < camW) {
+             if (m.second.getY() - camY < camH) {
+                     Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::MARINE, NULL, m.second.getAngle());
+             }
+         }
     }
+
+
     for (const auto& o : objectManager) {
-        o.second.texture.render(gRenderer, o.second.getX() - camX, o.second.getY() - camY);
+        if (o.second.getX() < camW) {
+            if (o.second.getY() - camY < camH) {
+                    Renderer::instance()->render(o.second.getX() - camX, o.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::MARINE);
+            }
+        }
     }
+
     for (const auto& z : zombieManager) {
-        z.second.texture.render(gRenderer, z.second.getX() - camX, z.second.getY() - camY,
-                                 NULL, z.second.getAngle());
+        if (z.second.getX() - camX < camW) {
+            if (z.second.getY() - camY < camH) {
+                    Renderer::instance()->render(z.second.getX() - camX, z.second.getY() - camY, 75, 125, TEXTURES::BABY_ZOMBIE, NULL, z.second.getAngle());
+            }
+        }
     }
 
     for (const auto& m : turretManager) {
-        m.second.texture.render(gRenderer, m.second.getX() - camX, m.second.getY() - camY,
-                                 NULL, m.second.getAngle());
+        if (m.second.getX() - camX < camW) {
+            if (m.second.getY() - camY < camH) {
+                    Renderer::instance()->render(m.second.getX() - camX, m.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE, NULL, m.second.getAngle());
+            }
+        }
     }
 
     for (const auto& b : barricadeManager) {
-        b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
+        if (b.second.getX() - camX < camW) {
+            if (b.second.getY() - camY < camH) {
+                    Renderer::instance()->render(b.second.getX() - camX, b.second.getY() - camY, MARINE_SIZE, MARINE_SIZE, TEXTURES::CONCRETE);
+            }
+        }
     }
-
 }
 
 // Update marine movements. health, and actions
