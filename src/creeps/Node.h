@@ -28,27 +28,26 @@ static constexpr int EXTEND_COST = 14;
 static constexpr int TILE_SIZE   = 50;
 
 // map row & column
-static constexpr int row = TILE_SIZE;
-static constexpr int col = TILE_SIZE;
-static int map[row][col];
+static constexpr int ROW = TILE_SIZE;
+static constexpr int COL = TILE_SIZE;
+static int gameMap[ROW][COL];
 
-static int closedNodes[row][col]; // array of closed nodes (evaluated)
-static int openNodes[row][col];   // array of open nodes (to be evaluated)
-static int dirMap[row][col];      // array of directions
+static int closedNodes[ROW][COL]; // array of closed nodes (evaluated)
+static int openNodes[ROW][COL];   // array of open nodes (to be evaluated)
+static int dirMap[ROW][COL];      // array of directions
 
 /**
  * 8 possible movements
  * 0 - right, 1 - right down, 2 - down, 3 - left down
  * 4 - left, 5 - left up, 6 - up, 7 - right up
  */
-static int mx[DIR_CAP]={1, 1, 0, -1, -1, -1, 0, 1};
-static int my[DIR_CAP]={0, 1, 1, 1, 0, -1, -1, -1};
+static constexpr int MX[DIR_CAP]={1, 1, 0, -1, -1, -1, 0, 1};
+static constexpr int MY[DIR_CAP]={0, 1, 1, 1, 0, -1, -1, -1};
 
 class Node {
 public:
     explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
-                  const int pri = 0)
-    : xPos_(xPos), yPos_(yPos), lv_(lv), pri_(pri) {}
+            const int pri = 0) : xPos_(xPos), yPos_(yPos), lv_(lv), pri_(pri) {}
 
     virtual ~Node() {}
 
@@ -99,15 +98,15 @@ public:
 
 private:
     // current position
-    int xPos_;
-    int yPos_;
+    int xPos;
+    int yPos;
 
     // level = total distance already travelled to reach the node
-    int lv_;
+    int lv;
 
     // priority = level+remaining distance estimated
     // smaller one with higher priority
-    int pri_;
+    int pri;
 };
 
 // determine priority in priority queue

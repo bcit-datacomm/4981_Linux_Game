@@ -65,42 +65,107 @@ public:
 
     void generateMove();            // A* movement
 
-    void setStep(const int sp);     // set step
-
-    int getStep() const;            // get step
-
-    void setState(const ZombieState stat); // set state
-
-    ZombieState getState() const;  // get state
-
     bool isMoving();                // Returns if the zombie should be moving
 
-    bool checkBase();               // checks if the zombie already arrived at the base
-
-    std::string getPath() const;    // get path
-
-    void setPath(const std::string pth); // set path
+    bool checkTarget();               // checks if the zombie already arrived at the target
 
     int getMoveDir();               // get move direction
-
-    void setCurDir(const int d);    // set current direction
-
-    int getCurDir() const;          // get current direction
-
-    void setCurFrame(const int frm); // set current frame
-
-    int getCurFrame() const;        // get current frame
 
     bool checkBounds(const float x, const float y) const;  // boundary checks
 
     // A* path
     std::string generatePath(const float xStart, const float yStart,
-                             const float xDest, const float yDest);
+            const float xDest, const float yDest);
 
-    // overlapped method
-    bool overlapped(const float x1, const float y1, const int w1, const int h1,
-                    const float x2, const float y2, const int w2, const int h2,
-                    const float overlap);
+    /**
+     * Set steps taken
+     * Fred Yang
+     * Feb 14
+     */
+    void setStep(const int sp) {
+        step = sp;
+    }
+
+    /**
+     * Get steps taken
+     * Fred Yang
+     * Feb 14
+     */
+    int getStep() const {
+        return step;
+    }
+
+    /**
+     * Set state
+     * Fred Yang
+     * March 14
+     */
+    void setState(const ZombieState state_) {
+        state = state_;
+    }
+
+    /**
+     * Get state
+     * Fred Yang
+     * March 14
+     */
+    ZombieState getState() const {
+        return state;
+    }
+
+    /**
+     * Get A* path
+     * Fred Yang
+     * Feb 14
+     */
+    string getPath() const {
+        return path;
+    }
+
+    /**
+     * Set A* path
+     * Fred Yang
+     * Feb 14
+     */
+    void setPath(const string pth) {
+        path = pth;
+    }
+
+    /**
+     * Set direction
+     * Fred Yang
+     * March 14
+     */
+    void setCurDir(const int d) {
+        dir = d;
+    }
+
+    /**
+     * Get current direction
+     * Fred Yang
+     * March 14
+     */
+    int getCurDir() const {
+        return dir;
+    }
+
+    /**
+     * Set frame
+     * Fred Yang
+     * March 14
+     */
+    void setCurFrame(const int frm) {
+        frame = frm;
+    }
+
+    /**
+     * Get current frame
+     * Fred Yang
+     * March 14
+     */
+    int getCurFrame() const {
+        return frame;
+    }
 
 private:
     int health;         // health points of zombie

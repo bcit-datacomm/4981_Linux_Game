@@ -1,88 +1,18 @@
 #include "Node.h"
 #include "Zombie.h"
+#include "../log/log.h"
+#include "../game/GameManager.h"
 #include <utility>
 using namespace std;
 
 Zombie::Zombie(int health, ZombieState state, int step, int dir, int frame)
       : Movable(ZOMBIE_VELOCITY), health(health), state(state), step(step),
         dir(dir), frame(frame) {
-    printf("Create Zombie\n");
+    logv("Create Zombie\n");
 }
 
 Zombie::~Zombie() {
-    //logv("Destroy Zombie\n");
-}
-
-/**
- * Get steps taken
- * Fred Yang
- * Feb 14
- */
-int Zombie::getStep() const {
-    return step;
-}
-
-/**
- * Set steps taken
- * Fred Yang
- * Feb 14
- */
-void Zombie::setStep(const int sp) {
-    step = sp;
-}
-
-/**
- * Get state
- * Fred Yang
- * March 14
- */
-ZombieState Zombie::getState() const {
-    return state;
-}
-
-/**
- * Set state
- * Fred Yang
- * March 14
- */
-void Zombie::setState(const ZombieState state_) {
-    state = state_;
-}
-
-/**
- * Get current frame
- * Fred Yang
- * March 14
- */
-int Zombie::getCurFrame() const {
-    return frame;
-}
-
-/**
- * Set frame
- * Fred Yang
- * March 14
- */
-void Zombie::setCurFrame(const int frm) {
-    frame = frm;
-}
-
-/**
- * Get current direction
- * Fred Yang
- * March 14
- */
-int Zombie::getCurDir() const {
-    return dir;
-}
-
-/**
- * Set direction
- * Fred Yang
- * March 14
- */
-void Zombie::setCurDir(const int d) {
-    dir = d;
+    logv("Destroy Zombie\n");
 }
 
 /**
@@ -105,24 +35,6 @@ int Zombie::getMoveDir() {
     return (sp < (int) pth.length() ? stoi(pth.substr(sp,1)) : -1);
 }
 
-/**
- * Set A* path
- * Fred Yang
- * Feb 14
- */
-void Zombie::setPath(const string pth) {
-    path = pth;
-}
-
-/**
- * Get A* path
- * Fred Yang
- * Feb 14
- */
-string Zombie::getPath() const {
-    return path;
-}
-
 void Zombie::onCollision() {
     // Do nothing for now
 }
@@ -141,18 +53,15 @@ bool Zombie::isMoving() {
 }
 
 /*
- * Does a check to see if the zombie already arrived at the base.
- * Robert Arendac, Fred Yang
+ * Does a check to see if the zombie already arrived at the target.
+ * In theory, zombies will only have a movement collision with a target
+ * as their pathfinding should walk around obstacles.
+ * Robert Arendac
  * March 7
 */
-bool Zombie::checkBase() {
-    float curX = getX();
-    float curY = getY();
-    float baseX = MAP_WIDTH / 2 - BASE_WIDTH;
-    float baseY = MAP_HEIGHT / 2 - BASE_HEIGHT;
-
-    return overlapped(curX, curY, ZOMBIE_WIDTH, ZOMBIE_HEIGHT,
-                      baseX, baseY, BASE_WIDTH, BASE_HEIGHT, OVERLAP);
+bool Zombie::checkTarget() {
+    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
+    return (ch.detectMovementCollision(this));
 }
 
 /**
@@ -167,11 +76,12 @@ void Zombie::generateMove() {
     float startY = getY();
 
     // Path is empty, shouldn't move
-    if (d < 0 || checkBase()) {
+    if (d < 0 || checkTarget()) {
         if (frame > 0) {
             frame--;
         }
 
+        // Changed to attack state once attack code is ready
         if (state != ZOMBIE_IDLE) {
             setState(ZOMBIE_IDLE);
         }
@@ -282,8 +192,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
     static priority_queue<Node> pq[2];
 
     // reset the node maps
-    for (i = 0; i < row; i++) {
-        for (j = 0; j < col; j++) {
+    for (i = 0; i < ROW; i++) {
+        for (j = 0; j < COL; j++) {
             closedNodes[i][j] = 0;
             openNodes[i][j] = 0;
         }
@@ -324,8 +234,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
                 j = dirMap[x][y];
                 c = '0' + (j + DIR_CAP/2)%DIR_CAP;
                 path = c + path;
-                x += mx[j];
-                y += my[j];
+                x += MX[j];
+                y += MY[j];
             }
 
             // empty the leftover nodes
@@ -340,12 +250,12 @@ string Zombie::generatePath(const float xStart, const float yStart,
         // traverse neighbors
         for (i = 0; i < DIR_CAP;i++) {
             // neighbor coordinates
-            xdx = x + mx[i];
-            ydy = y + my[i];
+            xdx = x + MX[i];
+            ydy = y + MY[i];
 
             // not evaluated & not outside (bound checking)
-            if (!(xdx < 0 || xdx > col -1 || ydy < 0 || ydy > row - 1
-                || map[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
+            if (!(xdx < 0 || xdx > COL -1 || ydy < 0 || ydy > ROW - 1
+                || gameMap[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
 
                 // generate a child node
                 childNode = Node(xdx, ydy, curNode.getLevel(), curNode.getPriority());
@@ -400,51 +310,4 @@ string Zombie::generatePath(const float xStart, const float yStart,
  */
 bool Zombie::checkBounds(const float x, const float y) const {
     return (!(x < 0 || x > MAP_WIDTH || y < 0 || y > MAP_HEIGHT));
-}
-
-/**
- * Check to see if two squares overlapped
- */
-bool Zombie::overlapped(const float x1, const float y1,
-                        const int w1, const int h1,
-                        const float x2, const float y2,
-                        const int w2, const int h2,
-                        const float overlap) {
-    int xb = 0; // big x
-    int yb = 0; // big y
-    int xs = 0; // small x
-    int ys = 0; // small y
-    int width = 0;
-    int height = 0;
-
-    if (x1 >= x2) {
-        xb = x1;
-        xs = x2;
-        width = w2;
-    } else {
-        xb = x2;
-        xs = x1;
-        width = w1;
-    }
-
-    if (y1 >= y2) {
-        yb = y1;
-        ys = y2;
-        height = h2;
-    } else {
-        yb = y2;
-        ys = y1;
-        height = h1;
-    }
-
-    if (xb >= xs && xb <= xs+width-1 && yb >= ys && yb <= ys+height-1) {
-        float dWidth = width-xb+xs;
-        float dHeight = height-yb+ys;
-
-        if (dWidth * dHeight / (w2 * h2) >= OVERLAP) {
-            return true;
-        }
-    }
-
-    return false;
 }

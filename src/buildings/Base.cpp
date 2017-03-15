@@ -34,37 +34,33 @@ Point Base::getSpawnPoint() {
     int x;
     int y;
 
-    //The gab between the spawn point and base.
-    int gab = 100;
-
-
     switch(distr(eng)){
         case 0://North
 
             //y point is fixed
-            y = getY() - gab;
+            y = getY() - GAP;
             //x point is randomly generated;
-            x = distr(eng, decltype(distr)::param_type(getX() - gab,
-                                                       getX() + getWidth() + gab));
+            x = distr(eng, decltype(distr)::param_type(getX() - GAP,
+                                                       getX() + getWidth() + GAP));
 
             break;
         case 1://South
-            y = getY() + getHeight() + gab;
-            x = distr(eng, decltype(distr)::param_type(getX() - gab,
-                                                       getX()+  getWidth() + gab));
+            y = getY() + getHeight() + GAP;
+            x = distr(eng, decltype(distr)::param_type(getX() - GAP,
+                                                       getX()+  getWidth() + GAP));
             break;
         case 2://West
 
             //x point is fixed
-            x = getX() - gab;
+            x = getX() - GAP;
             //y point is randomly generated
-            y = distr(eng, decltype(distr)::param_type(getY() - gab,
-                                                       getY() + getHeight() + gab));
+            y = distr(eng, decltype(distr)::param_type(getY() - GAP,
+                                                       getY() + getHeight() + GAP));
             break;
         case 3://East
-            x = getY() + getWidth() + gab;
-            y = distr(eng, decltype(distr)::param_type(getY() - gab,
-                                                       getY() + getHeight() + gab));
+            x = getY() + getWidth() + GAP;
+            y = distr(eng, decltype(distr)::param_type(getY() - GAP,
+                                                       getY() + getHeight() + GAP));
             break;
     }
 

@@ -12,8 +12,6 @@
 //#include <utility>
 //#include <SDL2/SDL.h>
 
-//TODO :  change later.
-
 // base width/height
 static constexpr int BASE_WIDTH  = 500;
 static constexpr int BASE_HEIGHT = 500;
@@ -21,6 +19,9 @@ static constexpr int BASE_HEIGHT = 500;
 // map width/height
 static constexpr int MAP_WIDTH   = 2000;
 static constexpr int MAP_HEIGHT  = 2000;
+
+//The gab between the spawn point and base.
+static constexpr int GAP = 100;
 
 typedef std::pair<float, float> Point;
 
