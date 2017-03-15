@@ -39,14 +39,14 @@ bool GameStateMatch::load() {
     }
 #endif
  	
-    unsigned int playerMarineID = GameManager::instance()->createMarine();
+    //unsigned int playerMarineID = GameManager::instance()->createMarine();
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 100, 100);
-    GameManager::instance()->createZombie(game.renderer, 700, 700);
-    GameManager::instance()->createTurret(game.renderer, 1000, 500);
-    GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
+    //GameManager::instance()->createMarine(game.renderer, 1500, 1500);
+    //GameManager::instance()->createZombie(game.renderer, 100, 100);
+    //GameManager::instance()->createZombie(game.renderer, 700, 700);
+    //GameManager::instance()->createTurret(game.renderer, 1000, 500);
+    //GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
 	
 #ifndef SERVER
     //base = Base();
@@ -56,11 +56,11 @@ bool GameStateMatch::load() {
     }
 #endif
     GameManager::instance()->addObject(base);
-    Point newPoint = base.getSpawnPoint();
+    //Point newPoint = base.getSpawnPoint();
 
     //player = new Player();
-    player.setControl(GameManager::instance()->getMarine(playerMarineID));
-    player.marine->setPosition(newPoint.first, newPoint.second);
+    //player.setControl(GameManager::instance()->getMarine(playerMarineID));
+    //player.marine->setPosition(newPoint.first, newPoint.second);
 
 #ifndef SERVER
     if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
@@ -115,7 +115,7 @@ void GameStateMatch::loop() {
         sync();    // Sync game to server
         render();    // Render game state to window
 #else
-        if (countedFrames % 3 == 0) {
+        if (countedFrames % 2 == 0) {
             //Server side sync packet sending
             genOutputPacket();
             sendSyncPacket(sendSocketUDP);

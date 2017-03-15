@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <unistd.h>
 #include <sys/epoll.h>
+#include <sys/signal.h>
 
 #include "../UDPHeaders.h"
 #include "server.h"
@@ -24,6 +25,7 @@ std::atomic_bool isGameRunning{false};
 int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
     setenv("OMP_DYNAMIC", "TRUE", 1);
+    signal(SIGINT, SIG_IGN);
 
     int opt;
     while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
@@ -95,7 +97,6 @@ void initSync(const int sock) {
     int nevents = 0;
     for (;;) {
         nevents = waitForEpollEvent(epollfd, events);
-#pragma omp parallel for schedule (static)
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
                 perror("Socket error");
@@ -110,10 +111,8 @@ void initSync(const int sock) {
             }
             if (events[i].events & EPOLLIN) {
                 if (events[i].data.fd == listenSocketTCP) {
-#pragma omp task
                     handleIncomingTCP(epollfd);
                 } else {
-#pragma omp task
                     readTCP(events[i].data.fd);
                 }
             }
