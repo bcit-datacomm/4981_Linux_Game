@@ -115,6 +115,10 @@ bool GameManager::addMarine(unsigned int id, Marine& newMarine) {
     }
 }
 
+bool GameManager::hasMarine(const int32_t id) {
+    return marineManager.find(id) != marineManager.end();
+}
+
 // Get a marine by its id
 Marine& GameManager::getMarine(unsigned int id) {
     return marineManager.find(id)->second;

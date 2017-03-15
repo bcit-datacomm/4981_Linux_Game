@@ -32,6 +32,7 @@ public:
     void createMarine(int32_t id);
 	void deleteMarine(unsigned int id);
     bool addMarine(unsigned int id, Marine& newMarine);
+    bool hasMarine(const int32_t id);
     Marine& getMarine(unsigned int id);
 	const auto& getAllMarines() const {return marineManager;}
 	const auto& getAllZombies() const {return zombieManager;}

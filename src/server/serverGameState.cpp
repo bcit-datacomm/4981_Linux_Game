@@ -30,10 +30,14 @@ void clearAttackActions() {
 }
 
 void updateMarine(const MoveAction& ma) {
-    Marine& marine = gm->getMarine(ma.id);
-    marine.setPosition(ma.xpos, ma.ypos);
-    marine.setVelocity(ma.vel);
-    marine.setAngle(ma.direction);
+    if (gm->hasMarine(ma.id)) {
+        Marine& marine = gm->getMarine(ma.id);
+        marine.setPosition(ma.xpos, ma.ypos);
+        marine.setVelocity(ma.vel);
+        marine.setAngle(ma.direction);
+    } else {
+        logv("Marine not found with id %d\n", ma.id);
+    }
 }
 
 std::vector<PlayerData> getPlayers() {
