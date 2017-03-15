@@ -71,6 +71,9 @@ GameStateMenu::GameStateMenu(Game& g, int gameWidth, int gameHeight):
 bool GameStateMenu::load() {
     bool success = true;
 
+    textInput[0] = "192.168.0.16";
+    textInput[1] = "hijohn";
+
     menuFont = TTF_OpenFont( "assets/fonts/Overdrive Sunset.otf", 110);
     if ( menuFont == nullptr ) {
         printf( "Failed to load font - Overdrive Sunset.otf! SDL_ttf Error: %s\n", TTF_GetError() );
@@ -120,11 +123,6 @@ bool GameStateMenu::load() {
 * Listens for events and renders all assets to the screen
 */
 void GameStateMenu::loop() {
-    std::string ip, username;
-    std::cout << "enter ip and username..." << std::endl;
-    std::cin >> ip >> username;
-    NetworkManager::instance().run(ip.c_str(), username.c_str());
-
     // State Loop
     while (play) {
         handle(); // Handle user input
@@ -298,6 +296,7 @@ void GameStateMenu::handle() {
 * Function positions all screen elements in the window
 */
 void GameStateMenu::update(const float delta) {
+    NetworkManager::instance().run(textInput[0].c_str(), textInput[1].c_str());
     if(delta == JOIN) {
         game.stateID = 2;
     } else if (delta == OPTIONS) {

@@ -62,8 +62,11 @@ void NetworkManager::initClients(const char *ip) {
     TCPThread.detach();
 }
 */
+
 void NetworkManager::run(const char *ip, const char  *username)
 {
+    std::cout << "Server IP: " << ip << std::endl;
+    std::cout << "Username: " << username << std::endl;
     serverIP = inet_addr(ip);
 
     sockTCP = createSocket(SOCK_STREAM);
