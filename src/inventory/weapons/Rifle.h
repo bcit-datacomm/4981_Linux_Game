@@ -9,16 +9,16 @@
 using std::string;
 
 namespace RifleVars {
-    const string TYPE       = "Rifle";
-    constexpr int RANGE         = 800;
-    constexpr int DAMAGE        = 200;
-    constexpr int CLIP          = 2;
-    constexpr int CLIPMAX       = 2;
-    constexpr int AMMO          = 1000;
-    constexpr int AOE           = 1;
-    constexpr int RELOAD        = 3;
-    constexpr int FIRERATE      = 1000;
-    constexpr bool READY    = true;
+    const string TYPE = "Rifle";
+    constexpr int RANGE = 800;
+    constexpr int DAMAGE = 200;
+    constexpr int CLIP = 2;
+    constexpr int CLIPMAX = 2;
+    constexpr int AMMO = 1000;
+    constexpr int AOE = 1;
+    constexpr int RELOAD = 3;
+    constexpr int FIRERATE = 1000;
+    constexpr bool READY = true;
 }
 
 class Rifle: public InstantWeapon {

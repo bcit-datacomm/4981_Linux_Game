@@ -10,12 +10,12 @@
 #include <SDL2/SDL.h>
 #include "../view/Window.h"
 
-constexpr int TURRET_HEIGHT = 100;
-constexpr int TURRET_WIDTH = 100;
-constexpr int PASS_ALPHA = 200;
-constexpr int FAIL_ALPHA = 30;
-constexpr int PLACED_ALPHA = 255;
-constexpr int PLACE_DISTANCE = 200;
+constexpr static int TURRET_HEIGHT = 100;
+constexpr static int TURRET_WIDTH = 100;
+constexpr static int PASS_ALPHA = 200;
+constexpr static int FAIL_ALPHA = 30;
+constexpr static int PLACED_ALPHA = 255;
+constexpr static int PLACE_DISTANCE = 200;
 
 class Turret : public Movable {
 public:
