@@ -100,12 +100,24 @@ void initSync(const int sock) {
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
                 perror("Socket error");
+                for (const auto& it : clientList) {
+                    if (it.second.entry.sock == events[i].data.fd) {
+                        clientList.erase(it.first);
+                        break;
+                    }
+                }
                 close(events[i].data.fd);
                 continue;
             }
             if (events[i].events & EPOLLHUP) {
                 //Peer closed the connection
                 logv("Peer closed connection\n");
+                for (const auto& it : clientList) {
+                    if (it.second.entry.sock == events[i].data.fd) {
+                        clientList.erase(it.first);
+                        break;
+                    }
+                }
                 close(events[i].data.fd);
                 continue;
             }
