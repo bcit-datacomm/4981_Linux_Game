@@ -56,6 +56,10 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const
         b.second.texture.render(gRenderer, b.second.getX()-camX, b.second.getY()-camY);
     }
 
+    for (const auto& w : wallManager) {
+        w.second.texture.render(gRenderer, w.second.getX() - camX, w.second.getY() - camY);
+    }
+
 }
 
 // Update marine movements. health, and actions
@@ -305,42 +309,35 @@ void GameManager::updateCollider() {
     collisionHandler = CollisionHandler();
 
     for (auto& m : marineManager) {
-        collisionHandler.quadtreeMov.insert(&m.second);
-        collisionHandler.quadtreePro.insert(&m.second);
-        collisionHandler.quadtreeDam.insert(&m.second);
+        collisionHandler.quadtreeMarine.insert(&m.second);
     }
 
     for (auto& z : zombieManager) {
-        collisionHandler.quadtreeMov.insert(&z.second);
-        collisionHandler.quadtreePro.insert(&z.second);
-        collisionHandler.quadtreeDam.insert(&z.second);
+        collisionHandler.quadtreeZombie.insert(&z.second);
     }
 
     for (auto& o : objectManager) {
-        collisionHandler.quadtreeMov.insert(&o.second);
-        collisionHandler.quadtreePro.insert(&o.second);
-        collisionHandler.quadtreeDam.insert(&o.second);
+        collisionHandler.quadtreeObj.insert(&o.second);
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov.insert(&m.second);
-        collisionHandler.quadtreePro.insert(&m.second);
-        collisionHandler.quadtreeDam.insert(&m.second);
-
+        collisionHandler.quadtreeTurret.insert(&m.second);
     }
 
     for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
-            collisionHandler.quadtreeMov.insert(&b.second);
-            collisionHandler.quadtreeDam.insert(&b.second);
+            collisionHandler.quadtreeBarricade.insert(&b.second);
         }
- }
+    }
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(&m.second);
     }
 
     //logv("pro size: %d\n", collisionHandler.quadtreePro.objects.size());
+    for (auto& w : wallManager) {
+        collisionHandler.quadtreeWall.insert(&w.second);
+    }
 }
 
 // Create barricade add it to manager, returns success
@@ -373,7 +370,7 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 
 // Create zombie add it to manager, returns success
 int32_t GameManager::createWall(SDL_Renderer* gRenderer,
-        const float x, const float y, const int w, const int h) {\
+        const float x, const float y, const int w, const int h) {
 
     const int32_t id = generateID();
 
@@ -381,16 +378,16 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer,
     SDL_Rect moveRect = {static_cast<int>(x), static_cast<int>(y), w, h};
     SDL_Rect pickRect = {static_cast<int>(x), static_cast<int>(y), w, h};
 
-    objectManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
+    wallManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
 
-    if (!objectManager.at(id).texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
+    if (!wallManager.at(id).texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
         logv("Failed to load the wall texture!\n");
         deleteBarricade(id);
         return -1;
     }
 
-    objectManager.at(id).texture.setDimensions(w, h);
-    objectManager.at(id).setPosition(x,y);
+    wallManager.at(id).texture.setDimensions(w, h);
+    wallManager.at(id).setPosition(x,y);
 
     return id;
 }

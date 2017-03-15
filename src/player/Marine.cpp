@@ -46,7 +46,9 @@ void Marine::checkForPickUp(){
         GameManager *gm = GameManager::instance();
         CollisionHandler &ch = gm->getCollisionHandler();
         pickupTick = currentTime;
-        ep =  ch.detectPickUpCollision(this);
+
+        ep =  ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this);
+
 
         if(ep != nullptr){
             //get Weapon drop Id
@@ -55,7 +57,7 @@ void Marine::checkForPickUp(){
             //Get Weaopn id from weapon drop
             PickId = wd.getWeaponId();
             if(inventory.pickUp(PickId)){
-                
+
                 gm->deleteWeaponDrop(wd.getId());
 
             }

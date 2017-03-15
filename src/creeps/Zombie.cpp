@@ -3,6 +3,7 @@
 #include <random>
 #include "../game/GameManager.h"
 #include "../log/log.h"
+#include <cassert>
 #define PI 3.14159265
 #define ZOMBIE_VELOCITY 200
 
@@ -15,6 +16,7 @@ Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, c
 
 Zombie::~Zombie() {
     //logv("Destroy Zombie\n");
+    printf("Create Zombie\n");
 }
 
 void Zombie::onCollision() {
@@ -50,14 +52,27 @@ void Zombie::generateRandomMove(){
     Entity::moveProHitBox(tx,ty);
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-    if(ch.detectMovementCollision(this)){
+
+    //assert(this->movementHitBox->getRect().h != 0);
+    //assert(this->movementHitBox->getRect().w != 0);
+
+    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)) {
+
         setAngle(getRandomAngle());
         cosVal = cos(getAngle() * PI / 180.0);
         sinVal = sin(getAngle() * PI / 180.0);
     }
+
     Entity::moveMoveHitBox(getX(), getY());
     Entity::moveProHitBox(getX(), getY());
 
+
     setDX(x*cosVal);
     setDY(y*sinVal);
- }
+
+}
