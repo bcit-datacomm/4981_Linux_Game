@@ -38,11 +38,11 @@ void Zombie::generateRandomMove(){
     double cosVal = cos(getAngle()*PI/180.0);
     double sinVal = sin(getAngle()*PI/180.0);
 
-    int x = getVelocity();
-    int y = getVelocity();
+    const int x = getVelocity();
+    const int y = getVelocity();
 
-    int tx = getX() + 20 * cosVal;
-    int ty = getY() + 20 * sinVal;
+    const int tx = getX() + 20 * cosVal;
+    const int ty = getY() + 20 * sinVal;
 
     movementHitBox->move(tx,ty);
     projectileHitBox->move(tx,ty);

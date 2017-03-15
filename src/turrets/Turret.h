@@ -44,7 +44,8 @@ public:
 
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
-    void move(float, float, float, float, CollisionHandler&);
+    void move(const float playerX, const float playerY, 
+                  const float moveX, const float moveY, CollisionHandler &ch);
 
     void placeTurret();
 

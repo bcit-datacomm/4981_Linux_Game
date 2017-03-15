@@ -19,7 +19,7 @@ Inventory::~Inventory(){
 
 }
 
-void Inventory::switchCurrent(int slot){
+void Inventory::switchCurrent(const int slot){
     if (current != slot) {
         logv("Switched to slot: %d\n", slot);
         current = slot;

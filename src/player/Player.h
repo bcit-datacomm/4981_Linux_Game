@@ -8,6 +8,8 @@
 #include <SDL2/SDL.h>
 #include "../game/GameManager.h"
 
+constexpr int PLAYER_PLACE_DISTANCE = 100;
+
 class Player {
 public:
 
