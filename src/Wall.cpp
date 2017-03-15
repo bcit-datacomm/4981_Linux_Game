@@ -1,7 +1,7 @@
 #include "Wall.h"
 
-Wall::Wall(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize,
-        const SDL_Rect &pickupSize, int height, int width) : Object(nid, spriteSize, movementSize, 
+Wall::Wall(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize,
+        const SDL_Rect &pickupSize, int height, int width) : Object(nid, dest, spriteSize, movementSize,
         pickupSize, height, width) {
     printf("Create Wall\n");
 }

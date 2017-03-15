@@ -1,38 +1,39 @@
 #include "Entity.h"
 #include <atomic>
+#include <cstdint>
 
-Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize):id(nid), destRect(dest), srcRect(0,0, dest.w, dest.h), movementHitBox(sspriteSize),
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize):id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(spriteSize),
         projectileHitBox(spriteSize), damageHitBox(spriteSize), pickupHitBox(spriteSize){
 }
 
-Entity::Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize): id(nid),
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
         movementHitBox(movementSize), projectileHitBox(spriteSize), damageHitBox(spriteSize),
         pickupHitBox(spriteSize){
 
 }
 
 //Weapon drops
-Entity::Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize,
-        const SDL_Rect &pickupSize): id(nid), movementHitBox(movementSize), projectileHitBox(spriteSize),
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize,
+        const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(spriteSize),
         damageHitBox(spriteSize),pickupHitBox(pickupSize){
 
 }
 
-Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize): id(nid), movementHitBox(movementSize), projectileHitBox(projectileSize),
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize),
         damageHitBox(damageSize), pickupHitBox(spriteSize){
 
 }
 
 
 //movables and marines
-Entity(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), movementHitBox(movementSize), projectileHitBox(projectileSize), damageHitBox(damageSize), pickupHitBox(pickupSize){
+Entity::Entity(int32_t nid,  const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize), damageHitBox(damageSize), pickupHitBox(pickupSize){
 
 }
 
-Entity::Entity(const Entity &e): spriteClips(e.spriteClips), movementHitBox(e.movementHitBox),
-        projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox),
-        id(e.id){
+Entity::Entity(const Entity &e): id(e.id), destRect(e.destRect), srcRect(e.srcRect), movementHitBox(e.movementHitBox),
+        projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox)
+        {
 }
 
 Entity::~Entity() {
@@ -69,17 +70,17 @@ void Entity::setPosition(float px, float py) {
 }
 
 void Entity::updateHitBoxes() {
-    movementHitBox->move(x, y);
-    projectileHitBox->move(x, y);
-    damageHitBox->move(x, y);
-    pickupHitBox->move(x, y);
+    movementHitBox.move(x, y);
+    projectileHitBox.move(x, y);
+    damageHitBox.move(x, y);
+    pickupHitBox.move(x, y);
 }
 
 void Entity::updateRectHitBoxes() {
-    movementHitBox->setRect(spriteClips[0]);
-    projectileHitBox->setRect(spriteClips[0]);
-    damageHitBox->setRect(spriteClips[0]);
-    pickupHitBox->setRect(spriteClips[0]);
+    movementHitBox.setRect(destRect);
+    projectileHitBox.setRect(destRect);
+    damageHitBox.setRect(destRect);
+    pickupHitBox.setRect(destRect);
 }
 
 void Entity::onCollision(){

@@ -1,8 +1,8 @@
 #include "Marine.h"
 #include "GameManager.h"
 
-Marine::Marine(int32_t id, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize) : Movable(id, spriteSize, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
+Marine::Marine(int32_t id, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize) : Movable(id, dest, spriteSize, movementSize, projectileSize, damageSize, MARINE_VELOCITY), Entity(id, dest, spriteSize, movementSize, projectileSize, damageSize) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire

@@ -4,8 +4,8 @@
 #include <random>
 #define PI 3.14159265
 
-Barricade::Barricade(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
-        int health, int state, bool placeable, bool placed): Object(nid, spriteSize, movementSize, pickupSize,
+Barricade::Barricade(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
+        int health, int state, bool placeable, bool placed): Object(nid, dest, spriteSize, movementSize, pickupSize,
         BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state), placeable(placeable), placed(placed) {
     printf("Create Barricade\n");
 }

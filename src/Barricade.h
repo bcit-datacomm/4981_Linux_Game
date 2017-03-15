@@ -16,7 +16,7 @@ constexpr int BARRICADE_HEIGHT = 100;
 
 class Barricade : public Object {
 public:
-    Barricade(int32_t nid, const SDL_Rect &spriteSize, const SDL_Rect &movementSize,
+    Barricade(int32_t nid, const SDL_Rect dest, const SDL_Rect &spriteSize, const SDL_Rect &movementSize,
         const SDL_Rect &pickupSize, int health = 100, int state = 0, bool placeable = false, bool placed = false);
     virtual ~Barricade();
 
