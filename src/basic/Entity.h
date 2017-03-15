@@ -22,11 +22,12 @@ public:
     Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
         const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize);
 
+
     Entity(const Entity &e);
     virtual ~Entity();
     virtual void onCollision();
     virtual void collidingProjectile(const int damage);
-    void setPosition(float x, float y); // Set marine position
+    void setPosition(const float x, const float y); // Set marine position
     void setX(float px); //set x coordinate
     void setY(float py); //set y coordinate
     float getX() const; // get x coordinate
@@ -35,6 +36,7 @@ public:
     void updateRectHitBoxes(); // update hitbox sizes
 
     int32_t getId()const{return id;}; //returns the id of the entity
+
 
     const HitBox& getMoveHitBox()const {return movementHitBox;};
     const HitBox& getProHitBox()const {return projectileHitBox;};

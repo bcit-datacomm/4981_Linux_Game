@@ -16,5 +16,5 @@ void Wall::onCollision() {
     logv("Wall collision\n");
 }
 
-void Wall::collidingProjectile(int damage) {
+void Wall::collidingProjectile(const int damage) {
 }

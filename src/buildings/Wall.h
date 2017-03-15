@@ -13,9 +13,8 @@ public:
     virtual ~Wall();
 
     void onCollision();
-    void collidingProjectile(int damage);
-
-private:
+    void collidingProjectile(const int damage);
 
 };
+
 #endif

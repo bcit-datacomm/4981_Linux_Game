@@ -40,13 +40,13 @@ Entity::~Entity() {
 }
 
 // Set x coordinate
-void Entity::setX(float px) {
+void Entity::setX(const float px) {
     x = px;
     updateHitBoxes();
 }
 
 // Set y coordinate
-void Entity::setY(float py) {
+void Entity::setY(const float py) {
     y = py;
     updateHitBoxes();
 }
