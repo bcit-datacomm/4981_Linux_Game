@@ -173,39 +173,47 @@ void processPacket(const char *data) {
     const MoveAction *ma = reinterpret_cast<const MoveAction *>(data);
     logv("Move actions packets contents:\nID:%d\nXpos:%f\n, Ypos:%f\n, Vel:%f\n, Direction:%f\n", ma->id, ma->xpos, ma->ypos, ma->vel, ma->direction);
     updateMarine(*ma);
-    saveMoveAction(ma->id, *ma);
 }
 
 //Isaac Morneau Feb 28th, 2017
 void genOutputPacket() {
     int32_t *pBuff = (int32_t *) outputPacket;
-    //get all the players
-    const auto& players = getPlayers();
-    //get all the zombies
-    const auto& zombies = getZombies();
 
     //start of every sync is the packet header
-    *pBuff++ = static_cast<int32_t>(UDPID::SYNC);
+    *pBuff++ = static_cast<int32_t>(UDPHeaders::SYNCH);
+
     //construct the sub header for players
-    *pBuff++ = static_cast<int32_t>(UDPID::PLAYERH);
+    *pBuff++ = static_cast<int32_t>(UDPHeaders::PLAYERH);
+    //get all the players
+    const auto& players = getPlayers();
     *pBuff++ = players.size();
     PlayerData *pPlayer = reinterpret_cast<PlayerData *>(pBuff);
     //write all the players to the buffer
-    for(auto p : players) {
-        p.nmoves = 0;
-        p.nattacks = 0;
+    for(const auto& p : players) {
         memcpy(pPlayer++, &p, sizeof(PlayerData));
     }
     pBuff = reinterpret_cast<int32_t *>(pPlayer);
+
+    *pBuff++ = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
+    *pBuff++ = attackList.size();
+    AttackAction *pAttack = reinterpret_cast<AttackAction *>(pBuff);
+    for (const auto& aa : attackList) {
+        memcpy(pAttack++, &aa, sizeof(AttackAction)); 
+    }
+    pBuff = reinterpret_cast<int32_t *>(pAttack);
+
     //construct the sub header for zombies
-    *pBuff++ = static_cast<int32_t>(UDPID::ZOMBIEH);
+    *pBuff++ = static_cast<int32_t>(UDPHeaders::ZOMBIEH);
+    //get all the zombies
+    const auto& zombies = getZombies();
     *pBuff++ = zombies.size();
     ZombieData* pZombie = reinterpret_cast<ZombieData *>(pBuff);
     //write all the zombies to the buffer
-    for(auto z : zombies) {
+    for(const auto& z : zombies) {
         memcpy(pZombie++, &z, sizeof(ZombieData));
     }
     pBuff = reinterpret_cast<int32_t *>(pZombie);
+
     //calculate how full the packet is for when its sent
     outputLength = pBuff - (int32_t *) outputPacket;
 }

@@ -10,23 +10,14 @@
 #include "servergamestate.h"
 
 GameManager *gm = GameManager::GameManager::instance();
-std::unordered_map<unsigned int, MoveAction> moveMap;
-std::unordered_map<unsigned int, AttackAction> attackMap;
+std::vector<AttackAction> attackList;
 
-void saveMoveAction(const unsigned int& id, const MoveAction& ma) {
-    moveMap.insert(std::make_pair(id, ma));
-}
-
-void saveAttack(const unsigned int& id, const AttackAction& aa) {
-    attackMap.insert(std::make_pair(id, aa));
-}
-
-void clearMoveActions() {
-    moveMap.clear();
+void saveAttack(const AttackAction& aa) {
+    attackList.push_back(aa);
 }
 
 void clearAttackActions() {
-    attackMap.clear();
+    attackList.clear();
 }
 
 void updateMarine(const MoveAction& ma) {
@@ -52,38 +43,12 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.ypos = marine.getY();
         tempPlayer.vel = marine.getVelocity();
         tempPlayer.direction = marine.getAngle();
-        
-        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.direction);
-
         tempPlayer.health = marine.getHealth();
-        tempPlayer.actionid = static_cast<int32_t>(UDPID::ACTIONH);
-        tempPlayer.nmoves = moveMap.count(idPlayerPair.first);
-        tempPlayer.nattacks = attackMap.count(idPlayerPair.first);
-        
-        memmove(&tempPlayer.moves, getMoveActions(idPlayerPair.first).data(), tempPlayer.nmoves);
-        memmove(&tempPlayer.attacks, getAttackActions(idPlayerPair.first).data(), tempPlayer.nattacks);
 
+        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.direction);
         rtn.push_back(tempPlayer);
     }
     return rtn;
-}
-
-std::vector<MoveAction> getMoveActions(const unsigned int& id) {
-    const auto& moveRange = moveMap.equal_range(id);
-    std::vector<MoveAction> moveList;
-    for (auto it = moveRange.first; it != moveRange.second; ++it) {
-        moveList.push_back(it->second);
-    }
-    return moveList;
-}
-
-std::vector<AttackAction> getAttackActions(const unsigned int& id) {
-    const auto& attackRange = attackMap.equal_range(id);
-    std::vector<AttackAction> attackList;
-    for (auto it = attackRange.first; it != attackRange.second; ++it) {
-        attackList.push_back(it->second);
-    }
-    return attackList;
 }
 
 std::vector<ZombieData> getZombies() {
