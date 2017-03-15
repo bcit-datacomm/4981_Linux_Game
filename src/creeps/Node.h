@@ -47,45 +47,45 @@ static constexpr int MY[DIR_CAP]={0, 1, 1, 1, 0, -1, -1, -1};
 class Node {
 public:
     explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
-            const int pri = 0) : xPos_(xPos), yPos_(yPos), lv_(lv), pri_(pri) {}
+            const int pri = 0) : xPos(xPos), yPos(yPos), lv(lv), pri(pri) {}
 
     virtual ~Node() {}
 
     // X coordinate of current node
     int getXPos() const {
-        return xPos_;
+        return xPos;
     }
 
     // Y coordinate of current node
     int getYPos() const {
-        return yPos_;
+        return yPos;
     }
 
     // Get distance travelled so far
     int getLevel() const {
-        return lv_;
+        return lv;
     }
 
     // Get priority of current node
     int getPriority() const {
-        return pri_;
+        return pri;
     }
 
     // current level plus remaining cost
     void updatePriority(const int xDest, const int yDest) {
-         pri_ = lv_ + estimate(xDest, yDest) * BASE_COST;
+         pri = lv + estimate(xDest, yDest) * BASE_COST;
     }
 
     // calculate next level based on direction
     void nextLevel(const int dir) {
-         lv_ += (dir%2 ==0 ? BASE_COST : EXTEND_COST);
+         lv += (dir%2 ==0 ? BASE_COST : EXTEND_COST);
     }
 
     // calculate cost per the remaining distance to the destination
     const int estimate(const int xDest, const int yDest) const {
         static int xDist, yDist, dist;
-        xDist = xDest - xPos_;
-        yDist = yDest - yPos_;
+        xDist = xDest - xPos;
+        yDist = yDest - yPos;
 
         // Euclidian Distance
         dist = static_cast<int>(sqrt(xDist * xDist + yDist * yDist));
