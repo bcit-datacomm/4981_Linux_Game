@@ -32,7 +32,7 @@ public:
     Player();
     ~Player();
 
-    void setId(int32_t& newId) {id = newId;};
+    void setId(int32_t newId) {id = newId;};
     int32_t getId() const {return id;};
 
     //Stays as pointer cause the player gets a marine object after the ctor is called
