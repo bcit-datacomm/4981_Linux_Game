@@ -50,13 +50,10 @@
 --------------------------------------------------------------------------*/
 enum UDPHeaders
 {
-    //(Main Header indicators in the 0 - 99 domain )
-    ATTACK, // 'A'?
-    MOVE, // 'M'?
-    SYNC, // 'SYN'?
-    PLAYERH, // 'P' Player Header
-    ZOMBIEH, // 'Z' Zombie Header
-    ACTIONH, // 'L' Action Header
+    SYNCH,
+    PLAYERH,
+    ZOMBIEH,
+    ATTACKACTIONH,
     //attack Headers ( in to 100 - 199 DECIMAL domain )
     SHOOT,
     HIT,
@@ -83,20 +80,21 @@ enum UDPHeaders
 -- PROGRAMMER: Eva Yu
 --
 -- Data Members:
-    -- int32_t   id - Attack action specifier
-    -- int32_t   actionid -action speicfier
-    -- int32_t   weaponid -weapon specifier
-    -- float xpos - x Pos
-    -- float ypos - y pos
-    -- float direction - And Angle in relation to -----
+-- int32_t   id - Attack action specifier
+-- int32_t   actionid -action speicfier
+-- int32_t   weaponid -weapon specifier
+-- float xpos - x Pos
+-- float ypos - y pos
+-- float direction - And Angle in relation to -----
 --------------------------------------------------------------------------*/
 typedef struct {
-	int32_t   id;
-	int32_t   actionid;
-	int32_t   weaponid;
-	float xpos;
-	float ypos;
-	float direction;
+    int32_t   id;
+    int32_t   playerid;
+    int32_t   actionid;
+    int32_t   weaponid;
+    float xpos;
+    float ypos;
+    float direction;
 } __attribute__((packed, aligned(1))) AttackAction;
 
 /*------------------------------------------------------------------------------
@@ -114,47 +112,20 @@ typedef struct {
 -- PROGRAMMER: Eva Yu
 --
 -- Data Members:
-    -- int32_t   id - int32_t to signify the playerid
-    -- float xpos - the X position`
-    -- float ypos - the Y position
-    -- float vel - the velocity of the player
-    -- float direction -- the direction the weapon is facing
+-- int32_t   id - int32_t to signify the playerid
+-- float xpos - the X position`
+-- float ypos - the Y position
+-- float vel - the velocity of the player
+-- float direction -- the direction the weapon is facing
 --------------------------------------------------------------------------*/
 typedef struct
 {
-	int32_t   id;
-	float xpos;
-	float ypos;
-	float vel;
-	float direction;
+    int32_t   id;
+    float xpos;
+    float ypos;
+    float vel;
+    float direction;
 } __attribute__((packed, aligned(1))) MoveAction;
-
-/*------------------------------------------------------------------------------
--- Struct: Action
---
--- DATE: Feb. 07, 2017
---
--- REVISIONS:
--- V1, Feb 07 2017 Deisgned by IM
--- V1, Feb 08 2017 Written by EY
---
--- DESIGNER: Isaac Morneau
---
--- PROGRAMMER: Eva Yu
---
--- Data Members:
-    -- int32_t   weaponid - int32_t to signify the playerid
-    -- float xpos - the X position`
-    -- float ypos - the Y position
-    -- float direction -- the direction the weapon is facing
-    --
---------------------------------------------------------------------------*/
-typedef struct {
-	int32_t weaponid;
-	float xpos;
-	float ypos;
-	float direction;
-}  Action;
 
 /*------------------------------------------------------------------------------
 -- Struct: PlayerData
@@ -171,42 +142,27 @@ typedef struct {
 -- PROGRAMMER: Eva Yu
 --
 -- Data Members:
-    -- int32_t   playerid - int32_t to signify the playerid
-    -- float xpos - the X position`
-    -- float ypos - the Y position
-    -- float vel - the Velocity of the player
-    -- float direction -- the direction the player is going towards
-    -- int32_t   health --
-    -- int32_t   actionid --
-    -- int32_t   nactions --
-    -- Action * actions --
+-- int32_t   playerid - int32_t to signify the playerid
+-- float xpos - the X position`
+-- float ypos - the Y position
+-- float vel - the Velocity of the player
+-- float direction -- the direction the player is going towards
+-- int32_t   health --
+-- int32_t   actionid --
+-- int32_t   nactions --
+-- Action * actions --
 --
 --------------------------------------------------------------------------*/
-//typedef struct {
-	//int32_t   playerid;
-	//float xpos;
-	//float ypos;
-	//float vel;
-	//float direction;
-	//int32_t   health;
-	//int32_t   actionid = ACTIONH;
-	//int32_t   nactions;
-	//Action * actions;
-//} PlayerData;
 
 typedef struct {
-	int32_t   playerid;
-	float xpos;
-	float ypos;
-	float vel;
-	float direction;
-	int32_t   health;
-	int32_t   actionid = ACTIONH;
-	int32_t   nmoves;
-	MoveAction *moves;
-	int32_t   nattacks;
-	AttackAction *attacks;
-} PlayerData;
+    int32_t   id;
+    int32_t   playerid;
+    float     xpos;
+    float     ypos;
+    float     vel;
+    float     direction;
+    int32_t   health;
+} __attribute__((packed, aligned(1))) PlayerData;
 /*------------------------------------------------------------------------------
 -- Struct: ZombieData
 --
@@ -222,21 +178,22 @@ typedef struct {
 -- PROGRAMMER: Eva Yu
 --
 -- Data Members:
-    -- int32_t zombieid -- int32_t id of Zombie
-    -- int32_t health -- int32_t health of zombie
-    -- float xpos -- the x position of zombie`
-    -- float ypos -- the y position of zombie
-    -- float direction -- the direction the zombie is facing ( angle 0 in respect to 0,0 )
+-- int32_t zombieid -- int32_t id of Zombie
+-- int32_t health -- int32_t health of zombie
+-- float xpos -- the x position of zombie`
+-- float ypos -- the y position of zombie
+-- float direction -- the direction the zombie is facing ( angle 0 in respect to 0,0 )
 --
 --------------------------------------------------------------------------*/
 
 typedef struct {
-	int32_t zombieid;
-	int32_t health;
-	float xpos;
-	float ypos;
-	float direction;
-}  ZombieData;
+    int32_t id;
+    int32_t zombieid;
+    int32_t health;
+    float xpos;
+    float ypos;
+    float direction;
+}  __attribute__((packed, aligned(1))) ZombieData;
 
 /*------------------------------------------------------------------------------
 -- Struct: GameSync
@@ -251,21 +208,24 @@ typedef struct {
 -- PROGRAMMER: Eva Yu
 --
 -- Data Members:
-    --	int32_t id -- int32_t Packet Specifier
-    --  int32_t playerheaderid -- int32_t Specifier For Player Header
-    --  int32_t nplayers -- int32_t number of Players
-    --  Player * -- Point32_ter to the Array of Players
-    --  int32_t zombieheaderid -- int32_t Zombie Specifier
-    --  int32_t nzombies -- int32_t number of zombies
-    --  Zombie * zombies -- point32_ter to the list of zombies
+--	int32_t id -- int32_t Packet Specifier
+--  int32_t playerheaderid -- int32_t Specifier For Player Header
+--  int32_t nplayers -- int32_t number of Players
+--  Player * -- Point32_ter to the Array of Players
+--  int32_t zombieheaderid -- int32_t Zombie Specifier
+--  int32_t nzombies -- int32_t number of zombies
+--  Zombie * zombies -- point32_ter to the list of zombies
 --
 --------------------------------------------------------------------------*/
 typedef struct
 {
-	int32_t id = SYNC; //packet
+    int32_t id = SYNCH; //packet
     int32_t playerheaderid = PLAYERH;
     int32_t nplayers;
     PlayerData * players;
+    int32_t attackheaderid = ATTACKACTIONH;
+    int32_t nattacks;
+    AttackAction * attacks;
     int32_t zombieheaderid = ZOMBIEH;
     int32_t nzombies;
     ZombieData * zombies;
