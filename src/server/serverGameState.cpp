@@ -49,7 +49,7 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.vel = marine.getVelocity();
         tempPlayer.direction = marine.getAngle();
         tempPlayer.health = marine.getHealth();
-        tempPlayer.actionid = ACTIONH;
+        tempPlayer.actionid = static_cast<int32_t>(UDPID::ACTIONH);
         tempPlayer.nmoves = moveMap.count(idPlayerPair.first);
         tempPlayer.nattacks = attackMap.count(idPlayerPair.first);
         

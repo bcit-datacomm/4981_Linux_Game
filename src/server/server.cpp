@@ -174,9 +174,9 @@ void genOutputPacket() {
     const auto& zombies = getZombies();
 
     //start of every sync is the packet header
-    *pBuff++ = SYNC;
+    *pBuff++ = static_cast<int32_t>(UDPID::SYNC);
     //construct the sub header for players
-    *pBuff++ = PLAYERH;
+    *pBuff++ = static_cast<int32_t>(UDPID::PLAYERH);
     *pBuff++ = players.size();
     PlayerData *pPlayer = reinterpret_cast<PlayerData *>(pBuff);
     //write all the players to the buffer
@@ -187,7 +187,7 @@ void genOutputPacket() {
     }
     pBuff = reinterpret_cast<int32_t *>(pPlayer);
     //construct the sub header for zombies
-    *pBuff++ = ZOMBIEH;
+    *pBuff++ = static_cast<int32_t>(UDPID::ZOMBIEH);
     *pBuff++ = zombies.size();
     ZombieData* pZombie = reinterpret_cast<ZombieData *>(pBuff);
     //write all the zombies to the buffer

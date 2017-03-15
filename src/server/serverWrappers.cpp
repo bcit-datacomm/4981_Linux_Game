@@ -237,6 +237,7 @@ epoll_event *createEpollEventList() {
 }
 
 void processClientUsername(const int sock, const char *buff, const std::pair<int32_t, PlayerJoin>& client) {
+    static float yPos = 0;
     //Handle initial username read
     std::pair<int32_t, PlayerJoin> tempMapEntry;
     tempMapEntry = client;
@@ -265,6 +266,8 @@ void processClientUsername(const int sock, const char *buff, const std::pair<int
     strncpy(outBuff + TCP_HEADER_SIZE + 1, tempMapEntry.second.entry.username, NAMELEN);
 
     gm->createMarine(tempMapEntry.first);
+    gm->getMarine(tempMapEntry.first).setPosition(100, yPos);
+    yPos += 150;
 
     //Send client their allocated id and username
     if (rawClientSend(sock, outBuff, bufferSize)) {

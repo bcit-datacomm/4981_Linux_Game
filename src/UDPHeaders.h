@@ -48,7 +48,7 @@
 -- NOTES:
 -- this is the enum to hold all the terspecifiers that will indicate the packets
 --------------------------------------------------------------------------*/
-enum UDPHeaders {
+enum class UDPID : int32_t {
     //(Main Header indicators in the 0 - 99 domain )
     ATTACK, // 'A'?
     MOVE, // 'M'?
@@ -200,7 +200,7 @@ struct PlayerData {
 	float vel;
 	float direction;
 	int32_t   health;
-	int32_t   actionid = ACTIONH;
+	int32_t   actionid = static_cast<int32_t>(UDPID::ACTIONH);
 	int32_t   nmoves;
 	MoveAction *moves;
 	int32_t   nattacks;
@@ -260,11 +260,11 @@ struct ZombieData {
 --
 --------------------------------------------------------------------------*/
 struct GameSync {
-	int32_t id = SYNC; //packet
-    int32_t playerheaderid = PLAYERH;
+	int32_t id = static_cast<int32_t>(UDPID::SYNC); //packet
+    int32_t playerheaderid = static_cast<int32_t>(UDPID::PLAYERH);
     int32_t nplayers;
     PlayerData * players;
-    int32_t zombieheaderid = ZOMBIEH;
+    int32_t zombieheaderid = static_cast<int32_t>(UDPID::ZOMBIEH);
     int32_t nzombies;
     ZombieData * zombies;
 };
@@ -274,8 +274,8 @@ union PacketTypes {
     AttackAction aa;
 };
 
-struct ClientUpdate{
-    UDPHeaders packetType;
+struct ClientUpdate {
+    UDPID packetType;
     PacketTypes data;
 };
 
