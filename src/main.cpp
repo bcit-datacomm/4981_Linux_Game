@@ -8,8 +8,11 @@
 
 int main(int argc, char *argv[]) {
     int opt;
-    while((opt = getopt(argc, argv, "ev")) != -1){
+    while((opt = getopt(argc, argv, "evi")) != -1){
         switch(opt){
+            case 'i'://verbose
+                log_verbose = 3;
+                break;
             case 'v'://verbose
                 log_verbose = 2;
                 break;
@@ -17,7 +20,7 @@ int main(int argc, char *argv[]) {
                 log_verbose = 1;
                 break;
             case '?':
-                printf("-v verbose\n-e error\nverbose enables error as well.");
+                printf("-v verbose\n-e error\nverbose enables error as well.\n");
                 break;
         }
     }

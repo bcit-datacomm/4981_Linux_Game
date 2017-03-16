@@ -67,7 +67,7 @@ void AudioManager::playEffect(const char * fileName){
     logv("%s\n", fileName);
 
     if (Mix_PlayChannel(-1, chunk, 0) == -1 ){
-        logv("Mix_PlayMusic: %s\n", Mix_GetError());
+        logv("Mix_PlayChannel: %s\n", Mix_GetError());
     }
 }
 
