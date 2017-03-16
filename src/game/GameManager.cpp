@@ -84,6 +84,14 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
             }
         }
     }
+
+    for (const auto& w : wallManager) {
+        if (w.second.getX() - camX < camW) {
+            if (w.second.getY() - camY < camH) {
+                Renderer::instance()->render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            }
+        }
+    }
 }
 
 // Update marine movements. health, and actions
@@ -153,7 +161,7 @@ int32_t GameManager::createTurret() {
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,120,120};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
     return id;
@@ -180,10 +188,9 @@ int32_t GameManager::createTurret(const float x, const float y) {
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,120,120};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
-
     turretManager.at(id).setPosition(x,y);
     return id;
 }
@@ -237,9 +244,11 @@ int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
 
     const int32_t id = weapon->getId();
     weaponManager.insert({id, weapon});
-    weaponManager.at(id)->setId(id);
-
-    return id;
+    if(weaponManager.count(id)){
+        weaponManager.at(id)->setId(id);
+        return id;
+    }
+    return -1;
 
 }
 
@@ -259,19 +268,13 @@ bool GameManager::createWeaponDrop(const float x, const float y) {
     const int32_t wid = w.getId();
     const int32_t id = generateID();
 
-    SDL_Rect weaponDropRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y),100,100};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y),100,100};
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
     WeaponDrop wd(id, weaponDropRect, pickRect, wid);
     weaponDropManager.insert({id, wd});
-
-    weaponDropManager.at(id).setX(x);
-    weaponDropManager.at(id).setY(y);
-
-    weaponDropManager.at(id).setPosition(x,y);
-    return true;
 }
 
 //returns weapon drop in  weaponDropManager
@@ -281,8 +284,8 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id){
 
 //returns weapon in weaponManager
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
-    const auto& it = weaponManager.find(id);
-    if(it != weaponManager.end()){
+
+    if(weaponManager.count(id)){
         return weaponManager.at(id);
     }
     logv("Couldnt find Weapon\n");
@@ -312,34 +315,27 @@ void GameManager::updateCollider() {
     collisionHandler = CollisionHandler();
 
     for (auto& m : marineManager) {
-        collisionHandler.quadtreeMov.insert(&m.second);
-        collisionHandler.quadtreePro.insert(&m.second);
-        collisionHandler.quadtreeDam.insert(&m.second);
+        collisionHandler.quadtreeMarine.insert(&m.second);
     }
 
     for (auto& z : zombieManager) {
-        collisionHandler.quadtreeMov.insert(&z.second);
-        collisionHandler.quadtreePro.insert(&z.second);
-        collisionHandler.quadtreeDam.insert(&z.second);
+        collisionHandler.quadtreeZombie.insert(&z.second);
     }
 
     for (auto& o : objectManager) {
-        collisionHandler.quadtreeMov.insert(&o.second);
-        collisionHandler.quadtreePro.insert(&o.second);
-        collisionHandler.quadtreeDam.insert(&o.second);
+        collisionHandler.quadtreeObj.insert(&o.second);
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov.insert(&m.second);
-        collisionHandler.quadtreePro.insert(&m.second);
-        collisionHandler.quadtreeDam.insert(&m.second);
-
+        if (m.second.isPlaced()) {
+            collisionHandler.quadtreeTurret.insert(&m.second);
+            collisionHandler.quadtreePickUp.insert(&m.second);
+        }
     }
 
     for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
-            collisionHandler.quadtreeMov.insert(&b.second);
-            collisionHandler.quadtreeDam.insert(&b.second);
+            collisionHandler.quadtreeBarricade.insert(&b.second);
         }
     }
 
@@ -347,7 +343,9 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreePickUp.insert(&m.second);
     }
 
-    //logv("pro size: %d\n", collisionHandler.quadtreePro.objects.size());
+    for (auto& w : wallManager) {
+        collisionHandler.quadtreeWall.insert(&w.second);
+    }
 }
 
 // Create barricade add it to manager, returns success
@@ -375,7 +373,7 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 }
 
 // Create zombie add it to manager, returns success
-int32_t GameManager::createWall(const float x, const float y, const int w, const int h) {\
+int32_t GameManager::createWall(const float x, const float y, const int w, const int h) {
 
     const int32_t id = generateID();
 
@@ -383,10 +381,7 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
     SDL_Rect moveRect = {static_cast<int>(x), static_cast<int>(y), w, h};
     SDL_Rect pickRect = {static_cast<int>(x), static_cast<int>(y), w, h};
 
-    objectManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
-
-    objectManager.at(id).setPosition(x,y);
-
+    wallManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
     return id;
 }
 
@@ -443,14 +438,14 @@ bool GameManager::createZombieWave(const int n){
     if(zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
-        for(const auto& z : zombieManager) {
+        for (const auto& z : zombieManager) {
             if(count >= spawnPoints.size()){
                 break;
             }
             ids.push_back(z.first);
             ++count;
         }
-        for(const auto& id : ids) {
+        for (const auto& id : ids) {
             deleteZombie(id);
         }
     }

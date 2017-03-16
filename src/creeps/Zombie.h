@@ -10,7 +10,7 @@
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
 #include "../inventory/Inventory.h"
-
+#include "../collision/Quadtree.h"
 #include "../view/Window.h"
 #include "../basic/Movable.h"
 

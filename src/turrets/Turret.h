@@ -23,7 +23,7 @@ public:
 
     Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
             const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
-            int ammo = 100, bool boolPlaced = false);
+            int ammo = 100, bool placed = false);
 
     virtual ~Turret();
 
@@ -53,11 +53,11 @@ public:
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
     void move(const float playerX, const float playerY,
-                  const float moveX, const float moveY, CollisionHandler &ch);
+              const float moveX, const float moveY, CollisionHandler &ch);
 
     void placeTurret();
 
-    bool isPlaced();
+    bool isPlaced() {return placed;};
 
     void pickUpTurret();
 
@@ -69,7 +69,7 @@ private:
     bool activated; // turret activated state
     int health; // turret health pool
     int ammo; // turret ammo pool
-    bool boolPlaced;
+    bool placed;
 };
 
 #endif

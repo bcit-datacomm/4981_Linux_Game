@@ -34,31 +34,30 @@ void Marine::fireWeapon() {
 }
 
 
-void Marine::checkForPickUp(){
+int32_t Marine::checkForPickUp(){
 
+    int32_t PickId = -1;
 
-    int currentTime = SDL_GetTicks();
+    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
 
-    if(currentTime > (pickupTick + pickupDelay)){
-        int32_t PickId = -1;
-        Entity* ep;
+    Entity* ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
 
-        GameManager *gm = GameManager::instance();
-        CollisionHandler &ch = gm->getCollisionHandler();
-        pickupTick = currentTime;
-        ep =  ch.detectPickUpCollision(this);
+    if(ep != nullptr){
+        const auto& tm = GameManager::instance()->getTurretManager();
+        //get Entity drop Id
+        PickId = ep->getId();
+        // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
+        const auto& it = tm.find(PickId);
+        if (it != tm.end()) {
+            return PickId;
+        }
+        const WeaponDrop &wd = GameManager::instance()->getWeaponDrop(PickId);
+        //Get Weaopn id from weapon drop
+        PickId = wd.getWeaponId();
+        if(inventory.pickUp(PickId)){
 
-        if(ep != nullptr){
-            //get Weapon drop Id
-            PickId = ep->getId();
-            WeaponDrop wd = gm->getWeaponDrop(PickId);
-            //Get Weaopn id from weapon drop
-            PickId = wd.getWeaponId();
-            if(inventory.pickUp(PickId)){
-                
-                gm->deleteWeaponDrop(wd.getId());
-
-            }
+            GameManager::instance()->deleteWeaponDrop(wd.getId());
         }
     }
+    return -1;
 }

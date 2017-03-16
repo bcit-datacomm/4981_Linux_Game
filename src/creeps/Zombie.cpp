@@ -1,5 +1,6 @@
 #include <math.h>
 #include <random>
+#include <cassert>
 
 #include "../creeps/Zombie.h"
 #include "../game/GameManager.h"
@@ -52,14 +53,24 @@ void Zombie::generateRandomMove(){
     Entity::moveProHitBox(tx,ty);
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-    if(ch.detectMovementCollision(this)){
+
+    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)) {
+
         setAngle(getRandomAngle());
         cosVal = cos(getAngle() * PI / 180.0);
         sinVal = sin(getAngle() * PI / 180.0);
     }
+
     Entity::moveMoveHitBox(getX(), getY());
     Entity::moveProHitBox(getX(), getY());
 
+
     setDX(x*cosVal);
     setDY(y*sinVal);
- }
+
+}

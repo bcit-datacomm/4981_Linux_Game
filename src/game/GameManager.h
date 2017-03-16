@@ -48,6 +48,7 @@ public:
     bool addTurret(const int32_t id, const Turret& newTurret);
     int32_t createTurret(const float x, const float y) ;
     Turret& getTurret(const int32_t id);
+    auto& getTurretManager() const {return turretManager;};
 
     // Method for getting collisionHandler
     CollisionHandler& getCollisionHandler();
@@ -93,6 +94,7 @@ private:
     std::map<int32_t, WeaponDrop> weaponDropManager;
     std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
     std::map<int32_t, Barricade> barricadeManager;
+    std::map<int32_t, Wall> wallManager;
 
 };
 

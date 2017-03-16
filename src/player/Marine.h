@@ -27,15 +27,12 @@ public:
     void onCollision();
     void collidingProjectile(int damage);
     void fireWeapon();
-    void checkForPickUp();
+    int32_t checkForPickUp();
     Inventory inventory;
 
 private:
     int health = 100;
     int state; //used to select sprite to display
-    int pickupTick = 0;
-    int pickupDelay = 200;
-
 };
 
 #endif
