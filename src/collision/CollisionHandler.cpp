@@ -89,11 +89,10 @@ std::priority_queue<Target> CollisionHandler::detectLineCollision(
     std::vector<Entity*> allEntities;
     std::priority_queue<Target> targetsInSights;
 
-    std::vector<Entity*> zombies = quadtreeZombie.objects;
-    std::vector<Entity*> turrets = quadtreeTurret.objects;
-    std::vector<Entity*> walls   = quadtreeWall.objects;
+    std::vector<Entity*> &zombies = quadtreeZombie.objects;
+    std::vector<Entity*> &turrets = quadtreeTurret.objects;
+    std::vector<Entity*> &walls   = quadtreeWall.objects;
 
-    
     allEntities.reserve( zombies.size() + turrets.size() + walls.size() );
     allEntities.insert( allEntities.end(), zombies.begin(), zombies.end() );
     allEntities.insert( allEntities.end(), turrets.begin(), turrets.end() );
