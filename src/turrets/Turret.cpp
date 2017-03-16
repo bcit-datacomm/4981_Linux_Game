@@ -116,7 +116,7 @@ bool Turret::targetScanTurret() {
 
         const float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
         const float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
-        const float distance = sqrt(pow(xDelta, 2) + pow(yDelta, 2));
+        const float distance = sqrt(xDelta * xDelta + yDelta * yDelta);
 
         if (distance < getRange()) {
             if (distance < closestZombieDist) {
@@ -127,7 +127,6 @@ bool Turret::targetScanTurret() {
         }
     }
 
-    // TODO: Attack a zombie;
     if (!detect) {
         return false;
     }

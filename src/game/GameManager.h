@@ -57,7 +57,7 @@ public:
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.
-    const auto& getZombies() {
+    auto& getZombies() {
         return zombieManager;
     }
 

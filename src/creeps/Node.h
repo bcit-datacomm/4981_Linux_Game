@@ -86,7 +86,8 @@ public:
 
     // calculate cost per the remaining distance to the destination
     const int estimate(const int xDest, const int yDest) const {
-        int xDist = xDest - xPos, yDist = yDest - yPos;
+        const int xDist = xDest - xPos;
+        const int yDist = yDest - yPos;
 
         // Euclidian Distance
         return static_cast<int>(sqrt(xDist * xDist + yDist * yDist));

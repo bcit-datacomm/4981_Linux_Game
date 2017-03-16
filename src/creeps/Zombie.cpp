@@ -48,7 +48,7 @@ void Zombie::collidingProjectile(int damage) {
  * Robert Arendac
  * March 7
 */
-bool Zombie::isMoving() {
+bool Zombie::isMoving() const {
     return (state == ZombieState::ZOMBIE_MOVE);
 }
 
@@ -59,7 +59,7 @@ bool Zombie::isMoving() {
  * Robert Arendac
  * March 7
 */
-bool Zombie::checkTarget() {
+bool Zombie::checkTarget() const {
     return GameManager::instance()->getCollisionHandler().detectMovementCollision(this);
 }
 
@@ -158,9 +158,7 @@ void Zombie::generateMove() {
     }
 
     setCurDir(d);
-    if (state != ZombieState::ZOMBIE_MOVE) {
-        setState(ZombieState::ZOMBIE_MOVE);
-    }
+    setState(ZombieState::ZOMBIE_MOVE);
 }
 
 /**
@@ -174,13 +172,14 @@ string Zombie::generatePath(const float xStart, const float yStart,
     int index = 0;
 
     // temp index
-    int i, j;
+    int i;
+    int j;
 
     // row / column index
-    int x, y, xdx, ydy;
-
-    // temp char
-    char c;
+    int x;
+    int y;
+    int xdx;
+    int ydy;
 
     // path to be generated
     string path;
@@ -190,7 +189,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
     static Node childNode;
 
     // priority queue
-    static priority_queue<Node> pq[2];
+    static array<priority_queue<Node>, 2> pq;
+    //static priority_queue<Node> pq[2];
 
     // reset the node maps
     memset(closedNodes, 0, sizeof(closedNodes[0][0]) * ROW * COL);
@@ -229,8 +229,7 @@ string Zombie::generatePath(const float xStart, const float yStart,
             path = "";
             while (!(x == xNodeStart && y == yNodeStart)) {
                 j = dirMap[x][y];
-                c = '0' + (j + DIR_CAP / 2) % DIR_CAP;
-                path = c + path;
+                path = static_cast<char>('0' + (j + DIR_CAP / 2) % DIR_CAP) + path;
                 x += MX[j];
                 y += MY[j];
             }

@@ -70,9 +70,9 @@ public:
 
     void generateMove();            // A* movement
 
-    bool isMoving();                // Returns if the zombie should be moving
+    bool isMoving() const;                // Returns if the zombie should be moving
 
-    bool checkTarget();               // checks if the zombie already arrived at the target
+    bool checkTarget() const;               // checks if the zombie already arrived at the target
 
     ZombieDirection getMoveDir() const;               // get move direction
 
