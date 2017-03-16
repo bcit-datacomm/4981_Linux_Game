@@ -6,7 +6,7 @@ CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
-EXCLUDEFOLDERS := server
+EXCLUDEFOLDERS := server UnitTests
 
 #The following variable generates a pattern to create these "not" flag chains for the find command based on the exclude list
 #find . -not \( -path *server -prune \) -not \( -path *gamefolder -prune \) -name *\.cpp
@@ -52,10 +52,14 @@ ifeq (,$(filter clean, $(MAKECMDGOALS)))
 endif
 
 #Check if in debug mode and set the appropriate compile flags
-ifeq (,$(filter debug dserver, $(MAKECMDGOALS)))
+ifeq (,$(filter debug dserver tests, $(MAKECMDGOALS)))
 $(eval CXXFLAGS := $(BASEFLAGS) $(RELEASEFLAGS))
 else
 $(eval CXXFLAGS := $(BASEFLAGS) $(DEBUGFLAGS))
+endif
+
+ifneq (,$(filter server dserver, $(MAKECMDGOALS)))
+$(eval CXXFLAGS += -DSERVER)
 endif
 
 #Target needed for use of automatic variable used below
@@ -71,9 +75,13 @@ dserver: server
 server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
 
+tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTests/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/tests 
+
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean
 
 # Deletes the executable and all .o and .d files in the bin folder
 clean: | $(ODIR)
-	$(RM) $(EXEC) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
+	$(RM) $(EXEC) $(wildcard $(ODIR)/tests*) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
+
