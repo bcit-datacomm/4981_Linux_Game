@@ -15,12 +15,9 @@ class Marine;
 class Weapon {
 public:
 
-    Weapon(string type = "no type", 
-        string fireSound = "", string hitSound = "", 
-        string reloadSound = "", string emptySound = "",
-        int range = 0, int damage = 0, int AOE = 0,
-        int clip = 0, int clipMax = 0, int ammo = 0,  
-        int reloadDelay = 0, int fireDelay = 0);
+    Weapon(string type = "no type", string fireSound = "", string hitSound = "", string reloadSound = "", 
+        string emptySound = "", int range = 0, int damage = 0, int AOE = 0, int clip = 0, int clipMax = 0, 
+        int ammo = 0,  int reloadDelay = 0, int fireDelay = 0);
 
     Weapon(const Weapon& w);
     ~Weapon() = default;

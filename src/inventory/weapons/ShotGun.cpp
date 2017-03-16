@@ -4,12 +4,10 @@
 */
 #include "ShotGun.h"
 
-ShotGun::ShotGun() : InstantWeapon(ShotgunVars::TYPE, 
-    ShotgunVars::FIRESOUND, ShotgunVars::HITSOUND, 
-    ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, 
-    ShotgunVars::RANGE, ShotgunVars::DAMAGE, ShotgunVars::AOE,
-    ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO,  
-    ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY) {
+ShotGun::ShotGun() : InstantWeapon(ShotgunVars::TYPE, ShotgunVars::FIRESOUND, ShotgunVars::HITSOUND, 
+    ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, ShotgunVars::RANGE, ShotgunVars::DAMAGE, 
+    ShotgunVars::AOE, ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::RELOADDELAY, 
+    ShotgunVars::FIREDELAY) {
 
 }
 
