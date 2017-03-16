@@ -258,8 +258,8 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
     const int32_t wid = w.getId();
     const int32_t id = generateID();
 
-    SDL_Rect weaponDropRect = {x,y,100,100};
-    SDL_Rect pickRect = {x,y,100,100};
+    SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y),100,100};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y),100,100};
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
