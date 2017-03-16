@@ -100,7 +100,7 @@ void processTCPMessage(const int sock, const char *buff, const size_t nbytes) {
 
     logv("Read packet with id: %d\n", idReceived);
 
-    for (const auto& it : clientList) {
+    for (auto& it : clientList) {
         if (it.second.entry.sock == sock) {
             if (!it.second.hasSentUsername) {
                 processClientUsername(sock, buff, it);
@@ -170,6 +170,7 @@ void handleIncomingTCP(const int epollfd) {
 
     PlayerJoin cli{0};
     cli.entry.addr = addr;
+    cli.entry.addr.sin_port = htons(listen_port_udp);
     cli.entry.sock = clientSock;
     cli.hasSentUsername = false;
     cli.isPlayerReady = false;
@@ -234,37 +235,27 @@ epoll_event *createEpollEventList() {
     return events;
 }
 
-void processClientUsername(const int sock, const char *buff, const std::pair<int32_t, PlayerJoin>& client) {
+void processClientUsername(const int sock, const char *buff, std::pair<const int32_t, PlayerJoin>& client) {
     static float yPos = 0;
     //Handle initial username read
-    std::pair<int32_t, PlayerJoin> tempMapEntry;
-    tempMapEntry = client;
-    tempMapEntry.first = getPlayerId();
-    tempMapEntry.second.hasSentUsername = true;
-    tempMapEntry.second.isPlayerReady = false;
-    tempMapEntry.second.entry.addr = client.second.entry.addr;
-    tempMapEntry.second.entry.addr.sin_port = htons(listen_port_udp);
-    strncpy(tempMapEntry.second.entry.username, buff + TCP_HEADER_SIZE + 1, NAMELEN);
-    strcat(tempMapEntry.second.entry.username, "\0");
-    logv("Server received username: %s\n", tempMapEntry.second.entry.username);
-
-    //Erase temporary entry in client list
-    clientList.erase(clientList.find(client.first));
-    //Insert newly compelted entry
-    clientList.insert(tempMapEntry);
+    client.second.hasSentUsername = true;
+    client.second.isPlayerReady = false;
+    strncpy(client.second.entry.username, buff + TCP_HEADER_SIZE + 1, NAMELEN);
+    strcat(client.second.entry.username, "\0");
+    logv("Server received username: %s\n", client.second.entry.username);
 
     const size_t bufferSize = NAMELEN + TCP_HEADER_SIZE + 1;
     char outBuff[bufferSize];
     memset(outBuff, '\0', bufferSize);
     int32_t *id = reinterpret_cast<int32_t *>(outBuff);
-    *id = tempMapEntry.first;
+    *id = client.first;
     outBuff[4] = 'C';
     outBuff[5] = '/';
 
-    strncpy(outBuff + TCP_HEADER_SIZE + 1, tempMapEntry.second.entry.username, NAMELEN);
+    strncpy(outBuff + TCP_HEADER_SIZE + 1, client.second.entry.username, NAMELEN);
 
-    gm->createMarine(tempMapEntry.first);
-    gm->getMarine(tempMapEntry.first).setPosition(100, yPos);
+    gm->createMarine(client.first);
+    gm->getMarine(client.first).setPosition(100, yPos);
     yPos += 150;
 
     //Send client their allocated id and username

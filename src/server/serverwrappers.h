@@ -15,7 +15,7 @@ void readTCP(const int sock);
 void readUDP(const int sock, sockaddr *servaddr, socklen_t *servAddrLen);
 int waitForEpollEvent(const int epollfd, epoll_event *events);
 epoll_event *createEpollEventList();
-void processClientUsername(const int sock, const char *buff, const std::pair<int32_t, PlayerJoin>& client);
+void processClientUsername(const int sock, const char *buff, std::pair<const int32_t, PlayerJoin>& client);
 void processCommandMessage(const int32_t idReceived, const char *buff, const int nbytes);
 bool rawClientSend(const int sock, const char *outBuff, const size_t bufferSize);
 bool checkIfAllClientsAreReady();
