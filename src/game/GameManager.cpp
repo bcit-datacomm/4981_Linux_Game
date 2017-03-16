@@ -130,7 +130,7 @@ int32_t GameManager::createTurret() {
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,120,120};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
     return id;
@@ -157,7 +157,7 @@ int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const 
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,120,120};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
 
@@ -173,6 +173,10 @@ int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const 
 // Get a tower by its id
 Turret& GameManager::getTurret(const int32_t id) {
     return turretManager.find(id)->second;
+}
+
+std::map<int32_t, Turret>& GameManager::getTurretManager() {
+    return turretManager;
 }
 
 int32_t GameManager::addZombie(const Zombie& newZombie) {
@@ -323,10 +327,12 @@ void GameManager::updateCollider() {
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeMov.insert(&m.second);
-        collisionHandler.quadtreePro.insert(&m.second);
-        collisionHandler.quadtreeDam.insert(&m.second);
-
+        if (m.second.isPlaced()) {
+            collisionHandler.quadtreeMov.insert(&m.second);
+            collisionHandler.quadtreePro.insert(&m.second);
+            collisionHandler.quadtreeDam.insert(&m.second);
+            collisionHandler.quadtreePickUp.insert(&m.second);
+        }
     }
 
     for (auto& b : barricadeManager) {

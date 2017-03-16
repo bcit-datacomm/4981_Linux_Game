@@ -34,31 +34,34 @@ void Marine::fireWeapon() {
 }
 
 
-void Marine::checkForPickUp(){
+int32_t Marine::checkForPickUp(){
 
+    int32_t PickId = -1;
+    Entity* ep;
 
-    int currentTime = SDL_GetTicks();
+    GameManager *gm = GameManager::instance();
+    CollisionHandler &ch = gm->getCollisionHandler();
+    ep =  ch.detectPickUpCollision(this);
 
-    if(currentTime > (pickupTick + pickupDelay)){
-        int32_t PickId = -1;
-        Entity* ep;
-
-        GameManager *gm = GameManager::instance();
-        CollisionHandler &ch = gm->getCollisionHandler();
-        pickupTick = currentTime;
-        ep =  ch.detectPickUpCollision(this);
-
-        if(ep != nullptr){
-            //get Weapon drop Id
-            PickId = ep->getId();
+    if(ep != nullptr){
+        std::map<int32_t, Turret> tm = gm->getTurretManager();
+        std::map<int32_t, Turret>::iterator it;
+        //get Entity drop Id
+        PickId = ep->getId();
+        it = tm.find(PickId);
+        if (it != tm.end())
+        {
+            return PickId;
+        } else {
             WeaponDrop wd = gm->getWeaponDrop(PickId);
             //Get Weaopn id from weapon drop
             PickId = wd.getWeaponId();
             if(inventory.pickUp(PickId)){
-                
+
                 gm->deleteWeaponDrop(wd.getId());
 
             }
         }
     }
+    return -1;
 }

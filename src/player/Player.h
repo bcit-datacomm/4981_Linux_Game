@@ -26,6 +26,7 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
+    void setTurretID(int32_t turretID);
 
     Player();
     ~Player();
@@ -36,6 +37,8 @@ public:
 private:
     int tempBarricadeID;
     int tempTurretID;
+    int pickupTick = 0;
+    int pickupDelay = 200;
 };
 
 #endif

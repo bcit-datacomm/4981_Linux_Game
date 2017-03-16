@@ -109,7 +109,13 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine->inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
-        marine->checkForPickUp();
+
+        int currentTime = SDL_GetTicks();
+
+        if(currentTime > (pickupTick + pickupDelay)){
+            pickupTick = currentTime;
+            tempTurretID = marine->checkForPickUp();
+        }
     }
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
@@ -130,15 +136,18 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     }
 }
 
-
 void Player::handleTempTurret(SDL_Renderer *renderer) {
    if(tempTurretID < 0) {
        const double angle = marine->getAngle();
-       tempTurretID = GameManager::instance()->createTurret(renderer, 
+       tempTurretID = GameManager::instance()->createTurret(renderer,
            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
            marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
    } else {
        GameManager::instance()->deleteTurret(tempTurretID);
        tempTurretID = -1;
    }
+}
+
+void Player::setTurretID(int32_t turretId) {
+    tempTurretID = turretId;
 }

@@ -23,7 +23,7 @@ public:
     Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
             const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
             int ammo = 100, bool boolPlaced = false);
-            
+
     virtual ~Turret();
 
     void spawnTurret(); // spawns a DEACTIVATED turret
@@ -51,14 +51,12 @@ public:
 
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
-    void move(const float playerX, const float playerY, 
+    void move(const float playerX, const float playerY,
                   const float moveX, const float moveY, CollisionHandler &ch);
 
     void placeTurret();
 
     bool isPlaced();
-
-    void pickUpTurret();
 
     void removeTurret(); // removes the turret
 

@@ -72,7 +72,7 @@ bool Turret::healthCheckTurret() {
     return (health > 0);
 }
 
-void Turret::move(const float playerX, const float playerY, 
+void Turret::move(const float playerX, const float playerY,
                         const float moveX, const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
     if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
@@ -89,12 +89,6 @@ void Turret::placeTurret() {
 
 bool Turret::isPlaced() {
   return boolPlaced;
-}
-
-void Turret::pickUpTurret() {
-    activated = false;
-    setPosition(0, 0);
-    texture.setAlpha(0);
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined
