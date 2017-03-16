@@ -37,56 +37,14 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX + distanceY));
 
-    /**
+
     return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this), this)
-            //&& !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
             && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this), this)
             && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this), this)
             && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this), this)
             && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this), this)
             && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this), this)));
-    */
-
-    //assert(this->movementHitBox->getRect().h != 0);
-    //assert(this->movementHitBox->getRect().w != 0);
-
-
-    bool canPlace = false;
-    if( distance <= 200){
-        logv("0) distance < 200\n");
-        canPlace = true;
-    }
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie, this), this)){
-        logv("1) zombie movement collision\n");
-        canPlace = false;
-    }
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine, this), this)){
-        logv("2) marine movement collision\n");
-        canPlace = false;
-    }
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade, this), this)){
-        logv("3) barricade movement collision\n");
-        canPlace = false;
-    }
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall, this), this)){
-        logv("4) wall movement collision\n");
-        canPlace = false;
-    }
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret, this), this)){
-        logv("5) turret movement collision\n");
-        canPlace = false;
-    }
-    /**
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj, this), this)){
-        logv("6) obj movement collision\n");
-        canPlace = false;
-    }
-    if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp, this), this)){
-        logv("7) pickup movement collision\n");
-        canPlace = false;
-    }
-    */
-    return canPlace;
 }
 
 // activates the turret

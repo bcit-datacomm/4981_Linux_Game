@@ -47,7 +47,7 @@ void Marine::checkForPickUp(){
         CollisionHandler &ch = gm->getCollisionHandler();
         pickupTick = currentTime;
 
-        ep =  ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this);
+        ep =  ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
 
 
         if(ep != nullptr){
