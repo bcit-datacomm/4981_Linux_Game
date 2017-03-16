@@ -3,6 +3,7 @@
 #include "../player/Marine.h"
 #include "../log/log.h"
 #include <iostream>
+#include <cmath>
 
 CollisionHandler::CollisionHandler() : quadtreeMov(0, {0,0,2000,2000}), quadtreePro(0, {0,0,2000,2000}),
         quadtreeDam(0, {0,0,2000,2000}),quadtreePickUp(0, {0,0,2000,2000}) {
@@ -77,7 +78,7 @@ Entity *CollisionHandler::detectPickUpCollision(const Entity *entity) {
 }
 
 // Created by DericM 3/8/2017
-std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
+std::priority_queue<Target> CollisionHandler::detectLineCollision(
         Marine &marine, const int range) {
 
     const double degrees = marine.getAngle() - 90;
@@ -86,22 +87,41 @@ std::priority_queue<HitBox*> CollisionHandler::detectLineCollision(
     const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
     const int deltaX  = range * cos(radians);
     const int deltaY  = range * sin(radians);
-    int aX, aY, bX, bY;
-
+    int aX, aY, bX, bY, tX, tY, pDist;
     std::vector<Entity*> allEntities;
+    std::priority_queue<Target> targetsInSights;
+
     allEntities = quadtreePro.objects;
-
-    std::priority_queue<HitBox*> targetsInSights;
     for (unsigned int x = 0, len = allEntities.size(); x < len; x++) {
-            aX = playerX;
-            aY = playerY;
-            bX = aX + deltaX;
-            bY = aY + deltaY;
+        Entity* possibleTarget = allEntities.at(x);
 
-            if (SDL_IntersectRectAndLine(&(allEntities.at(x)->projectileHitBox->getRect()), &aX, &aY , &bX, &bY)) {
-                logv("Shot target at (%d, %d)\n", aX, aY);
-                targetsInSights.push(allEntities.at(x)->projectileHitBox.get());
-            }
+/*
+        if(*possibleTarget == marine){
+            continue;
+        }
+        */
+
+        aX = playerX;
+        aY = playerY;
+        bX = aX + deltaX;
+        bY = aY + deltaY;
+
+        if (SDL_IntersectRectAndLine(&(possibleTarget->projectileHitBox->getRect()), &aX, &aY , &bX, &bY)) {
+            logi("Intersect target at (%d, %d)\n", bX, bY);
+
+            tX = marine.getX() - bX;
+            tY = marine.getY() - bX;
+            pDist = std::hypot(tX, tY);
+
+            Target tar(*possibleTarget);
+            tar.hitX = aX;
+            tar.hitY = aY;
+            tar.playerDist = pDist;
+
+            targetsInSights.push(tar);
+            logi("targetsInSights.size(): %d\n", targetsInSights.size());
+            
+        }
     }
     return targetsInSights;
 }
