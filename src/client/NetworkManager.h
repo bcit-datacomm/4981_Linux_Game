@@ -26,6 +26,11 @@
 
 //moved enums to the bottom, and commented out
 
+enum class NetworkState {
+    NOT_RUNNING,
+    GAME_STARTED
+};
+
 class NetworkManager {
 public:
     static NetworkManager& instance();
@@ -35,7 +40,9 @@ public:
     void writeUDPSocket(const char *buf, const int &len);
 
     int32_t getPlayerId() const {return _myid;};
+    NetworkState getNetworkState() const {return state;};
 private:
+    NetworkState state = NetworkState::NOT_RUNNING;
     int32_t _myid;  // EY: March 14 - to be removed for game intergration
     bool connected, running; // EY: March 14 - to be removed for game intergration
     int sockTCP;

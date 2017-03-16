@@ -160,6 +160,7 @@ void NetworkManager::runUDPClient() {
     char buffer[SYNC_PACKET_MAX];
     int packetSize;
     packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
+    state = NetworkState::GAME_STARTED;
     Packetizer::parseGameSync(buffer, packetSize);
 
     cout << "\nRecevied Dgram. Bytes read: " << packetSize << endl;

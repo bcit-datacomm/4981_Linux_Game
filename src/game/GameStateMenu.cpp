@@ -125,6 +125,11 @@ bool GameStateMenu::load() {
 void GameStateMenu::loop() {
     // State Loop
     while (play) {
+        if(NetworkManager::instance().getNetworkState() == NetworkState::GAME_STARTED) {
+            game.stateID = 2;
+            play = false;
+        }
+
         handle(); // Handle user input
         render(); // Render game state to window
     }
@@ -239,7 +244,8 @@ void GameStateMenu::handle() {
             for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
                 if (selected[i]) {
                     update(i);
-                    play = false;
+                    //play is now set to false in the menu loop when the game is started.
+                    //play = false;
                 }
             }
             for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
@@ -296,9 +302,11 @@ void GameStateMenu::handle() {
 * Function positions all screen elements in the window
 */
 void GameStateMenu::update(const float delta) {
-    NetworkManager::instance().run(textInput[0].c_str(), textInput[1].c_str());
     if(delta == JOIN) {
-        game.stateID = 2;
+        NetworkManager::instance().run(textInput[0].c_str(), textInput[1].c_str());
+        //stateID will be set in the loop when the server starts the game.
+        //play bool will be set to false there as well instead of in handle.
+        //game.stateID = 2;
     } else if (delta == OPTIONS) {
         game.stateID = 2; //TEMPORARY: change to correct state ID once implemented
     } else {
