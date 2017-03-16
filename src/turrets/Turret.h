@@ -1,13 +1,13 @@
 // Created 05/02/2017 Mark C.
 #ifndef TURRET_H
 #define TURRET_H
+#include <vector>
+#include <SDL2/SDL.h>
 #include "../sprites/LTexture.h"
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../player/Marine.h"
 #include "../collision/CollisionHandler.h"
-#include <vector>
-#include <SDL2/SDL.h>
 #include "../view/Window.h"
 
 constexpr static int TURRET_HEIGHT = 100;
@@ -21,7 +21,7 @@ class Turret : public Movable {
 public:
     Turret(bool activated = false, int health = 200, int ammo = 100,
             bool boolPlaced = false, float range = 400.0f);
-    virtual ~Turret();
+    virtual ~Turret();  // default dtor
 
     void spawnTurret(); // spawns a DEACTIVATED turret
 
@@ -48,8 +48,8 @@ public:
 
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
-    void move(const float playerX, const float playerY, 
-                  const float moveX, const float moveY, CollisionHandler &ch);
+    void move(const float playerX, const float playerY,
+            const float moveX, const float moveY, CollisionHandler &ch);
 
     void placeTurret();
 

@@ -25,14 +25,14 @@ int Zombie::getMoveDir() {
         return dir;
     }
 
-    int sp = getStep();
-    string pth = getPath();
+    const int sp = getStep();
+    const string pth = getPath();
     /*
     cout << "path: " << pth << endl;
     cout << sp << '-' << pth.length() << endl;
     */
 
-    return (sp < (int) pth.length() ? stoi(pth.substr(sp,1)) : -1);
+    return (sp < static_cast<int>(pth.length()) ? stoi(pth.substr(sp,1)) : -1);
 }
 
 void Zombie::onCollision() {
@@ -70,15 +70,15 @@ bool Zombie::checkTarget() {
  * March 13
 */
 void Zombie::generateMove() {
-    int d = getMoveDir();   //Direction zombie is moving
+    const int d = getMoveDir();   //Direction zombie is moving
     //cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
-    float startX = getX();
-    float startY = getY();
+    const float startX = getX();
+    const float startY = getY();
 
     // Path is empty, shouldn't move
     if (d < 0 || checkTarget()) {
         if (frame > 0) {
-            frame--;
+            --frame;
         }
 
         // Changed to attack state once attack code is ready
@@ -150,10 +150,10 @@ void Zombie::generateMove() {
     }
 
     if (frame > 0) {
-        frame--;
+        --frame;
     } else {
         setCurFrame(ZOMBIE_FRAMES);
-        step++;
+        ++step;
     }
 
     setCurDir(d);
@@ -168,7 +168,7 @@ void Zombie::generateMove() {
  * Feb 14
  */
 string Zombie::generatePath(const float xStart, const float yStart,
-                            const float xDest, const float yDest) {
+        const float xDest, const float yDest) {
     // priority queue index
     int index = 0;
 
@@ -192,17 +192,13 @@ string Zombie::generatePath(const float xStart, const float yStart,
     static priority_queue<Node> pq[2];
 
     // reset the node maps
-    for (i = 0; i < ROW; i++) {
-        for (j = 0; j < COL; j++) {
-            closedNodes[i][j] = 0;
-            openNodes[i][j] = 0;
-        }
-    }
+    memset(closedNodes, 0, sizeof(closedNodes[0][0]) * ROW * COL);
+    memset(openNodes, 0, sizeof(openNodes[0][0]) * ROW * COL);
 
-    int xNodeStart = (int) xStart / TILE_SIZE;
-    int yNodeStart = (int) yStart / TILE_SIZE;
-    int xNodeDest = (int) xDest / TILE_SIZE;
-    int yNodeDest = (int) yDest / TILE_SIZE;
+    int xNodeStart = static_cast<int>(xStart / TILE_SIZE);
+    int yNodeStart = static_cast<int>(yStart / TILE_SIZE);
+    int xNodeDest = static_cast<int>(xDest / TILE_SIZE);
+    int yNodeDest = static_cast<int>(yDest / TILE_SIZE);
 
     // create the start node and push into open list
     curNode = Node(xNodeStart, yNodeStart, 0, 0);
@@ -211,9 +207,9 @@ string Zombie::generatePath(const float xStart, const float yStart,
 
     // A* path finding
     while (!pq[index].empty()) {
+        Node tmp = pq[index].top();
         // get the current node with the highest priority from open list
-        curNode = Node(pq[index].top().getXPos(), pq[index].top().getYPos(),
-                           pq[index].top().getLevel(), pq[index].top().getPriority());
+        curNode = Node(tmp.getXPos(), tmp.getYPos(), tmp.getLevel(), tmp.getPriority());
 
         x = curNode.getXPos();
         y = curNode.getYPos();
@@ -232,16 +228,14 @@ string Zombie::generatePath(const float xStart, const float yStart,
             path = "";
             while (!(x == xNodeStart && y == yNodeStart)) {
                 j = dirMap[x][y];
-                c = '0' + (j + DIR_CAP/2)%DIR_CAP;
+                c = '0' + (j + DIR_CAP / 2) % DIR_CAP;
                 path = c + path;
                 x += MX[j];
                 y += MY[j];
             }
 
             // empty the leftover nodes
-            while (!pq[index].empty()) {
-                 pq[index].pop();
-             }
+            pq[index] = priority_queue<Node>();
 
             setPath(path);
             return path;
@@ -255,7 +249,7 @@ string Zombie::generatePath(const float xStart, const float yStart,
 
             // not evaluated & not outside (bound checking)
             if (!(xdx < 0 || xdx > COL -1 || ydy < 0 || ydy > ROW - 1
-                || gameMap[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
+                    || gameMap[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
 
                 // generate a child node
                 childNode = Node(xdx, ydy, curNode.getLevel(), curNode.getPriority());

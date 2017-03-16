@@ -41,7 +41,7 @@ Point Base::getSpawnPoint() {
             y = getY() - GAP;
             //x point is randomly generated;
             x = distr(eng, decltype(distr)::param_type(getX() - GAP,
-                                                       getX() + getWidth() + GAP));
+                    getX() + getWidth() + GAP));
 
             break;
         case 1://South

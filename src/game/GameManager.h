@@ -55,7 +55,11 @@ public:
     void updateZombies(const float delta); // Update zombie actions
     void updateTurrets(const float delta); // Update turret actions
 
-    const std::map<int32_t, Zombie>& getZombies(); // Get all zombies in game
+    // returns the list of zombies.
+    // Jamie, 2017-03-01.
+    const std::map<int32_t, Zombie>& GameManager::getZombies() {
+        return zombieManager;
+    }
 
     int32_t addObject(const Object&);
     void deleteObject(const int32_t id);

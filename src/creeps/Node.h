@@ -49,7 +49,7 @@ public:
     explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
             const int pri = 0) : xPos(xPos), yPos(yPos), lv(lv), pri(pri) {}
 
-    virtual ~Node() {}
+    virtual ~Node() {} // default dtor
 
     // X coordinate of current node
     int getXPos() const {
@@ -83,17 +83,16 @@ public:
 
     // calculate cost per the remaining distance to the destination
     const int estimate(const int xDest, const int yDest) const {
-        static int xDist, yDist, dist;
+        int xDist, yDist;
         xDist = xDest - xPos;
         yDist = yDest - yPos;
 
         // Euclidian Distance
-        dist = static_cast<int>(sqrt(xDist * xDist + yDist * yDist));
+        return (static_cast<int>(sqrt(xDist * xDist + yDist * yDist)));
 
         // Manhattan distance
         //dist = abs(xDist) + abs(yDist);
 
-        return dist;
     }
 
 private:

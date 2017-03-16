@@ -1,17 +1,17 @@
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
 #include <string>
+#include <math.h>
+#include <random>
+#include <vector>
+#include <utility>
+#include <SDL2/SDL.h>
 #include "../sprites/LTexture.h"
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
 #include "../inventory/Inventory.h"
 #include "../buildings/Base.h"
-#include <math.h>
-#include <random>
-#include <vector>
-#include <utility>
-#include <SDL2/SDL.h>
 #include "../view/Window.h"
 #include "../basic/Movable.h"
 
@@ -23,35 +23,39 @@ static constexpr int ZOMBIE_WIDTH    = 75;
 
 // 8 possible directions
 static constexpr int DIR_CAP = 8;
-static constexpr int DIR_R   = 0;
-static constexpr int DIR_RD  = 1;
-static constexpr int DIR_D   = 2;
-static constexpr int DIR_LD  = 3;
-static constexpr int DIR_L   = 4;
-static constexpr int DIR_LU  = 5;
-static constexpr int DIR_U   = 6;
-static constexpr int DIR_RU  = 7;
+enum ZombieDirections {
+    DIR_R,
+    DIR_RD,
+    DIR_D,
+    DIR_LD,
+    DIR_L,
+    DIR_LU,
+    DIR_U,
+    DIR_RU
+};
 
 // Cardinal directions for setting angles
-static constexpr int NORTH     = 0;
-static constexpr int NORTHEAST = 45;
-static constexpr int EAST      = 90;
-static constexpr int SOUTHEAST = 135;
-static constexpr int SOUTH     = 180;
-static constexpr int SOUTHWEST = 225;
-static constexpr int WEST      = 270;
-static constexpr int NORTHWEST = 315;
+enum ZombieAngles {
+    NORTH = 0,
+    NORTHEAST = 45,
+    EAST = 90,
+    SOUTHEAST = 135,
+    SOUTH = 180,
+    SOUTHWEST = 225,
+    WEST = 270,
+    NORTHWEST = 315
+};
 
 // overlapped
 static constexpr float OVERLAP = 0.1f;
 
 // zombie state
-typedef enum {
+enum ZombieState{
     ZOMBIE_IDLE,
     ZOMBIE_MOVE,
     ZOMBIE_ATTACK,
     ZOMBIE_DIE
-} ZombieState;
+};
 
 class Zombie : public Movable {
 public:

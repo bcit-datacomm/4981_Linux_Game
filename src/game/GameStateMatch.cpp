@@ -13,7 +13,7 @@
 #include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-                               level(),  base(), camera(gameWidth,gameHeight){
+        level(),  base(), camera(gameWidth,gameHeight) {
 
 }
 
@@ -184,12 +184,10 @@ void GameStateMatch::update(const float delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
-	GameManager::instance()->updateTurrets(delta);
+    GameManager::instance()->updateTurrets(delta);
 
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
-
-
 }
 
 void GameStateMatch::render() {

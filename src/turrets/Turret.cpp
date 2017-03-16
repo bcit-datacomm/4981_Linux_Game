@@ -136,8 +136,7 @@ bool Turret::targetScanTurret() {
     }
 
     const auto& target = mapZombies.find(closestZombieId);
-    if (target == mapZombies.end())
-    {
+    if (target == mapZombies.end()) {
         return false;
     }
 
@@ -145,7 +144,7 @@ bool Turret::targetScanTurret() {
     float deltaY = getY() - target->second.getY();
 
     // Set angle so turret points at zombie
-    double angle = ((atan2(deltaX, deltaY) * 180.0)/M_PI) * -1;
+    double angle = ((atan2(deltaX, deltaY) * 180.0) / M_PI) * -1;
     setAngle(angle);
     //detectList[closestZombieId]->damage(this->attackDmg);
 
