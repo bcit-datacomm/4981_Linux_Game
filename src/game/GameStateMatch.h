@@ -42,7 +42,7 @@ private:
 
     // Frame Display
     std::stringstream frameTimeText;
-    TTF_Font *frameFont = nullptr;
+    TTF_Font *frameFont;
     LTexture frameFPSTextTexture;
 };
 

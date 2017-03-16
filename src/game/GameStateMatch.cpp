@@ -15,7 +15,7 @@
 
 GameStateMatch::GameStateMatch(Game& g, int gameWidth, int gameHeight) : GameState(g), 
     playerMarineId(GameManager::instance()->createMarine()), player(playerMarineId), level(),  base(), 
-        camera(gameWidth,gameHeight) {
+        camera(gameWidth,gameHeight), frameFont(nullptr) {
 
 }
 

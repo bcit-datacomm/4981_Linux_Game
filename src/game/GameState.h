@@ -1,7 +1,6 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 #include <SDL2/SDL.h>
-//#include "Game.h"
 
 class Game;
 

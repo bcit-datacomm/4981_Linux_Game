@@ -3,15 +3,9 @@
 #include <string>
 #include <sstream>
 
-Window::Window()  {
-    //Initialize non-existant window
-    window = nullptr;
-    mouseFocus = false;
-    keyboardFocus = false;
-    fullScreen = false;
-    minimized = false;
-    width = 0;
-    height = 0;
+Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyboardFocus(false), 
+        fullScreen(false), minimized(false) {
+
 }
 
 Window::~Window() {

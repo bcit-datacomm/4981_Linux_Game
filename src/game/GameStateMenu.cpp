@@ -29,15 +29,15 @@
 *
 * Interface: GameStateMenu(Game& g, int gameWidth, int gameHeight)
 *                           Game& g: The instance of the game which the display window is tied to
-*                           int gameWidth: Width of the game.getWindow()
-*                           int gameHeight: Height of the game.getWindow()
+*                           int gameWidth: Width of the game window
+*                           int gameHeight: Height of the game window
 *
 * Notes:
 * GameStateMenu ctor which initializes all member variables for use throughout class
 */
 GameStateMenu::GameStateMenu(Game& g, int gameWidth, int gameHeight): GameState(g), headingFont(nullptr), 
-    textboxFont(nullptr), menuFont(nullptr),  level(), camera(gameWidth,gameHeight), menuItems({"join", "options"}), 
-    selected{false,false}, activeTextbox{false,false}, defaultText({"IP Address", "Username"}), textInput({defaultText[IP], 
+        textboxFont(nullptr), menuFont(nullptr),  level(), camera(gameWidth,gameHeight), menuItems({"join", "options"}), 
+        selected{false,false}, activeTextbox{false,false}, defaultText({"IP Address", "Username"}), textInput({defaultText[IP], 
         defaultText[USERNAME]}), fontColors({SDL_WHITE_RGB, SDL_GREEN_RGB, SDL_BLACK_RGB, SDL_RED_RGB}) {
 }
 

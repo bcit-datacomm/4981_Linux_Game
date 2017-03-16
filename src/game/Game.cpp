@@ -134,7 +134,7 @@ SDL_Surface* Game::loadSurface(std::string path) {
     if (loadedSurface == nullptr) {
         logv("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     } else if (screenSurface == nullptr) {
-        logv("Unable to load image %s!\n  Window surface is nullptr\n", path.c_str());
+        logv("Unable to load image %s!\n  Window surface is null\n", path.c_str());
     } else {
         //Convert surface to screen format
         optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, 0);
