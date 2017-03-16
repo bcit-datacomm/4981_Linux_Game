@@ -11,12 +11,3 @@ ShotGun::ShotGun() : InstantWeapon(ShotgunVars::TYPE, ShotgunVars::FIRESOUND, Sh
 
 }
 
-
-/*
-bool ShotGun::fire(Marine &marine){
-    if(Weapon::fire(marine)){
-        return false;
-    }
-
-}
-*/
