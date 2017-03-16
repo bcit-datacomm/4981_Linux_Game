@@ -6,12 +6,9 @@
 using namespace std;
 
 
-WeaponDrop::WeaponDrop(int32_t wId): weaponId(wId){
+WeaponDrop::WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize,
+        int32_t wId): Entity(id, dest, dest, pickupSize), weaponId(wId){
     logi("Created Weapon Drop\n");
-}
-
-WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
-
 }
 
 WeaponDrop::~WeaponDrop() {

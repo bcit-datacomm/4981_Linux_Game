@@ -42,6 +42,7 @@ bool InstantWeapon::fire(Marine &marine){
 
 
     std::priority_queue<Target> targets = getTargets(marine);
+
     if(targets.empty()){
         return false;
     }

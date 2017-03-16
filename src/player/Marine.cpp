@@ -2,7 +2,9 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Marine::Marine() : Movable(MARINE_VELOCITY) {
+Marine::Marine(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY){
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -39,20 +41,25 @@ void Marine::checkForPickUp(){
 
     if(currentTime > (pickupTick + pickupDelay)){
         int32_t PickId = -1;
+        Entity* ep;
+
         GameManager *gm = GameManager::instance();
         CollisionHandler &ch = gm->getCollisionHandler();
         pickupTick = currentTime;
-        Entity *ep =  ch.detectPickUpCollision(this);
+
+        ep =  ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
+
 
         if(ep != nullptr){
             //get Weapon drop Id
             PickId = ep->getId();
             WeaponDrop wd = gm->getWeaponDrop(PickId);
-            wd.setId(PickId);
             //Get Weaopn id from weapon drop
             PickId = wd.getWeaponId();
             if(inventory.pickUp(PickId)){
+
                 gm->deleteWeaponDrop(wd.getId());
+
             }
         }
     }

@@ -76,6 +76,7 @@ public:
     int32_t createWall(SDL_Renderer* gRenderer, const float x, const float y, const int h, const int w); // create Wall object
     void setBoundary(SDL_Renderer* gRenderer, const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
 
+
 private:
     GameManager();
     ~GameManager();
@@ -90,6 +91,7 @@ private:
     std::map<int32_t, WeaponDrop> weaponDropManager;
     std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
     std::map<int32_t, Barricade> barricadeManager;
+    std::map<int32_t, Wall> wallManager;
 
 };
 
