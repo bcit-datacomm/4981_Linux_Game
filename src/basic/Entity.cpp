@@ -39,7 +39,7 @@ Entity::Entity(const Entity &e): id(e.id), destRect(e.destRect), srcRect(e.srcRe
 }
 
 const SDL_Rect Entity::getRelativeDestRect(const SDL_Rect& view) const {
-    return {view.x - destRect.x , view.y - destRect.y, int(destRect.w), int(destRect.h)};
+    return {destRect.x - view.x , destRect.y - view.y, int(destRect.w), int(destRect.h)};
 }
 
 // Set x coordinate

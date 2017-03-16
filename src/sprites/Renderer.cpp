@@ -137,18 +137,18 @@ void Renderer::setWindow(SDL_Window * window) {
     setRenderer();
 }
 
+
 //renders an object
-void Renderer::render(int x, int y, int w, int h, TEXTURES spriteType, SDL_Rect* clip, double angle,
-                      SDL_Point* center, SDL_RendererFlip flip) {
-
-    SDL_Rect dest = {x, y, w, h};
-
-    if (clip != nullptr) {
-        dest.w = clip->w;
-        dest.h = clip->h;
-    }
-
+void Renderer::render(const SDL_Rect& dest, TEXTURES spriteType, const SDL_Rect& clip, double angle,
+                      const SDL_Point* center, SDL_RendererFlip flip) {
     //Render to screen
-    SDL_RenderCopyEx(_renderer, getTexture(static_cast<int>(spriteType)), clip, &dest, angle,
+    SDL_RenderCopyEx(_renderer, getTexture(static_cast<int>(spriteType)), &clip, &dest, angle,
+                     center, flip);
+}
+//renders an object
+void Renderer::render(const SDL_Rect& dest, TEXTURES spriteType, double angle,
+                      const SDL_Point* center, SDL_RendererFlip flip) {
+    //Render to screen
+    SDL_RenderCopyEx(_renderer, getTexture(static_cast<int>(spriteType)), nullptr, &dest, angle,
                      center, flip);
 }

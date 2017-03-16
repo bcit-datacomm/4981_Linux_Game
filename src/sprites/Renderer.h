@@ -11,9 +11,9 @@
 #include "../log/log.h"
 
 /* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-*/
+ ** DESIGNER:  Michael Goll
+ ** DATE:      March 14, 2017
+ */
 
 //-------- Game Screens --------
 #define MAIN_SCREEN "assets/TitleScreen_Marz.png"
@@ -65,45 +65,47 @@
 
 
 class Renderer {
-public:
-    //returns the instance if it exists, otherwise creates one
-    static Renderer * instance();
-    ~Renderer();
+    public:
+        //returns the instance if it exists, otherwise creates one
+        static Renderer * instance();
+        ~Renderer();
 
-    //returns the sprite or sprite sheet that the object is looking to render
-    static SDL_Texture * getTexture(int spriteType) {return _sprites.at(spriteType);};
-    //gets the renderer
-    static SDL_Renderer * getRenderer() {return _renderer;};
-    //sets the window
-    static void setWindow(SDL_Window * window);
-    //loads all the sprites specified in Renderer.h
-    static void loadSprites();
+        //returns the sprite or sprite sheet that the object is looking to render
+        static SDL_Texture * getTexture(int spriteType) {return _sprites.at(spriteType);};
+        //gets the renderer
+        static SDL_Renderer * getRenderer() {return _renderer;};
+        //sets the window
+        static void setWindow(SDL_Window * window);
+        //loads all the sprites specified in Renderer.h
+        static void loadSprites();
 
-    static TTF_Font * loadFont(std::string fonts, int size);
+        static TTF_Font * loadFont(std::string fonts, int size);
 
-    //creates a texture from a font file
-    void createText(TTF_Font * font, std::string text, SDL_Color colour);
+        //creates a texture from a font file
+        void createText(TTF_Font * font, std::string text, SDL_Color colour);
 
-    //renders all of the sprites within the camera viewport
+        //renders all of the sprites within the camera viewport
 
-    static void render(int x, int y, int w, int h, TEXTURES spriteType, SDL_Rect * clip = nullptr, double angle = 0.0,
-                          SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+        static void render(const SDL_Rect& dest, TEXTURES spriteType, double angle = 0.0, const SDL_Point* center = nullptr,
+                SDL_RendererFlip flip = SDL_FLIP_NONE);
+        static void render(const SDL_Rect& dest, TEXTURES spriteType, const SDL_Rect& clip, double angle = 0.0,
+                const SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 
-private:
-    Renderer(){}
+    private:
+        Renderer(){}
 
-    static Renderer * rInstance;
-    static SDL_Renderer * _renderer;
-    static SDL_Window * _window;
-    static int _index;
+        static Renderer * rInstance;
+        static SDL_Renderer * _renderer;
+        static SDL_Window * _window;
+        static int _index;
 
-    //array of all sprites in the game
-    static std::array<SDL_Texture *, TOTAL_SPRITES> _sprites;
-    //creates a texture from a file
-    static void createTexture(std::string filePath);
-    //sets the renderer
-    static void setRenderer();
+        //array of all sprites in the game
+        static std::array<SDL_Texture *, TOTAL_SPRITES> _sprites;
+        //creates a texture from a file
+        static void createTexture(std::string filePath);
+        //sets the renderer
+        static void setRenderer();
 };
 
 #endif

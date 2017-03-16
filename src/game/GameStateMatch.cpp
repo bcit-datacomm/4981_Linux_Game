@@ -36,7 +36,7 @@ bool GameStateMatch::load() {
     GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(0, 0);
+    GameManager::instance()->createMarine(100, 100);
     GameManager::instance()->createZombie(800, 800);
     GameManager::instance()->createTurret(1000, 500);
     GameManager::instance()->createWeaponDrop(1800, 1700);
@@ -187,13 +187,15 @@ void GameStateMatch::render() {
                     break;
                 }
                 //i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY()
-                Renderer::instance()->render(i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE, TEXTURES::BARREN);
+                Renderer::instance()->render(
+                        {i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE},
+                        TEXTURES::BARREN);
             }
         }
 
 
         //renders objects in game
-        GameManager::instance()->renderObjects(camera.getX(), camera.getY(), camera.getH(), camera.getW());
+        GameManager::instance()->renderObjects(camera.getViewport());
 
 
         //SDL_Color textColor = { 0, 0, 0, 255 };
