@@ -68,7 +68,7 @@ bool Weapon::getFireState() {
 }
 
 void Weapon::fire(Marine &marine){
-
+    logv("Weapon::fire(Marine &marine)");
 }
 
 int32_t generateWID() {

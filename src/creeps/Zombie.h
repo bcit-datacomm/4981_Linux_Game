@@ -1,11 +1,13 @@
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
 #include <string>
+
 #include "../sprites/LTexture.h"
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
 #include "../inventory/Inventory.h"
+#include "../collision/Quadtree.h"
 #include <math.h>
 #include <vector>
 #include <SDL2/SDL.h>

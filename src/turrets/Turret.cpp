@@ -1,6 +1,7 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
 #include "../log/log.h"
+#include <cassert>
 
 Turret::Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated, int health, int ammo,
@@ -36,7 +37,14 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX + distanceY));
 
-    return (distance <= PLACE_DISTANCE && !ch.detectMovementCollision(this));
+
+    return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this), this)));
 }
 
 // activates the turret
@@ -72,7 +80,7 @@ bool Turret::healthCheckTurret() {
     return (health > 0);
 }
 
-void Turret::move(const float playerX, const float playerY, 
+void Turret::move(const float playerX, const float playerY,
                         const float moveX, const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
     if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
