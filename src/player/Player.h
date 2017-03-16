@@ -36,8 +36,9 @@ public:
 private:
     int tempBarricadeID;
     int tempTurretID;
-    int pickupTick = 0;
-    int pickupDelay = 200;
+    bool holdingTurret;
+    int pickupTick;
+    int pickupDelay;
 };
 
 #endif

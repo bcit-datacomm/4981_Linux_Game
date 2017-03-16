@@ -6,7 +6,7 @@ Turret::Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize, co
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated, int health, int ammo,
         bool placed): Entity(id, dest, movementSize, projectileSize, damageSize,
         pickupSize), Movable(id, dest, movementSize, projectileSize, damageSize,
-        pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
+        pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), placed(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -73,7 +73,7 @@ bool Turret::healthCheckTurret() {
 }
 
 void Turret::move(const float playerX, const float playerY,
-                        const float moveX, const float moveY, CollisionHandler &ch) {
+        const float moveX, const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
     if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
         texture.setAlpha(PASS_ALPHA);
@@ -84,11 +84,11 @@ void Turret::move(const float playerX, const float playerY,
 
 void Turret::placeTurret() {
     texture.setAlpha(PLACED_ALPHA);
-    boolPlaced = true;
+    placed = true;
 }
 
 void Turret::pickUpTurret() {
-    boolPlaced = false;
+    placed = false;
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined

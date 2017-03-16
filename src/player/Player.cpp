@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <math.h>
 
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1) {
+Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200) {
 
 }
 
@@ -45,6 +45,7 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
                     GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
                 tempTurretID = -1;
+                holdingTurret = false;
             }
         }
     }
@@ -109,16 +110,17 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine->inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
-
         const int currentTime = SDL_GetTicks();
 
         if(currentTime > (pickupTick + pickupDelay)){
-            pickupTick = currentTime;/*
-            tempTurretID = marine->checkForPickUp();
-            Turret& tempTurret = GameManager::instance()->getTurret(tempTurretID);
-            tempTurret.pickUpTurret();*/
-            tempTurretID = marine->checkForPickUp();
-            GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
+            pickupTick = currentTime;
+            const int checkTurret = marine->checkForPickUp();
+            if (checkTurret > -1 && holdingTurret == false)
+            {
+                tempTurretID = checkTurret;
+                GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
+                holdingTurret = true;
+            }
         }
     }
     if(state[SDL_SCANCODE_I]) {
