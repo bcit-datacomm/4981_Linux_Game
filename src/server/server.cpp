@@ -169,10 +169,19 @@ void listenForPackets(const sockaddr_in servaddr) {
 }
 
 void processPacket(const char *data) {
-    //Actual implementation TBD
-    const MoveAction *ma = reinterpret_cast<const MoveAction *>(data);
-    logv("Move actions packets contents:\nID:%d\nXpos:%f\n, Ypos:%f\n, Vel:%f\n, Direction:%f\n", ma->id, ma->xpos, ma->ypos, ma->vel, ma->direction);
-    updateMarine(*ma);
+    const ClientMessage *mesg = reinterpret_cast<const ClientMessage *>(data);
+    switch (static_cast<UDPHeaders>(mesg->id)) {
+        case UDPHeaders::WALK:
+            {
+                const MoveAction ma = mesg->data.ma;
+                logv("Move actions packets contents:\nID:%d\nXpos:%f\n, Ypos:%f\n, Vel:%f\n, Direction:%f\n", ma.id, ma.xpos, ma.ypos, ma.vel, ma.direction);
+                updateMarine(ma);
+            }
+            break;
+        default:
+            logv("Received packet with unknown id\n");
+            break;
+    }
 }
 
 //Isaac Morneau Feb 28th, 2017

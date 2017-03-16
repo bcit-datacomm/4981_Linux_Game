@@ -227,5 +227,15 @@ typedef struct
     ZombieData * zombies;
 } GameSync;
 
+union PacketData {
+    MoveAction ma;
+    AttackAction aa;
+};
+
+struct ClientMessage {
+    int32_t id;
+    PacketData data;
+};
+
 #endif
 
