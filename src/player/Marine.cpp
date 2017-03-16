@@ -38,7 +38,9 @@ int32_t Marine::checkForPickUp(){
 
     int32_t PickId = -1;
 
-    Entity* ep =  GameManager::instance()->getCollisionHandler().detectPickUpCollision(this);
+    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
+
+    Entity* ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
 
     if(ep != nullptr){
         const auto& tm = GameManager::instance()->getTurretManager();
@@ -55,7 +57,6 @@ int32_t Marine::checkForPickUp(){
         if(inventory.pickUp(PickId)){
 
             GameManager::instance()->deleteWeaponDrop(wd.getId());
-
         }
     }
     return -1;

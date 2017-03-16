@@ -3,6 +3,7 @@
 #include <math.h>
 #include <random>
 #include "../log/log.h"
+#include <cassert>
 #define PI 3.14159265
 
 
@@ -25,18 +26,14 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
 
     placeable = (distance <= 200);
 
-    SDL_Rect checkBox;
-    checkBox.h = 100;
-    checkBox.w = 100;
-    checkBox.x = getX();
-    checkBox.y = getY();
-    HitBox hitBox(checkBox);
-
-    if(placeable && ch.detectMovementCollision(this)){
+    if(placeable && (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this))){
         placeable = false;
     }
-
-
     return placeable;
 }
 

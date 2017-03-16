@@ -5,14 +5,24 @@ void Movable::move(float moveX, float moveY, CollisionHandler &ch){
     //Move the Movable left or right
     setX(getX() + moveX);
 
-    if (ch.detectMovementCollision(this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)) {
         setX(getX() - moveX);
     }
 
     //Move the Movable up or down
     setY(getY()+moveY);
 
-    if (ch.detectMovementCollision(this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)) {
         setY(getY() - moveY);
     }
 

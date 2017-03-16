@@ -92,6 +92,7 @@ private:
     std::map<int32_t, WeaponDrop> weaponDropManager;
     std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
     std::map<int32_t, Barricade> barricadeManager;
+    std::map<int32_t, Wall> wallManager;
 
 };
 
