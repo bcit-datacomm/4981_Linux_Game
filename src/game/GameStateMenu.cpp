@@ -12,6 +12,7 @@
 #include "../view/Window.h"
 #include <unistd.h>
 #include "../log/log.h"
+#include "Game.h"
 
 
 /**
@@ -28,23 +29,16 @@
 *
 * Interface: GameStateMenu(Game& g, int gameWidth, int gameHeight)
 *                           Game& g: The instance of the game which the display window is tied to
-*                           int gameWidth: Width of the game window
-*                           int gameHeight: Height of the game window
+*                           int gameWidth: Width of the game.getWindow()
+*                           int gameHeight: Height of the game.getWindow()
 *
 * Notes:
 * GameStateMenu ctor which initializes all member variables for use throughout class
 */
-GameStateMenu::GameStateMenu(Game& g, int gameWidth, int gameHeight):
-                                GameState(g),
-                                headingFont(nullptr), textboxFont(nullptr), menuFont(nullptr),
-                                level(),
-                                camera(gameWidth,gameHeight),
-                                menuItems({"join", "options"}),
-                                selected{false,false},
-                                activeTextbox{false,false},
-                                defaultText({"IP Address", "Username"}),
-                                textInput({defaultText[IP], defaultText[USERNAME]}),
-                                fontColors({SDL_WHITE_RGB, SDL_GREEN_RGB, SDL_BLACK_RGB, SDL_RED_RGB}){
+GameStateMenu::GameStateMenu(Game& g, int gameWidth, int gameHeight): GameState(g), headingFont(nullptr), 
+    textboxFont(nullptr), menuFont(nullptr),  level(), camera(gameWidth,gameHeight), menuItems({"join", "options"}), 
+    selected{false,false}, activeTextbox{false,false}, defaultText({"IP Address", "Username"}), textInput({defaultText[IP], 
+        defaultText[USERNAME]}), fontColors({SDL_WHITE_RGB, SDL_GREEN_RGB, SDL_BLACK_RGB, SDL_RED_RGB}) {
 }
 
 
@@ -89,11 +83,11 @@ bool GameStateMenu::load() {
         success = false;
     }
 
-    if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", game.renderer)) {
+    if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", game.getRenderer())) {
         logv("Failed to load the level texture!\n");
         success = false;
     } else {
-        level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
+        level.levelTexture.setDimensions(game.getWindow().getWidth(), game.getWindow().getHeight());
     }
     return success;
 }
@@ -120,7 +114,6 @@ bool GameStateMenu::load() {
 * Listens for events and renders all assets to the screen
 */
 void GameStateMenu::loop() {
-
     // State Loop
     while (play) {
         handle(); // Handle user input
@@ -174,9 +167,9 @@ void GameStateMenu::handle() {
  SDL_Keycode keyCode;
 
  //Handle events on queue
- SDL_WaitEvent( &event );
- game.window.handleEvent(event);
-    switch ( event.type ) {
+ SDL_WaitEvent(&event);
+ game.getWindow().handleEvent(event);
+    switch (event.type) {
         case SDL_KEYDOWN:
             keyCode = event.key.keysym.sym;
             if (keyCode == SDLK_ESCAPE) {
@@ -262,7 +255,7 @@ void GameStateMenu::handle() {
             switch (event.window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
                     //Adjust the dimensions of the window if resized
-                    level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
+                    level.levelTexture.setDimensions(game.getWindow().getWidth(), game.getWindow().getHeight());
                     break;
             }
             break;
@@ -294,13 +287,12 @@ void GameStateMenu::handle() {
 * Function positions all screen elements in the window
 */
 void GameStateMenu::update(const float delta) {
-
     if(delta == JOIN) {
-        game.stateID = 2;
+        game.setStateID(2);
     } else if (delta == OPTIONS) {
-        game.stateID = 2; //TEMPORARY: change to correct state ID once implemented
+        game.setStateID(2);
     } else {
-        game.stateID = 0;
+        game.setStateID(0);
     }
 }
 
@@ -325,8 +317,8 @@ void GameStateMenu::update(const float delta) {
 */
 void GameStateMenu::positionElements() {
 
-    int windowWidth = game.window.getWidth();
-    int windowHeight = game.window.getHeight();
+    int windowWidth = game.getWindow().getWidth();
+    int windowHeight = game.getWindow().getHeight();
     int maxTextWidth = 0;
     int maxTextHeight = 0;
     int vertPadding = 50;
@@ -396,13 +388,13 @@ void GameStateMenu::positionElements() {
 */
 void GameStateMenu::render() {
     //Only draw when not minimized
-    if (!game.window.isMinimized()) {
+    if (!game.getWindow().isMinimized()) {
 
         //Clear screen
-        SDL_RenderClear( game.renderer );
+        SDL_RenderClear( game.getRenderer() );
 
         //Render textures
-        level.levelTexture.render(game.renderer, 0 - camera.getX(), 0 - camera.getY());
+        level.levelTexture.render(game.getRenderer(), 0 - camera.getX(), 0 - camera.getY());
 
         //Position all screen elements in the window
         positionElements();
@@ -414,18 +406,18 @@ void GameStateMenu::render() {
             } else {
                 renderText(&menuTextTextures[i], menuItems[i].c_str(), fontColors[RED], menuFont, menuItemPos[i]);
             }
-            menuTextTextures[i].render(game.renderer, menuItemPos[i].x, menuItemPos[i].y);
+            menuTextTextures[i].render(game.getRenderer(), menuItemPos[i].x, menuItemPos[i].y);
         }
 
         //Change the color of the textbox when active
         //Used so User knows when textbox is can accept input
         for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
             if (activeTextbox[i]) {
-                SDL_SetRenderDrawColor(game.renderer, LT_GREEN_RGB[0], LT_GREEN_RGB[1], LT_GREEN_RGB[2], OPAQUE);
-                SDL_RenderFillRect(game.renderer, &textboxPos[i]);
+                SDL_SetRenderDrawColor(game.getRenderer(), LT_GREEN_RGB[0], LT_GREEN_RGB[1], LT_GREEN_RGB[2], OPAQUE);
+                SDL_RenderFillRect(game.getRenderer(), &textboxPos[i]);
             } else {
-                SDL_SetRenderDrawColor(game.renderer, WHITE_RGB[0], WHITE_RGB[1], WHITE_RGB[2], OPAQUE);
-                SDL_RenderFillRect(game.renderer, &textboxPos[i]);
+                SDL_SetRenderDrawColor(game.getRenderer(), WHITE_RGB[0], WHITE_RGB[1], WHITE_RGB[2], OPAQUE);
+                SDL_RenderFillRect(game.getRenderer(), &textboxPos[i]);
             }
         }
 
@@ -438,7 +430,7 @@ void GameStateMenu::render() {
         }
 
         //Update screen
-        SDL_RenderPresent(game.renderer);
+        SDL_RenderPresent(game.getRenderer());
     }
 }
 
@@ -469,11 +461,11 @@ void GameStateMenu::render() {
 * When called, it renders the passed in text to the screen
 */
 void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
-                                SDL_Color color, TTF_Font* font, SDL_Rect rect) {
-    if ( !fontTexture->loadFromRenderedText( text, color, game.renderer, font ) ) {
+        SDL_Color color, TTF_Font* font, SDL_Rect rect) {
+    if (!fontTexture->loadFromRenderedText(text, color, game.getRenderer(), font)) {
         logv( "Unable to render text texture!\n" );
     }
-    fontTexture->render(game.renderer, rect.x, rect.y);
+    fontTexture->render(game.getRenderer(), rect.x, rect.y);
 }
 
 /**

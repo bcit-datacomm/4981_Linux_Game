@@ -24,24 +24,26 @@ public:
     virtual bool load();
     virtual void loop();
 
-    GameManager* gameManager = nullptr;
-
-    // Frame Display
-    std::stringstream frameTimeText;
-    TTF_Font* frameFont = nullptr;
-    LTexture frameFPSTextTexture;
+    auto& getFrameTimeText() const {return frameTimeText;}
+    auto getFrameFont() const {return frameFont;}
+    auto getFPSTexture() const {return frameFPSTextTexture;}
 
 private:
-    Player player;
-    Level level;
-    Base base;
-    Camera camera;
-
     virtual void sync() override;
     virtual void handle() override;
     virtual void update(const float delta) override;
     virtual void render() override;
 
+    const int32_t playerMarineId;
+    Player player;
+    Level level;
+    Base base;
+    Camera camera;
+
+    // Frame Display
+    std::stringstream frameTimeText;
+    TTF_Font *frameFont = nullptr;
+    LTexture frameFPSTextTexture;
 };
 
 #endif

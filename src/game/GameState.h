@@ -1,7 +1,9 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 #include <SDL2/SDL.h>
-#include "Game.h"
+//#include "Game.h"
+
+class Game;
 
 class GameState {
 public:
@@ -11,20 +13,25 @@ public:
     virtual bool load() = 0;
     virtual void loop() = 0;
 
-    // Pointer to game parent
+    auto& getGame() const {return game;}
+    auto& getEventHandler() const {return event;}
+    auto getPlayFlag() const {return play;}
+
+protected:
+    //Reference to game parent
     Game& game;
 
-    // Event handler
+    //Event handler
     SDL_Event event;
-
+    //
     //Main loop flag
     bool play = true;
 
-private:
     virtual void handle() = 0;
     virtual void update(const float delta) = 0;
     virtual void render() = 0;
     virtual void sync() = 0;
+
 };
 
 #endif

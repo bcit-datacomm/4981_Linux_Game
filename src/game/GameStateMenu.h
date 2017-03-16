@@ -37,30 +37,31 @@ static constexpr size_t RED = 3;
 
 class GameStateMenu : public GameState {
 public:
-
     GameStateMenu(Game& g, int gameWidth, int gameHeight);
-
     virtual ~GameStateMenu();
 
     virtual bool load();
     virtual void loop();
-
-    TTF_Font* headingFont;
-    TTF_Font* textboxFont;
-    TTF_Font* menuFont;
-    LTexture frameFPSTextTexture;
+    auto getHeadingFont() const {return headingFont;}
+    auto getTextBoxFont() const {return textboxFont;}
+    auto getMenuFont() const {return menuFont;}
+    auto& getFPSTexture() const {return frameFPSTextTexture;}
 
 private:
-
-    Level level;
-    Camera camera;
-
     virtual void sync() override;
     virtual void handle() override;
     virtual void update(const float delta) override;
     virtual void render() override;
     void positionElements();
     void renderText(LTexture *fontTexture, const char* text, SDL_Color color, TTF_Font* font, SDL_Rect rect);
+
+    TTF_Font *headingFont;
+    TTF_Font *textboxFont;
+    TTF_Font *menuFont;
+    LTexture frameFPSTextTexture;
+
+    Level level;
+    Camera camera;
 
     std::string menuItems[NUM_MENU_ITEMS]; //Menu Item text to be displayed in the window
     bool selected[NUM_MENU_ITEMS]; //Whether the menu option has been selected
@@ -75,7 +76,7 @@ private:
     std::string defaultText[NUM_TEXT_FIELDS]; //Default text to be displayed in the textbox
     std::string textInput[NUM_TEXT_FIELDS]; //User inputted text in the textbox
 
-    SDL_Color   fontColors[4]; //Colors used in the Window
+    SDL_Color fontColors[4]; //Colors used in the Window
 
 };
 
