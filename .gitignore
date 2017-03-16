@@ -1,0 +1,3 @@
+/src/*.h.gch
+/src/*/*.h.gch
+/bin/*
