@@ -16,12 +16,6 @@
 #include "../view/Window.h"
 #include "../sprites/SpriteManager.h"
 
-// ticks (ms) in 1 second
-static constexpr float TICK_SEC = 1000;
-
-// font size
-static constexpr int FONT_SIZE = 28;
-
 class GameStateMatch : public GameState {
 public:
     GameStateMatch(Game& g, int gameWidth, int gameHeight);
