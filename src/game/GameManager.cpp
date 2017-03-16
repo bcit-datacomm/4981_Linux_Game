@@ -67,22 +67,10 @@ void GameManager::updateMarines(const float delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
-        z.second.generateMove();
-        if (z.second.isMoving()) {
-            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
-        }
+        z.second.generateRandomMove();
+        z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
     }
 }
-
-// Update turret actions.
-// Jamie, 2017-03-01.
-void GameManager::updateTurrets(const float delta) {
-    for (auto& t : turretManager) {
-        t.second.targetScanTurret();
-    }
-}
-
-
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();
@@ -170,16 +158,12 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const float y) {
     const int32_t id = generateID();
     zombieManager[id] = Zombie();
-
     if (!zombieManager.at(id).texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
         logv("Failed to load the Zombie texture!\n");
         deleteZombie(id);
         return false;
     }
-
     zombieManager.at(id).setPosition(x,y);
-    zombieManager.at(id).generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    zombieManager.at(id).setState(ZombieState::ZOMBIE_MOVE);
 
     return true;
 }
@@ -406,7 +390,7 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer,
 }
 
 bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
-
+    
     std::vector<Point> spawnPoints;
     spawnPoints.emplace_back(Point(-900, -900));
     spawnPoints.emplace_back(Point(1900, -900));

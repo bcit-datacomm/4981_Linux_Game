@@ -12,8 +12,8 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 
-GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g),
-        camera(gameWidth,gameHeight) {
+GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
+                               level(),  base(), camera(gameWidth,gameHeight){
 
 }
 
@@ -21,7 +21,7 @@ bool GameStateMatch::load() {
     bool success = true;
 
     //Open the font
-    frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", FONT_SIZE);
+    frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
     if (frameFont == nullptr) {
         logv( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         success = false;
@@ -32,7 +32,7 @@ bool GameStateMatch::load() {
         logv("Failed to load the level texture!\n");
         success = false;
     } else {
-        level.levelTexture.setDimensions(MAP_WIDTH, MAP_HEIGHT);
+        level.levelTexture.setDimensions(2000, 2000);
     }
 
     const int32_t playerMarineID = GameManager::instance()->createMarine();
@@ -43,13 +43,9 @@ bool GameStateMatch::load() {
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(game.renderer, 1500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 600, 900);
-    GameManager::instance()->createZombie(game.renderer, 500, 1500);
-    GameManager::instance()->createZombie(game.renderer, 1500, 250);
-    GameManager::instance()->createTurret(game.renderer, 1000, 500);
     GameManager::instance()->createWeaponDrop(game.renderer, 1800, 1700);
     //base = Base();
-
+    
     if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
         logv("Failed to load the base texture!\n");
         success = false;
@@ -184,10 +180,11 @@ void GameStateMatch::update(const float delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
-    GameManager::instance()->updateTurrets(delta);
 
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
+
+
 }
 
 void GameStateMatch::render() {

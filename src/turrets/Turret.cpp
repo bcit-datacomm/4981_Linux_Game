@@ -1,10 +1,9 @@
 // Created 05/02/2017 Mark C.
 #include "Turret.h"
-#include "../game/GameManager.h"
 #include "../log/log.h"
 
-Turret::Turret(bool activated, int health, int ammo, bool placed, float range)
-        :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed), range(range) {
+Turret::Turret(bool activated, int health, int ammo, bool placed)
+        :Movable(MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -70,7 +69,7 @@ bool Turret::healthCheckTurret() {
     return (health > 0);
 }
 
-void Turret::move(const float playerX, const float playerY,
+void Turret::move(const float playerX, const float playerY, 
                         const float moveX, const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
     if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
@@ -95,53 +94,7 @@ void Turret::pickUpTurret() {
     texture.setAlpha(0);
 }
 
-/**
- * Checks if there are any enemies in the turret's coverage area.
- * Jamie, March 1
- * Revised by Rob, March 5
- */
+// checks if there are any enemies in the turret's coverage area, this is not yet defined
 bool Turret::targetScanTurret() {
-    //Get map of all zombies
-    const auto& mapZombies = GameManager::instance()->getZombies();
-
-    unsigned int closestZombieId = 0;
-    float closestZombieDist = std::numeric_limits<float>::max();
-
-    // Detect zombies
-    bool detect = false;
-    for (const auto& item : mapZombies) {
-        const auto& zombie = item.second;
-        const float zombieX = zombie.getX();
-        const float zombieY = zombie.getY();
-
-        const float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
-        const float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
-        const float distance = sqrt(xDelta * xDelta + yDelta * yDelta);
-
-        if (distance < getRange()) {
-            if (distance < closestZombieDist) {
-                closestZombieId = item.first;
-                closestZombieDist = distance;
-                detect = true;
-            }
-        }
-    }
-
-    if (!detect) {
-        return false;
-    }
-
-    const auto& target = mapZombies.find(closestZombieId);
-    if (target == mapZombies.end()) {
-        return false;
-    }
-
-    const float deltaX = getX() - target->second.getX();
-    const float deltaY = getY() - target->second.getY();
-
-    // Set angle so turret points at zombie
-    setAngle(((atan2(deltaX, deltaY) * 180.0) / M_PI) * -1);
-    //detectList[closestZombieId]->damage(this->attackDmg);
-
     return true;
 }
