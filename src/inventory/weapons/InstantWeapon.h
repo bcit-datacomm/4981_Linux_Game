@@ -5,10 +5,9 @@
 #define INSTANTWEAPON_H
 #include "Weapon.h"
 #include "../../collision/CollisionHandler.h"
+#include "Target.h"
 
 using std::string;
-
-
 
 class InstantWeapon: public Weapon  {
 public:

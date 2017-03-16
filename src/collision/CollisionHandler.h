@@ -4,23 +4,7 @@
 #include "Quadtree.h"
 #include <vector>
 #include <queue>
-
-typedef struct Target{
-    Entity target;
-    int hitX;
-    int hitY;
-    int playerDist;
-    Target(Entity& t) : target(t){}
-
-    Target(const Target& t) : target(t.target), hitX(t.hitX), 
-            hitY(t.hitY), playerDist(t.playerDist) {
-    }
-    Target& operator=(Target&& t){ return t; }
-
-    bool operator<(const Target& rhs) const{
-        return playerDist < rhs.playerDist;
-    }
-} Target;
+#include "../inventory/weapons/Target.h"
 
 
 class Marine;

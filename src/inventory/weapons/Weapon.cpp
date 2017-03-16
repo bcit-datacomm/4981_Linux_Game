@@ -11,26 +11,26 @@
 using std::string;
 
 Weapon::Weapon(string type, string fireSound, string hitSound,
-        string reloadSound, string emptySound,
-        int range, int damage, int AOE,
-        int clip, int clipMax, int ammo, 
-        int reloadDelay, int fireDelay)
-    : type(type), fireSound(fireSound), hitSound(hitSound),
-        reloadSound(reloadSound), emptySound(emptySound),
-        range(range), damage(damage), AOE(AOE),
-        clip(clip), clipMax(clipMax), ammo(ammo), 
-        reloadDelay(reloadDelay), fireDelay(fireDelay),
-        reloadTick(0), fireTick(0),  wID(generateWID()){
+    string reloadSound, string emptySound,
+    int range, int damage, int AOE,
+    int clip, int clipMax, int ammo, 
+    int reloadDelay, int fireDelay)
+: type(type), fireSound(fireSound), hitSound(hitSound),
+    reloadSound(reloadSound), emptySound(emptySound),
+    range(range), damage(damage), AOE(AOE),
+    clip(clip), clipMax(clipMax), ammo(ammo), 
+    reloadDelay(reloadDelay), fireDelay(fireDelay),
+    reloadTick(0), fireTick(0),  wID(generateWID()){
 
 }
 
 Weapon::Weapon(const Weapon& w) 
-    : type(w.type), fireSound(w.fireSound), hitSound(w.hitSound),
-        reloadSound(w.reloadSound), emptySound(w.emptySound),
-        range(w.range), damage(w.damage), AOE(w.AOE), 
-        clip(w.clip), clipMax(w.clipMax), ammo(w.ammo),
-        reloadDelay(w.reloadDelay), fireDelay(w.fireDelay),
-        reloadTick(w.reloadTick), fireTick(w.fireTick), wID(w.getId()){
+: type(w.type), fireSound(w.fireSound), hitSound(w.hitSound),
+    reloadSound(w.reloadSound), emptySound(w.emptySound),
+    range(w.range), damage(w.damage), AOE(w.AOE), 
+    clip(w.clip), clipMax(w.clipMax), ammo(w.ammo),
+    reloadDelay(w.reloadDelay), fireDelay(w.fireDelay),
+    reloadTick(w.reloadTick), fireTick(w.fireTick), wID(w.getId()){
 }
 
 
@@ -97,8 +97,8 @@ bool Weapon::fire(Marine &marine){
     if(!chamberRound()){
         return false;
     }
-    
     AudioManager::instance().playEffect(fireSound.c_str());
 
     return true;
 }
+

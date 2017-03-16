@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
+#include "../inventory/weapons/Target.h"
 
 
 CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
@@ -85,18 +86,25 @@ std::priority_queue<Target> CollisionHandler::detectLineCollision(
     const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
     const int deltaX  = range * cos(radians);
     const int deltaY  = range * sin(radians);
-    int aX, aY, bX, bY, tX, tY, pDist;
+    int aX; 
+    int aY;
+    int bX;
+    int bY; 
+    int tX; 
+    int tY; 
+    int pDist;
+
     std::vector<Entity*> allEntities;
     std::priority_queue<Target> targetsInSights;
 
-    std::vector<Entity*> &zombies = quadtreeZombie.objects;
-    std::vector<Entity*> &turrets = quadtreeTurret.objects;
-    std::vector<Entity*> &walls   = quadtreeWall.objects;
+    auto& zombies = quadtreeZombie.objects;
+    auto& turrets = quadtreeTurret.objects;
+    auto& walls   = quadtreeWall.objects;
 
-    allEntities.reserve( zombies.size() + turrets.size() + walls.size() );
-    allEntities.insert( allEntities.end(), zombies.begin(), zombies.end() );
-    allEntities.insert( allEntities.end(), turrets.begin(), turrets.end() );
-    allEntities.insert( allEntities.end(), walls.begin(),   walls.end()   );
+    allEntities.reserve(zombies.size() + turrets.size() + walls.size());
+    allEntities.insert(allEntities.end(), zombies.begin(), zombies.end());
+    allEntities.insert(allEntities.end(), turrets.begin(), turrets.end());
+    allEntities.insert(allEntities.end(), walls.begin(), walls.end());
 
     for (unsigned int x = 0, len = allEntities.size(); x < len; x++) {
         Entity* possibleTarget = allEntities.at(x);

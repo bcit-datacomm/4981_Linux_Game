@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "../../log/log.h"
+#include "Target.h"
 
 using std::string;
 
@@ -18,16 +19,16 @@ using std::string;
 
 
 InstantWeapon::InstantWeapon(string type, 
-        string fireSound, string hitSound,
-        string reloadSound, string emptySound,
-        int range, int damage, int AOE,
-        int clip, int clipMax, int ammo, 
-        int reloadDelay, int fireDelay)
-    : Weapon(type, fireSound, hitSound,
-        reloadSound, emptySound,
-        range, damage, AOE,
-        clip, clipMax, ammo, 
-        reloadDelay, fireDelay) {
+    string fireSound, string hitSound,
+    string reloadSound, string emptySound,
+    int range, int damage, int AOE,
+    int clip, int clipMax, int ammo, 
+    int reloadDelay, int fireDelay)
+: Weapon(type, fireSound, hitSound,
+    reloadSound, emptySound,
+    range, damage, AOE,
+    clip, clipMax, ammo, 
+    reloadDelay, fireDelay) {
 
 }
 
