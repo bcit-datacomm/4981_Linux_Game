@@ -19,6 +19,7 @@
 #include <math.h>
 #include <queue>
 #include "Zombie.h"
+#include "../log/log.h"
 
 // horizontal/vertical & diagonal cost
 static constexpr int BASE_COST   = 10;
@@ -49,7 +50,9 @@ public:
     explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
             const int pri = 0) : xPos(xPos), yPos(yPos), lv(lv), pri(pri) {}
 
-    virtual ~Node() {} // default dtor
+    virtual ~Node() {
+        logv("destroy Node\n");
+    } // default dtor
 
     // X coordinate of current node
     int getXPos() const {
@@ -78,17 +81,15 @@ public:
 
     // calculate next level based on direction
     void nextLevel(const int dir) {
-         lv += (dir%2 ==0 ? BASE_COST : EXTEND_COST);
+         lv += (dir % 2 ==0 ? BASE_COST : EXTEND_COST);
     }
 
     // calculate cost per the remaining distance to the destination
     const int estimate(const int xDest, const int yDest) const {
-        int xDist, yDist;
-        xDist = xDest - xPos;
-        yDist = yDest - yPos;
+        int xDist = xDest - xPos, yDist = yDest - yPos;
 
         // Euclidian Distance
-        return (static_cast<int>(sqrt(xDist * xDist + yDist * yDist)));
+        return static_cast<int>(sqrt(xDist * xDist + yDist * yDist));
 
         // Manhattan distance
         //dist = abs(xDist) + abs(yDist);

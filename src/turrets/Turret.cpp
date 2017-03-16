@@ -109,17 +109,14 @@ bool Turret::targetScanTurret() {
 
     // Detect zombies
     bool detect = false;
-    for (const auto& item : mapZombies)
-    {
+    for (const auto& item : mapZombies) {
         const auto& zombie = item.second;
-        float zombieX = zombie.getX();
-        float zombieY = zombie.getY();
+        const float zombieX = zombie.getX();
+        const float zombieY = zombie.getY();
 
-        float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
-        float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
-        xDelta *= xDelta;
-        yDelta *= yDelta;
-        float distance = sqrt(xDelta + yDelta);
+        const float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
+        const float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
+        const float distance = sqrt(pow(xDelta, 2) + pow(yDelta, 2));
 
         if (distance < getRange()) {
             if (distance < closestZombieDist) {
@@ -140,19 +137,12 @@ bool Turret::targetScanTurret() {
         return false;
     }
 
-    float deltaX = getX() - target->second.getX();
-    float deltaY = getY() - target->second.getY();
+    const float deltaX = getX() - target->second.getX();
+    const float deltaY = getY() - target->second.getY();
 
     // Set angle so turret points at zombie
-    double angle = ((atan2(deltaX, deltaY) * 180.0) / M_PI) * -1;
-    setAngle(angle);
+    setAngle(((atan2(deltaX, deltaY) * 180.0) / M_PI) * -1);
     //detectList[closestZombieId]->damage(this->attackDmg);
 
     return true;
-}
-
-// returns the turret's range.
-// Jamie, 2017-03-01.
-float Turret::getRange() const {
-    return range;
 }

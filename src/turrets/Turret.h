@@ -59,7 +59,11 @@ public:
 
     void removeTurret(); // removes the turret
 
-    float getRange() const;
+    // returns the turret's range.
+    // Jamie, 2017-03-01.
+    float getRange() const {
+        return range;
+    }
 
 private:
     bool activated; // turret activated state

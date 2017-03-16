@@ -57,7 +57,7 @@ public:
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.
-    const std::map<int32_t, Zombie>& GameManager::getZombies() {
+    const auto& getZombies() {
         return zombieManager;
     }
 

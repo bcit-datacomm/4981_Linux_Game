@@ -12,8 +12,8 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 
-GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-        level(),  base(), camera(gameWidth,gameHeight) {
+GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g),
+        camera(gameWidth,gameHeight) {
 
 }
 

@@ -23,7 +23,7 @@ static constexpr int ZOMBIE_WIDTH    = 75;
 
 // 8 possible directions
 static constexpr int DIR_CAP = 8;
-enum ZombieDirections {
+enum class ZombieDirection : int {
     DIR_R,
     DIR_RD,
     DIR_D,
@@ -31,11 +31,12 @@ enum ZombieDirections {
     DIR_L,
     DIR_LU,
     DIR_U,
-    DIR_RU
+    DIR_RU,
+    DIR_INVALID = -1
 };
 
 // Cardinal directions for setting angles
-enum ZombieAngles {
+enum class ZombieAngles : int {
     NORTH = 0,
     NORTHEAST = 45,
     EAST = 90,
@@ -47,10 +48,10 @@ enum ZombieAngles {
 };
 
 // overlapped
-static constexpr float OVERLAP = 0.1f;
+static constexpr float OVERLAP = 0.1;
 
 // zombie state
-enum ZombieState{
+enum class ZombieState {
     ZOMBIE_IDLE,
     ZOMBIE_MOVE,
     ZOMBIE_ATTACK,
@@ -59,8 +60,8 @@ enum ZombieState{
 
 class Zombie : public Movable {
 public:
-    Zombie(int health = ZOMBIE_INIT_HP, ZombieState state = ZOMBIE_IDLE, int step = 0,
-           int dir = -1, int frame = ZOMBIE_FRAMES);
+    Zombie(int health = ZOMBIE_INIT_HP, ZombieState state = ZombieState::ZOMBIE_IDLE, int step = 0,
+           ZombieDirection dir = ZombieDirection::DIR_INVALID, int frame = ZOMBIE_FRAMES);
     virtual ~Zombie();
 
     void onCollision();
@@ -73,7 +74,7 @@ public:
 
     bool checkTarget();               // checks if the zombie already arrived at the target
 
-    int getMoveDir();               // get move direction
+    ZombieDirection getMoveDir() const;               // get move direction
 
     bool checkBounds(const float x, const float y) const;  // boundary checks
 
@@ -104,8 +105,8 @@ public:
      * Fred Yang
      * March 14
      */
-    void setState(const ZombieState state_) {
-        state = state_;
+    void setState(const ZombieState newState) {
+        state = newState;
     }
 
     /**
@@ -140,7 +141,7 @@ public:
      * Fred Yang
      * March 14
      */
-    void setCurDir(const int d) {
+    void setCurDir(const ZombieDirection d) {
         dir = d;
     }
 
@@ -149,7 +150,7 @@ public:
      * Fred Yang
      * March 14
      */
-    int getCurDir() const {
+    ZombieDirection getCurDir() const {
         return dir;
     }
 
@@ -176,7 +177,7 @@ private:
     std::string path;   // A* path zombie should follow
     ZombieState state; // 0 - idle, 1 - move, 2 - attack, 3 - die
     int step;           // Number of steps zombie has taken in path
-    int dir;            // moving direction
+    ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
 };
 

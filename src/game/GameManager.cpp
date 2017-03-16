@@ -69,7 +69,7 @@ void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
         z.second.generateMove();
         if (z.second.isMoving()) {
-            z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
+            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
         }
     }
 }
@@ -178,8 +178,8 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const flo
     }
 
     zombieManager.at(id).setPosition(x,y);
-    zombieManager.at(id).generatePath(x, y, MAP_WIDTH/2 - BASE_WIDTH, MAP_HEIGHT/2 - BASE_HEIGHT);
-    zombieManager.at(id).setState(ZOMBIE_MOVE);
+    zombieManager.at(id).generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
+    zombieManager.at(id).setState(ZombieState::ZOMBIE_MOVE);
 
     return true;
 }
