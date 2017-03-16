@@ -8,53 +8,68 @@
 #include "../../sprites/LTexture.h"
 #include <string>
 
+using std::string;
+
 class Marine;
 
 class Weapon {
 public:
 
-    Weapon(std::string type = "no type", int range = 0, int damage = 0, int clip = 0, int clipMax = 0,
-            int ammo = 0, int rAOE = 0, int reloadSpeed = 0, int fireRate = 0, bool isReadyToFire = false);
+    Weapon(string type = "no type", string fireSound = "", string hitSound = "", 
+            string reloadSound = "", string emptySound = "",
+            int range = 0, int damage = 0, int AOE = 0,
+            int clip = 0, int clipMax = 0, int ammo = 0,  
+            int reloadDelay = 0, int fireDelay = 0);
     Weapon(const Weapon& w);
     ~Weapon() = default;
   
-    
-    int getClipMax() const { return clipMax; } //returns max amount clip can hold
-    std::string getType() const { return type; } //returns weapon type
-    int getReloadSpeed() const { return reloadSpeed; } //returns weapon reload speed
-    int getAmmo() const { return ammo; } //returns ammo amount
-    int getRAOE() const { return rAOE; } //returns radius of effect
-    int getClip() const { return clip; } //returns bullets in clip
-    int getDamage() const { return damage; } //returns damage of weapon
-    int getRange() const { return range; } //returns range of weapon
-    int getFireRate() const { return fireRate; } //returns weapon rate of fire
-    
-    void reloadClip();//resets clip to max amount
-    bool reduceAmmo(const int rounds);
+    string getType() const { return type; } 
+
+    int getRange() const { return range; } 
+    int getDamage() const { return damage; } 
+    int getAOE() const { return AOE; } 
+
+    int getClip() const { return clip; } 
+    int getClipMax() const { return clipMax; } 
+    int getAmmo() const { return ammo; } 
+
+    int getReloadSpeed() const { return reloadDelay; } 
+    int getFireRate() const { return fireDelay; } 
+        
+    bool reduceClip(const int rounds);
+    bool reloadClip();
+    bool chamberRound();
     
     int32_t getId()const{return wID;};
     void setId(const int32_t num){wID = num;};
 
-    bool getFireState(); //returns gun ready to fire
-
-    virtual void fire(Marine &marine);
+    virtual bool fire(Marine &marine);
 
 protected:
-    std::string type;
-    int range; //range of weapon
-    int damage;//damage per bullet
-    int clip;//bullets in clip
-    int clipMax;//max amount clip can hold
-    int ammo; //amount of bullets total
-    int rAOE; //radius of area of effect
-    int reloadSpeed;
+    string type;
+
+    string fireSound;
+    string hitSound;
+    string reloadSound;
+    string emptySound;
+
+    int range;
+    int damage;
+    int AOE; 
+
+    int clip;
+    int clipMax;
+    int ammo; 
+    
+    int reloadDelay;
+    int fireDelay;
+
+    int reloadTick;
+    int fireTick;
+
     LTexture inGameTexture;
     LTexture UiTexture;
-    int reloadTick;
-    int reloadDelay;
-    int fireRate;
-    int fireTick;
-    bool isReadyToFire;
+
     int32_t wID;
 
 };

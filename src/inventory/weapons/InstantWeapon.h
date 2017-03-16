@@ -6,15 +6,22 @@
 #include "Weapon.h"
 #include "../../collision/CollisionHandler.h"
 
+using std::string;
+
+
 
 class InstantWeapon: public Weapon  {
 public:
-    InstantWeapon(std::string type, int range, int damage,
-    int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire);
+    InstantWeapon(string type, 
+        string fireSound, string hitSound,
+        string reloadSound, string emptySound,
+        int range, int damage, int AOE,
+        int clip, int clipMax, int ammo, 
+        int reloadDelay, int fireDelay);
     ~InstantWeapon() = default;
 
-
-    void fire(Marine &marine);
+    virtual bool fire(Marine &marine);
+    std::priority_queue<Target> getTargets(Marine &marine);
 
 };
 
