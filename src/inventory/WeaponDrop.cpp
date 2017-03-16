@@ -7,7 +7,7 @@ using namespace std;
 
 
 WeaponDrop::WeaponDrop(int32_t wId): weaponId(wId){
-    logv("Created Weapon Drop\n");
+    logi("Created Weapon Drop\n");
 }
 
 WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
@@ -15,7 +15,7 @@ WeaponDrop::WeaponDrop(const WeaponDrop &wd): weaponId(wd.weaponId){
 }
 
 WeaponDrop::~WeaponDrop() {
-    logv("Destroy WeaponDrop\n");
+    logi("Destroy WeaponDrop\n");
 }
 void WeaponDrop::setPosition(int x, int y){
     xCoord = x;
