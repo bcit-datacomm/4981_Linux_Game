@@ -49,7 +49,7 @@ int32_t Marine::checkForPickUp(){
         if (it != tm.end()) {
             return PickId;
         }
-        const WeaponDrop wd = GameManager::instance()->getWeaponDrop(PickId);
+        const WeaponDrop &wd = GameManager::instance()->getWeaponDrop(PickId);
         //Get Weaopn id from weapon drop
         PickId = wd.getWeaponId();
         if(inventory.pickUp(PickId)){
