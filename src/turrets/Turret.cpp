@@ -87,8 +87,8 @@ void Turret::placeTurret() {
     boolPlaced = true;
 }
 
-bool Turret::isPlaced() {
-  return boolPlaced;
+void Turret::pickUpTurret() {
+    boolPlaced = false;
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined

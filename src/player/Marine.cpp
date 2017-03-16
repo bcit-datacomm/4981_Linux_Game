@@ -41,21 +41,20 @@ int32_t Marine::checkForPickUp(){
     Entity* ep =  GameManager::instance()->getCollisionHandler().detectPickUpCollision(this);
 
     if(ep != nullptr){
-        std::map<int32_t, Turret> tm = GameManager::instance()->getTurretManager();
+        const auto& tm = GameManager::instance()->getTurretManager();
         //get Entity drop Id
         PickId = ep->getId();
         const auto& it = tm.find(PickId);
         if (it != tm.end()) {
             return PickId;
-        } else {
-            WeaponDrop wd = GameManager::instance()->getWeaponDrop(PickId);
-            //Get Weaopn id from weapon drop
-            PickId = wd.getWeaponId();
-            if(inventory.pickUp(PickId)){
+        }
+        WeaponDrop wd = GameManager::instance()->getWeaponDrop(PickId);
+        //Get Weaopn id from weapon drop
+        PickId = wd.getWeaponId();
+        if(inventory.pickUp(PickId)){
 
-                GameManager::instance()->deleteWeaponDrop(wd.getId());
+            GameManager::instance()->deleteWeaponDrop(wd.getId());
 
-            }
         }
     }
     return -1;

@@ -56,7 +56,9 @@ public:
 
     void placeTurret();
 
-    bool isPlaced();
+    bool isPlaced() {return boolPlaced;};
+
+    void pickUpTurret();
 
     void removeTurret(); // removes the turret
 

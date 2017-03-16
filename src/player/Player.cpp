@@ -110,11 +110,13 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     }
     if(state[SDL_SCANCODE_E]){
 
-        int currentTime = SDL_GetTicks();
+        const int currentTime = SDL_GetTicks();
 
         if(currentTime > (pickupTick + pickupDelay)){
             pickupTick = currentTime;
             tempTurretID = marine->checkForPickUp();
+            Turret& tempTurret = GameManager::instance()->getTurret(tempTurretID);
+            tempTurret.pickUpTurret();
         }
     }
     if(state[SDL_SCANCODE_I]) {
