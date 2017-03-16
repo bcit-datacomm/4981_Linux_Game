@@ -33,7 +33,7 @@ bool GameStateMatch::load() {
 
 
     //set the boundary on the map
-    //GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
+    GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(0, 0);
@@ -187,13 +187,13 @@ void GameStateMatch::render() {
                     break;
                 }
                 //i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY()
-                Renderer::instance()->render(SDL_Rect{i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE}, TEXTURES::BARREN);
+                Renderer::instance()->render(i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE, TEXTURES::BARREN);
             }
         }
 
 
         //renders objects in game
-        GameManager::instance()->renderObjects(camera.getViewport());
+        GameManager::instance()->renderObjects(camera.getX(), camera.getY(), camera.getH(), camera.getW());
 
 
         //SDL_Color textColor = { 0, 0, 0, 255 };

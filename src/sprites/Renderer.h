@@ -86,10 +86,8 @@ public:
 
     //renders all of the sprites within the camera viewport
 
-    static void render(const SDL_Rect& dest, TEXTURES spriteType, double angle = 0.0,
-        SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
-    static void render(const SDL_Rect& dest, TEXTURES spriteType, const SDL_Rect& clip,
-        double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+    static void render(int x, int y, int w, int h, TEXTURES spriteType, SDL_Rect * clip = nullptr, double angle = 0.0,
+                          SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 
 private:

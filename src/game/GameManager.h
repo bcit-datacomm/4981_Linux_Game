@@ -31,7 +31,7 @@ public:
 
     int32_t generateID();
 
-    void renderObjects(const SDL_Rect& camera); // Render all objects in level
+    void renderObjects(int camX, int camY, int camH, int camW); // Render all objects in level
 
     // Methods for creating, getting, and deleting marines from the level.
     int32_t createMarine();
