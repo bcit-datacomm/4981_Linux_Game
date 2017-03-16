@@ -74,7 +74,7 @@ void Entity::updateHitBoxes() {
     movementHitBox.move(x, y);
     projectileHitBox.move(x, y);
     damageHitBox.move(x, y);
-    pickupHitBox.move(x, y);
+    pickupHitBox.move(x - 10, y - 10);
 }
 
 void Entity::updateRectHitBoxes() {
