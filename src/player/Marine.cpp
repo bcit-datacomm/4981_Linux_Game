@@ -44,11 +44,12 @@ int32_t Marine::checkForPickUp(){
         const auto& tm = GameManager::instance()->getTurretManager();
         //get Entity drop Id
         PickId = ep->getId();
+        // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
         const auto& it = tm.find(PickId);
         if (it != tm.end()) {
             return PickId;
         }
-        WeaponDrop wd = GameManager::instance()->getWeaponDrop(PickId);
+        const WeaponDrop wd = GameManager::instance()->getWeaponDrop(PickId);
         //Get Weaopn id from weapon drop
         PickId = wd.getWeaponId();
         if(inventory.pickUp(PickId)){
