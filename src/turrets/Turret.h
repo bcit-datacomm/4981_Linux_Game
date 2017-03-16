@@ -1,13 +1,13 @@
 // Created 05/02/2017 Mark C.
 #ifndef TURRET_H
 #define TURRET_H
+#include <vector>
+#include <SDL2/SDL.h>
 #include "../sprites/LTexture.h"
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../player/Marine.h"
 #include "../collision/CollisionHandler.h"
-#include <vector>
-#include <SDL2/SDL.h>
 #include "../view/Window.h"
 
 constexpr static int TURRET_HEIGHT = 100;
@@ -19,6 +19,10 @@ constexpr static int PLACE_DISTANCE = 200;
 
 class Turret : public Movable {
 public:
+    Turret(bool activated = false, int health = 200, int ammo = 100,
+            bool boolPlaced = false, float range = 400.0f);
+    virtual ~Turret();  // default dtor
+
     void spawnTurret(); // spawns a DEACTIVATED turret
 
     bool placementCheckTurret(); // checks if turret placement is within bounds
@@ -44,8 +48,8 @@ public:
 
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
-    void move(const float playerX, const float playerY, 
-                  const float moveX, const float moveY, CollisionHandler &ch);
+    void move(const float playerX, const float playerY,
+            const float moveX, const float moveY, CollisionHandler &ch);
 
     void placeTurret();
 
@@ -55,15 +59,18 @@ public:
 
     void removeTurret(); // removes the turret
 
-    Turret(bool activated = false, int health = 200, int ammo = 100,
-         bool boolPlaced = false);
-    virtual ~Turret();
+    // returns the turret's range.
+    // Jamie, 2017-03-01.
+    float getRange() const {
+        return range;
+    }
 
 private:
     bool activated; // turret activated state
     int health; // turret health pool
     int ammo; // turret ammo pool
     bool boolPlaced;
+    float range; // turret's range.
 };
 
 #endif

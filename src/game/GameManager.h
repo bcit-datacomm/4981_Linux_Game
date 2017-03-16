@@ -53,6 +53,13 @@ public:
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float delta); // Update marine actions
     void updateZombies(const float delta); // Update zombie actions
+    void updateTurrets(const float delta); // Update turret actions
+
+    // returns the list of zombies.
+    // Jamie, 2017-03-01.
+    auto& getZombies() {
+        return zombieManager;
+    }
 
     int32_t addObject(const Object&);
     void deleteObject(const int32_t id);
