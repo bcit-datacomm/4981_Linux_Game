@@ -31,7 +31,7 @@
 ------------------------------------------------------------------------------*/
 #ifndef UDPHEADER_H
 #define UDPHEADER_H
-#include <stdint.h>
+#include <cstdint>
 /*------------------------------------------------------------------------------
 -- enum: UDPHeaders
 --
@@ -48,8 +48,7 @@
 -- NOTES:
 -- this is the enum to hold all the terspecifiers that will indicate the packets
 --------------------------------------------------------------------------*/
-enum class UDPHeaders:int32_t
-{
+enum class UDPHeaders : int32_t {
     SYNCH,
     PLAYERH,
     ZOMBIEH,
@@ -227,5 +226,15 @@ typedef struct
     int32_t nzombies;
     ZombieData * zombies;
 } GameSync;
+
+union PacketData {
+    MoveAction ma;
+    AttackAction aa;
+};
+
+struct ClientMessage {
+    int32_t id;
+    PacketData data;
+};
 
 #endif

@@ -120,7 +120,10 @@ void GameStateMatch::loop() {
 
 void GameStateMatch::updateServ() {
     MoveAction moveAction = player.getMoveAction();
-    NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(MoveAction));
+    ClientMessage clientMessage;
+    clientMessage.id = static_cast<int32_t>(UDPHeaders::WALK);
+    clientMessage.data.ma = moveAction;
+    NetworkManager::instance().writeUDPSocket((char *)&clientMessage, sizeof(ClientMessage));
 }
 
 void GameStateMatch::sync() {
