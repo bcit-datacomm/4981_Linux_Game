@@ -303,6 +303,6 @@ string Zombie::generatePath(const float xStart, const float yStart,
  * Fred Yang
  * Feb 14
  */
-bool Zombie::checkBounds(const float x, const float y) const {
+constexpr bool Zombie::checkBounds(const float x, const float y) {
     return (!(x < 0 || x > MAP_WIDTH || y < 0 || y > MAP_HEIGHT));
 }

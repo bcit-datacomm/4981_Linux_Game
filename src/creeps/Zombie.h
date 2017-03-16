@@ -76,7 +76,7 @@ public:
 
     ZombieDirection getMoveDir() const;               // get move direction
 
-    bool checkBounds(const float x, const float y) const;  // boundary checks
+    static constexpr bool checkBounds(const float x, const float y);  // boundary checks
 
     // A* path
     std::string generatePath(const float xStart, const float yStart,
