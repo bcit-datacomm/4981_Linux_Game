@@ -12,15 +12,6 @@ public:
     CollisionHandler();
     ~CollisionHandler() = default;
 
-/**
-    const HitBox *detectDamageCollision(const Entity *entity);    // Check for damage collisions, return object if hits
-    const HitBox *detectProjectileCollision(const Entity *entity); // Check for projectile collisions, return object if hits
-    bool detectMovementCollision(const Entity *entity); // // Check for collisions during movement
-    Entity* detectPickUpCollision(const Entity *entity);//check for pick up collision, return object if can pick up
-    std::priority_queue<const HitBox*> detectLineCollision(Marine &marine, const int range);
-*/
-
-
     const HitBox *detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity);    // Check for damage collisions, return object if hits
     const HitBox *detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity); // Check for projectile collisions, return object if hits
     bool detectMovementCollision(const std::vector<Entity*> returnObjects, const Entity *entity); // // Check for collisions during movement

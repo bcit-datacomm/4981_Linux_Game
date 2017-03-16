@@ -16,7 +16,6 @@ Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, c
 
 Zombie::~Zombie() {
     //logv("Destroy Zombie\n");
-    printf("Create Zombie\n");
 }
 
 void Zombie::onCollision() {
@@ -52,9 +51,6 @@ void Zombie::generateRandomMove(){
     Entity::moveProHitBox(tx,ty);
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-
-    //assert(this->movementHitBox->getRect().h != 0);
-    //assert(this->movementHitBox->getRect().w != 0);
 
     if(ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)

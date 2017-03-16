@@ -283,7 +283,7 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
 
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id){
-        return weaponDropManager.at(id);
+    return weaponDropManager.at(id);
 }
 
 //returns weapon in weaponManager
@@ -344,7 +344,6 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreePickUp.insert(&m.second);
     }
 
-    //logv("pro size: %d\n", collisionHandler.quadtreePro.objects.size());
     for (auto& w : wallManager) {
         collisionHandler.quadtreeWall.insert(&w.second);
     }
@@ -461,20 +460,20 @@ bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
     if(zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
-        for(const auto& z : zombieManager) {
+        for (const auto& z : zombieManager) {
             if(count >= spawnPoints.size()){
                 break;
             }
             ids.push_back(z.first);
             ++count;
         }
-        for(const auto& id : ids) {
+        for (const auto& id : ids) {
             deleteZombie(id);
         }
     }
 
-    for(int i = 0; i < n; ++i) {
-        for(const auto& p : spawnPoints)
+    for (int i = 0; i < n; ++i) {
+        for (const auto& p : spawnPoints)
             createZombie(gRenderer, p.first, p.second);
     }
 
