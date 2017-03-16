@@ -1,8 +1,7 @@
 #include "Player.h"
 #include <math.h>
 
-Player::Player(const int32_t& id) : tempBarricadeID(-1), tempTurretID(-1), 
-        marine(GameManager::instance()->getMarine(id)) {
+Player::Player(const int32_t& id) : tempBarricadeID(-1), tempTurretID(-1), marine(GameManager::instance()->getMarine(id)), holdingTurret(false), pickupTick(0), pickupDelay(200) {
 
 }
 
@@ -31,6 +30,7 @@ void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
                     GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
                 tempTurretID = -1;
+                holdingTurret = false;
             }
         }
     }
@@ -95,7 +95,22 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine.inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
+<<<<<<< HEAD
         marine.checkForPickUp();
+=======
+        const int currentTime = SDL_GetTicks();
+
+        if(currentTime > (pickupTick + pickupDelay)){
+            pickupTick = currentTime;
+            const int checkTurret = marine->checkForPickUp();
+            if (checkTurret > -1 && holdingTurret == false)
+            {
+                tempTurretID = checkTurret;
+                GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
+                holdingTurret = true;
+            }
+        }
+>>>>>>> 53d488113550f61b018c8f7f47840793f5cbc2d1
     }
     if(state[SDL_SCANCODE_I]) {
         marine.inventory.useItem();
@@ -116,13 +131,19 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
     }
 }
 
-
 void Player::handleTempTurret(SDL_Renderer *renderer) {
    if(tempTurretID < 0) {
+<<<<<<< HEAD
        const double angle = marine.getAngle();
        tempTurretID = GameManager::instance()->createTurret(renderer, 
            marine.getX() + PLAYER_PLACE_DISTANCE * cos(angle),
            marine.getY() + PLAYER_PLACE_DISTANCE * sin(angle));
+=======
+       const double angle = marine->getAngle();
+       tempTurretID = GameManager::instance()->createTurret(renderer,
+           marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
+           marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
+>>>>>>> 53d488113550f61b018c8f7f47840793f5cbc2d1
    } else {
        GameManager::instance()->deleteTurret(tempTurretID);
        tempTurretID = -1;

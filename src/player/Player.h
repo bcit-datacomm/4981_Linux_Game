@@ -33,6 +33,9 @@ private:
     int tempBarricadeID;
     int tempTurretID;
     Marine& marine;
+    bool holdingTurret;
+    int pickupTick;
+    int pickupDelay;
 };
 
 #endif
