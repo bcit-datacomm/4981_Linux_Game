@@ -175,10 +175,6 @@ Turret& GameManager::getTurret(const int32_t id) {
     return turretManager.find(id)->second;
 }
 
-std::map<int32_t, Turret>& GameManager::getTurretManager() {
-    return turretManager;
-}
-
 int32_t GameManager::addZombie(const Zombie& newZombie) {
     const int32_t id = generateID();
 

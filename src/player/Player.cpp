@@ -147,7 +147,3 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
        tempTurretID = -1;
    }
 }
-
-void Player::setTurretID(int32_t turretId) {
-    tempTurretID = turretId;
-}

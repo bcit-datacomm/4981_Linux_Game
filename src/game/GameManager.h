@@ -46,7 +46,7 @@ public:
     bool addTurret(const int32_t id, const Turret& newTurret);
     int32_t createTurret(SDL_Renderer* gRenderer, const float x, const float y) ;
     Turret& getTurret(const int32_t id);
-    std::map<int32_t, Turret>& getTurretManager();
+    std::map<int32_t, Turret>& getTurretManager(){return turretManager;};
 
     // Method for getting collisionHandler
     CollisionHandler& getCollisionHandler();

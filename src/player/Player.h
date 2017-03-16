@@ -26,7 +26,6 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
-    void setTurretID(int32_t turretID);
 
     Player();
     ~Player();
