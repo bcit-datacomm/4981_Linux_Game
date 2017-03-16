@@ -14,7 +14,7 @@
 #include "serverwrappers.h"
 
 int32_t getPlayerId() {
-    static std::atomic<int32_t> counter{0};
+    static std::atomic<int32_t> counter{-1};
     return ++counter;
 }
 
