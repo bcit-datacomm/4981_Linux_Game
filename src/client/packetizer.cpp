@@ -52,16 +52,16 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
     pBuff += sizeof(int32_t);
     switch(*pBuff++)
     {
-        case 'C':
+        case 'C': // NEW CONNECTIONS ONLY!
             if(*pBuff++ == '/') {
+                // insertplayer new player
                 std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
-                //insertplayer(id,msg);
                 GameManager::instance()->createMarine(id, msg);
             }
             break;
 
         case 'T':
-            std::cout << "\nId: " << id << "\tMsg: " << pBuff;
+            std::cout << "\nId: " << id << "\tMsg: " << ++pBuff;
             break;
 
         default:
@@ -114,6 +114,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
     switch(static_cast<UDPHeaders>(*pBuff++)) {
       case UDPHeaders::PLAYERH: {  // enclose in braces to prevent
         int32_t pCount = *pBuff++;
+
         for(int32_t i = 0; i  < pCount; i++) {
           player = reinterpret_cast<PlayerData *>(pBuff);
           std::cout << "\nPlayer playerid:" << player->playerid;

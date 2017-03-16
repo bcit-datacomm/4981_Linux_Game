@@ -120,9 +120,10 @@ void NetworkManager::runTCPClient() {
             }
 
             if(!running){
-                cout << "\nNew player detected! username: " << (buffrecv + 6);
+                Packetizer::parseControlMsg(buffrecv, bRead);
             } else{ // if game is going, must be player message
                 cout << "\nChat Recieved! msg: " << (buffrecv + 6);
+                Packetizer::parseControlMsg(buffrecv, bRead);
             }
         }
     } while(connected);
@@ -142,7 +143,9 @@ void NetworkManager::handshake(const char *ip, const char *username) {
 void NetworkManager::waitRecvId()
 {
     char buffrecv[STD_BUFFSIZE];
-    readSocket(sockTCP, buffrecv, STD_BUFFSIZE);
+    int32_t bRead;
+    bRead = readSocket(sockTCP, buffrecv, STD_BUFFSIZE);
+    Packetizer::parseControlMsg(buffrecv, bRead);
     // !!!!replace with parseControlMsg
     _myid = *(reinterpret_cast<const int32_t *>(buffrecv));
 }
@@ -168,7 +171,6 @@ void NetworkManager::runUDPClient() {
     while(running) {
         packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
         cout << "Recevied Dgram. Bytes read: " << packetSize << endl;
-        /*TEMP:*/
         Packetizer::parseGameSync(buffer, packetSize);
     }
 }
@@ -383,12 +385,10 @@ being received exceeds MTU.
 int NetworkManager::readUDPSocket(char *buf, const int& len) {
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(UDP_PORT);
-    addr.sin_addr.s_addr = INADDR_ANY;
     socklen_t addrLen = sizeof(addr);
     int res = recvfrom(sockUDP, buf, len, 0,
         (struct sockaddr *)&addr, &addrLen);
+
     if(res < 0 ) {
 		perror("recvfrom");
         exit(1);
