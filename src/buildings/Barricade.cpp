@@ -31,17 +31,17 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this))){
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this))) {
         placeable = false;
     }
     return placeable;
 }
 
-bool Barricade::isPlaceable(){
+bool Barricade::isPlaceable() {
     return placeable;
 }
 
-bool Barricade::isPlaced(){
+bool Barricade::isPlaced() {
     return placed;
 }
 
@@ -49,13 +49,6 @@ bool Barricade::isPlaced(){
 void Barricade::move(const float playerX, const float playerY, const float moveX,
         const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
-    //`setX(100);
-
-    // if(checkPlaceablePosition(playerX, playerY, moveX, moveY, ch)) {
-    //     texture.setAlpha(200);
-    // } else {
-    //     texture.setAlpha(30);
-    // }
 }
 
 
@@ -67,7 +60,7 @@ void Barricade::collidingProjectile(const int damage) {
     health -= damage;
 }
 
-void Barricade::placeBarricade(){
+void Barricade::placeBarricade() {
     // texture.setAlpha(255);
     placed=true;
 }

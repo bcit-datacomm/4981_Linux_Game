@@ -18,7 +18,7 @@ enum class TEXTURES : int {
 
     //--------------------- Menu textures ---------------------
     //Main Menu
-    MAIN,
+    MAIN, //Splash screen
 
     //LOBBY,
 
@@ -356,11 +356,9 @@ enum class TEXTURES : int {
     // //Boss Death
     // BOSS_ZOMBIE_DEAD
 
-
-    USERNAME_FONT,
-    HOST_FONT,
+    TEXTBOX,
     JOIN_FONT,
-    OPTIONS_FONT,
+    OPTIONS_FONT
 };
 
 #endif

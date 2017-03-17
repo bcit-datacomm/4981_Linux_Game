@@ -15,7 +15,8 @@ public:
             const SDL_Rect &damageSize, const SDL_Rect &pickupSize, int vel) : Entity(id, dest, movementSize,
             projectileSize, damageSize, pickupSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
 
-    virtual ~Movable() {};
+    virtual ~Movable() = default;
+    
     void move(float moveX, float moveY, CollisionHandler& ch); // Moves Marine
     void setDX(float px); //set delta x coordinate
     void setDY(float py); //set delta y coordinate

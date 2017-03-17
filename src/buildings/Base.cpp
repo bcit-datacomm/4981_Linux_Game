@@ -39,33 +39,33 @@ Point Base::getSpawnPoint() {
     int gab = 100;
 
 
-    switch(distr(eng)){
-        case 0://North
+    switch(distr(eng)) {
 
+        case 0://North
             //y point is fixed
             ny = getY() - gab;
             //x point is randomly generated;
             nx = distr(eng, decltype(distr)::param_type(getX() - gab,
-                                                       getX() + getWidth() + gab));
-
+                       getX() + getWidth() + gab));
             break;
         case 1://South
             ny = getY() + getHeight() + gab;
             nx = distr(eng, decltype(distr)::param_type(getX() - gab,
-                                                       getX()+  getWidth() + gab));
+                       getX()+  getWidth() + gab));
             break;
-        case 2://West
 
+        case 2://West
             //x point is fixed
             nx = getX() - gab;
             //y point is randomly generated
             ny = distr(eng, decltype(distr)::param_type(getY() - gab,
-                                                       getY() + getHeight() + gab));
+                       getY() + getHeight() + gab));
             break;
+
         case 3://East
             nx = getY() + getWidth() + gab;
             ny = distr(eng, decltype(distr)::param_type(getY() - gab,
-                                                       getY() + getHeight() + gab));
+                       getY() + getHeight() + gab));
             break;
     }
 

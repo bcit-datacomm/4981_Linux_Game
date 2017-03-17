@@ -24,6 +24,10 @@
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 
+constexpr int initVal = 0;
+constexpr int defaultSize = 100;
+constexpr int PUSize = 120;
+
 
 class GameManager {
 public:

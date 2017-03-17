@@ -21,6 +21,7 @@
 void Game::run() {
     // End program if stateID is 0 after a end of a loop
     while (stateID > 0) {
+        logv("State ID: %d\n", stateID);
         loadState();
         if (state->load()) {
             state->loop();
@@ -29,7 +30,6 @@ void Game::run() {
 }
 
 void Game::loadState() {
-    logv("Starting ");
     if (state != NULL) {
         delete state;
     }
@@ -37,12 +37,10 @@ void Game::loadState() {
     switch(stateID) {
         case 1:
             logv("Menu State\n");
-            //state = new GameStateMenu(*this, window.getWidth(), window.getHeight());
+            state = new GameStateMenu(*this);
             break;
         case 2:
             logv("Match State\n");
-            logv("w, h = %d, %d", window.getWidth(), window.getHeight());
-
             state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
 
             break;
@@ -58,49 +56,49 @@ bool Game::init() {
     bool success = true;
 
     //Initialize SDL
-    if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
-        logv( "SDL could not initialize! %s\n", SDL_GetError() );
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        logv("SDL could not initialize! %s\n", SDL_GetError());
         success = false;
     } else {
         //Set texture filtering to linear
-        if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) ) {
-            logv( "Warning: Linear texture filtering not enabled!" );
+        if(!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
+            logv("Warning: Linear texture filtering not enabled!");
         }
 
         //Create window
         window = Window();
-        if ( !window.init() ) {
-            logv( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+        if (!window.init()) {
+            logv("Window could not be created! SDL Error: %s\n", SDL_GetError());
             success = false;
         } else {
             //Create renderer for window
             Renderer::instance()->setWindow(window.getWindow());
-            if ( Renderer::instance()->getRenderer()  == nullptr ) {
-                logv( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+            if (Renderer::instance()->getRenderer()  == nullptr) {
+                logv("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
                 success = false;
             } else {
 
                 //Initialize renderer color
-                SDL_SetRenderDrawColor( Renderer::instance()->getRenderer() , 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_SetRenderDrawColor(Renderer::instance()->getRenderer() , 0xFF, 0xFF, 0xFF, 0xFF);
 
                 //Initialize PNG loading
                 int imgFlags = IMG_INIT_PNG;
-                if ( !( IMG_Init( imgFlags ) & imgFlags ) ) {
-                    logv( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+                if (!(IMG_Init(imgFlags) & imgFlags)) {
+                    logv("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
                     success = false;
                 } else {
                     screenSurface = window.getScreenSurface();
                 }
 
                  //Initialize SDL_ttf
-                if ( TTF_Init() == -1 ) {
-                    logv( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+                if (TTF_Init() == -1) {
+                    logv("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
                     success = false;
                 }
 
                 //Initialize SDL_mixer
-                if ( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
-                    logv( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+                if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+                    logv("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
                     success = false;
                 }
             }

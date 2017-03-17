@@ -24,7 +24,7 @@ public:
     Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
         const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize);
 
-    ~Entity() {}
+    ~Entity() = default;
 
 
     Entity(const Entity &e);
@@ -53,10 +53,10 @@ public:
     void setDestRect(int x, int y, int width, int height);
     void setSrcRect(int x, int y, int width, int height);
 
-    void moveMoveHitBox(int x, int y){ movementHitBox.move(x,y);};
-    void moveProHitBox(int x, int y){ projectileHitBox.move(x,y);};
-    void moveDamHitBox(int x, int y){ damageHitBox.move(x,y);};
-    void movePickUpHitBox(int x, int y){ pickupHitBox.move(x,y);};
+    void moveMoveHitBox(int x, int y) { movementHitBox.move(x,y);};
+    void moveProHitBox(int x, int y) { projectileHitBox.move(x,y);};
+    void moveDamHitBox(int x, int y) { damageHitBox.move(x,y);};
+    void movePickUpHitBox(int x, int y) { pickupHitBox.move(x,y);};
 
 private:
 

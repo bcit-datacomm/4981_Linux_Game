@@ -15,22 +15,14 @@
 #include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-                               level(),  base(), camera(gameWidth,gameHeight){
+                               level(),  base(), camera(gameWidth,gameHeight) {
 
 }
 
 bool GameStateMatch::load() {
     bool success = true;
 
-    //Open the font
-    // frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
-    // if (frameFont == nullptr) {
-    //     logv( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
-    //     success = false;
-    // }
-
     const int32_t playerMarineID = GameManager::instance()->createMarine();
-
 
     //set the boundary on the map
     GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
@@ -41,13 +33,11 @@ bool GameStateMatch::load() {
     GameManager::instance()->createTurret(1000, 500);
     GameManager::instance()->createWeaponDrop(1800, 1700);
 
-
-    //base = Base();
-
+    //creates the base
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 
-    //player = new Player();
+    //gives the player control of the marine
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.marine->setPosition(newPoint.first, newPoint.second);
 
@@ -77,10 +67,10 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         //Calculate and correct fps
-        avgFPS = countedFrames / ( fpsTimer.getTicks() / TIME_SECOND);
+        avgFPS = countedFrames / (fpsTimer.getTicks() / TIME_SECOND);
 
         //Set FPS text to be rendered
-        frameTimeText.str( "" );
+        frameTimeText.str("");
         frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
 
         // Process frame
@@ -100,7 +90,7 @@ void GameStateMatch::loop() {
         //If frame finished early
         if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
-            SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
+            SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
     }
 }
@@ -117,7 +107,7 @@ void GameStateMatch::handle() {
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
-           switch( event.type ) {
+           switch(event.type) {
         case SDL_WINDOWEVENT:
             camera.setViewSize(game.window.getWidth(), game.window.getHeight());
             break;
@@ -130,7 +120,7 @@ void GameStateMatch::handle() {
             }
             break;
         case SDL_KEYDOWN:
-            switch( this->event.key.keysym.sym ) {
+            switch(event.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     play = false;
                     break;
@@ -142,7 +132,7 @@ void GameStateMatch::handle() {
             }
             break;
         case SDL_KEYUP:
-            switch( event.key.keysym.sym ) {
+            switch(event.key.keysym.sym) {
                 default:
                    break;
             }
@@ -171,51 +161,32 @@ void GameStateMatch::update(const float delta) {
 
 void GameStateMatch::render() {
     //Only draw when not minimized
-    if ( !game.window.isMinimized() ) {
+    if (!game.window.isMinimized()) {
 
-        //Clear screen
-        //SDL_SetRenderDrawColor( Renderer::instance()->getRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );
-        SDL_RenderClear( Renderer::instance()->getRenderer() );
+        SDL_RenderClear(Renderer::instance()->getRenderer());
 
         //Render textures
         for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
-            if ( i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
+
+            if (i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
                 break;
             }
+            
             for (int j = camera.getY() / TEXTURE_SIZE - 1; ; ++j) {
                 if (j * TEXTURE_SIZE - camera.getY() >= camera.getH()) {
                     break;
                 }
-                //i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY()
+
                 Renderer::instance()->render(
                         {i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE},
                         TEXTURES::BARREN);
             }
         }
 
-
         //renders objects in game
         GameManager::instance()->renderObjects(camera.getViewport());
 
-
-        //SDL_Color textColor = { 0, 0, 0, 255 };
-
-        //Render text
-        // if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
-        //         textColor, Renderer::instance()->getRenderer(), frameFont ) ) {
-        //     logv( "Unable to render FPS texture!\n" );
-        // }
-
-        // frameFPSTextTexture.render(Renderer::instance()->getRenderer(),
-        //     (game.window.getWidth() - frameFPSTextTexture.getWidth()), 0);
-
         //Update screen
-        SDL_RenderPresent( Renderer::instance()->getRenderer() );
+        SDL_RenderPresent(Renderer::instance()->getRenderer());
     }
-}
-
-GameStateMatch::~GameStateMatch() {
-    // Free texture and font
-    // frameFPSTextTexture.free();
-    // TTF_CloseFont(frameFont);
 }

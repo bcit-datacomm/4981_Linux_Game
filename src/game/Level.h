@@ -10,8 +10,8 @@ class Level {
 public:
     std::string getTexturePath();
 
-    Level();
-    ~Level();
+    Level() = default;
+    ~Level() = default;
 
 private:
     static int width;

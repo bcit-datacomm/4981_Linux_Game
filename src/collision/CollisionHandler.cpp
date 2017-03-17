@@ -24,10 +24,10 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
 
 // Check for projectile collisions, return object it hits
 const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getDamHitBox().getRect(), &obj->getDamHitBox().getRect())
-                && !(entity->getDamHitBox().isPlayerFriendly() && obj->getDamHitBox().isPlayerFriendly())){
+                && !(entity->getDamHitBox().isPlayerFriendly() && obj->getDamHitBox().isPlayerFriendly())) {
             return &(obj->getDamHitBox());
         }
     }
@@ -36,10 +36,10 @@ const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> retur
 
 // Check for projectile collisions, return object it hits
 const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getProHitBox().getRect(), &obj->getProHitBox().getRect())
-                && !(entity->getProHitBox().isPlayerFriendly() && obj->getProHitBox().isPlayerFriendly())){
+                && !(entity->getProHitBox().isPlayerFriendly() && obj->getProHitBox().isPlayerFriendly())) {
             return &(obj->getProHitBox());
         }
     }
@@ -48,10 +48,10 @@ const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> r
 
 // Check for collisions during movement
 bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getMoveHitBox().getRect())
-                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getMoveHitBox().isPlayerFriendly())){
+                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getMoveHitBox().isPlayerFriendly())) {
             return true;
         }
     }
@@ -60,10 +60,10 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
 
 //check for pickup collision
 Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getPickUpHitBox().getRect())
-                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getPickUpHitBox().isPlayerFriendly())){
+                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getPickUpHitBox().isPlayerFriendly())) {
             return obj;
         }
     }
@@ -105,7 +105,6 @@ std::priority_queue<const HitBox*> CollisionHandler::detectLineCollision(
     return targetsInSights;
 }
 
-std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree &q, const Entity *entity){
-    std::vector<Entity*> returnObjects;
+std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree &q, const Entity *entity) {
     return q.retrieve(entity);
 }

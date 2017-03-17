@@ -15,7 +15,7 @@ public:
     Window window;
     SDL_Surface* screenSurface = nullptr;
 
-    unsigned int stateID = 2; // Starting game state id
+    unsigned int stateID = 1; // Starting game state id
 
     bool init();
     bool loadMedia();

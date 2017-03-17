@@ -22,7 +22,7 @@
 class GameStateMatch : public GameState {
 public:
     GameStateMatch(Game& g, int gameWidth, int gameHeight);
-    virtual ~GameStateMatch();
+    virtual ~GameStateMatch() = default;
 
     virtual bool load();
     virtual void loop();

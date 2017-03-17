@@ -22,8 +22,8 @@ class Turret : public Movable {
 public:
 
     Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
-            int ammo = 100, bool placed = false);
+           const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
+           int ammo = 100, bool placed = false);
 
     virtual ~Turret();
 
