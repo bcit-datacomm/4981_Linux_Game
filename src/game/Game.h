@@ -3,34 +3,37 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <memory>
 #include "../view/Window.h"
-
-class GameState;
+#include "GameState.h"
 
 class Game {
 public:
-    Game():window(){};
-
-    // Game window
-    Window window;
-    SDL_Renderer* renderer = NULL;
-    SDL_Surface* screenSurface = NULL;
-
-    unsigned int stateID = 1; // Starting game state id
+    Game() : window(), state(nullptr), renderer(nullptr), screenSurface(nullptr) {};
+    ~Game();
 
     bool init();
+    auto& getWindow() {return window;}
+    auto getRenderer() const {return renderer;}
+    auto getSurface() const {return screenSurface;}
+    void setStateID(const unsigned int id) {stateID = id;}
     bool loadMedia();
-    SDL_Surface* loadSurface( std::string path );
-    SDL_Texture* loadTexture( std::string path );
+    SDL_Surface *loadSurface(std::string path);
+    SDL_Texture *loadTexture(std::string path);
     void run();
     void loadState();
-    void close();
 
 private:
+    // Game window
+    Window window;
 
     // Current game state
-    GameState* state = nullptr;//stays as a pointer cause we need to be able to switch between match and menu states
+    std::unique_ptr<GameState> state;//stays as a pointer cause we need to be able to switch between match and menu states
 
+    SDL_Renderer *renderer;
+    SDL_Surface *screenSurface;
+
+    unsigned int stateID = 1; // Starting game state id
 };
 
 #endif

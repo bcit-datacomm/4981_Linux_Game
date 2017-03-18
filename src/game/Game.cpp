@@ -15,6 +15,18 @@
 #include "../view/Camera.h"
 #include "../log/log.h"
 
+Game::~Game() {
+    state.reset();
+
+    //Destroy window
+    SDL_DestroyRenderer(renderer);
+
+    //Quit SDL subsystems
+    Mix_Quit();
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+}
 
 void Game::run() {
     // End program if stateID is 0 after a end of a loop
@@ -28,20 +40,16 @@ void Game::run() {
 
 void Game::loadState() {
     logv("Starting ");
-    if (state != NULL) {
-        delete state;
-    }
+    state.reset();
     // Sets the state by the state ID
     switch(stateID) {
         case 1:
             logv("Menu State\n");
-            state = new GameStateMenu(*this, window.getWidth(), window.getHeight());
+            state = std::make_unique<GameStateMenu>(*this, window.getWidth(), window.getHeight());
             break;
         case 2:
             logv("Match State\n");
-
-            state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
-
+            state = std::make_unique<GameStateMatch>(*this, window.getWidth(), window.getHeight());
             break;
         default:
             break;
@@ -55,49 +63,48 @@ bool Game::init() {
     bool success = true;
 
     //Initialize SDL
-    if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
-        logv( "SDL could not initialize! %s\n", SDL_GetError() );
+    if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
+        logv("SDL could not initialize! %s\n", SDL_GetError());
         success = false;
     } else {
         //Set texture filtering to linear
-        if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) ) {
+        if(!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
             logv( "Warning: Linear texture filtering not enabled!" );
         }
 
         //Create window
         window = Window();
-        if ( !window.init() ) {
-            logv( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+        if (!window.init()) {
+            logv("Window could not be created! SDL Error: %s\n", SDL_GetError());
             success = false;
         } else {
             //Create renderer for window
             renderer = window.createRenderer();
-            if ( renderer  == NULL ) {
+            if (renderer  == nullptr) {
                 logv( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
                 success = false;
             } else {
-
                 //Initialize renderer color
-                SDL_SetRenderDrawColor( renderer , 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_SetRenderDrawColor(renderer , 0xFF, 0xFF, 0xFF, 0xFF);
 
                 //Initialize PNG loading
                 int imgFlags = IMG_INIT_PNG;
-                if ( !( IMG_Init( imgFlags ) & imgFlags ) ) {
-                    logv( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+                if (!(IMG_Init(imgFlags) & imgFlags)) {
+                    logv("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
                     success = false;
                 } else {
                     screenSurface = window.getScreenSurface();
                 }
 
                  //Initialize SDL_ttf
-                if ( TTF_Init() == -1 ) {
-                    logv( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+                if (TTF_Init() == -1) {
+                    logv("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
                     success = false;
                 }
 
                 //Initialize SDL_mixer
-                if ( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
-                    logv( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+                if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+                    logv("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
                     success = false;
                 }
 
@@ -114,30 +121,28 @@ bool Game::loadMedia() {
     //Loading success flag
     bool success = true;
 
-
     // Load graphics, audio, and fonts here
-
     return success;
 }
 
-SDL_Surface* Game::loadSurface( std::string path ) {
+SDL_Surface* Game::loadSurface(std::string path) {
     //The final optimized image
-    SDL_Surface* optimizedSurface = NULL;
+    SDL_Surface* optimizedSurface;
 
     //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if ( loadedSurface == NULL ) {
-        logv( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-    } else if (screenSurface == NULL) {
-        logv( "Unable to load image %s!\n  Window surface is NULL\n", path.c_str());
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    if (loadedSurface == nullptr) {
+        logv("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+    } else if (screenSurface == nullptr) {
+        logv("Unable to load image %s!\n  Window surface is null\n", path.c_str());
     } else {
         //Convert surface to screen format
-        optimizedSurface = SDL_ConvertSurface( loadedSurface, screenSurface->format, 0 );
-        if( optimizedSurface == NULL ) {
+        optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, 0);
+        if (optimizedSurface == nullptr) {
             logv( "Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
         }
         //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
+        SDL_FreeSurface(loadedSurface);
     }
 
     return optimizedSurface;
@@ -145,40 +150,21 @@ SDL_Surface* Game::loadSurface( std::string path ) {
 
 
 // Sets texture
-SDL_Texture* Game::loadTexture( std::string path ) {
+SDL_Texture* Game::loadTexture(std::string path) {
     //The final texture
-    SDL_Texture* newTexture = NULL;
+    SDL_Texture* newTexture = nullptr;
     //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if ( loadedSurface == NULL ) {
-        logv( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    if (loadedSurface == nullptr) {
+        logv("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     } else {
         //Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
-        if( newTexture == NULL ) {
-            logv( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if (newTexture == nullptr) {
+            logv("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
         }
         //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
+        SDL_FreeSurface(loadedSurface);
     }
     return newTexture;
-}
-
-void Game::close() {
-
-    if (state != NULL) {
-        delete state;
-    }
-
-    //Destroy window
-    SDL_DestroyRenderer( renderer );
-    window.free();
-    renderer = NULL;
-
-    //Quit SDL subsystems
-    Mix_Quit();
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
-
 }

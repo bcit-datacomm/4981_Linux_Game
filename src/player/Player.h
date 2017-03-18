@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
+#include <memory>
 #include "../sprites/LTexture.h"
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
@@ -8,16 +9,15 @@
 #include <SDL2/SDL.h>
 #include "../game/GameManager.h"
 
-constexpr int PLAYER_PLACE_DISTANCE = 100;
+static constexpr int PLAYER_PLACE_DISTANCE = 100;
 
 class Player {
 public:
-
+    Player(const int32_t& id);
+    ~Player() = default;
 
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-    void handleMouseUpdate(Window& w, float camX, float camY);
-
-    void setControl(Marine& newControl);
+    void handleMouseUpdate(Window& w, const float camX, const float camY);
 
     void handleMouseWheelInput(const SDL_Event *e);
 
@@ -27,15 +27,12 @@ public:
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
 
-    Player();
-    ~Player();
-
-    //Stays as pointer cause the player gets a marine object after the ctor is called
-    Marine *marine = NULL;
+    Marine& getMarine() const {return marine;}
 
 private:
     int tempBarricadeID;
     int tempTurretID;
+    Marine& marine;
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
