@@ -16,6 +16,7 @@
 #include "../view/Window.h"
 #include "../sprites/SpriteManager.h"
 
+
 class GameStateMatch : public GameState {
 public:
     GameStateMatch(Game& g, int gameWidth, int gameHeight);

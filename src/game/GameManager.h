@@ -38,7 +38,6 @@ public:
 
     void createMarine(int32_t id, std::string username);
     // Methods for creating, getting, and deleting marines from the level.
-    //int32_t createMarine();
     //int32_t createMarine(int id, SDL_Renderer* gRenderer, float x, float y);
     void deleteMarine(unsigned int id);
     void deleteMarine(const int32_t id);

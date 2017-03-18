@@ -125,7 +125,7 @@ bool GameStateMenu::load() {
 void GameStateMenu::loop() {
     // State Loop
     while (play) {
-        if(NetworkManager::instance().getNetworkState() == NetworkState::GAME_STARTED) {
+        if(NetworkManager::instance().getNetworkState() >= NetworkState::GAME_STARTED) {
             game.stateID = 2;
             play = false;
         }
@@ -303,7 +303,7 @@ void GameStateMenu::handle() {
 */
 void GameStateMenu::update(const float delta) {
     if(delta == JOIN) {
-        NetworkManager::instance().run(textInput[0].c_str(), textInput[1].c_str());
+        NetworkManager::instance().run(textInput[0], textInput[1]);
         //stateID will be set in the loop when the server starts the game.
         //play bool will be set to false there as well instead of in handle.
         //game.stateID = 2;

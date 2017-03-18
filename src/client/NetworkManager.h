@@ -11,9 +11,9 @@
 #include <atomic>
 #include <memory>
 #include <map>
+#include <cassert>
 #include "../UDPHeaders.h"
 
-#include "../player/Player.h"
 
 #define STDIN           0
 #define TCP_PORT 		35223
@@ -21,71 +21,51 @@
 #define STD_BUFFSIZE    1024
 #define MAX_EVENTS 		1
 #define MAX_USERS		23
+#define UNAME_SIZE      32
 #define SYNC_PACKET_MAX USHRT_MAX
 
 
 //moved enums to the bottom, and commented out
 
+//order matters.
 enum class NetworkState {
     NOT_RUNNING,
+    INITIALIZING,
     GAME_STARTED
 };
 
 class NetworkManager {
 public:
     static NetworkManager& instance();
-    void run(const char *ip, const char *username);
-    void closeConnection();
-    int writeSocket(int, const char *, int);
-    void writeUDPSocket(const char *buf, const int &len);
 
-    int32_t getPlayerId() const {return _myid;};
+    ~NetworkManager();
+
+    void run(const std::string ip, const std::string username);
+    void writeUDPSocket(const char *buf, const int &len) const;
+    int32_t getPlayerId() const {return myid;};
     NetworkState getNetworkState() const {return state;};
 private:
-    NetworkState state = NetworkState::NOT_RUNNING;
-    int32_t _myid;  // EY: March 14 - to be removed for game intergration
-    bool connected, running; // EY: March 14 - to be removed for game intergration
+    std::atomic<NetworkState> state{NetworkState::NOT_RUNNING};
+    int32_t myid;  // EY: March 14 - to be removed for game intergration
     int sockTCP;
     int sockUDP;
-    in_addr_t serverIP;
+    sockaddr_in servUDPAddr;
+    socklen_t servUDPAddrLen;
+
     NetworkManager() {};
 
-    void runTCPClient();
     void runUDPClient();
-    int readUDPSocket(char *buf, const int& len);
-    int createSocket(int) const;
-    int connectSocket(const char *) const;
-    void connectSocket(int sock, const struct sockaddr_in& addr) const;
-    void bindSocket(int sock, struct sockaddr_in addr);
-    void handshake(const char * ip, const char * uname);
+    void runTCPClient(const std::string username);
+    void handshake(const std::string username) const;
     void waitRecvId();
+    void writeTCPSocket(const char *buf, const int len) const;
+    int readTCPSocket(char *buf, const int len) const;
+    int readUDPSocket(char *buf, const int& len) const;
 
-    struct sockaddr_in createAddress(const in_addr_t ip, const int port) const;
-    int readSocket(int sock, char *buf, int len) const;
-
+    static sockaddr_in createAddr(const in_addr_t ip, const int port);
+    static int createSock(int);
+    static void connectSock(int sock, const sockaddr_in& addr);
+    static void bindSock(int sock, sockaddr_in addr);
 };
 
 #endif
-
-/*
-//ENUMS
-#ifndef PACKET_SPECIFIER_ENUMCL
-#define PACKET_SPECIFIER_ENUMCL
-
-enum class P_SPECIFIER{
-	  EXIT,
-		UNAME,
-		CHAT
-};
-
-#endif
-
-#ifndef GAMESTATE_ENUMCL
-#define GAMESTATE_ENUMCL
-
-enum class GAMESTATE{
-		GAME_RECV,
-		AI_RECV
-};
-#endif
-*/
