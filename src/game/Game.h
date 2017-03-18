@@ -13,15 +13,12 @@ public:
 
     // Game window
     Window window;
-    SDL_Renderer* renderer = NULL;
-    SDL_Surface* screenSurface = NULL;
+    SDL_Surface* screenSurface = nullptr;
 
     unsigned int stateID = 1; // Starting game state id
 
     bool init();
     bool loadMedia();
-    SDL_Surface* loadSurface( std::string path );
-    SDL_Texture* loadTexture( std::string path );
     void run();
     void loadState();
     void close();

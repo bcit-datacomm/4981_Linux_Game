@@ -3,12 +3,15 @@
 #include <math.h>
 #include <random>
 #include "../log/log.h"
+#include <cassert>
 #define PI 3.14159265
 
-Barricade::Barricade(int health, int state, bool placeable, bool placed)
-        : Object(BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state), placeable(placeable),
-        placed(placed) {
+
+Barricade::Barricade(int32_t nid, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
+        int health, int state, bool placeable, bool placed): Object(nid, dest, movementSize, pickupSize,
+        BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state), placeable(placeable), placed(placed) {
     logv("Create Barricade\n");
+
 }
 
 Barricade::~Barricade() {
@@ -23,26 +26,22 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
 
     placeable = (distance <= 200);
 
-    SDL_Rect checkBox;
-    checkBox.h = 100;
-    checkBox.w = 100;
-    checkBox.x = getX();
-    checkBox.y = getY();
-    HitBox hitBox(getX(), getY(), checkBox);
-
-    if(placeable && ch.detectMovementCollision(this)){
+    if(placeable && (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this))) {
         placeable = false;
     }
-
-
     return placeable;
 }
 
-bool Barricade::isPlaceable(){
+bool Barricade::isPlaceable() {
     return placeable;
 }
 
-bool Barricade::isPlaced(){
+bool Barricade::isPlaced() {
     return placed;
 }
 
@@ -50,13 +49,6 @@ bool Barricade::isPlaced(){
 void Barricade::move(const float playerX, const float playerY, const float moveX,
         const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
-    //`setX(100);
-
-    if(checkPlaceablePosition(playerX, playerY, moveX, moveY, ch)) {
-        texture.setAlpha(200);
-    } else {
-        texture.setAlpha(30);
-    }
 }
 
 
@@ -68,7 +60,7 @@ void Barricade::collidingProjectile(const int damage) {
     health -= damage;
 }
 
-void Barricade::placeBarricade(){
-    texture.setAlpha(255);
+void Barricade::placeBarricade() {
+    // texture.setAlpha(255);
     placed=true;
 }

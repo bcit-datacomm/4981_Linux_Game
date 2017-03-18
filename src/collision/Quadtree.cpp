@@ -1,6 +1,7 @@
 #include <array>
 #include <memory>
 #include "Quadtree.h"
+#include "../basic/Entity.h"
 
 Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) {
     level = pLevel;
@@ -75,7 +76,7 @@ int Quadtree::getIndex(const HitBox *pRect) const{
 void Quadtree::insert(Entity *entity) {
     objectCounter++;
     if (nodes[0] != nullptr) {
-        int index = getIndex(entity->movementHitBox.get());
+        int index = getIndex(&(entity->getMoveHitBox()));
         if (index != -1) {
             nodes[index]->insert(entity);
             return;
@@ -91,7 +92,7 @@ void Quadtree::insert(Entity *entity) {
 
         unsigned int i = 0;
         while (i < objects.size()) {
-            int index = getIndex(objects.at(i)->movementHitBox.get());
+            int index = getIndex(&(objects.at(i)->getMoveHitBox()));
             if (index != -1) {
                 nodes[index]->insert(objects.at(i));
                 objects.erase(objects.begin()+i);
@@ -105,7 +106,7 @@ void Quadtree::insert(Entity *entity) {
 
 std::vector<Entity *> Quadtree::retrieve(const Entity *entity) {
     std::vector<Entity *> returnObjects;
-    int index = getIndex(entity->movementHitBox.get());
+    int index = getIndex(&(entity->getMoveHitBox()));
     if (index != -1 && nodes[0] != nullptr) {
         returnObjects = nodes[index]->retrieve(entity);
     }

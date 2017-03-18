@@ -1,7 +1,17 @@
 #include "Object.h"
 #include "../log/log.h"
 
-Object::Object(int width, int height, double angle) : Entity(), width(width), height(height), angle(angle){
+Object::Object(int32_t nid, const SDL_Rect dest, int width, int height, double angle):
+        Entity(nid, dest), width(width), height(height), angle(angle){
+    setHeight(height);
+    setWidth(width);
+    updateRectHitBoxes();
+}
+
+
+Object::Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
+        int width, int height, double angle): Entity(nid, dest,movementSize, pickupSize), width(width),
+        height(height), angle(angle){
     setHeight(height);
     setWidth(width);
     updateRectHitBoxes();
@@ -13,11 +23,9 @@ Object::~Object() {
 
 void Object::setHeight(const int h) {
     height = h;
-    spriteClips[0].h = height;
 }
 void Object::setWidth(const int w) {
     width = w;
-    spriteClips[0].w = width;
 }
 int Object::getHeight(){
     return height;
