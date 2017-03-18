@@ -35,7 +35,6 @@ public:
 
 private:
     Player player;
-    Level level;
     Base base;
     Camera camera;
 

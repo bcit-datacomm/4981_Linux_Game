@@ -15,7 +15,7 @@
 #include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-                               level(),  base(), camera(gameWidth,gameHeight) {
+    base(), camera(gameWidth,gameHeight) {
 
 }
 
@@ -171,7 +171,7 @@ void GameStateMatch::render() {
             if (i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
                 break;
             }
-            
+
             for (int j = camera.getY() / TEXTURE_SIZE - 1; ; ++j) {
                 if (j * TEXTURE_SIZE - camera.getY() >= camera.getH()) {
                     break;

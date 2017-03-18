@@ -43,8 +43,7 @@
 * Removed excess initializations. (Michael Goll / March 16, 2017)
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textboxFont(nullptr),
-                                menuFont(nullptr),
-                                screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
+    menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
 }
 
 

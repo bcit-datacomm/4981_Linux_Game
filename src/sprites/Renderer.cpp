@@ -14,11 +14,19 @@ SDL_Window * Renderer::window = nullptr;
 std::array<SDL_Texture *, TOTAL_SPRITES> Renderer::sprites = {0};
 int Renderer::index = 0;
 
-//returns the instance if it exists, otherwise creates one
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** returns the instance if it exists, otherwise creates one
+*/
 Renderer * Renderer::instance() {
     return &Renderer::rInstance;
 }
 
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+*/
 Renderer::~Renderer() {
     for (const auto& s : sprites) {
         if (s != nullptr) {
@@ -30,7 +38,11 @@ Renderer::~Renderer() {
     SDL_DestroyWindow(window);
 }
 
-//load all sprites sheets
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** load all sprites sheets
+*/
 void Renderer::loadSprites() {
     logv("Loading Sprites...\n");
     //Main game screen
@@ -41,7 +53,7 @@ void Renderer::loadSprites() {
     createTexture(TEXTURE_BARREN); //barren dirt
     createTexture(TEXTURE_MIDDLE); //dead grass
     createTexture(TEXTURE_DIRT);   //terraformed
-    createTexture(REPLACE_ME);    //concrete
+    createTexture(REPLACE_ME);    //concrete, temporary texture for now
 
     //-------- map object textures --------
         //nature
@@ -50,7 +62,7 @@ void Renderer::loadSprites() {
     createTexture(MAP_OBJECTS);
 
     //-------- weapon textures --------
-    createTexture(REPLACE_ME);
+    createTexture(REPLACE_ME); //temporary, will be replaced later
 
     //-------- marine textures --------
     createTexture(TEMP_MARINE_TEXTURE);
@@ -77,7 +89,11 @@ TTF_Font * Renderer::loadFont(const std::string filePath, const int size) {
     return font;
 }
 
-//creates a texture and adds it to the array
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** creates a texture and adds it to the array
+*/
 void Renderer::createTexture(const std::string filePath) {
 
     SDL_Surface * surface = IMG_Load(filePath.c_str());
@@ -102,6 +118,11 @@ void Renderer::createTexture(const std::string filePath) {
     }
 }
 
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** creates a texture out of text
+*/
 void Renderer::createText(TTF_Font * font, const std::string text, const SDL_Color colour) {
     SDL_Surface * textSurface = TTF_RenderText_Solid(font, text.c_str(), colour);
 
@@ -122,28 +143,44 @@ void Renderer::createText(TTF_Font * font, const std::string text, const SDL_Col
     }
 }
 
-//sets the game's renderer
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** sets the game's renderer
+*/
 void Renderer::setRenderer() {
     if ((renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) == nullptr) {
         logv("Renderer could not be created\n");
     }
 }
 
-//sets the window
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** sets the window
+*/
 void Renderer::setWindow(SDL_Window * win) {
     window = win;
     setRenderer();
 }
 
-
-//renders an object
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** renders an object
+*/
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip,
     double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
     SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &dest, angle,
                      center, flip);
 }
-//renders an object
+
+/* DEVELOPER: Michael Goll
+** DESIGNER:  Michael Goll
+** DATE:      March 14, 2017
+** renders an object
+*/
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double angle,
     const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen

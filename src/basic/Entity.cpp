@@ -77,6 +77,7 @@ void Entity::setPosition(float px, float py) {
     updateHitBoxes();
 }
 
+//updates the hit boxes
 void Entity::updateHitBoxes() {
     movementHitBox.move(x, y);
     projectileHitBox.move(x, y);
@@ -84,6 +85,7 @@ void Entity::updateHitBoxes() {
     pickupHitBox.move(x - 10, y - 10);
 }
 
+//updates the rectangle for the hitbox
 void Entity::updateRectHitBoxes() {
     movementHitBox.setRect(destRect);
     projectileHitBox.setRect(destRect);
@@ -99,7 +101,7 @@ void Entity::collidingProjectile(const int damage) {
     //do nothing
 }
 
-
+//sets the destination rect of where to render stuff
 void Entity::setDestRect(const int x, const int y, const int width, const int height) {
     destRect.x = x;
     destRect.y = y;
@@ -107,6 +109,7 @@ void Entity::setDestRect(const int x, const int y, const int width, const int he
     destRect.h = height;
 }
 
+//sets the source rect, used for sprites and textures
 void Entity::setSrcRect(const int x, const int y, const int width, const int height) {
     srcRect.x = x;
     srcRect.y = y;

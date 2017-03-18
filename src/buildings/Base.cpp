@@ -71,9 +71,9 @@ Point Base::getSpawnPoint() {
 
     //considering the player size
     if(nx < getX())
-        nx-=MARINE_WIDTH;
+        nx -= MARINE_WIDTH;
     if(ny < getY())
-        ny-=MARINE_HEIGHT;
+        ny -= MARINE_HEIGHT;
 
     return Point(nx,ny);
 }

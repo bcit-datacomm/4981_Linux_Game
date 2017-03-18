@@ -10,7 +10,7 @@
 
 /**
 *   NOTE: If you change any of the sprites (ex. adding a new sprite), you
-*         MUST change the TOTAL_SPRITES value in Renderer.h
+*         MUST change the TOTAL_SPRITES value in Renderer.h accordingly
 *
 */
 

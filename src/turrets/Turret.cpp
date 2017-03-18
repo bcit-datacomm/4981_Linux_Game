@@ -83,13 +83,16 @@ bool Turret::healthCheckTurret() {
 }
 
 void Turret::move(const float playerX, const float playerY,
-                  const float moveX, const float moveY, CollisionHandler &ch) {
+    const float moveX, const float moveY, CollisionHandler &ch) {
 
     setPosition(moveX, moveY);
+
     if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
-        //texture.setAlpha(PASS_ALPHA);
+        //change the texture rendered for the turret here
+        //left blank for now
     } else {
-        //texture.setAlpha(FAIL_ALPHA);
+        //change the texture rendered for the turret here
+        //left blank for now
     }
 }
 

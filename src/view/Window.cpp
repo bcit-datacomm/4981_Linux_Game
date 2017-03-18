@@ -17,10 +17,11 @@ Window::Window() {
 bool Window::init() {
     //Create window
     mWindow = SDL_CreateWindow("4981 Linux Game",
-                               SDL_WINDOWPOS_UNDEFINED,
-                               SDL_WINDOWPOS_UNDEFINED,
-                               SCREEN_WIDTH, SCREEN_HEIGHT,
-                               SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        SCREEN_WIDTH, SCREEN_HEIGHT,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        
     if(mWindow != NULL) {
         mMouseFocus = true;
         mKeyboardFocus = true;

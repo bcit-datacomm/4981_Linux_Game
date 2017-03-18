@@ -21,7 +21,7 @@ static constexpr SDL_Color SDL_GREEN_RGB = {54, 96, 81};
 static constexpr size_t WHITE_RGB[3] = {255, 255, 255};
 static constexpr size_t YELLOW_RGB[3] = {148, 139, 77};
 static constexpr size_t LT_GREEN_RGB[3] = {92, 133, 108};
-constexpr int MAX_RGB = 255;
+static constexpr int MAX_RGB = 255;
 
 //Position of color in the fontColor array
 static constexpr size_t WHITE = 0;
