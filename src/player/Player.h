@@ -1,11 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
+#include <SDL2/SDL.h>
 #include <string>
-#include "../sprites/LTexture.h"
+
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
-#include <SDL2/SDL.h>
 #include "../game/GameManager.h"
 
 constexpr int PLAYER_PLACE_DISTANCE = 100;
@@ -36,6 +37,9 @@ public:
 private:
     int tempBarricadeID;
     int tempTurretID;
+    bool holdingTurret;
+    int pickupTick;
+    int pickupDelay;
 };
 
 #endif

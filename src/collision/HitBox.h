@@ -4,7 +4,7 @@
 
 class HitBox {
 public:
-    HitBox(const float x, const float y, SDL_Rect rect);
+    HitBox(SDL_Rect nrect);
     ~HitBox() = default;
 
     void move(const float x, const float y);
