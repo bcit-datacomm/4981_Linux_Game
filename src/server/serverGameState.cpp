@@ -12,14 +12,17 @@
 GameManager *gm = GameManager::GameManager::instance();
 std::vector<AttackAction> attackList;
 
+//John Agapeyev March 19
 void saveAttack(const AttackAction& aa) {
     attackList.push_back(aa);
 }
 
+//John Agapeyev March 19
 void clearAttackActions() {
     attackList.clear();
 }
 
+//John Agapeyev March 19
 void updateMarine(const MoveAction& ma) {
     if (gm->hasMarine(ma.id)) {
         Marine& marine = gm->getMarine(ma.id);
@@ -31,6 +34,7 @@ void updateMarine(const MoveAction& ma) {
     }
 }
 
+//John Agapeyev March 19
 std::vector<PlayerData> getPlayers() {
     std::vector<PlayerData> rtn;
     PlayerData tempPlayer;
@@ -51,6 +55,7 @@ std::vector<PlayerData> getPlayers() {
     return rtn;
 }
 
+//John Agapeyev March 19
 std::vector<ZombieData> getZombies() {
     std::vector<ZombieData> rtn;
     ZombieData tempZombie;
@@ -69,6 +74,7 @@ std::vector<ZombieData> getZombies() {
     return rtn;
 }
 
+//John Agapeyev March 19
 void startGame() {
     Game game;
     game.run();

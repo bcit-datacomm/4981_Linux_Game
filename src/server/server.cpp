@@ -23,6 +23,7 @@ bool verbose = false;
 std::unordered_map<int32_t, PlayerJoin> clientList;
 std::atomic_bool isGameRunning{false};
 
+//Isaac Morneau March 19
 int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
     setenv("OMP_DYNAMIC", "TRUE", 1);
@@ -92,6 +93,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+//John Agapeyev March 19
 void initSync(const int sock) {
     logv("Starting TCP sync\n");
 
@@ -143,6 +145,7 @@ void initSync(const int sock) {
     free(events);
 }
 
+//John Agapeyev March 19
 void listenForPackets(const sockaddr_in servaddr) {
     socklen_t servAddrLen = sizeof(servaddr);
 
@@ -178,14 +181,21 @@ void listenForPackets(const sockaddr_in servaddr) {
     }
 }
 
+//John Agapeyev March 19
 void processPacket(const char *data) {
     const ClientMessage *mesg = reinterpret_cast<const ClientMessage *>(data);
     switch (static_cast<UDPHeaders>(mesg->id)) {
         case UDPHeaders::WALK:
             {
-                const MoveAction ma = mesg->data.ma;
+                const MoveAction& ma = mesg->data.ma;
                 logv("Move actions packets contents:\nID:%d\nXpos:%f\n, Ypos:%f\n, Vel:%f\n, Direction:%f\n", ma.id, ma.xpos, ma.ypos, ma.vel, ma.direction);
                 updateMarine(ma);
+            }
+            break;
+        case UDPHeaders::ATTACKACTIONH:
+            {
+                const AttackAction& aa = mesg->data.aa;
+                attackList.push_back(aa);
             }
             break;
         default:
@@ -237,12 +247,14 @@ void genOutputPacket() {
     outputLength = (pBuff - (int32_t *) outputPacket) * sizeof(int32_t);
 }
 
+//Joh Agapeyev March 19
 void sendSyncPacket(const int sock) {
     for (const auto& client : clientList) {
         sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
     }
 }
 
+//John Agapeyev March 19
 void listenTCP(const int socket, const unsigned long ip, const unsigned short port) {
     bindSocket(socket, ip, port);
     if (listen(socket, LISTENQ) == -1) {
@@ -251,6 +263,7 @@ void listenTCP(const int socket, const unsigned long ip, const unsigned short po
     }
 }
 
+//John Agapeyev March 19
 void listenUDP(const int socket, const unsigned long ip, const unsigned short port) {
     const auto& servaddrudp = bindSocket(socket, ip, port);
     logv("UDP server started\n");
