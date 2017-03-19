@@ -1,9 +1,7 @@
 #include "HitBox.h"
 
 
-HitBox::HitBox(const float x, const float y, SDL_Rect rect){
-    setRect(rect);
-    move(x,y);
+HitBox::HitBox(SDL_Rect nrect):rect(nrect){
 }
 
 const SDL_Rect& HitBox::getRect() const{

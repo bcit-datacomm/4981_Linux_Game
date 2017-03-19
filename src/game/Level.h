@@ -5,16 +5,14 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
-#include "../sprites/LTexture.h"
 
 class Level {
 public:
     std::string getTexturePath();
-    LTexture levelTexture;
-    
-    Level();
-    ~Level();
-    
+
+    Level() = default;
+    ~Level() = default;
+
 private:
     static int width;
     static int height;
