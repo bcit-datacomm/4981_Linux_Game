@@ -46,17 +46,6 @@ int createSocket(const bool useUDP, const bool nonblocking) {
     return sock;
 }
 
-void logv(const char *msg, ...) {
-    if (!verbose) {
-        return;
-    }
-    va_list args;
-    va_start(args, msg);
-    vprintf(msg, args);
-    va_end(args);
-    fflush(stdout);
-}
-
 void transitionToGameStart() {
     logv("Starting the game\n");
     std::thread(startGame).detach();

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <utility>
-#include "../GameManager.h"
+#include "../game/GameManager.h"
 #include "../UDPHeaders.h"
 #include "server.h"
 

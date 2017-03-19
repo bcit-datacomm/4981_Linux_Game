@@ -4,6 +4,7 @@
 #include <sys/signal.h>
 
 #include "../UDPHeaders.h"
+#include "../log/log.h"
 #include "server.h"
 #include "serverwrappers.h"
 #include "servergamestate.h"
@@ -60,8 +61,17 @@ int main(int argc, char **argv) {
                     exit(2);
                 }
                 break;
-            case 'v':
-                verbose = true;
+            case 'v'://verbose
+                log_verbose = 2;
+                break;
+            case 'e'://error
+                log_verbose = 1;
+                break;
+            case 'o':
+                log_verbose = atoi(optarg);
+                break;
+            case '?':
+                printf("-v verbose\n-e error\nverbose enables error as well.");
                 break;
         }
     }

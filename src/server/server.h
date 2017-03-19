@@ -18,7 +18,7 @@
 #define SYNC_IN 32 //name padded with nulls
 #define NAMELEN 32 //same as above but kept seperate for clarity of purpose
 #define SYNC_OUT 33 //name padded with nulls + id
-#define OPT_STRING "hl:L:c:v"
+#define OPT_STRING "hl:L:c:evo:"
 #define MAX_PORT 65535
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
 #define MAXEVENTS 100 //although many kernals define it as 5 usually it can support many more
@@ -54,9 +54,4 @@ void sendSyncPacket(const int sock);
 void listenForPackets(const sockaddr_in servaddr);
 void listenTCP(const int socket, const unsigned long ip, const unsigned short port);
 void listenUDP(const int socket, const unsigned long ip, const unsigned short port);
-
-//off by default
-extern bool verbose;
-//logging for statuses when in verbose mode
-void logv(const char *msg, ...);
 #endif

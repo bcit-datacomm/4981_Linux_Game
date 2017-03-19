@@ -2,11 +2,11 @@
 #include <unordered_map>
 #include <utility>
 
-#include "../Game.h"
-#include "../LTimer.h"
-#include "../Marine.h"
-#include "../Zombie.h"
-#include "../GameManager.h"
+#include "../game/Game.h"
+#include "../basic/LTimer.h"
+#include "../player/Marine.h"
+#include "../creeps/Zombie.h"
+#include "../game/GameManager.h"
 #include "servergamestate.h"
 
 GameManager *gm = GameManager::GameManager::instance();
