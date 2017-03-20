@@ -19,7 +19,10 @@ public:
     const HitBox *detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity); // Check for projectile collisions, return object if hits
     bool detectMovementCollision(const std::vector<Entity*> returnObjects, const Entity *entity); // // Check for collisions during movement
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);//check for pick up collision, return object if can pick up
-    std::priority_queue<Target> detectLineCollision(Marine &marine, const int range);
+    void detectLineCollision(std::priority_queue<Target>& targetsInSights, 
+        Marine &marine, const int range);
+    void checkTargets(const int playerX, const int playerY, const int deltaX, const int deltaY,
+        std::priority_queue<Target>& targetsInSights, std::vector<Entity*> allEntities, int type);
 
     std::vector<Entity *>getQuadTreeEntities(Quadtree &q,const Entity *entity); // General Collision handler, pass in quadtree check
 

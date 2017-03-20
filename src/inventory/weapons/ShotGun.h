@@ -15,12 +15,13 @@ namespace ShotgunVars {
 
     const string FIRESOUND      = EFX_WLRIFLE;
     const string HITSOUND       = "";
-    const string RELOADSOUND    = "";
-    const string EMPTYSOUND     = "";
+    const string RELOADSOUND    = EFX_WRELOAD01;
+    const string EMPTYSOUND     = EFX_PDROP01;
 
     constexpr int RANGE         = 200;
-    constexpr int DAMAGE        = 400;
+    constexpr int DAMAGE        = 100;
     constexpr int AOE           = 1;
+    constexpr int PENETRATION   = 1;
 
     constexpr int CLIP          = 2;
     constexpr int CLIPMAX       = 2;

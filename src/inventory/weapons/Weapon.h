@@ -16,7 +16,7 @@ class Weapon {
 public:
 
     Weapon(string type = "no type", string fireSound = "", string hitSound = "", string reloadSound = "", 
-        string emptySound = "", int range = 0, int damage = 0, int AOE = 0, int clip = 0, int clipMax = 0, 
+        string emptySound = "", int range = 0, int damage = 0, int AOE = 0, int penetration = 0, int clip = 0, int clipMax = 0, 
         int ammo = 0,  int reloadDelay = 0, int fireDelay = 0);
 
     Weapon(const Weapon& w);
@@ -55,6 +55,7 @@ protected:
     int range;
     int damage;
     int AOE; 
+    int penetration; 
 
     int clip;
     int clipMax;

@@ -15,12 +15,13 @@ namespace HandgunVars {
 
     const string FIRESOUND      = EFX_WLPISTOL;
     const string HITSOUND       = "";
-    const string RELOADSOUND    = "";
-    const string EMPTYSOUND     = "";
+    const string RELOADSOUND    = EFX_WRELOAD01;
+    const string EMPTYSOUND     = EFX_PDROP01;
 
     constexpr int RANGE         = 500;
-    constexpr int DAMAGE        = 500;
+    constexpr int DAMAGE        = 20;
     constexpr int AOE           = 1;
+    constexpr int PENETRATION   = 3;
 
     constexpr int CLIP          = 5;
     constexpr int CLIPMAX       = 5;

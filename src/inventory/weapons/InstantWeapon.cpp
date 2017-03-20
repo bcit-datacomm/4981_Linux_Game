@@ -1,5 +1,11 @@
-/*
-    Created  by Deric M       01/03/17
+/**
+    Target.h
+
+    DISCRIPTION:
+        This is class is used in all instant fire weapons, the weapons will 
+
+    AUTHOR: Deric Mccadden 01/03/17
+
 */
 #include "InstantWeapon.h"
 #include "../../collision/HitBox.h"
@@ -19,8 +25,8 @@ using std::string;
 
 
 InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-    int range, int damage, int AOE, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
-: Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, clip, clipMax, ammo, 
+    int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
+: Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo, 
     reloadDelay, fireDelay) {
 
 }
@@ -34,29 +40,30 @@ bool InstantWeapon::fire(Marine &marine){
     }
     logi("InstantWeapon::fire()\n");
 
+    auto& collisionHandler = GameManager::instance()->getCollisionHandler();
 
-    std::priority_queue<Target> targets = getTargets(marine);
+    std::priority_queue<Target> targets;
 
-    if(targets.empty()){
-        return false;
+    collisionHandler.detectLineCollision(targets, marine, range);//getTargets(marine);
+
+
+    for(int i = 0; i < penetration; i++) {
+        if(targets.empty()){
+            logi("targets.empty()\n");
+            break;
+        }
+        if(targets.top().type != TYPE_ZOMBIE){
+            logi("target is of type: %d\n", targets.top().type);
+            break;
+        }
+
+        logi("targets.size():%d\n", targets.size());
+
+        logi("Shot target of type: %d\n", targets.top().type);
+        targets.top().entity.collidingProjectile(damage);
+        targets.pop();
     }
-
-
-    logi("target hit\n");
-    //=======================================================
-    //only shoot the first target for now, will change this later
-    //to include penetration to shoot multiple targets with 1 bullet.
-    //targets.top()->attached->collidingProjectile(getDamage()); //broken
-    targets.pop();
-    //=======================================================
 
     return true;
 }
 
-
-
-std::priority_queue<Target> InstantWeapon::getTargets(Marine &marine){
-    CollisionHandler &collisionHandler = GameManager::instance()->getCollisionHandler();
-
-    return collisionHandler.detectLineCollision(marine, getRange());
-}

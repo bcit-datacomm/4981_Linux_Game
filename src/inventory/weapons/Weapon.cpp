@@ -11,23 +11,25 @@
 using std::string;
 
 Weapon::Weapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-    int range, int damage, int AOE, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
+    int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, 
+    int fireDelay)
 : type(type), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound), 
-    range(range), damage(damage), AOE(AOE), clip(clip), clipMax(clipMax), ammo(ammo), reloadDelay(reloadDelay), 
-    fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(generateWID()){
+    range(range), damage(damage), AOE(AOE), penetration(penetration), clip(clip), clipMax(clipMax), ammo(ammo), 
+    reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(generateWID()){
 
 }
 
 Weapon::Weapon(const Weapon& w) 
 : type(w.type), fireSound(w.fireSound), hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound),
-    range(w.range), damage(w.damage), AOE(w.AOE), clip(w.clip), clipMax(w.clipMax), ammo(w.ammo), reloadDelay(w.reloadDelay), 
-    fireDelay(w.fireDelay), reloadTick(w.reloadTick), fireTick(w.fireTick), wID(w.getId()){
+    range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), clip(w.clip), clipMax(w.clipMax), 
+    ammo(w.ammo), reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick), 
+    fireTick(w.fireTick), wID(w.getId()){
 }
 
 
 //Deric M       3/3/2017
 bool Weapon::reduceClip(const int rounds){
-    logi("Current ammo: %d/%d\n", clip, ammo);
+    logi("Current ammo: %d/%d\n", clip, ammo + clip);
     if(clip < rounds){
         reloadClip();
     }
@@ -46,6 +48,7 @@ bool Weapon::reloadClip(){
     reloadTick = currentTime;
     fireTick += reloadDelay; //must wait extra time to fire from reloading
     if(ammo <= 0){
+        AudioManager::instance().playEffect(emptySound.c_str());
         return false;
     }
 
@@ -57,6 +60,8 @@ bool Weapon::reloadClip(){
     }
     ammo -= ammoNeeded;
     clip += ammoNeeded;
+    AudioManager::instance().playEffect(reloadSound.c_str());
+
     return true;
 }
 
