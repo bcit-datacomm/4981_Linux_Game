@@ -2,6 +2,7 @@
 #include <memory>
 #include "Inventory.h"
 #include "../game/GameManager.h"
+#include "../log/log.h"
 
 Inventory::Inventory(){
     weapons[0] = std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun));
@@ -18,23 +19,23 @@ Inventory::~Inventory(){
 
 }
 
-void Inventory::switchCurrent(int slot){
+void Inventory::switchCurrent(const int slot){
     if (current != slot) {
-        printf("Switched to slot: %d\n", slot);
+        logv("Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
 bool Inventory::pickUp(int32_t weaponId){
     if(current == 0){
-        printf("Can't Swap default gun \n");
+        logv("Can't Swap default gun \n");
         return false;
     }
-    printf("Picked up weapon\n");
-    printf("Swapped from %d ", weaponIds[current]);
+    logv("Picked up weapon\n");
+    logv("Swapped from %d ", weaponIds[current]);
 
     weaponIds[current] = weaponId;
-    printf("to %d\n", weaponIds[current]);
+    logv("to %d\n", weaponIds[current]);
     return true;
 }
 
@@ -67,7 +68,7 @@ void Inventory::scrollCurrent(int direction){
         } else {
             current = direction;
         }
-        printf("Switched to slot:%d\n", current);
+        logv("Switched to slot:%d\n", current);
     }
 
 }

@@ -56,7 +56,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
             if(*pBuff++ == '/') {
                 // insertplayer new player
                 std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
-                GameManager::instance()->createMarine(id, msg);
+                GameManager::instance()->createMarine(id);
             }
             break;
 

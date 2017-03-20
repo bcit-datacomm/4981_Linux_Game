@@ -2,27 +2,47 @@
 #include <iostream>
 #include <string>
 #include "game/Game.h"
+#include "log/log.h"
+#include <getopt.h>
+#include "client/NetworkManager.h"
 
 int main(int argc, char *argv[]) {
-    Game* game = new Game();
+    int opt;
+    while((opt = getopt(argc, argv, "ni:p:evo:")) != -1){
+        switch(opt){
+            case 'n':
+                networked = true;
+                break;
+            case 'v'://verbose
+                log_verbose = 2;
+                break;
+            case 'e'://error
+                log_verbose = 1;
+                break;
+            case 'o':
+                log_verbose = atoi(optarg);
+                break;
+            case '?':
+                printf("-v verbose\n-e error\nverbose enables error as well.");
+                break;
+        }
+    }
+    Game game;
 
-    printf( "Loading...\n");
+    logv("Loading...\n");
 
     //Start up SDL and create window
-    if(game->init() && game->loadMedia())
+    if(game.init() && game.loadMedia())
     {
-        printf( "Running...\n");
+        logv( "Running...\n");
 
-        game->run();
-
+        game.run();
     } else {
-        printf( "Failed to start!\n" );
+        logv( "Failed to start!\n" );
     }
 
-    //Free resources and close SDL
-    game->close();
+    game.close();
 
-    delete game;
-    printf( "Exit\n" );
+    logv( "Exit\n" );
     return 0;
 }

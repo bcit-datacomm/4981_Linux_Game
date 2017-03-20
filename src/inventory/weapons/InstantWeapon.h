@@ -9,14 +9,12 @@
 
 class InstantWeapon: public Weapon  {
 public:
- InstantWeapon(std::string type, int range, int damage,
-  int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire);
- ~InstantWeapon() = default;
+    InstantWeapon(std::string type, int range, int damage,
+    int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire);
+    ~InstantWeapon() = default;
 
 
     void fire(Marine &marine);
-
-protected:
 
 };
 

@@ -24,8 +24,7 @@
 #define UNAME_SIZE      32
 #define SYNC_PACKET_MAX USHRT_MAX
 
-
-//moved enums to the bottom, and commented out
+extern bool networked;
 
 //order matters.
 enum class NetworkState {
@@ -62,9 +61,9 @@ private:
     int readTCPSocket(char *buf, const int len) const;
     int readUDPSocket(char *buf, const int& len) const;
 
-    static sockaddr_in createAddr(const in_addr_t ip, const int port);
-    static int createSock(int);
-    static void connectSock(int sock, const sockaddr_in& addr);
+    static sockaddr_in createAddress(const in_addr_t ip, const int port);
+    static int createSocket(int);
+    static void connectSocket(int sock, const sockaddr_in& addr);
     static void bindSock(int sock, sockaddr_in addr);
 };
 

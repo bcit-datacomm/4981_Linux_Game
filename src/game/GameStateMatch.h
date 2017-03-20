@@ -1,26 +1,29 @@
 #ifndef GAMESTATE_MATCH_H
 #define GAMESTATE_MATCH_H
-#include "../basic/Entity.h"
-#include "GameState.h"
+
 #include <string>
 #include <sstream>
 #include <iomanip>
+
+#include "../basic/Entity.h"
+#include "../game/GameState.h"
 #include "../player/Player.h"
-#include "Level.h"
-#include "../sprites/LTexture.h"
+#include "../game/Level.h"
 #include "../view/Camera.h"
 #include "../buildings/Base.h"
 #include "../creeps/Zombie.h"
-#include "GameManager.h"
+#include "../game/GameManager.h"
+#include "../sprites/SpriteTypes.h"
+#include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
-#include "../sprites/SpriteManager.h"
+#include "../basic/LTimer.h"
 
 
 class GameStateMatch : public GameState {
 public:
     GameStateMatch(Game& g, int gameWidth, int gameHeight);
-    virtual ~GameStateMatch();
+    virtual ~GameStateMatch() = default;
 
     void updateServ();
     virtual bool load();
@@ -30,12 +33,10 @@ public:
 
     // Frame Display
     std::stringstream frameTimeText;
-    TTF_Font* frameFont = nullptr;
-    LTexture frameFPSTextTexture;
+    //TTF_Font* frameFont = nullptr;
 
 private:
     Player player;
-    Level level;
     Base base;
     Camera camera;
 

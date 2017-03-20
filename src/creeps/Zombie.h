@@ -1,23 +1,26 @@
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
+
 #include <string>
-#include "../sprites/LTexture.h"
+#include <math.h>
+#include <vector>
+#include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
 #include "../inventory/Inventory.h"
-#include <math.h>
-#include <vector>
-#include <SDL2/SDL.h>
+#include "../collision/Quadtree.h"
 #include "../view/Window.h"
 #include "../basic/Movable.h"
 
-constexpr int ZOMBIE_HEIGHT = 125;
-constexpr int ZOMBIE_WIDTH = 75;
+constexpr static int ZOMBIE_HEIGHT = 125;
+constexpr static int ZOMBIE_WIDTH = 75;
 
 class Zombie : public Movable {
 public:
-    Zombie(int health = 100, int state = 0);
+    Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, int health = 100, int state = 0);
     virtual ~Zombie();
 
 

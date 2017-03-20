@@ -1,6 +1,6 @@
-#include "Camera.h"
+#include "../view/Camera.h"
 #include "../player/Player.h"
-#include "Window.h"
+#include "../view/Window.h"
 #include "../player/Marine.h"
 
 Camera::Camera(float w, float h) {
@@ -22,12 +22,4 @@ void Camera::move(float x, float y) {
 void Camera::setViewSize(float w, float h) {
     viewport.w = w;
     viewport.h = h;
-}
-
-float Camera::getX() {
-    return viewport.x;
-}
-
-float Camera::getY() {
-    return viewport.y;
 }

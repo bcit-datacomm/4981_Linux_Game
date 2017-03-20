@@ -4,8 +4,8 @@
 */
 #ifndef WEAPON_H
 #define WEAPON_H
+
 #include <SDL2/SDL.h>
-#include "../../sprites/LTexture.h"
 #include <string>
 
 class Marine;
@@ -18,21 +18,23 @@ public:
     Weapon(const Weapon& w);
     ~Weapon() = default;
 
-    std::string getType();//returns weapon type
-    int getClip(); //returns bullets in clip
-    int getClipMax(); //returns max amount clip can hold
-    int getDamage(); //returns damage of weapon
-    int getRange(); //returns range of weapon
-    int getReloadSpeed();//returns weapon reload speed
-    int getAmmo();//returns ammo amount
-    int getRAOE(); //returns radius of effect
+
+    int getClipMax() const { return clipMax; } //returns max amount clip can hold
+    std::string getType() const { return type; } //returns weapon type
+    int getReloadSpeed() const { return reloadSpeed; } //returns weapon reload speed
+    int getAmmo() const { return ammo; } //returns ammo amount
+    int getRAOE() const { return rAOE; } //returns radius of effect
+    int getClip() const { return clip; } //returns bullets in clip
+    int getDamage() const { return damage; } //returns damage of weapon
+    int getRange() const { return range; } //returns range of weapon
+    int getFireRate() const { return fireRate; } //returns weapon rate of fire
+
     void reloadClip();//resets clip to max amount
-    bool reduceAmmo(int rounds);
+    bool reduceAmmo(const int rounds);
 
     int32_t getId()const{return wID;};
     void setId(const int32_t num){wID = num;};
 
-    int getFireRate(); //returns weapon rate of fire
     bool getFireState(); //returns gun ready to fire
 
     virtual void fire(Marine &marine);
@@ -46,8 +48,6 @@ protected:
     int ammo; //amount of bullets total
     int rAOE; //radius of area of effect
     int reloadSpeed;
-    LTexture inGameTexture;
-    LTexture UiTexture;
     int reloadTick;
     int reloadDelay;
     int fireRate;

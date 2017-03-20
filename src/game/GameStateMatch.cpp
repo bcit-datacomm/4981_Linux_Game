@@ -8,58 +8,41 @@
 #include <SDL2/SDL_ttf.h>
 #include "GameStateMatch.h"
 #include "../client/NetworkManager.h"
-#include <thread>
+#include "../game/GameStateMatch.h"
+#include "../sprites/Renderer.h"
+#include "../sprites/SpriteTypes.h"
 #include "../basic/LTimer.h"
-#include "../sprites/LTexture.h"
 #include "../view/Window.h"
+#include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-                               level(),  base(), camera(gameWidth,gameHeight) {
+    base(), camera(gameWidth,gameHeight) {
 
 }
 
 bool GameStateMatch::load() {
-    player.setControl(GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()));
-    player.setId(NetworkManager::instance().getPlayerId());
+    if (networked) {
+        player.setControl(GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()));
+        player.setId(NetworkManager::instance().getPlayerId());
+    } else {
+        Point newPoint = base.getSpawnPoint();
+        player.setControl(GameManager::instance()->getMarine(GameManager::instance()->createMarine()));
+        player.marine->setPosition(newPoint.first, newPoint.second);
+
+        // Create Dummy Entitys
+        GameManager::instance()->createMarine(100, 100);
+        GameManager::instance()->createZombie(800, 800);
+        GameManager::instance()->createTurret(1000, 500);
+        GameManager::instance()->createWeaponDrop(1800, 1700);
+    }
 
     bool success = true;
 
-    //Open the font
-    frameFont = TTF_OpenFont( "assets/fonts/kenpixelsquare.ttf", 28 );
-    if (frameFont == nullptr) {
-        printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
-        success = false;
-    }
-
-    //level = new Level();() / 1000.f)
-    if (!level.levelTexture.loadFromFile("assets/texture/checkerboard.png", game.renderer)) {
-        //printf("Failed to load the level texture!\n");
-        success = false;
-    } else {
-        level.levelTexture.setDimensions(2000, 2000);
-    }
-
-
-
-
     //set the boundary on the map
-    GameManager::instance()->setBoundary(game.renderer, -1000, -1000, 3000, 3000);
+    GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
 
-    if (!base.texture.loadFromFile("assets/texture/base.png", game.renderer)) {
-        printf("Failed to load the base texture!\n");
-        success = false;
-    }
-
+    //creates the base
     GameManager::instance()->addObject(base);
-    //Point newPoint = base.getSpawnPoint();
-
-    if (!player.marine->texture.loadFromFile("assets/texture/arrow.png", game.renderer)) {
-        printf("Failed to load the player texture!\n");
-        success = false;
-    }
-
-    //camera = Camera(game.window.getWidth(), game.window.getHeight());
-
 
     return success;
 }
@@ -87,16 +70,17 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         //Calculate and correct fps
-        avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
+        avgFPS = countedFrames / (fpsTimer.getTicks() / TIME_SECOND);
 
         //Set FPS text to be rendered
-        frameTimeText.str( "" );
+        frameTimeText.str("");
         frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
 
         // Process frame
         handle();    // Handle user input
+
         update(stepTimer.getTicks() / 1000.f); // Update state values
-        if(stepTimer.getTicks() % (SCREEN_TICK_PER_FRAME * (1/30)+1) == 0)
+        if (networked && stepTimer.getTicks() % (SCREEN_TICK_PER_FRAME * (1/30)+1) == 0)
             updateServ();
 
         stepTimer.start(); //Restart step timer
@@ -105,17 +89,16 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
-        if(fpsTimer.getTicks() / 1000 > second) {
-            GameManager::instance()->createZombieWave(game.renderer, 1);
+        if(fpsTimer.getTicks() / TIME_SECOND > second) {
+            GameManager::instance()->createZombieWave(1);
             second+=5;
         }
 
         //If frame finished early
         if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
-            SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
+            SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
-
     }
 }
 
@@ -137,96 +120,89 @@ void GameStateMatch::handle() {
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
     //Handle events on queue
-    while ( SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
-        switch(event.type) {
-            case SDL_WINDOWEVENT:
-                camera.setViewSize(game.window.getWidth(), game.window.getHeight());
-                break;
-            case SDL_MOUSEWHEEL:
-                player.handleMouseWheelInput(&(event));
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if (event.button.button == SDL_BUTTON_RIGHT) {
-                    player.handlePlacementClick(game.renderer);
-                }
-                break;
-            case SDL_KEYDOWN:
-                switch(event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        play = false;
-                        break;
-                    case SDLK_b:
-                        player.handleTempBarricade(game.renderer);
-                        break;
-                    case SDLK_t:
-                        player.handleTempTurret(game.renderer);
-                        break;
-                    default:
-                        break;
-              }
-              break;
-            case SDL_KEYUP:
-               switch( event.key.keysym.sym ) {
-                   default:
-                       break;
-                }
-                break;
-            case SDL_QUIT:
-                  play = false;
-                  break;
-            default:
-                break;
+           switch(event.type) {
+        case SDL_WINDOWEVENT:
+            camera.setViewSize(game.window.getWidth(), game.window.getHeight());
+            break;
+        case SDL_MOUSEWHEEL:
+            player.handleMouseWheelInput(&(event));
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            if (event.button.button == SDL_BUTTON_RIGHT) {
+                player.handlePlacementClick(Renderer::instance()->getRenderer());
+            }
+            break;
+        case SDL_KEYDOWN:
+            switch(event.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                    play = false;
+                    break;
+                case SDLK_b:
+                    player.handleTempBarricade(Renderer::instance()->getRenderer());
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case SDL_KEYUP:
+            switch(event.key.keysym.sym) {
+                default:
+                   break;
+            }
+            break;
+        case SDL_QUIT:
+            play = false;
+            break;
+        default:
+            break;
         }
     }
 }
 
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
-    player.marine->move(player.marine->getDX() * delta, player.marine->getDY() * delta,
-        GameManager::instance()->getCollisionHandler());
     // Move player
-    //GameManager::instance()->updateMarines(delta);
-    //GameManager::instance()->updateZombies(delta);
-
+    if (networked) {
+        player.marine->move(player.marine->getDX() * delta, player.marine->getDY() * delta,
+            GameManager::instance()->getCollisionHandler());
+    } else {
+        GameManager::instance()->updateMarines(delta);
+        GameManager::instance()->updateZombies(delta);
+    }
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
 }
 
 void GameStateMatch::render() {
     //Only draw when not minimized
-    if ( !game.window.isMinimized() ) {
+    if (!game.window.isMinimized()) {
 
-        //Clear screen
-        SDL_SetRenderDrawColor( game.renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-        SDL_RenderClear( game.renderer );
+        SDL_RenderClear(Renderer::instance()->getRenderer());
 
         //Render textures
-        level.levelTexture.render(game.renderer, 0-camera.getX(), 0-camera.getY());
+        for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
 
-        //renders objects in game
-        GameManager::instance()->renderObjects(game.renderer, camera.getX(), camera.getY());
+            if (i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
+                break;
+            }
 
-        SDL_Color textColor = { 0, 0, 0, 255 };
+            for (int j = camera.getY() / TEXTURE_SIZE - 1; ; ++j) {
+                if (j * TEXTURE_SIZE - camera.getY() >= camera.getH()) {
+                    break;
+                }
 
-        //Render text
-        if ( !frameFPSTextTexture.loadFromRenderedText( frameTimeText.str().c_str(),
-                textColor, game.renderer, frameFont ) ) {
-            printf( "Unable to render FPS texture!\n" );
+                Renderer::instance()->render(
+                        {i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE},
+                        TEXTURES::BARREN);
+            }
         }
 
-        frameFPSTextTexture.render(game.renderer,
-            (game.window.getWidth() - frameFPSTextTexture.getWidth()), 0);
+        //renders objects in game
+        GameManager::instance()->renderObjects(camera.getViewport());
 
         //Update screen
-        SDL_RenderPresent( game.renderer );
+        SDL_RenderPresent(Renderer::instance()->getRenderer());
     }
-}
-
-GameStateMatch::~GameStateMatch() {
-    // Free texture and font
-    delete GameManager::instance();
-    frameFPSTextTexture.free();
-    TTF_CloseFont(frameFont);
-    frameFont = nullptr;
 }

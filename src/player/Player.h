@@ -1,14 +1,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
+#include <SDL2/SDL.h>
 #include <string>
-#include "../sprites/LTexture.h"
+
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
-#include <SDL2/SDL.h>
 #include "../UDPHeaders.h"
 #include "../game/GameManager.h"
 
+constexpr int PLAYER_PLACE_DISTANCE = 100;
 
 class Player {
 public:
@@ -28,12 +30,9 @@ public:
     void handleTempTurret(SDL_Renderer *renderer);
 
     MoveAction getMoveAction();
-
+    void setId(const int32_t newId) {id = newId;};
     Player();
     ~Player();
-
-    void setId(int32_t newId) {id = newId;};
-    int32_t getId() const {return id;};
 
     //Stays as pointer cause the player gets a marine object after the ctor is called
     Marine *marine = nullptr;
@@ -42,6 +41,9 @@ private:
     int32_t id;
     int tempBarricadeID;
     int tempTurretID;
+    bool holdingTurret;
+    int pickupTick;
+    int pickupDelay;
 };
 
 #endif

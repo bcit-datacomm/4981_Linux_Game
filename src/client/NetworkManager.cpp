@@ -21,6 +21,9 @@
 
 using namespace std;
 
+bool networked = false;
+
+
 /**------------------------------------------------------------------------------
 -------------------------------------------------------------------------------*/
 NetworkManager& NetworkManager::instance() {
@@ -59,13 +62,13 @@ void NetworkManager::run(const std::string ip, const std::string username) {
     state = NetworkState::INITIALIZING;
 
     in_addr_t serverIP = inet_addr(ip.c_str());
-    sockTCP = createSock(SOCK_STREAM);
-    bindSock(sockTCP, createAddr(INADDR_ANY, TCP_PORT));
-    connectSock(sockTCP, createAddr(serverIP, TCP_PORT));
-    servUDPAddr = createAddr(serverIP, UDP_PORT);
+    sockTCP = createSocket(SOCK_STREAM);
+    bindSock(sockTCP, createAddress(INADDR_ANY, TCP_PORT));
+    connectSocket(sockTCP, createAddress(serverIP, TCP_PORT));
+    servUDPAddr = createAddress(serverIP, UDP_PORT);
     servUDPAddrLen = sizeof(servUDPAddr);
-    sockUDP = createSock(SOCK_DGRAM);
-    bindSock(sockUDP, createAddr(INADDR_ANY, UDP_PORT));
+    sockUDP = createSocket(SOCK_DGRAM);
+    bindSock(sockUDP, createAddress(INADDR_ANY, UDP_PORT));
 
     std::thread TCPThread(&NetworkManager::runTCPClient, this, username);
     TCPThread.detach();
@@ -311,7 +314,7 @@ int NetworkManager::readUDPSocket(char *buf, const int& len) const {
 
 /**------------------------------------------------------------------------------
 -------------------------------------------------------------------------------*/
-void NetworkManager::connectSock(int sock, const sockaddr_in& addr) {
+void NetworkManager::connectSocket(int sock, const sockaddr_in& addr) {
     if ((connect(sock, (struct sockaddr *)&addr, sizeof(sockaddr_in))) < 0) {
         perror("connect");
         exit(1);
@@ -320,7 +323,7 @@ void NetworkManager::connectSock(int sock, const sockaddr_in& addr) {
 
 /**------------------------------------------------------------------------------
 -------------------------------------------------------------------------------*/
-sockaddr_in NetworkManager::createAddr(const in_addr_t ip, const int port) {
+sockaddr_in NetworkManager::createAddress(const in_addr_t ip, const int port) {
     sockaddr_in addr;
     //set server addr struct
     memset(&addr, '0', sizeof(sockaddr_in));
@@ -333,7 +336,7 @@ sockaddr_in NetworkManager::createAddr(const in_addr_t ip, const int port) {
 
 /**------------------------------------------------------------------------------
 -------------------------------------------------------------------------------*/
-int NetworkManager::createSock(int sockType) {
+int NetworkManager::createSocket(int sockType) {
     int sock = socket(AF_INET, sockType, 0);
     if (sock < 0) {
         perror("sock");

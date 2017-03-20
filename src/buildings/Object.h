@@ -1,14 +1,19 @@
 #ifndef OBJECT_H
 #define OBJECT_H
+
 #include <string>
-#include "../basic/Entity.h"
-#include "../sprites/LTexture.h"
 #include <SDL2/SDL.h>
+
+#include "../basic/Entity.h"
 #include "../collision/HitBox.h"
 
 class Object : public Entity {
 public:
-    Object(int h = 0, int w = 0, double ang = 0);
+
+    Object(int32_t nid, const SDL_Rect dest, int width = 0, int height = 0, double angle = 0);
+
+    Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
+         int width = 0, int heigth = 0, double angle = 0);
     virtual ~Object();
 
     void setHeight(int);
