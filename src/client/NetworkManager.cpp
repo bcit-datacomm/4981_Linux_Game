@@ -349,7 +349,7 @@ int NetworkManager::createSocket(int sockType) {
 /**------------------------------------------------------------------------------
 -------------------------------------------------------------------------------*/
 void NetworkManager::bindSock(int sock, sockaddr_in addr) {
-    bool optionValue = true;
+    int optionValue = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &optionValue, sizeof(optionValue))) {
         perror("sockopt");
         exit(1);
