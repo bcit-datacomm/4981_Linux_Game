@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include "game/Game.h"
-#include "log/log.h"
 #include <getopt.h>
 
+#include "game/Game.h"
+#include "log/log.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
     int opt;
-    while((opt = getopt(argc, argv, "evi")) != -1){
+    while((opt = getopt(argc, argv, "evio")) != -1){
         switch(opt){
             case 'i'://verbose
                 log_verbose = 3;
@@ -19,6 +19,9 @@ int main(int argc, char *argv[]) {
             case 'e'://error
                 log_verbose = 1;
                 break;
+            case 'o':
+                log_verbose = atoi(optarg);
+                break;
             case '?':
                 printf("-v verbose\n-e error\nverbose enables error as well.\n");
                 break;
@@ -26,23 +29,16 @@ int main(int argc, char *argv[]) {
     }
     Game game;
 
-    logv( "Loading...\n");
+    logv("Loading...\n");
 
     //Start up SDL and create window
-    if(game.init() && game.loadMedia())
-    {
-        logv( "Running...\n");
-
+    if (game.init() && game.loadMedia()) {
+        logv("Running...\n");
         game.run();
-
     } else {
-        logv( "Failed to start!\n" );
+        logv("Failed to start!\n");
     }
 
-    //Free resources and close SDL
-    game.close();
-
-    logv( "Exit\n" );
-
+    logv("Exit\n");
     return 0;
 }

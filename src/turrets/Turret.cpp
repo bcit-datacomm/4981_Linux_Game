@@ -7,7 +7,7 @@ Turret::Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize, co
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated, int health, int ammo,
         bool placed): Entity(id, dest, movementSize, projectileSize, damageSize,
         pickupSize), Movable(id, dest, movementSize, projectileSize, damageSize,
-        pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), boolPlaced(placed) {
+        pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), placed(placed) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -39,12 +39,12 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
 
 
     return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this), this)));
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this), this)));
 }
 
 // activates the turret
@@ -81,7 +81,7 @@ bool Turret::healthCheckTurret() {
 }
 
 void Turret::move(const float playerX, const float playerY,
-                        const float moveX, const float moveY, CollisionHandler &ch) {
+        const float moveX, const float moveY, CollisionHandler &ch) {
     setPosition(moveX, moveY);
     if(collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
         texture.setAlpha(PASS_ALPHA);
@@ -92,17 +92,11 @@ void Turret::move(const float playerX, const float playerY,
 
 void Turret::placeTurret() {
     texture.setAlpha(PLACED_ALPHA);
-    boolPlaced = true;
-}
-
-bool Turret::isPlaced() {
-  return boolPlaced;
+    placed = true;
 }
 
 void Turret::pickUpTurret() {
-    activated = false;
-    setPosition(0, 0);
-    texture.setAlpha(0);
+    placed = false;
 }
 
 // checks if there are any enemies in the turret's coverage area, this is not yet defined

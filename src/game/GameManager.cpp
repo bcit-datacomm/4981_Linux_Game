@@ -136,7 +136,7 @@ int32_t GameManager::createTurret() {
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,120,120};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
     return id;
@@ -163,7 +163,7 @@ int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const 
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
-    SDL_Rect pickRect = {0,0,100,100};
+    SDL_Rect pickRect = {0,0,120,120};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
     if(turretManager.count(id)){
@@ -331,7 +331,10 @@ void GameManager::updateCollider() {
     }
 
     for (auto& m : turretManager) {
-        collisionHandler.quadtreeTurret.insert(&m.second);
+        if (m.second.isPlaced()) {
+            collisionHandler.quadtreeTurret.insert(&m.second);
+            collisionHandler.quadtreePickUp.insert(&m.second);
+        }
     }
 
     for (auto& b : barricadeManager) {

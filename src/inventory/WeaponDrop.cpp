@@ -27,7 +27,7 @@ int WeaponDrop::getY() const{
     return yCoord;
 }
 
-int32_t WeaponDrop::getWeaponId(){
+int32_t WeaponDrop::getWeaponId() const{
     return weaponId;
 }
 
@@ -38,6 +38,6 @@ void WeaponDrop::onCollision() {
 void WeaponDrop::collidingProjectile(int damage) {
 }
 
-int32_t WeaponDrop::getId() {
+int32_t WeaponDrop::getId() const {
     return Entity::getId();
 }
