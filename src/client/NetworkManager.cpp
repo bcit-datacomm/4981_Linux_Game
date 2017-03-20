@@ -158,11 +158,11 @@ void NetworkManager::handshake(const std::string username) const {
 
 void NetworkManager::waitRecvId() {
     char buffrecv[STD_BUFFSIZE];
-    int bytesRead;
-    bytesRead = readTCPSocket(buffrecv, STD_BUFFSIZE);
+    int bytesRead = readTCPSocket(buffrecv, STD_BUFFSIZE);
     Packetizer::parseControlMsg(buffrecv, bytesRead);
     // !!!!replace with parseControlMsg
-    myid = *(reinterpret_cast<const int32_t *>(buffrecv));
+    const int32_t *idp = reinterpret_cast<const int32_t *>(buffrecv);
+    myid = *idp;
 }
 
 /**------------------------------------------------------------------------------

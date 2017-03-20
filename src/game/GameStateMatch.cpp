@@ -14,6 +14,8 @@
 #include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../log/log.h"
+#include "../server/server.h"
+#include "../server/servergamestate.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
     base(), camera(gameWidth,gameHeight) {
@@ -37,12 +39,26 @@ bool GameStateMatch::load() {
     }
 
     bool success = true;
+    //const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     //set the boundary on the map
     GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
 
     //creates the base
     GameManager::instance()->addObject(base);
+    // Create Dummy Entitys
+    //GameManager::instance()->createMarine(100, 100);
+    GameManager::instance()->createZombie(800, 800);
+    GameManager::instance()->createTurret(1000, 500);
+    GameManager::instance()->createWeaponDrop(1800, 1700);
+
+    //creates the base
+    GameManager::instance()->addObject(base);
+    //Point newPoint = base.getSpawnPoint();
+
+    //gives the player control of the marine
+    //player.setControl(GameManager::instance()->getMarine(playerMarineID));
+    //player.marine->setPosition(newPoint.first, newPoint.second);
 
     return success;
 }
@@ -61,21 +77,23 @@ void GameStateMatch::loop() {
     unsigned long countedFrames = 0;
     int frameTicks;
     unsigned int second = 0;
+#ifndef SERVER
     float avgFPS = 0;
+#endif
     fpsTimer.start();
 
     // State Loop
     while (play) {
         //Start cap timer
         capTimer.start();
-
+#ifndef SERVER
         //Calculate and correct fps
         avgFPS = countedFrames / (fpsTimer.getTicks() / TIME_SECOND);
 
         //Set FPS text to be rendered
         frameTimeText.str("");
         frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
-
+#endif
         // Process frame
         handle();    // Handle user input
 
@@ -84,14 +102,22 @@ void GameStateMatch::loop() {
             updateServ();
 
         stepTimer.start(); //Restart step timer
+#ifndef SERVER
         sync();    // Sync game to server
         render();    // Render game state to window
+#else
+        if (countedFrames % 2 == 0) {
+            //Server side sync packet sending
+            genOutputPacket();
+            sendSyncPacket(sendSocketUDP);
+        }
+#endif
 
         ++countedFrames;
 
         if(fpsTimer.getTicks() / TIME_SECOND > second) {
             GameManager::instance()->createZombieWave(1);
-            second+=5;
+            second += 5;
         }
 
         //If frame finished early

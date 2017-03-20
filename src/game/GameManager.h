@@ -46,13 +46,14 @@ public:
     void renderObjects(const SDL_Rect& cam); // Render all objects in level
 
     // Methods for creating, getting, and deleting marines from the level.
+    bool hasMarine(const int32_t id) const;
     int32_t createMarine();
     bool createMarine(const float x, const float y);
     void createMarine(const int32_t id);
     void deleteMarine(const int32_t id);
 
-    const std::map<int32_t, Marine> & getAllMarines() const {return marineManager;}
-	const std::map<int32_t, Zombie> & getAllZombies() const {return zombieManager;}
+    const auto& getAllMarines() const {return marineManager;}
+	const auto& getAllZombies() const {return zombieManager;}
 
     bool addMarine(const int32_t id, const Marine& newMarine);
     Marine& getMarine(const int32_t id) {return marineManager.at(id);};

@@ -27,6 +27,8 @@ public:
     void create(); //function displays character
     void onCollision();
     void collidingProjectile(int damage);
+    int getHealth() const {return health;}
+    
     void fireWeapon();
     int32_t checkForPickUp();
     Inventory inventory;

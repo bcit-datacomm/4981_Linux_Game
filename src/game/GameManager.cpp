@@ -110,6 +110,10 @@ void GameManager::updateZombies(const float delta) {
     }
 }
 
+bool GameManager::hasMarine(const int32_t id) const {
+    return marineManager.count(id);
+}
+
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();

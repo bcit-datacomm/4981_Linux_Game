@@ -28,8 +28,8 @@ public:
     void collidingProjectile(int damage);
     void generateRandomMove(); //randomly generate the zombie's movement
     int getRandomAngle(); //randomly generate the angle of zombie
-
-    void setHealth(const int& hlth) {health = hlth;};
+    void setHealth(const int hlth) {health = hlth;};
+    int getHealth() const {return health;}
 private:
     int health;
     int state; //used to select sprite to display

@@ -9,7 +9,7 @@ class GameState;
 
 class Game {
 public:
-    Game():window(){};
+    Game() : window() {};
 
     // Game window
     Window window;
@@ -27,7 +27,6 @@ private:
 
     // Current game state
     GameState* state = nullptr;//stays as a pointer cause we need to be able to switch between match and menu states
-
 };
 
 #endif

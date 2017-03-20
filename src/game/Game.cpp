@@ -30,6 +30,10 @@ void Game::run() {
 }
 
 void Game::loadState() {
+#ifdef SERVER
+    state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
+    stateID = 0;
+#else
     if (state != NULL) {
         delete state;
     }
@@ -42,13 +46,13 @@ void Game::loadState() {
         case 2:
             logv("Match State\n");
             state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
-
             break;
         default:
             break;
     }
      // Reset stateID back to zero to allow states to end program or incase of load failure
     stateID = 0;
+#endif
 }
 
 bool Game::init() {
