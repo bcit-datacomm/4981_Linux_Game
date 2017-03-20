@@ -52,15 +52,15 @@ bool InstantWeapon::fire(Marine &marine){
             logi("targets.empty()\n");
             break;
         }
-        if(targets.top().type != TYPE_ZOMBIE){
-            logi("target is of type: %d\n", targets.top().type);
+        if(targets.top().getType() != TYPE_ZOMBIE){
+            logi("target is of type: %d\n", targets.top().getType());
             break;
         }
 
         logi("targets.size():%d\n", targets.size());
 
-        logi("Shot target of type: %d\n", targets.top().type);
-        targets.top().entity.collidingProjectile(damage);
+        logi("Shot target of type: %d\n", targets.top().getType());
+        targets.top().getEntity().collidingProjectile(damage);
         targets.pop();
     }
 

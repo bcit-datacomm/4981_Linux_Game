@@ -167,7 +167,7 @@ void CollisionHandler::checkTargets(const int originX, const int originY, const 
 
             Target tar(*possibleTarget, type, tempEndX, tempEndY, distanceToOrigin);
 
-            logi("tar.type: %d\n", tar.type);
+            logi("tar.getType(): %d\n", tar.getType());
 
             targetsInSights.push(tar);
         }

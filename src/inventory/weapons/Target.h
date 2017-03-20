@@ -38,6 +38,12 @@ public:
         return playerDist < rhs.playerDist;
     }
 
+    Entity& getEntity() const {return entity;}
+    int getType() const {return type;}
+    int getHitX() const {return hitX;}
+    int getHitY() const {return hitY;}
+
+
 private:
 	Entity& entity;
     int type;
