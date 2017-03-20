@@ -37,8 +37,6 @@ public:
     ShotGun();
     ~ShotGun() = default;
 
-    //bool fire(Marine &marine);
-
 };
 
 #endif

@@ -2,7 +2,11 @@
     Target.h
 
     DISCRIPTION:
-        This is class is used in all instant fire weapons, the weapons will 
+        InstantWewapon Weapons construct a line from the weapons mussle to its 
+        theoretical range limit, and then get all the intersecting targets.
+        Tergets are sorted in a priority queue by distance from player, and then
+        they are damaged in order untill something invulnrable is hit, or 
+        penertation runs out.
 
     AUTHOR: Deric Mccadden 01/03/17
 
@@ -25,9 +29,9 @@ using std::string;
 
 
 InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-    int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
+        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
 : Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo, 
-    reloadDelay, fireDelay) {
+        reloadDelay, fireDelay) {
 
 }
 
@@ -44,7 +48,7 @@ bool InstantWeapon::fire(Marine &marine){
 
     std::priority_queue<Target> targets;
 
-    collisionHandler.detectLineCollision(targets, marine, range);//getTargets(marine);
+    collisionHandler.detectLineCollision(targets, marine, range);
 
 
     for(int i = 0; i < penetration; i++) {
