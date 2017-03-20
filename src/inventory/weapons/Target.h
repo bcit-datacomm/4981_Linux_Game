@@ -31,7 +31,11 @@ public:
     }
     
     Target& operator=(Target&& t) {
-    	return t;
+        entity = t.entity;
+        type = t.type;
+        hitX = t.hitX;
+        hitY = t.hitY;
+        return *this;
     }
 
     bool operator<(const Target& rhs) const {
@@ -45,7 +49,7 @@ public:
 
 
 private:
-	Entity& entity;
+    Entity& entity;
     int type;
     int hitX;
     int hitY;

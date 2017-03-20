@@ -150,8 +150,7 @@ void CollisionHandler::checkTargets(const int originX, const int originY, const 
     int tempEndY;
     int distanceToOrigin;
 
-    for (unsigned int x = 0, len = allEntities.size(); x < len; x++) {
-        Entity* possibleTarget = allEntities.at(x);
+    for(auto& possibleTarget : allEntities) {
 
         tempOriginX = originX;
         tempOriginY = originY;
@@ -173,11 +172,6 @@ void CollisionHandler::checkTargets(const int originX, const int originY, const 
         }
     }
 }
-
-
-
-
-
 
 std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree &q, const Entity *entity){
     std::vector<Entity*> returnObjects;
