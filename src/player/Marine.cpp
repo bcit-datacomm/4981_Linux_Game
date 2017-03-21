@@ -20,7 +20,7 @@ void Marine::onCollision() {
 }
 
 void Marine::collidingProjectile(int damage) {
-    health = health - damage;
+    health -= damage;
 }
 
 // Created by DericM 3/8/2017
@@ -35,7 +35,6 @@ void Marine::fireWeapon() {
 
 
 int32_t Marine::checkForPickUp(){
-
     int32_t PickId = -1;
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
@@ -43,19 +42,16 @@ int32_t Marine::checkForPickUp(){
     Entity* ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
 
     if(ep != nullptr){
-        const auto& tm = GameManager::instance()->getTurretManager();
         //get Entity drop Id
         PickId = ep->getId();
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
-        const auto& it = tm.find(PickId);
-        if (it != tm.end()) {
+        if (GameManager::instance()->getTurretManager().count(PickId)) {
             return PickId;
         }
-        const WeaponDrop &wd = GameManager::instance()->getWeaponDrop(PickId);
-        //Get Weaopn id from weapon drop
+        const WeaponDrop& wd = GameManager::instance()->getWeaponDrop(PickId);
+        //Get Weapon id from weapon drop
         PickId = wd.getWeaponId();
         if(inventory.pickUp(PickId)){
-
             GameManager::instance()->deleteWeaponDrop(wd.getId());
         }
     }
