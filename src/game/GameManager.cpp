@@ -276,9 +276,17 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
             return false;
         }
         weaponDropManager.at(id).setPosition(x,y);
+        logv("Created id:%d in weaponDropManager\n", id);
         return true;
     }
     return false;
+}
+
+/*create by maitiu March 21
+ * Checks if id can be found in weaponDropManager
+ */
+bool GameManager::weaponDropExists(const int32_t id){
+    return weaponDropManager.count(id);
 }
 
 //returns weapon drop in  weaponDropManager

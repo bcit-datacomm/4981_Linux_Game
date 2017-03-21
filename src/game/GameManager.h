@@ -66,6 +66,7 @@ public:
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteWeaponDrop(const int32_t id);
+    bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);
