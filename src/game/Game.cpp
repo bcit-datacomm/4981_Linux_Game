@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "../server/server.h"
 #include "../game/Game.h"
 #include "../game/GameStateMatch.h"
 #include "../game/GameStateMenu.h"
@@ -24,6 +25,9 @@ void Game::run() {
         logv("State ID: %d\n", stateID);
         loadState();
         if (state->load()) {
+#ifdef SERVER
+            isGameRunning.store(true, std::memory_order_relaxed);
+#endif
             state->loop();
         }
     }
