@@ -22,7 +22,7 @@ public:
     void detectLineCollision(std::priority_queue<Target>& targetsInSights, 
         Marine &marine, const int range);
     void checkTargets(const int playerX, const int playerY, const int deltaX, const int deltaY,
-        std::priority_queue<Target>& targetsInSights, std::vector<Entity*> allEntities, int type);
+        std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type);
 
     std::vector<Entity *>getQuadTreeEntities(Quadtree &q,const Entity *entity); // General Collision handler, pass in quadtree check
 

@@ -143,7 +143,7 @@ void CollisionHandler::detectLineCollision(
             This is needed for identification purposes in InstantWeapon.fire()
 */
 void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
-        std::priority_queue<Target>& targetsInSights, std::vector<Entity*> allEntities, int type) {
+        std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
     int tempOriginX; 
     int tempOriginY;
     int tempEndX;
@@ -164,7 +164,7 @@ void CollisionHandler::checkTargets(const int originX, const int originY, const 
 
             distanceToOrigin = std::hypot(originX - tempEndX, originY - tempEndY);
 
-            Target tar(*possibleTarget, type, tempEndX, tempEndY, distanceToOrigin);
+            Target tar(possibleTarget->getId(), type, tempEndX, tempEndY, distanceToOrigin);
 
             logi("tar.getType(): %d\n", tar.getType());
 

@@ -22,34 +22,20 @@
 
 class Target{
 public:
-    Target(Entity& t, int type, int hitX, int hitY, int playerDist) 
-    : entity(t), type(type), hitX(hitX), hitY(hitY), playerDist(playerDist){}
-
-
-    Target(const Target& t) : entity(t.entity), type(t.type), hitX(t.hitX), 
-            hitY(t.hitY), playerDist(t.playerDist) {
-    }
-    
-    Target& operator=(Target&& t) {
-        entity = t.entity;
-        type = t.type;
-        hitX = t.hitX;
-        hitY = t.hitY;
-        return *this;
-    }
+    Target(int32_t id, int type, int hitX, int hitY, int playerDist) 
+    : id(id), type(type), hitX(hitX), hitY(hitY), playerDist(playerDist){}
 
     bool operator<(const Target& rhs) const {
         return playerDist < rhs.playerDist;
     }
 
-    Entity& getEntity() const {return entity;}
+    int32_t getId() const {return id;}
     int getType() const {return type;}
     int getHitX() const {return hitX;}
     int getHitY() const {return hitY;}
 
-
 private:
-    Entity& entity;
+    int32_t id;
     int type;
     int hitX;
     int hitY;

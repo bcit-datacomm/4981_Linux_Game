@@ -1,5 +1,5 @@
 /**
-    Target.h
+    InstantWeapon.cpp
 
     DISCRIPTION:
         InstantWewapon Weapons construct a line from the weapons mussle to its 
@@ -44,12 +44,11 @@ bool InstantWeapon::fire(Marine &marine){
     }
     logi("InstantWeapon::fire()\n");
 
-    auto& collisionHandler = GameManager::instance()->getCollisionHandler();
-
     std::priority_queue<Target> targets;
+    GameManager* gameManager = GameManager::instance();
+    auto& collisionHandler = gameManager->getCollisionHandler();
 
     collisionHandler.detectLineCollision(targets, marine, range);
-
 
     for(int i = 0; i < penetration; i++) {
         if(targets.empty()){
@@ -62,9 +61,14 @@ bool InstantWeapon::fire(Marine &marine){
         }
 
         logi("targets.size():%d\n", targets.size());
-
         logi("Shot target of type: %d\n", targets.top().getType());
-        targets.top().getEntity().collidingProjectile(damage);
+
+        int32_t id = targets.top().getId();
+        if(!gameManager->zombieExists(id)){
+            logi("!gameManager.zombieExists(id)\n");
+            break;
+        }
+        gameManager->getZombie(id).collidingProjectile(damage);
         targets.pop();
     }
 

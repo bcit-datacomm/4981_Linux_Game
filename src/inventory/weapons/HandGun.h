@@ -19,7 +19,7 @@ namespace HandgunVars {
     const string EMPTYSOUND     = EFX_PDROP01;
 
     constexpr int RANGE         = 500;
-    constexpr int DAMAGE        = 20;
+    constexpr int DAMAGE        = 200;
     constexpr int AOE           = 1;
     constexpr int PENETRATION   = 3;
 

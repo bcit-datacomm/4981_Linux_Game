@@ -219,6 +219,23 @@ void GameManager::deleteZombie(const int32_t id) {
 
 }
 
+/* 
+    AUTHOR: Deric Mccadden 21/03/2017
+    DESC: Checks if id can be found in zombieManager
+ */
+bool GameManager::zombieExists(const int32_t id) {
+    return zombieManager.count(id);
+}
+
+/* 
+    AUTHOR: Deric Mccadden 21/03/2017
+    DESC: returns zombie that matches id from zombieManager
+ */
+Zombie& GameManager::getZombie(const int32_t id) {
+    return zombieManager.at(id);
+}
+
+
 int32_t GameManager::addObject(const Object& newObject) {
     objectManager.insert({newObject.getId(), newObject});
     return newObject.getId();
@@ -291,8 +308,10 @@ bool GameManager::weaponDropExists(const int32_t id){
 
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id){
+    logv("id: %d", id);
     return weaponDropManager.at(id);
 }
+
 
 //returns weapon in weaponManager
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
