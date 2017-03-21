@@ -25,8 +25,8 @@ void Marine::collidingProjectile(int damage) {
 
 // Created by DericM 3/8/2017
 void Marine::fireWeapon() {
-    Weapon* w = inventory.getCurrent();
-    if( w != nullptr){
+    Weapon *w = inventory.getCurrent();
+    if (w != nullptr){
         w->fire(*this);
     } else {
         logv("Slot Empty\n");
@@ -38,10 +38,9 @@ int32_t Marine::checkForPickUp(){
     GameManager *gm = GameManager::instance();
     CollisionHandler &ch = gm->getCollisionHandler();
 
-    Entity* ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
-    if(ep != nullptr){
+    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp, this), this);
+    if (ep) {
         logv("Searching for id:%d in weaponDropManager\n", pickId);
-        const auto& tm = gm->getTurretManager();
         //get Entity drop Id
         pickId = ep->getId();
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
@@ -50,7 +49,7 @@ int32_t Marine::checkForPickUp(){
         }
         //Checks if WeaponDrop exists
         if(gm->weaponDropExists(pickId)){
-            const WeaponDrop &wd = gm->getWeaponDrop(pickId);
+            const WeaponDrop& wd = gm->getWeaponDrop(pickId);
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();
 
@@ -61,7 +60,7 @@ int32_t Marine::checkForPickUp(){
             logv("unable to find id:%d in weaponDropManager\n", pickId);
         }
     } else {
-        logv("Pick id was nullpPtr\n");
+        loge("Pick id was nullptr\n");
     }
     return -1;
 }
