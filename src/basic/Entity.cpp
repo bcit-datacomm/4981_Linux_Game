@@ -74,6 +74,8 @@ float Entity::getY() const{
 void Entity::setPosition(float px, float py) {
     x = px;
     y = py;
+    destRect.x = px;
+    destRect.y = py;
     updateHitBoxes();
 }
 
