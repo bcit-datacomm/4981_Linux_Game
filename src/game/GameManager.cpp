@@ -209,6 +209,24 @@ void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
 }
 
+/* 
+    AUTHOR: Deric Mccadden 21/03/2017
+    DESC: Checks if id can be found in zombieManager
+ */
+bool GameManager::zombieExists(const int32_t id) {
+    return zombieManager.count(id);
+}
+
+/* 
+    AUTHOR: Deric Mccadden 21/03/2017
+    DESC: returns zombie that matches id from zombieManager
+ */
+Zombie& GameManager::getZombie(const int32_t id) {
+    const auto& z = zombieManager[id];
+    assert(z.second);
+    return z.first;
+}
+
 int32_t GameManager::addObject(const Object& newObject) {
     objectManager.insert({newObject.getId(), newObject});
     return newObject.getId();
@@ -252,11 +270,20 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
         return false;
     }
     elem->second.setPosition(x,y);
+    logv("Created id:%d in weaponDropManager\n", id);
     return true;
 }
 
-//returns weapon drop in weaponDropManager
+/*create by maitiu March 21
+ * Checks if id can be found in weaponDropManager
+ */
+bool GameManager::weaponDropExists(const int32_t id){
+    return weaponDropManager.count(id);
+}
+
+//returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id){
+    logv("id: %d", id);
     const auto& wd = weaponDropManager[id];
     assert(wd.second);
     return wd.first;

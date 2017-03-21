@@ -63,10 +63,13 @@ public:
     bool createZombie(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteZombie(const int32_t id);
     bool createZombieWave(SDL_Renderer* gRenderer, const int n);
+    bool zombieExists(const int32_t id);
+    Zombie& getZombie(const int32_t id);
 
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(SDL_Renderer* gRenderer, const float x, const float y);
     void deleteWeaponDrop(const int32_t id);
+    bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);

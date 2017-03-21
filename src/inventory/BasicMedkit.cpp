@@ -5,13 +5,13 @@
 #include "../log/log.h"
 
 BasicMedkit::BasicMedkit() : Consumable() {
-    logv("BasicMedkit Created\n");
+    logi("BasicMedkit Created\n");
 }
 
 BasicMedkit::~BasicMedkit() {
-    logv("BasicMedkit Destroyed\n");
+    logi("BasicMedkit Destroyed\n");
 }
 
 void BasicMedkit::OnConsume() {
-    logv("BasicMedkit Consumed\n");
+    logi("BasicMedkit Consumed\n");
 }
