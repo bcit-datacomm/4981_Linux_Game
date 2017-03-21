@@ -5,21 +5,30 @@
 #ifndef HANDGUN_H
 #define HANDGUN_H
 #include "InstantWeapon.h"
+#include "../../audio/AudioManager.h"
 #include <string>
 
 using std::string;
 
 namespace HandgunVars {
-    const string TYPE = "HandGun";
-    constexpr int RANGE = 500;
-    constexpr int DAMAGE = 500;
-    constexpr int CLIP  = 2;
-    constexpr int CLIPMAX = 2;
-    constexpr int AMMO = 50;
-    constexpr int AOE = 1;
-    constexpr int RELOAD = 3;
-    constexpr int FIRERATE = 1000;
-    constexpr bool READY = true;
+    const string TYPE           = "HandGun";
+
+    const string FIRESOUND      = EFX_WLPISTOL;
+    const string HITSOUND       = "";
+    const string RELOADSOUND    = EFX_WRELOAD01;
+    const string EMPTYSOUND     = EFX_PDROP01;
+
+    constexpr int RANGE         = 500;
+    constexpr int DAMAGE        = 200;
+    constexpr int AOE           = 1;
+    constexpr int PENETRATION   = 3;
+
+    constexpr int CLIP          = 5;
+    constexpr int CLIPMAX       = 5;
+    constexpr int AMMO          = 100;
+
+    constexpr int RELOADDELAY   = 2000;
+    constexpr int FIREDELAY     = 500;
 }
 
 

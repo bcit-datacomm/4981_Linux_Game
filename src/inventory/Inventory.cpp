@@ -21,21 +21,21 @@ Inventory::~Inventory(){
 
 void Inventory::switchCurrent(const int slot){
     if (current != slot) {
-        logv("Switched to slot: %d\n", slot);
+        logi("Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
 bool Inventory::pickUp(int32_t weaponId){
     if(current == 0){
-        logv("Can't Swap default gun \n");
+        logi("Can't Swap default gun \n");
         return false;
     }
-    logv("Picked up weapon\n");
-    logv("Swapped from %d ", weaponIds[current]);
+    logi("Picked up weapon\n");
+    logi("Swapped from %d ", weaponIds[current]);
 
     weaponIds[current] = weaponId;
-    logv("to %d\n", weaponIds[current]);
+    logi("to %d\n", weaponIds[current]);
     return true;
 }
 
@@ -68,7 +68,7 @@ void Inventory::scrollCurrent(int direction){
         } else {
             current = direction;
         }
-        logv("Switched to slot:%d\n", current);
+        logi("Switched to slot:%d\n", current);
     }
 
 }
