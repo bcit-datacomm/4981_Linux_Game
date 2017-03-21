@@ -23,6 +23,7 @@ GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameSt
 }
 
 bool GameStateMatch::load() {
+#ifndef SERVER
     if (networked) {
         player.setControl(GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()));
         player.setId(NetworkManager::instance().getPlayerId());
@@ -37,7 +38,7 @@ bool GameStateMatch::load() {
         GameManager::instance()->createTurret(1000, 500);
         GameManager::instance()->createWeaponDrop(1800, 1700);
     }
-
+#endif
     bool success = true;
     //const int32_t playerMarineID = GameManager::instance()->createMarine();
 
@@ -93,13 +94,13 @@ void GameStateMatch::loop() {
         //Set FPS text to be rendered
         frameTimeText.str("");
         frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
-#endif
         // Process frame
         handle();    // Handle user input
 
         update(stepTimer.getTicks() / 1000.f); // Update state values
         if (networked && stepTimer.getTicks() % (SCREEN_TICK_PER_FRAME * (1/30)+1) == 0)
             updateServ();
+#endif
 
         stepTimer.start(); //Restart step timer
 #ifndef SERVER
