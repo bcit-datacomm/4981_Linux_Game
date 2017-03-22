@@ -1,16 +1,17 @@
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
+
 #include <string>
 #include <math.h>
 #include <random>
 #include <vector>
 #include <utility>
 #include <SDL2/SDL.h>
-#include "../sprites/LTexture.h"
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
 #include "../inventory/Inventory.h"
+#include "../collision/Quadtree.h"
 #include "../buildings/Base.h"
 #include "../view/Window.h"
 #include "../basic/Movable.h"
@@ -21,7 +22,10 @@ static constexpr int ZOMBIE_FRAMES   = 50;
 static constexpr int ZOMBIE_HEIGHT   = 125;
 static constexpr int ZOMBIE_WIDTH    = 75;
 
-// 8 possible directions
+/* 8 possible directions combining left, right, up, down.
+ * Fred Yang
+ * Feb 14
+ */
 static constexpr int DIR_CAP = 8;
 enum class ZombieDirection : int {
     DIR_R,
@@ -35,7 +39,10 @@ enum class ZombieDirection : int {
     DIR_INVALID = -1
 };
 
-// Cardinal directions for setting angles
+/* Cardinal directions for setting angles, one angle for each movement direction.
+ * Robert Arendac
+ * March 14
+ */
 enum class ZombieAngles : int {
     NORTH = 0,
     NORTHEAST = 45,
@@ -47,10 +54,11 @@ enum class ZombieAngles : int {
     NORTHWEST = 315
 };
 
-// overlapped
-static constexpr float OVERLAP = 0.1;
-
-// zombie state
+/* zombie states, change when you want zombie to take a different action.
+ * Eg. go from moving to attacking
+ * Fred Yang
+ * March 14
+ */
 enum class ZombieState {
     ZOMBIE_IDLE,
     ZOMBIE_MOVE,
@@ -60,8 +68,10 @@ enum class ZombieState {
 
 class Zombie : public Movable {
 public:
-    Zombie(int health = ZOMBIE_INIT_HP, ZombieState state = ZombieState::ZOMBIE_IDLE, int step = 0,
-           ZombieDirection dir = ZombieDirection::DIR_INVALID, int frame = ZOMBIE_FRAMES);
+    Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, int health = ZOMBIE_INIT_HP, ZombieState state = ZombieState::ZOMBIE_IDLE,
+        int step = 0, ZombieDirection dir = ZombieDirection::DIR_INVALID, int frame = ZOMBIE_FRAMES);
+
     virtual ~Zombie();
 
     void onCollision();

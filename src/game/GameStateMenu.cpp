@@ -6,12 +6,14 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "GameStateMenu.h"
-#include "../basic/LTimer.h"
-#include "../sprites/LTexture.h"
-#include "../view/Window.h"
 #include <unistd.h>
+
+#include "../game/GameStateMenu.h"
+#include "../basic/LTimer.h"
+#include "../view/Window.h"
+#include "../sprites/Renderer.h"
 #include "../log/log.h"
+#include "../sprites/SpriteTypes.h"
 
 
 /**
@@ -26,6 +28,9 @@
 * Programmer:
 * Jacob Frank
 *
+* Modified by:
+* Michael Goll (March 16, 2017)
+*
 * Interface: GameStateMenu(Game& g, int gameWidth, int gameHeight)
 *                           Game& g: The instance of the game which the display window is tied to
 *                           int gameWidth: Width of the game window
@@ -33,18 +38,12 @@
 *
 * Notes:
 * GameStateMenu ctor which initializes all member variables for use throughout class
+*
+* Revisions:
+* Removed excess initializations. (Michael Goll / March 16, 2017)
 */
-GameStateMenu::GameStateMenu(Game& g, int gameWidth, int gameHeight):
-                                GameState(g),
-                                headingFont(nullptr), textboxFont(nullptr), menuFont(nullptr),
-                                level(),
-                                camera(gameWidth,gameHeight),
-                                menuItems({"join", "options"}),
-                                selected{false,false},
-                                activeTextbox{false,false},
-                                defaultText({"IP Address", "Username"}),
-                                textInput({defaultText[IP], defaultText[USERNAME]}),
-                                fontColors({SDL_WHITE_RGB, SDL_GREEN_RGB, SDL_BLACK_RGB, SDL_RED_RGB}){
+GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textboxFont(nullptr),
+    menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
 }
 
 
@@ -60,42 +59,41 @@ GameStateMenu::GameStateMenu(Game& g, int gameWidth, int gameHeight):
 * Programmer:
 * Jacob Frank
 *
+* Modified by:
+* Michael Goll (March 16, 2017)
+*
 * Interface: load()
 *
 * Returns: true if the level, camera, and all font textures were loaded without error
 *
 * Notes:
 * Function loads the initial state of the window
-* Opens all fonts to be used, the title screen background, and the camera for viewing the window
+* Opens all fonts to be used and the title screen background
+*
+* Revisions:
+* Loads all text files and needed text textures once and stores them in Renderer instance's sprite array.
+* (Michael Goll / March 16, 2017)
 */
+
 bool GameStateMenu::load() {
-    bool success = true;
+    logv("Loading Fonts...\n");
 
-    menuFont = TTF_OpenFont( "assets/fonts/Overdrive Sunset.otf", 110);
-    if ( menuFont == nullptr ) {
-        logv( "Failed to load font - Overdrive Sunset.otf! SDL_ttf Error: %s\n", TTF_GetError() );
-        success = false;
+    if ((menuFont = Renderer::instance()->loadFont("assets/fonts/Overdrive Sunset.otf", 110)) == nullptr) {
+        return false;
     }
 
-    headingFont = TTF_OpenFont( "assets/fonts/SEGUISB.ttf", 30);
-    if ( headingFont == nullptr ) {
-        logv( "Failed to load font - SEGUISB.TTF! SDL_ttf Error: %s\n", TTF_GetError() );
-        success = false;
+    Renderer::instance()->createText(TEXTURES::JOIN_FONT, menuFont, "Join", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance()->createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+
+    if ((headingFont = Renderer::instance()->loadFont("assets/fonts/SEGUISB.ttf", FONT_SIZE)) == nullptr) {
+        return false;
     }
 
-    textboxFont = TTF_OpenFont( "assets/fonts/SEGOEUISL.ttf", 30);
-    if ( textboxFont == nullptr ) {
-        logv( "Failed to load font - SEGOEUISL.ttf! SDL_ttf Error: %s\n", TTF_GetError() );
-        success = false;
+    if ((textboxFont = Renderer::instance()->loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE)) == nullptr) {
+        return false;
     }
 
-    if (!level.levelTexture.loadFromFile("assets/TitleScreen_Marz.png", game.renderer)) {
-        logv("Failed to load the level texture!\n");
-        success = false;
-    } else {
-        level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
-    }
-    return success;
+    return true;
 }
 
 
@@ -153,7 +151,7 @@ void GameStateMenu::sync() {
 * Function: handle
 *
 * Date:
-* JF: February 8, 2017: added handler for window resizing event
+* JF: February 8, 2O17: added handler for window resizing event
 *
 * Designer:
 * Jacob Frank
@@ -170,107 +168,68 @@ void GameStateMenu::sync() {
 * functionality of the main menu
 */
 void GameStateMenu::handle() {
- int x,y;
- SDL_Keycode keyCode;
+    //int x, y; // <-- leaving these in for future use
 
- //Handle events on queue
- SDL_WaitEvent( &event );
- game.window.handleEvent(event);
-    switch ( event.type ) {
+    SDL_Keycode keyCode;
+
+    //Handle events on queue
+    SDL_WaitEvent(&event);
+    game.window.handleEvent(event);
+
+    switch (event.type) {
+
+        case SDL_MOUSEBUTTONDOWN:
+            // x = event.button.x;
+            // y = event.button.y;
+
+            //move to the game when a click occurs
+            //changes the state to tell the Game.cpp loop to start the actual game
+            game.stateID = 2;
+
+            //breaks out of the menu loop and Game.cpp re-evaluates the state
+            play = false;
+            break;
+
         case SDL_KEYDOWN:
             keyCode = event.key.keysym.sym;
+
             if (keyCode == SDLK_ESCAPE) {
                 play = false;
-                break;
             }
+            break;
 
-            for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
-                if (activeTextbox[i]) {
-                    //Handling backspace
-                    if (keyCode == SDLK_BACKSPACE && textInput[i].length() > 0) {
-                        textInput[i].pop_back();
-                    }
-                    //Handle copy
-                    else if (keyCode == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
-                        SDL_SetClipboardText( textInput[i].c_str() );
-                    }
-                    //Handle paste
-                    else if (keyCode == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
-                        textInput[i] = SDL_GetClipboardText();
-                    }
-                }
-            }
-        break;
         case SDL_TEXTINPUT:
-            for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
-                if (activeTextbox[i]) {
-                    //Ensures that a copy or paste is not occurring
-                    if (!((event.text.text[ 0 ] == 'c' || event.text.text[ 0 ] == 'C') &&
-                          (event.text.text[ 0 ] == 'v' || event.text.text[ 0 ] == 'V') &&
-                           SDL_GetModState() & KMOD_CTRL)) {
-                        //Update the string int displayed int he textbox
-                        if (textInput[i].length() < maxLength) {
-                            textInput[i] += event.text.text;
-                        }
-                    }
-                }
-            }
+        //intentionally left blank for now
+        //only temporary, will be functional later
             break;
+
         case SDL_KEYUP: //Do nothing on key release
+        //intentionally left blank for now
+        //only temporary, will be functional later
             break;
+
         case SDL_MOUSEMOTION:
-            x = event.motion.x;
-            y = event.motion.y;
-            for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
-                //Check if mouse is above one of the menu uptions
-                if (x >= menuItemPos[i].x && x <= menuItemPos[i].x + menuTextTextures[i].getWidth() &&
-                    y >= menuItemPos[i].y && y <= menuItemPos[i].y + menuTextTextures[i].getHeight()) {
-                    selected[i] = true;  //Activate the button
-                } else {
-                    selected[i] = false; //deactivate the button
-                }
-            }
+        //intentionally left blank for now
+        //only temporary, will be functional later
             break;
-        case SDL_MOUSEBUTTONDOWN:
-            x = event.button.x;
-            y = event.button.y;
-            for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
-                if (selected[i]) {
-                    update(i);
-                    play = false;
-                }
-            }
-            for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
-                //Check if the mouse was clicked inside the textbox area
-                if (x >= textboxPos[i].x && x <= textboxPos[i].x + textboxPos[i].w &&
-                    y >= textboxPos[i].y && y <= textboxPos[i].y + textboxPos[i].h) {
-                    activeTextbox[i] = true; //Activate the textbox to enable typing
-                    //If default string is detected, delete it
-                    if (textInput[i].compare(defaultText[i]) == 0) {
-                        textInput[i] = "";
-                    }
-                } else {
-                    activeTextbox[i] = false; //deactivate the textbox
-                    //Reset textbox text to default text, if textbox is empty
-                    if (textInput[i].empty()) {
-                        textInput[i] = defaultText[i];
-                    }
-                }
-            }
-            break;
+
         case SDL_WINDOWEVENT:
             switch (event.window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
-                    //Adjust the dimensions of the window if resized
-                    level.levelTexture.setDimensions(game.window.getWidth(), game.window.getHeight());
-                    break;
+                    //Re-render with the new size
+                    //data1 --> new window width, | data2 --> new window height
+                    screenRect = {ZERO, ZERO, event.window.data1, event.window.data2};
+                break;
             }
             break;
-    case SDL_QUIT:
-        play = false;
-        break;
-    default:
-        break;
+
+        case SDL_QUIT:
+            play = false;
+            game.stateID = 0;
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -295,13 +254,6 @@ void GameStateMenu::handle() {
 */
 void GameStateMenu::update(const float delta) {
 
-    if(delta == JOIN) {
-        game.stateID = 2;
-    } else if (delta == OPTIONS) {
-        game.stateID = 2; //TEMPORARY: change to correct state ID once implemented
-    } else {
-        game.stateID = 0;
-    }
 }
 
 /**
@@ -316,67 +268,68 @@ void GameStateMenu::update(const float delta) {
 * Programmer:
 * Jacob Frank
 *
+* Modified by:
+* Michael Goll (March 16, 2017)
+*
 * Interface: positionElements()
 *
 * Returns: void
 *
 * Notes:
 * Function positions all screen elements in the window
+*
+* Revisions:
+* Renders text in SDL_Rect structures instead of LTextures. (Michael Goll / March 16, 2017)
 */
 void GameStateMenu::positionElements() {
 
-    int windowWidth = game.window.getWidth();
-    int windowHeight = game.window.getHeight();
-    int maxTextWidth = 0;
-    int maxTextHeight = 0;
-    int vertPadding = 50;
-    int horzPadding = 10;
+    int maxTextWidth = ZERO;
+    int maxTextHeight = ZERO;
+    int vertPadding = 100;
+
     std::string longestString = "";
     char largestChar = 'W';
-
 
     //Check if TTF was initialized correctly
     if(!TTF_WasInit() && TTF_Init()== -1) {
         logv("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
+
     //Calculate the pixel length and height of the largest possible string
     longestString.resize(maxLength + 1, largestChar);
     TTF_SizeText(textboxFont, longestString.c_str(), &maxTextWidth, &maxTextHeight);
 
-    //Position the menu text
-    menuItemPos[JOIN].x = windowWidth / 2  - menuTextTextures[JOIN].getWidth() / 2;
-    menuItemPos[JOIN].y = windowHeight / 2 + menuTextTextures[JOIN].getHeight();
-    menuItemPos[OPTIONS].x = windowWidth / 2  - menuTextTextures[OPTIONS].getWidth() / 2;
-    menuItemPos[OPTIONS].y = windowHeight / 2 + menuTextTextures[OPTIONS].getHeight() * 2.2;
 
     //Create a textbox for the server IP
-    textboxPos[IP].w = maxTextWidth;
-    textboxPos[IP].h = maxTextHeight;
-    textboxPos[IP].x = windowWidth / 2  - textboxPos[IP].w / 2;
-    textboxPos[IP].y = menuItemPos[JOIN].y - vertPadding;
+    hostIPTextBox.x = (screenRect.w - hostIPTextBox.w) * 0.5;
+    hostIPTextBox.y = screenRect.h * 0.5;
+    hostIPTextBox.w = maxTextWidth;
+    hostIPTextBox.h = maxTextHeight;
 
     //Create a textbox for the Username
-    textboxPos[USERNAME].w = maxTextWidth;
-    textboxPos[USERNAME].h = maxTextHeight;
-    textboxPos[USERNAME].x = windowWidth / 2  - textboxPos[USERNAME].w / 2;
-    textboxPos[USERNAME].y = textboxPos[IP].y - vertPadding;
+    usernameTextBox.x = (screenRect.w - usernameTextBox.w) * 0.5;
+    usernameTextBox.y = hostIPTextBox.y - vertPadding * 0.5;
+    usernameTextBox.w = maxTextWidth;
+    usernameTextBox.h = maxTextHeight;
 
-    //position the text for the IP Address textbox
-    textboxTextPos[IP].x = textboxPos[IP].x + horzPadding;
-    textboxTextPos[IP].y = textboxPos[IP].y - ((textboxPos[IP].h - maxTextHeight) / 2);
+    //Position the menu text
+    joinRect.x = hostIPTextBox.x + hostIPTextBox.x * 0.25;
+    joinRect.y = hostIPTextBox.y + vertPadding;
+    joinRect.w = maxTextWidth * 0.5;
+    joinRect.h = maxTextHeight * 2;
 
-    //position the text for the Username textbox
-    textboxTextPos[USERNAME].x = textboxPos[USERNAME].x + horzPadding;
-    textboxTextPos[USERNAME].y = textboxPos[USERNAME].y - ((textboxPos[USERNAME].h - maxTextHeight) / 2);
+    optionsRect.x = hostIPTextBox.x;
+    optionsRect.y = joinRect.y + vertPadding;
+    optionsRect.w = maxTextWidth;
+    optionsRect.h = maxTextHeight * 2;
 }
-
 
 /**
 * Function: render
 *
 * Date:
-* JF: February 10, 2017: created function
+* JF: February 20, 2017: created function
 * JF: March 7-8, 2017: Moved functionality for rendering to wrapper function
 *
 * Designer:
@@ -384,6 +337,9 @@ void GameStateMenu::positionElements() {
 *
 * Programmer:
 * Jacob Frank
+*
+* Modified by:
+* Michael Goll (March 16, 2017)
 *
 * Interface: render()
 *
@@ -393,87 +349,36 @@ void GameStateMenu::positionElements() {
 * Function renders all assets to the screen
 * Changes the color of any assets that are selected
 * Calls helper function to position elements in the window
+*
+* Revisions:
+* Now renders solely with the Renderer instance. (Michael Goll / March 16, 2017)
 */
 void GameStateMenu::render() {
     //Only draw when not minimized
     if (!game.window.isMinimized()) {
 
-        //Clear screen
-        SDL_RenderClear( game.renderer );
+        screenRect = {ZERO, ZERO, game.window.getWidth(), game.window.getHeight()};
 
-        //Render textures
-        level.levelTexture.render(game.renderer, 0 - camera.getX(), 0 - camera.getY());
+        //Clear screen
+        SDL_RenderClear(Renderer::instance()->getRenderer());
+
+        //render the splash screen
+        Renderer::instance()->render(screenRect, TEXTURES::MAIN);
 
         //Position all screen elements in the window
         positionElements();
 
-        //Render Menu option text
-        for (size_t i = 0; i < NUM_MENU_ITEMS; i++) {
-            if(selected[i]) {
-                renderText(&menuTextTextures[i], menuItems[i].c_str(), fontColors[GREEN], menuFont, menuItemPos[i]);
-            } else {
-                renderText(&menuTextTextures[i], menuItems[i].c_str(), fontColors[RED], menuFont, menuItemPos[i]);
-            }
-            menuTextTextures[i].render(game.renderer, menuItemPos[i].x, menuItemPos[i].y);
-        }
+        //textboxes
+        Renderer::instance()->render(usernameTextBox, TEXTURES::TEXTBOX);
+        Renderer::instance()->render(hostIPTextBox, TEXTURES::TEXTBOX);
 
-        //Change the color of the textbox when active
-        //Used so User knows when textbox is can accept input
-        for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
-            if (activeTextbox[i]) {
-                SDL_SetRenderDrawColor(game.renderer, LT_GREEN_RGB[0], LT_GREEN_RGB[1], LT_GREEN_RGB[2], OPAQUE);
-                SDL_RenderFillRect(game.renderer, &textboxPos[i]);
-            } else {
-                SDL_SetRenderDrawColor(game.renderer, WHITE_RGB[0], WHITE_RGB[1], WHITE_RGB[2], OPAQUE);
-                SDL_RenderFillRect(game.renderer, &textboxPos[i]);
-            }
-        }
-
-        //Render the Textfield text to the screen
-        for (size_t i = 0; i < NUM_TEXT_FIELDS; i++) {
-            if (!textInput[i].empty()) {
-                renderText(&textboxTextures[i], textInput[i].c_str(), fontColors[BLACK],
-                textboxFont, textboxTextPos[i]);
-            }
-        }
+        //Join and Options text
+        Renderer::instance()->render(joinRect, TEXTURES::JOIN_FONT);
+        Renderer::instance()->render(optionsRect, TEXTURES::OPTIONS_FONT);
 
         //Update screen
-        SDL_RenderPresent(game.renderer);
+        SDL_RenderPresent(Renderer::instance()->getRenderer());
     }
-}
-
-/**
-* Function: renderText
-*
-* Date:
-* JF: March 7, 2017: Created wrapper function for loadFromRenderText function
-*
-* Designer:
-* Jacob Frank
-*
-* Programmer:
-* Jacob Frank
-*
-* Interface: renderText(LTexture *fontTexture, const char* text, SDL_Color color, TTF_Font* font, SDL_Rect rect)
-*                       LTexture *fontTexture: Wrapper for the font texture to be rendered to the screen window
-*                       const char* text: Text to be rendered to the screen
-*                       SDL_Color color: Color of the text to be rendered
-*                       TTF_Font* font: The font to be used to write the text
-*                       SDL_Rect rect: Structure that defines the bounding box of the rectangle for the text
-*
-* Returns: void
-*
-*
-* Notes:
-* Wrapper function for the loadFromRenderedText function.
-* When called, it renders the passed in text to the screen
-*/
-void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
-                                SDL_Color color, TTF_Font* font, SDL_Rect rect) {
-    if ( !fontTexture->loadFromRenderedText( text, color, game.renderer, font ) ) {
-        logv( "Unable to render text texture!\n" );
-    }
-    fontTexture->render(game.renderer, rect.x, rect.y);
 }
 
 /**
@@ -488,19 +393,19 @@ void GameStateMenu::renderText(LTexture *fontTexture, const char* text,
 * Programmer:
 * Jacob Frank
 *
+* Modified by:
+* Michael Goll (March 16, 2017)
+*
 * Interface: ~GameStateMenu()
 *
 * Notes:
 * Deconstructor, frees all allocated memory for textures and fonts
+*
+* Revisions:
+* Removed unnecessary free calls (Michael Goll / March 16, 2017)
 */
 GameStateMenu::~GameStateMenu() {
-    // Free texture and font
-    menuTextTextures[1].free();
-    menuTextTextures[0].free();
     TTF_CloseFont(textboxFont);
     TTF_CloseFont(headingFont);
     TTF_CloseFont(menuFont);
-    menuFont = nullptr;
-    textboxFont = nullptr;
-    headingFont = nullptr;
 }

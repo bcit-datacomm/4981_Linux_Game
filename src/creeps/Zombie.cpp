@@ -1,13 +1,21 @@
-#include "Node.h"
-#include "Zombie.h"
-#include "../log/log.h"
-#include "../game/GameManager.h"
+#include <math.h>
+#include <random>
+#include <cassert>
 #include <utility>
+#include "Zombie.h"
+#include "Node.h"
+#include "../game/GameManager.h"
+#include "../log/log.h"
 using namespace std;
 
-Zombie::Zombie(int health, ZombieState state, int step, ZombieDirection dir, int frame)
-      : Movable(ZOMBIE_VELOCITY), health(health), state(state), step(step),
-        dir(dir), frame(frame) {
+#define PI 3.14159265
+#define ZOMBIE_VELOCITY 200
+
+Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, int health, ZombieState state, int step, ZombieDirection dir, int frame)
+        : Entity(id, dest, movementSize, projectileSize, damageSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
+        health(health), state(state), step(step), dir(dir), frame(frame) {
     logv("Create Zombie\n");
 }
 
@@ -57,10 +65,13 @@ bool Zombie::isMoving() const {
  * In theory, zombies will only have a movement collision with a target
  * as their pathfinding should walk around obstacles.
  * Robert Arendac
- * March 7
+ * March 18
 */
 bool Zombie::checkTarget() const {
-    return GameManager::instance()->getCollisionHandler().detectMovementCollision(this);
+    auto ch = GameManager::instance()->getCollisionHandler();
+    return (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine, this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj, this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret, this), this));
 }
 
 /**
@@ -81,14 +92,12 @@ void Zombie::generateMove() {
         }
 
         // Changed to attack state once attack code is ready
-        if (state != ZombieState::ZOMBIE_IDLE) {
-            setState(ZombieState::ZOMBIE_IDLE);
-        }
+        setState(ZombieState::ZOMBIE_IDLE);
 
         return;
     }
 
-    // Each case will check if the zombie is within bounds before moving
+    // Each case will check if the zombie is within bounds before moving and set its angle
     switch(d) {
         case ZombieDirection::DIR_R:
             if (checkBounds(startX + ZOMBIE_VELOCITY, startY)) {
@@ -303,5 +312,5 @@ string Zombie::generatePath(const float xStart, const float yStart,
  * Feb 14
  */
 constexpr bool Zombie::checkBounds(const float x, const float y) {
-    return (!(x < 0 || x > MAP_WIDTH || y < 0 || y > MAP_HEIGHT));
+    return true;//(!(x < 0 || x > MAP_WIDTH || y < 0 || y > MAP_HEIGHT));
 }

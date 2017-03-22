@@ -1,36 +1,62 @@
 #include "Entity.h"
 #include <atomic>
+#include <cstdint>
+#include "../log/log.h"
 
-Entity::Entity():id(generateID()) {
-    spriteClips[0].x = 0;
-    spriteClips[0].y = 0;
-    spriteClips[0].w = 100;
-    spriteClips[0].h = 100;
-    movementHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    projectileHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    damageHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
-    pickupHitBox = std::make_shared<HitBox>(x, y, spriteClips[0]);
+Entity::Entity(int32_t nid, const SDL_Rect dest):id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
+        movementHitBox(dest), projectileHitBox(dest), damageHitBox(dest), pickupHitBox(dest), x(dest.x),
+        y(dest.y) {
+}
+
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize): id(nid), destRect(dest),
+        srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(dest),
+        damageHitBox(dest), pickupHitBox(dest), x(dest.x), y(dest.y) {
 
 }
 
-Entity::Entity(const Entity &e): spriteClips(e.spriteClips),movementHitBox(e.movementHitBox),
-        projectileHitBox(e.projectileHitBox),damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox),
-        id(e.getId()){
+//Weapon drops
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
+        const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
+        movementHitBox(movementSize), projectileHitBox(dest), damageHitBox(dest),pickupHitBox(pickupSize),
+        x(dest.x), y(dest.y) {
+
 }
 
-Entity::~Entity() {
-    texture.free();
+Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
+        movementHitBox(movementSize), projectileHitBox(projectileSize), damageHitBox(damageSize),
+        pickupHitBox(dest), x(dest.x), y(dest.y) {
+}
+
+
+//movables and marines
+Entity::Entity(int32_t nid,  const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), destRect(dest),
+        srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize),
+        damageHitBox(damageSize), pickupHitBox(pickupSize), x(dest.x), y(dest.y) {
+
+}
+
+Entity::Entity(const Entity &e): id(e.id), destRect(e.destRect), srcRect(e.srcRect),
+        movementHitBox(e.movementHitBox), projectileHitBox(e.projectileHitBox),
+        damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox), x(e.x), y(e.y) {
+}
+
+const SDL_Rect Entity::getRelativeDestRect(const SDL_Rect& view) const {
+    return {destRect.x - view.x , destRect.y - view.y, static_cast<int>(destRect.w), static_cast<int>(destRect.h)};
 }
 
 // Set x coordinate
 void Entity::setX(const float px) {
     x = px;
+    destRect.x = px;
     updateHitBoxes();
 }
 
 // Set y coordinate
 void Entity::setY(const float py) {
     y = py;
+    destRect.y = py;
     updateHitBoxes();
 }
 
@@ -44,6 +70,15 @@ float Entity::getY() const{
     return y;
 }
 
+// Get x coordinate
+int Entity::getW() const{
+    return destRect.w;
+}
+
+// Get y coordinate
+int Entity::getH() const{
+    return destRect.h;
+}
 // Set Entity by x and y amount
 void Entity::setPosition(float px, float py) {
     x = px;
@@ -51,29 +86,42 @@ void Entity::setPosition(float px, float py) {
     updateHitBoxes();
 }
 
+//updates the hit boxes
 void Entity::updateHitBoxes() {
-    movementHitBox->move(x, y);
-    projectileHitBox->move(x, y);
-    damageHitBox->move(x, y);
-    pickupHitBox->move(x, y);
+    movementHitBox.move(x, y);
+    projectileHitBox.move(x, y);
+    damageHitBox.move(x, y);
+    pickupHitBox.move(x - 10, y - 10);
 }
 
+//updates the rectangle for the hitbox
 void Entity::updateRectHitBoxes() {
-    movementHitBox->setRect(spriteClips[0]);
-    projectileHitBox->setRect(spriteClips[0]);
-    damageHitBox->setRect(spriteClips[0]);
-    pickupHitBox->setRect(spriteClips[0]);
+    movementHitBox.setRect(destRect);
+    projectileHitBox.setRect(destRect);
+    damageHitBox.setRect(destRect);
+    pickupHitBox.setRect(destRect);
 }
 
-void Entity::onCollision(){
+void Entity::onCollision() {
     //do nothing
 }
 
-void Entity::collidingProjectile(const int damage){
+void Entity::collidingProjectile(const int damage) {
     //do nothing
 }
 
-int32_t generateID() {
-    static std::atomic<int32_t> counter{-1};
-    return ++counter;
+//sets the destination rect of where to render stuff
+void Entity::setDestRect(const int x, const int y, const int width, const int height) {
+    destRect.x = x;
+    destRect.y = y;
+    destRect.w = width;
+    destRect.h = height;
+}
+
+//sets the source rect, used for sprites and textures
+void Entity::setSrcRect(const int x, const int y, const int width, const int height) {
+    srcRect.x = x;
+    srcRect.y = y;
+    srcRect.w = width;
+    srcRect.h = height;
 }

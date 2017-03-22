@@ -1,9 +1,9 @@
 // Created 05/02/2017 Mark C.
 #ifndef TURRET_H
 #define TURRET_H
+
 #include <vector>
 #include <SDL2/SDL.h>
-#include "../sprites/LTexture.h"
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../player/Marine.h"
@@ -19,9 +19,12 @@ constexpr static int PLACE_DISTANCE = 200;
 
 class Turret : public Movable {
 public:
-    Turret(bool activated = false, int health = 200, int ammo = 100,
-            bool boolPlaced = false, float range = 400.0f);
-    virtual ~Turret();  // default dtor
+
+    Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
+        int ammo = 100, bool placed = false, float range = 400.0f);
+
+    virtual ~Turret();
 
     void spawnTurret(); // spawns a DEACTIVATED turret
 
@@ -53,7 +56,7 @@ public:
 
     void placeTurret();
 
-    bool isPlaced();
+    bool isPlaced() {return placed;};
 
     void pickUpTurret();
 
@@ -69,7 +72,7 @@ private:
     bool activated; // turret activated state
     int health; // turret health pool
     int ammo; // turret ammo pool
-    bool boolPlaced;
+    bool placed;
     float range; // turret's range.
 };
 
