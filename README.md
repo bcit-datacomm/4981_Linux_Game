@@ -12,4 +12,5 @@ Here are some quick links for the guidelines:
 
 And then some quick links for the ease of navigation:
 - [MAR-Z Directory Tree](https://github.com/bcit-datacomm/4981_Linux_Game/wiki/Directory-Tree-of-MAR-Z)
-- [MAR-Z Design Class Diagram](https://github.com/bcit-datacomm/4981_Linux_Game/wiki/Directory-Tree-of-MAR-Z)
+- [MAR-Z Design Class Diagram](https://github.com/bcit-datacomm/4981_Linux_Game/wiki/Design-Class-Diagram)
+- [Entity Description](https://github.com/bcit-datacomm/4981_Linux_Game/wiki/Entity-Hierarchy)
