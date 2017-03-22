@@ -54,7 +54,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
 
     for (const auto& o : objectManager) {
-        if (o.second.getX() < camW) {
+        if (o.second.getX() - camX < camW) {
             if (o.second.getY() - camY < camH) {
                 Renderer::instance()->render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
