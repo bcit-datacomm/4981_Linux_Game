@@ -84,8 +84,8 @@ bool GameStateMenu::load() {
         return false;
     }
 
-    Renderer::instance()->createText(menuFont, "Join", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
-    Renderer::instance()->createText(menuFont, "Options", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance()->createText(TEXTURES::JOIN_FONT, menuFont, "Join", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance()->createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
 
     if ((headingFont = Renderer::instance()->loadFont("assets/fonts/SEGUISB.ttf", FONT_SIZE)) == nullptr) {
         return false;

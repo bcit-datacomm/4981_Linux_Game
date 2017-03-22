@@ -6,6 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <array>
 #include <string>
+#include <map>
 
 #include "../sprites/SpriteTypes.h"
 #include "../log/log.h"
@@ -64,7 +65,7 @@ class Renderer {
         ~Renderer();
 
         //returns the sprite or sprite sheet that the object is looking to render
-        static SDL_Texture * getTexture(int spriteType) {return sprites.at(spriteType);};
+        static SDL_Texture * getTexture(int spriteType);
 
         //gets the renderer
         static SDL_Renderer * getRenderer() {return renderer;};
@@ -78,7 +79,12 @@ class Renderer {
         static TTF_Font * loadFont(const std::string fonts, const int size);
 
         //creates a texture from a font file
-        void createText(TTF_Font * font, const std::string text, const SDL_Color colour);
+        void createText(const TEXTURES index, TTF_Font * font, const std::string text, const SDL_Color colour);
+
+        int createTempText(TTF_Font * font, const std::string text, const SDL_Color colour);
+
+        //creates a temporary texture
+        int createTempTexture(const std::string filePath);
 
         //renders all of the sprites within the camera viewport
         static void render(const SDL_Rect& dest, const TEXTURES spriteType, double angle = 0.0,
@@ -95,12 +101,15 @@ class Renderer {
         static Renderer rInstance;
         static SDL_Renderer * renderer;
         static SDL_Window * window;
-        static int index;
+        static int tempIndex;
 
         //array of all sprites in the game
-        static std::array<SDL_Texture *, TOTAL_SPRITES> sprites;
+        static std::map<int, SDL_Texture *> sprites;
+
         //creates a texture from a file
-        static void createTexture(std::string filePath);
+        static void createTexture(const TEXTURES index, const std::string filePath);
+        static void createTexture(const int index, const std::string filePath);
+
         //sets the renderer
         static void setRenderer();
 };
