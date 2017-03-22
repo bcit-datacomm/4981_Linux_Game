@@ -459,28 +459,13 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
 bool GameManager::createZombieWave(const int n) {
 
     std::vector<Point> spawnPoints;
-    //spawnPoints.emplace_back(Point(100, 100));
-    //spawnPoints.emplace_back(Point(500, 100));
-    // spawnPoints.emplace_back(Point(1900, -900));
-    // spawnPoints.emplace_back(Point(2900, -900));
-    // spawnPoints.emplace_back(Point(2900, 2900));
-    // spawnPoints.emplace_back(Point(1900, 2900));
-    // spawnPoints.emplace_back(Point(-900, 2900));
-
-    if(zombieManager.size() >= spawnPoints.size() * 5) {
-       unsigned int count = 0;
-       std::vector<int32_t> ids;
-       for (const auto& z : zombieManager) {
-           if(count >= spawnPoints.size()) {
-               break;
-           }
-           ids.push_back(z.first);
-           ++count;
-       }
-       for (const auto& id : ids) {
-           deleteZombie(id);
-       }
-   }
+    spawnPoints.emplace_back(Point(100, 100));
+    spawnPoints.emplace_back(Point(500, 100));
+    spawnPoints.emplace_back(Point(1900, 900));
+    spawnPoints.emplace_back(Point(2900, 900));
+    spawnPoints.emplace_back(Point(2900, 2900));
+    spawnPoints.emplace_back(Point(1900, 2900));
+    spawnPoints.emplace_back(Point(900, 2900));
 
 
     for (int i = 0; i < n; ++i) {

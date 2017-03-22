@@ -24,14 +24,14 @@ bool GameStateMatch::load() {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     //set the boundary on the map
-    GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
+    GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(100, 500);
-    GameManager::instance()->createZombie(-100, -100);
+    //GameManager::instance()->createZombie(-100, -100);
     //GameManager::instance()->createTurret(1000, 500);
     //GameManager::instance()->createTurret(100, 100);
-    GameManager::instance()->createWeaponDrop(1800, 1700);
+    //GameManager::instance()->createWeaponDrop(1800, 1700);
     //GameManager::instance()->createZombie(100, 100);
 
     GameManager::instance()->addObject(base);
