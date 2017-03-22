@@ -23,7 +23,10 @@ bool verbose = false;
 std::unordered_map<int32_t, PlayerJoin> clientList;
 std::atomic_bool isGameRunning{false};
 
-//Isaac Morneau March 19
+/**
+ * Main entry function
+ * Isaac Morneau March 19
+ */
 int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
     setenv("OMP_DYNAMIC", "TRUE", 1);
@@ -93,7 +96,13 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-//John Agapeyev March 19
+/**
+ * The TCP sync loop.
+ * It takes the socket to listen on as a parameter.
+ * It uses epoll to wait for a read notification, upon which it dispatches control
+ * to the appropriate handler.
+ * John Agapeyev March 19
+ */
 void initSync(const int sock) {
     logv("Starting TCP sync\n");
 
@@ -101,7 +110,7 @@ void initSync(const int sock) {
 
     epoll_event ev;
     ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
-    ev.data.fd = listenSocketTCP;
+    ev.data.fd = sock;
 
     int epollfd = createEpollFD();
     addEpollSocket(epollfd, ev.data.fd, &ev);
@@ -134,7 +143,7 @@ void initSync(const int sock) {
                 continue;
             }
             if (events[i].events & EPOLLIN) {
-                if (events[i].data.fd == listenSocketTCP) {
+                if (events[i].data.fd == sock) {
                     handleIncomingTCP(epollfd);
                 } else {
                     readTCP(events[i].data.fd);
@@ -145,7 +154,12 @@ void initSync(const int sock) {
     free(events);
 }
 
-//John Agapeyev March 19
+/**
+ * The main server loop during gameplay.
+ * This is the UDP loop, as opposed to the TCP loop defined above.
+ * This method takes the address to use when reading from the socket.
+ * John Agapeyev March 19
+ */
 void listenForPackets(const sockaddr_in servaddr) {
     socklen_t servAddrLen = sizeof(servaddr);
 
@@ -181,7 +195,13 @@ void listenForPackets(const sockaddr_in servaddr) {
     }
 }
 
-//John Agapeyev March 19
+/**
+ * Processes a char buffer that was received as a UDP packet.
+ * It casts the buffer to a struct defined in UDPHeaders.h.
+ * It then uses a predefined enum id to determine the packet type.
+ * This packet type is then handled appropriately.
+ * John Agapeyev March 19
+ */
 void processPacket(const char *data) {
     const ClientMessage *mesg = reinterpret_cast<const ClientMessage *>(data);
     switch (static_cast<UDPHeaders>(mesg->id)) {
@@ -204,7 +224,15 @@ void processPacket(const char *data) {
     }
 }
 
-//Isaac Morneau Feb 28th, 2017
+/**
+ * Generates the contents of the output packet and stores them into a buffer.
+ * This method takes advantage of reinterpret casting pointers to write multi-byte
+ * values into char arrays.
+ * At the end, it then calculates the size of the generated packet.
+ * This size is required due to the dynamic size of the packet, and as such, the packet
+ * size is not always predefined.
+ * Isaac Morneau Feb 28th, 2017
+ */
 void genOutputPacket() {
     int32_t *pBuff = (int32_t *) outputPacket;
 
@@ -247,14 +275,21 @@ void genOutputPacket() {
     outputLength = (pBuff - (int32_t *) outputPacket) * sizeof(int32_t);
 }
 
-//Joh Agapeyev March 19
+/**
+ * Loops through every client and sends them a copy of the output sync packet.
+ * John Agapeyev March 19
+ */
 void sendSyncPacket(const int sock) {
     for (const auto& client : clientList) {
         sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
     }
 }
 
-//John Agapeyev March 19
+/**
+ * Sets a TCP socket to listen on a given ip and port.
+ * The ip and port are in network byte order.
+ * John Agapeyev March 19
+ */
 void listenTCP(const int socket, const unsigned long ip, const unsigned short port) {
     bindSocket(socket, ip, port);
     if (listen(socket, LISTENQ) == -1) {
@@ -263,7 +298,13 @@ void listenTCP(const int socket, const unsigned long ip, const unsigned short po
     }
 }
 
-//John Agapeyev March 19
+/**
+ * Sets a UDP socket to listen on a given ip and port
+ * The only difference between this method and the TCP method defined above is that
+ * the TCP method calls listen and bind, whereas this method only calls bind.
+ * Another key difference is that this method automatically starts the UDP listen loop.
+ * John Agapeyev March 19
+ */
 void listenUDP(const int socket, const unsigned long ip, const unsigned short port) {
     const auto& servaddrudp = bindSocket(socket, ip, port);
     logv("UDP server started\n");
