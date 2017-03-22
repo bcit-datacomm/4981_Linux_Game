@@ -15,8 +15,7 @@
 #include "../log/log.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-    base(), camera(gameWidth,gameHeight) {
-
+        base(), camera(gameWidth,gameHeight) {
 }
 
 bool GameStateMatch::load() {
@@ -28,12 +27,13 @@ bool GameStateMatch::load() {
     GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(100, 100);
-    GameManager::instance()->createZombie(800, 800);
-    GameManager::instance()->createTurret(1000, 500);
+    GameManager::instance()->createMarine(100, 500);
+    GameManager::instance()->createZombie(-100, -100);
+    //GameManager::instance()->createTurret(1000, 500);
+    //GameManager::instance()->createTurret(100, 100);
     GameManager::instance()->createWeaponDrop(1800, 1700);
+    //GameManager::instance()->createZombie(100, 100);
 
-    //creates the base
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 
@@ -82,7 +82,7 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
-        if(fpsTimer.getTicks() / TIME_SECOND > second) {
+        if ((stepTimer.getTicks() / TIME_SECOND) > second) {
             GameManager::instance()->createZombieWave(1);
             second+=5;
         }
@@ -152,11 +152,10 @@ void GameStateMatch::update(const float delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
+    GameManager::instance()->updateTurrets(delta);
 
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
-
-
 }
 
 void GameStateMatch::render() {
