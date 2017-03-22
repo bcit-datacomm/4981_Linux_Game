@@ -195,7 +195,7 @@ void processPacket(const char *data) {
         case UDPHeaders::ATTACKACTIONH:
             {
                 const AttackAction& aa = mesg->data.aa;
-                attackList.push_back(aa);
+                saveAttack(aa);
             }
             break;
         default:

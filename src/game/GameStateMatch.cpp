@@ -111,6 +111,7 @@ void GameStateMatch::loop() {
             //Server side sync packet sending
             genOutputPacket();
             sendSyncPacket(sendSocketUDP);
+            clearAttackActions();
         }
 #endif
 
