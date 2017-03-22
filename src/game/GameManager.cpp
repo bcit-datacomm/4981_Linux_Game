@@ -64,7 +64,7 @@ void GameManager::renderObjects(SDL_Renderer* gRenderer, const float camX, const
 // Update marine movements. health, and actions
 void GameManager::updateMarines(const float delta) {
     for (auto& m : marineManager) {
-        m.second.move((m.second.getDX()*delta), (m.second.getDY()*delta), collisionHandler);
+        m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
     }
 }
 
@@ -72,7 +72,7 @@ void GameManager::updateMarines(const float delta) {
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
         z.second.generateRandomMove();
-        z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
+        z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
     }
 }
 // Create marine add it to manager, returns marine id
@@ -83,8 +83,7 @@ int32_t GameManager::createMarine() {
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
 
-    Marine m(id, marineRect, moveRect, projRect, damRect);
-    marineManager.insert({id, m});
+    marineManager.emplace(id, Marine(id, marineRect, moveRect, projRect, damRect));
     return id;
 }
 
@@ -95,8 +94,7 @@ bool GameManager::createMarine(SDL_Renderer* gRenderer, const float x, const flo
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
 
-    Marine m(id, marineRect, moveRect, projRect, damRect);
-    const auto& elem = marineManager.insert({id, m});
+    const auto& elem = marineManager.emplace(id, Marine(id, marineRect, moveRect, projRect, damRect));
     if (!elem->second.texture.loadFromFile("assets/texture/arrow.png", gRenderer)) {
         logv("Failed to load the marine texture!\n");
         deleteMarine(id);
@@ -115,7 +113,7 @@ bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
     if (marineManager.count(id)) {
         return false;
     }
-    marineManager.insert({id,newMarine});
+    marineManager.emplace(id, newMarine);
     return true;
 }
 
@@ -135,7 +133,7 @@ int32_t GameManager::createTurret() {
     SDL_Rect damRect = {0,0,100,100};
     SDL_Rect pickRect = {0,0,120,120};
 
-    turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
+    turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect));
     return id;
 }
 
@@ -149,7 +147,7 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
     if (turretManager.count(id)) {
         return false;
     }
-    turretManager.insert({id, newTurret});
+    turretManager.emplace(id, newTurret);
     return true;
 }
 
@@ -162,7 +160,7 @@ int32_t GameManager::createTurret(SDL_Renderer* gRenderer, const float x, const 
     SDL_Rect damRect = {0,0,100,100};
     SDL_Rect pickRect = {0,0,120,120};
 
-    const auto& elem = turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
+    const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect));
     if (!elem->second.texture.loadFromFile("assets/texture/turret.png", gRenderer)) {
         logv("Failed to load the turret texture!\n");
         deleteTurret(id);
@@ -181,7 +179,7 @@ Turret& GameManager::getTurret(const int32_t id) {
 
 int32_t GameManager::addZombie(const Zombie& newZombie) {
     const int32_t id = generateID();
-    zombieManager.insert({id,newZombie});
+    zombieManager.emplace(id, newZombie);
     return id;
 }
 
@@ -194,7 +192,7 @@ bool GameManager::createZombie(SDL_Renderer* gRenderer, const float x, const flo
     SDL_Rect projRect = {0,0,100,100};
     SDL_Rect damRect = {0,0,100,100};
 
-    const auto& elem = zombieManager.insert({id, Zombie(id, zombieRect, moveRect, projRect, damRect)});
+    const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
     if (!elem->second.texture.loadFromFile("assets/texture/zombie.png", gRenderer)) {
         logv("Failed to load the Zombie texture!\n");
         deleteZombie(id);
@@ -228,7 +226,7 @@ Zombie& GameManager::getZombie(const int32_t id) {
 }
 
 int32_t GameManager::addObject(const Object& newObject) {
-    objectManager.insert({newObject.getId(), newObject});
+    objectManager.emplace(newObject.getId(), newObject);
     return newObject.getId();
 }
 
@@ -239,14 +237,14 @@ void GameManager::deleteObject(const int32_t id) {
 
 int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
     const int32_t id = weapon->getId();
-    const auto& elem = weaponManager.insert({id, weapon});
+    const auto& elem = weaponManager.emplace(id, weapon);
     elem->second->setId(id);
     return id;
 }
 
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
-    weaponDropManager.insert({id, newWeaponDrop});
+    weaponDropManager.emplace(id, newWeaponDrop);
     return id;
 }
 
@@ -262,7 +260,7 @@ bool GameManager::createWeaponDrop(SDL_Renderer* gRenderer, const float x, const
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
     WeaponDrop wd(id, weaponDropRect, pickRect, wid);
-    const auto& elem = weaponDropManager.insert({id, wd});
+    const auto& elem = weaponDropManager.emplace(id, wd);
 
     if(!elem->second.texture.loadFromFile("assets/texture/shotGun.png", gRenderer)) {
         logv("Failed to load the player texture!\n");
@@ -352,8 +350,7 @@ int32_t GameManager::createBarricade(SDL_Renderer* gRenderer, const float x, con
     SDL_Rect moveRect = {0,0,100,100};
     SDL_Rect pickRect = {0,0,100,100};
 
-    Barricade b(id, barricadeRect, moveRect, pickRect);
-    const auto& elem = barricadeManager.insert({id, b});
+    const auto& elem = barricadeManager.emplace(id, Barricade(id, barricadeRect, moveRect, pickRect));
     if (!elem->second.texture.loadFromFile("assets/texture/barricade.png", gRenderer)) {
         logv("Failed to load the barricade texture!\n");
         deleteBarricade(id);
@@ -384,7 +381,7 @@ int32_t GameManager::createWall(SDL_Renderer* gRenderer,
     SDL_Rect moveRect = {static_cast<int>(x), static_cast<int>(y), w, h};
     SDL_Rect pickRect = {static_cast<int>(x), static_cast<int>(y), w, h};
 
-    const auto& elem = wallManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
+    const auto& elem = wallManager.emplace(id, Wall(id, wallRect, moveRect, pickRect, h, h));
     if (!elem->second.texture.loadFromFile("assets/texture/wall.png", gRenderer)) {
         logv("Failed to load the wall texture!\n");
         deleteBarricade(id);
@@ -438,14 +435,14 @@ void GameManager::setBoundary(SDL_Renderer* gRenderer,
 
 bool GameManager::createZombieWave(SDL_Renderer* gRenderer, const int n){
     std::vector<Point> spawnPoints;
-    spawnPoints.emplace_back(Point(-900, -900));
-    spawnPoints.emplace_back(Point(1900, -900));
-    spawnPoints.emplace_back(Point(2900, -900));
-    spawnPoints.emplace_back(Point(2900, 2900));
-    spawnPoints.emplace_back(Point(1900, 2900));
-    spawnPoints.emplace_back(Point(-900, 2900));
+    spawnPoints.emplace_back(-900, -900);
+    spawnPoints.emplace_back(1900, -900);
+    spawnPoints.emplace_back(2900, -900);
+    spawnPoints.emplace_back(2900, 2900);
+    spawnPoints.emplace_back(1900, 2900);
+    spawnPoints.emplace_back(-900, 2900);
 
-    if(zombieManager.size() >= spawnPoints.size() * 5) {
+    if (zombieManager.size() >= spawnPoints.size() * 5) {
         unsigned int count = 0;
         std::vector<int32_t> ids;
         for (const auto& z : zombieManager) {
