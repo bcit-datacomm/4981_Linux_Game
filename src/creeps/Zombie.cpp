@@ -82,8 +82,6 @@ bool Zombie::checkTarget() const {
 void Zombie::generateMove() {
     const ZombieDirection d = getMoveDir();   //Direction zombie is moving
     //cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
-    const float startX = getX();
-    const float startY = getY();
 
     // Path is empty, shouldn't move
     if (d == ZombieDirection::DIR_INVALID || checkTarget()) {
@@ -97,68 +95,53 @@ void Zombie::generateMove() {
         return;
     }
 
-    // Each case will check if the zombie is within bounds before moving and set its angle
+    // Each case will set direction and angle based on the next step in the path
     switch(d) {
         case ZombieDirection::DIR_R:
-            if (checkBounds(startX + ZOMBIE_VELOCITY, startY)) {
-                setDX(ZOMBIE_VELOCITY);
-                setDY(0);
-                setAngle(static_cast<double>(ZombieAngles::EAST));
-            }
+            setDX(ZOMBIE_VELOCITY);
+            setDY(0);
+            setAngle(static_cast<double>(ZombieAngles::EAST));
             break;
         case ZombieDirection::DIR_RD:
-            if (checkBounds(startX + ZOMBIE_VELOCITY, startY + ZOMBIE_VELOCITY)) {
-                setDX(ZOMBIE_VELOCITY);
-                setDY(ZOMBIE_VELOCITY);
-                setAngle(static_cast<double>(ZombieAngles::SOUTHEAST));
-            }
+            setDX(ZOMBIE_VELOCITY);
+            setDY(ZOMBIE_VELOCITY);
+            setAngle(static_cast<double>(ZombieAngles::SOUTHEAST));
             break;
         case ZombieDirection::DIR_D:
-            if (checkBounds(startX, startY + ZOMBIE_VELOCITY)) {
-                setDX(0);
-                setDY(ZOMBIE_VELOCITY);
-                setAngle(static_cast<double>(ZombieAngles::SOUTH));
-            }
+            setDX(0);
+            setDY(ZOMBIE_VELOCITY);
+            setAngle(static_cast<double>(ZombieAngles::SOUTH));
             break;
         case ZombieDirection::DIR_LD:
-            if (checkBounds(startX - ZOMBIE_VELOCITY, startY + ZOMBIE_VELOCITY)) {
-                setDX(-ZOMBIE_VELOCITY);
-                setDY(ZOMBIE_VELOCITY);
-                setAngle(static_cast<double>(ZombieAngles::SOUTHWEST));
-            }
+            setDX(-ZOMBIE_VELOCITY);
+            setDY(ZOMBIE_VELOCITY);
+            setAngle(static_cast<double>(ZombieAngles::SOUTHWEST));
             break;
         case ZombieDirection::DIR_L:
-            if (checkBounds(startX - ZOMBIE_VELOCITY, startY)) {
-                setDX(-ZOMBIE_VELOCITY);
-                setDY(0);
-                setAngle(static_cast<double>(ZombieAngles::WEST));
-            }
+            setDX(-ZOMBIE_VELOCITY);
+            setDY(0);
+            setAngle(static_cast<double>(ZombieAngles::WEST));
             break;
         case ZombieDirection::DIR_LU:
-            if (checkBounds(startX - ZOMBIE_VELOCITY, startY - ZOMBIE_VELOCITY)) {
-                setDX(-ZOMBIE_VELOCITY);
-                setDY(-ZOMBIE_VELOCITY);
-                setAngle(static_cast<double>(ZombieAngles::NORTHWEST));
-            }
+            setDX(-ZOMBIE_VELOCITY);
+            setDY(-ZOMBIE_VELOCITY);
+            setAngle(static_cast<double>(ZombieAngles::NORTHWEST));
             break;
         case ZombieDirection::DIR_U:
-            if (checkBounds(startX, startY - ZOMBIE_VELOCITY)) {
-                setDX(0);
-                setDY(-ZOMBIE_VELOCITY);
-                setAngle(static_cast<double>(ZombieAngles::NORTH));
-            }
+            setDX(0);
+            setDY(-ZOMBIE_VELOCITY);
+            setAngle(static_cast<double>(ZombieAngles::NORTH));
             break;
         case ZombieDirection::DIR_RU:
-            if (checkBounds(startX + ZOMBIE_VELOCITY, startY - ZOMBIE_VELOCITY)) {
-                setDX(ZOMBIE_VELOCITY);
-                setDY(-ZOMBIE_VELOCITY);
-                setAngle(static_cast<double>(ZombieAngles::NORTHEAST));
-            }
+            setDX(ZOMBIE_VELOCITY);
+            setDY(-ZOMBIE_VELOCITY);
+            setAngle(static_cast<double>(ZombieAngles::NORTHEAST));
             break;
         case ZombieDirection::DIR_INVALID:  // Shouldn't ever happens, gets rid of warning
             break;
     }
 
+    // Frames are used to make sure the zombie doesn't move through the path too quickly/slowly
     if (frame > 0) {
         --frame;
     } else {
@@ -304,13 +287,4 @@ string Zombie::generatePath(const float xStart, const float yStart,
     }
 
     return ""; // no route found
-}
-
-/**
- * Check to see if the zombie is still within the screen bounds before moving
- * Fred Yang
- * Feb 14
- */
-constexpr bool Zombie::checkBounds(const float x, const float y) {
-    return true;//(!(x < 0 || x > MAP_WIDTH || y < 0 || y > MAP_HEIGHT));
 }

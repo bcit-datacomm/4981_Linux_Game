@@ -50,7 +50,7 @@ Point Base::getSpawnPoint() {
         case 1://South
             y = getY() + getHeight() + GAP;
             x = distr(eng, decltype(distr)::param_type(getX() - GAP,
-                                                       getX()+  getWidth() + GAP));
+                    getX()+  getWidth() + GAP));
             break;
 
         case 2://West
@@ -58,13 +58,13 @@ Point Base::getSpawnPoint() {
             x = getX() - GAP;
             //y point is randomly generated
             y = distr(eng, decltype(distr)::param_type(getY() - GAP,
-                                                       getY() + getHeight() + GAP));
+                    getY() + getHeight() + GAP));
             break;
 
         case 3://East
             x = getY() + getWidth() + GAP;
             y = distr(eng, decltype(distr)::param_type(getY() - GAP,
-                                                       getY() + getHeight() + GAP));
+                    getY() + getHeight() + GAP));
             break;
     }
 

@@ -78,15 +78,13 @@ public:
 
     void collidingProjectile(int damage);
 
-    void generateMove();            // A* movement
+    void generateMove();                    // A* movement
 
-    bool isMoving() const;                // Returns if the zombie should be moving
+    bool isMoving() const;                  // Returns if the zombie should be moving
 
     bool checkTarget() const;               // checks if the zombie already arrived at the target
 
-    ZombieDirection getMoveDir() const;               // get move direction
-
-    static constexpr bool checkBounds(const float x, const float y);  // boundary checks
+    ZombieDirection getMoveDir() const;     // get move direction
 
     // A* path
     std::string generatePath(const float xStart, const float yStart,
