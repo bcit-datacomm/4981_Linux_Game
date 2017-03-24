@@ -18,11 +18,12 @@
 #define SYNC_IN 32 //name padded with nulls
 #define NAMELEN 32 //same as above but kept seperate for clarity of purpose
 #define SYNC_OUT 33 //name padded with nulls + id
-#define OPT_STRING "hl:L:c:evo:"
+#define OPT_STRING "ni:p:hl:L:c:evo:"
 #define MAX_PORT 65535
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
-#define MAXEVENTS 100 //although many kernals define it as 5 usually it can support many more
+#define MAXEVENTS 100 //although many kernels define it as 5 usually it can support many more
 #define TCP_HEADER_SIZE 5 //4 bytes for int32_t one byte for C/T char
+#define MULTICAST_ADDR "226.23.41.86.1"
 
 struct ClientEntry {
     char username[NAMELEN + 1];
@@ -40,6 +41,7 @@ extern char outputPacket[OUT_PACKET_SIZE];
 extern int listenSocketUDP;
 extern int listenSocketTCP;
 extern int sendSocketUDP;
+extern sockaddr_in sendAddrUDP;
 extern std::unordered_map<int32_t, PlayerJoin> clientList;
 extern std::atomic_bool isGameRunning;
 extern int listen_port_udp;

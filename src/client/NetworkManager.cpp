@@ -1,8 +1,8 @@
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <errno.h>
 #include <netdb.h>
@@ -22,7 +22,6 @@
 using namespace std;
 
 bool networked = false;
-
 
 /**------------------------------------------------------------------------------
 -------------------------------------------------------------------------------*/
@@ -69,6 +68,18 @@ void NetworkManager::run(const std::string ip, const std::string username) {
     servUDPAddrLen = sizeof(servUDPAddr);
     sockUDP = createSocket(SOCK_DGRAM);
     bindSock(sockUDP, createAddress(INADDR_ANY, UDP_PORT));
+
+    ip_mreq mreq;
+    memset(&mreq, 0, sizeof(mreq));
+    mreq.imr_interface.s_addr = INADDR_ANY;
+    if (inet_pton(AF_INET, MULTICAST_ADDR, &mreq.imr_multiaddr) != 1) {
+        perror("inet_pton");
+        exit(1);
+    }
+    if (setsockopt(sockUDP, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
 
     std::thread TCPThread(&NetworkManager::runTCPClient, this, username);
     TCPThread.detach();
@@ -351,7 +362,7 @@ int NetworkManager::createSocket(int sockType) {
 void NetworkManager::bindSock(int sock, sockaddr_in addr) {
     int optionValue = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &optionValue, sizeof(optionValue))) {
-        perror("sockopt");
+        perror("setsockopt");
         exit(1);
     }
 

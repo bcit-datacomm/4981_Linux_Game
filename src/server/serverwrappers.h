@@ -1,6 +1,8 @@
 #ifndef SERVER_WRAPPERS_H
 #define SERVER_WRAPPERS_H
 
+#include <sys/epoll.h>
+
 int createSocket(const bool useUDP, const bool nonblocking);
 int32_t getPlayerId();
 void transitionToGameStart();

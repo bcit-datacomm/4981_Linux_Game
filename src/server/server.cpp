@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 #include <sys/signal.h>
+#include <arpa/inet.h>
 
 #include "../UDPHeaders.h"
 #include "../log/log.h"
@@ -18,83 +19,11 @@ int outputLength = 0;
 char outputPacket[OUT_PACKET_SIZE];
 int listenSocketUDP;
 int listenSocketTCP;
+sockaddr_in sendAddrUDP;
 int sendSocketUDP;
 bool verbose = false;
 std::unordered_map<int32_t, PlayerJoin> clientList;
 std::atomic_bool isGameRunning{false};
-
-/**
- * Main entry function
- * Isaac Morneau March 19
- */
-int main(int argc, char **argv) {
-    setenv("OMP_PROC_BIND", "TRUE", 1);
-    setenv("OMP_DYNAMIC", "TRUE", 1);
-    signal(SIGINT, SIG_IGN);
-
-    int opt;
-    while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
-        switch(opt) {
-            case 'h':
-                printf("usage %s\noptions:\n\t"
-                        " -h this message\n\t"
-                        "-l the port to listen to for UDP, default 35222\n\t"
-                        "-L the port to listen to for TCP, default 35223\n\t"
-                        "-c the number of clients to accept max, default 10\n",
-                        argv[0]);
-                exit(0);
-                break;
-            case 'l'://listen port UDP
-                listen_port_udp = atoi(optarg);
-                if(listen_port_udp < 1 || listen_port_udp > MAX_PORT){
-                    printf("l must be an integer 0<x<%d\n", MAX_PORT);
-                    exit(2);
-                }
-                break;
-            case 'L'://listen port TCP
-                listen_port_tcp = atoi(optarg);
-                if(listen_port_tcp < 1 || listen_port_tcp > MAX_PORT){
-                    printf("L must be an integer 0<x<%d\n",MAX_PORT);
-                    exit(2);
-                }
-                break;
-            case 'c'://client count
-                client_count = atoi(optarg);
-                if(client_count < 0 || client_count > 100){
-                    printf("c must be an integer 0<x<100\n");
-                    exit(2);
-                }
-                break;
-            case 'v'://verbose
-                log_verbose = 2;
-                break;
-            case 'e'://error
-                log_verbose = 1;
-                break;
-            case 'o':
-                log_verbose = atoi(optarg);
-                break;
-            case '?':
-                printf("-v verbose\n-e error\nverbose enables error as well.");
-                break;
-        }
-    }
-    if (listen_port_udp == listen_port_tcp){
-        printf("l cannot be the same port as L\n");
-        exit(2);
-    }
-
-    logv("UDP port: %d, TCP port: %d, Max clients %d\n", listen_port_udp, listen_port_tcp, client_count);
-
-    listenSocketUDP = createSocket(true, true);
-    sendSocketUDP = createSocket(true, true);
-    listenSocketTCP = createSocket(false, true);
-
-    listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
-    logv("Sockets created and bound\n");
-    initSync(listenSocketTCP);
-    return 0;
-}
 
 /**
  * The TCP sync loop.
@@ -280,9 +209,7 @@ void genOutputPacket() {
  * John Agapeyev March 19
  */
 void sendSyncPacket(const int sock) {
-    for (const auto& client : clientList) {
-        sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &client.second.entry.addr, sizeof(client.second.entry.addr));
-    }
+    sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &sendAddrUDP, sizeof(sendAddrUDP));
 }
 
 /**

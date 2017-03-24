@@ -2,18 +2,17 @@
 #define NETWORKMANAGER_HPP
 
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <limits.h>
+#include <climits>
 #include <atomic>
 #include <memory>
 #include <map>
 #include <cassert>
 #include "../UDPHeaders.h"
-
 
 #define STDIN           0
 #define TCP_PORT 		35223
@@ -23,6 +22,7 @@
 #define MAX_USERS		23
 #define UNAME_SIZE      32
 #define SYNC_PACKET_MAX USHRT_MAX
+#define MULTICAST_ADDR "226.23.41.86.1"
 
 extern bool networked;
 
@@ -51,7 +51,7 @@ private:
     sockaddr_in servUDPAddr;
     socklen_t servUDPAddrLen;
 
-    NetworkManager() {};
+    NetworkManager() = default;
 
     void runUDPClient();
     void runTCPClient(const std::string username);
