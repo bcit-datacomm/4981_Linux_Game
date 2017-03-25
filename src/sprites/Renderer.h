@@ -116,7 +116,7 @@ class Renderer {
 
 
     private:
-        Renderer() = default;
+        Renderer(): tempIndex(1000) {}
         ~Renderer();
 
         static Renderer sInstance;
