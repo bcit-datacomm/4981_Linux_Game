@@ -8,9 +8,6 @@
 #include "../log/log.h"
 using namespace std;
 
-#define PI 3.14159265
-#define ZOMBIE_VELOCITY 200
-
 Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
         const SDL_Rect &damageSize, int health, ZombieState state, int step, ZombieDirection dir, int frame)
         : Entity(id, dest, movementSize, projectileSize, damageSize),
@@ -80,11 +77,11 @@ bool Zombie::checkTarget() const {
  * March 13
 */
 void Zombie::generateMove() {
-    const ZombieDirection d = getMoveDir();   //Direction zombie is moving
+    const ZombieDirection direction = getMoveDir();   //Direction zombie is moving
     //cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
 
     // Path is empty, shouldn't move
-    if (d == ZombieDirection::DIR_INVALID || checkTarget()) {
+    if (direction == ZombieDirection::DIR_INVALID || checkTarget()) {
         if (frame > 0) {
             --frame;
         }
@@ -96,7 +93,7 @@ void Zombie::generateMove() {
     }
 
     // Each case will set direction and angle based on the next step in the path
-    switch(d) {
+    switch(direction) {
         case ZombieDirection::DIR_R:
             setDX(ZOMBIE_VELOCITY);
             setDY(0);
@@ -149,7 +146,7 @@ void Zombie::generateMove() {
         ++step;
     }
 
-    setCurDir(d);
+    setCurDir(direction);
     setState(ZombieState::ZOMBIE_MOVE);
 }
 
