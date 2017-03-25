@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "../../log/log.h"
+#include "../../sprites/VisualEffect.h"
 
 InstantWeapon::InstantWeapon(std::string type, int range, int damage,
         int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire)
@@ -36,6 +37,16 @@ void InstantWeapon::fire(Marine &marine){
     //get all targets in line with the shot
     std::priority_queue<const HitBox*> targets;
     targets = collisionHandler.detectLineCollision(marine, getRange());
+   
+    //same as what happens in the line collision to show the use of the effect
+    const double degrees = marine.getAngle() - 90;
+    const double radians = degrees * M_PI / 180;
+    const int playerX = marine.getX() + (MARINE_WIDTH / 2);
+    const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
+    const int deltaX  = range * cos(radians);
+    const int deltaY  = range * sin(radians);
+
+    VisualEffect::instance().addPostLine(5, playerX, playerY, playerX + deltaX, playerY + deltaY, 0, 255, 0);
     if(targets.empty()){
         return;
     }

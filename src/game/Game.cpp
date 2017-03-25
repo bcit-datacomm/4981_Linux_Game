@@ -72,14 +72,14 @@ bool Game::init() {
             success = false;
         } else {
             //Create renderer for window
-            Renderer::instance()->setWindow(window.getWindow());
-            if (Renderer::instance()->getRenderer()  == nullptr) {
+            Renderer::instance().setWindow(window.getWindow());
+            if (Renderer::instance().getRenderer()  == nullptr) {
                 logv("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
                 success = false;
             } else {
 
                 //Initialize renderer color
-                SDL_SetRenderDrawColor(Renderer::instance()->getRenderer() , 0xFF, 0xFF, 0xFF, 0xFF);
+                SDL_SetRenderDrawColor(Renderer::instance().getRenderer() , 0xFF, 0xFF, 0xFF, 0xFF);
 
                 //Initialize PNG loading
                 int imgFlags = IMG_INIT_PNG;
@@ -108,7 +108,7 @@ bool Game::init() {
 }
 
 bool Game::loadMedia() {
-    Renderer::instance()->loadSprites();
+    Renderer::instance().loadSprites();
     return true;
 }
 

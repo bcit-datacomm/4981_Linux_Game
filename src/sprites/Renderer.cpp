@@ -2,31 +2,19 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ */
 
-Renderer Renderer::rInstance;
-SDL_Renderer * Renderer::renderer = nullptr;
-SDL_Window * Renderer::window = nullptr;
+Renderer Renderer::sInstance;
 
-std::map<int, SDL_Texture *> Renderer::sprites;
-int Renderer::tempIndex = 1000;
-
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** returns the instance if it exists, otherwise creates one
-*/
-Renderer * Renderer::instance() {
-    return &Renderer::rInstance;
-}
-
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ */
 Renderer::~Renderer() {
     for (const auto& s : sprites) {
         if (s.second != nullptr) {
@@ -38,11 +26,12 @@ Renderer::~Renderer() {
     SDL_DestroyWindow(window);
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** load all sprites sheets
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * load all sprites sheets
+ */
 void Renderer::loadSprites() {
     logv("Loading Sprites...\n");
     //Main game screen
@@ -78,11 +67,16 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::BOSS_ZOMBIE, ZOMBIE_BOSS);
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** Loads a font from a TTF file
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ *
+ * REVISED: Isaac Morneau, March 25, 2017
+ *      changed pointers and static to references
+ *
+ * Loads a font from a TTF file
+ */
 TTF_Font * Renderer::loadFont(const std::string filePath, const int size) {
     TTF_Font * font = nullptr;
 
@@ -93,11 +87,12 @@ TTF_Font * Renderer::loadFont(const std::string filePath, const int size) {
     return font;
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** creates a texture and adds it to the array
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * creates a texture and adds it to the array
+ */
 void Renderer::createTexture(const int index, const std::string filePath) {
 
     SDL_Surface * surface = IMG_Load(filePath.c_str());
@@ -125,22 +120,24 @@ void Renderer::createTexture(const TEXTURES index, const std::string filePath) {
     createTexture(static_cast<int>(index), filePath);
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 20, 2017
-** creates a texture, adds it to the map and returns its ID
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 20, 2017
+ * creates a texture, adds it to the map and returns its ID
+ */
 int Renderer::createTempTexture(const std::string filePath) {
     createTexture(tempIndex, filePath);
     return tempIndex++;
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** creates a texture out of text
-** returns a 0 on error, otherwise returns the id where it is stored
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * creates a texture out of text
+ * returns a 0 on error, otherwise returns the id where it is stored
+ */
 void Renderer::createText(const TEXTURES index, TTF_Font * font, const std::string text, const SDL_Color colour) {
     SDL_Surface * textSurface = TTF_RenderText_Solid(font, text.c_str(), colour);
 
@@ -160,12 +157,13 @@ void Renderer::createText(const TEXTURES index, TTF_Font * font, const std::stri
     }
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 20, 2017
-** creates a texture out of text, used for temporary texts (usernames, ect)
-** returns a 0 on error, otherwise returns the id where it is stored
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 20, 2017
+ * creates a texture out of text, used for temporary texts (usernames, ect)
+ * returns a 0 on error, otherwise returns the id where it is stored
+ */
 int Renderer::createTempText(TTF_Font * font, const std::string text, const SDL_Color colour) {
     SDL_Surface * textSurface = TTF_RenderText_Solid(font, text.c_str(), colour);
 
@@ -187,32 +185,35 @@ int Renderer::createTempText(TTF_Font * font, const std::string text, const SDL_
     return 0;
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** sets the game's renderer
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * sets the game's renderer
+ */
 void Renderer::setRenderer() {
     if ((renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) == nullptr) {
         logv("Renderer could not be created\n");
     }
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** sets the window
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * sets the window
+ */
 void Renderer::setWindow(SDL_Window * win) {
     window = win;
     setRenderer();
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** renders an object
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * renders an object
+ */
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip,
     double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
@@ -220,11 +221,12 @@ void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL
                      center, flip);
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** renders an object
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * renders an object
+ */
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double angle,
     const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
@@ -232,11 +234,12 @@ void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double an
                      center, flip);
 }
 
-/* DEVELOPER: Michael Goll
-** DESIGNER:  Michael Goll
-** DATE:      March 14, 2017
-** returns the sprite or sprite sheet that the object is looking to render
-*/
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      March 14, 2017
+ * returns the sprite or sprite sheet that the object is looking to render
+ */
 SDL_Texture * Renderer::getTexture(int spriteType) {
     auto texture = sprites.find(spriteType);
 
