@@ -38,15 +38,19 @@ void InstantWeapon::fire(Marine &marine){
     std::priority_queue<const HitBox*> targets;
     targets = collisionHandler.detectLineCollision(marine, getRange());
    
-    //same as what happens in the line collision to show the use of the effect
+
+    //similar as to what happens in the line collision and is used to show a use of the line effect
     const double degrees = marine.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
     const int playerX = marine.getX() + (MARINE_WIDTH / 2);
     const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
-    const int deltaX  = range * cos(radians);
-    const int deltaY  = range * sin(radians);
+    const int deltaX  = playerX + range * cos(radians);
+    const int deltaY  = playerY + range * sin(radians);
 
-    VisualEffect::instance().addPostLine(5, playerX, playerY, playerX + deltaX, playerY + deltaY, 0, 255, 0);
+    //5 frames to display ie 1/12th of a second at 60fps
+    //0 red, 255 green, 0 blue
+    VisualEffect::instance().addPreLine(5, playerX, playerY, deltaX, deltaY, 0, 255, 0);
+
     if(targets.empty()){
         return;
     }
