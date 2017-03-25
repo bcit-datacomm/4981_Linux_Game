@@ -174,8 +174,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
     string path;
 
     // current node & child node
-    static Node curNode;
-    static Node childNode;
+    Node curNode;
+    Node childNode;
 
     // priority queue
     static array<priority_queue<Node>, 2> pq;
@@ -197,9 +197,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
 
     // A* path finding
     while (!pq[index].empty()) {
-        Node tmp = pq[index].top();
         // get the current node with the highest priority from open list
-        curNode = Node(tmp.getXPos(), tmp.getYPos(), tmp.getLevel(), tmp.getPriority());
+        curNode = pq[index].top();
 
         x = curNode.getXPos();
         y = curNode.getYPos();
