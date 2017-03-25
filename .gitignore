@@ -29,3 +29,8 @@
 
 # Object folder
 bin/
+
+# Codeblocks Project files
+4981_Linux_Game.cbp
+4981_Linux_Game.layout
+
