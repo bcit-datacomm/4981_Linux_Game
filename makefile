@@ -25,7 +25,7 @@ CONVERT := $(patsubst $(SRCOBJS), $(OBJS), $(shell basename -a $(EXCLUDEDSRCWILD
 EXEC := $(ODIR)/$(APPNAME)
 DEPS := $(EXEC).d
 
-all release debug dserver server: $(CONVERT)
+all release debug: $(CONVERT)
 # Command takes all bin .o files and creates an executable called chess in the bin folder
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(EXEC)
 
@@ -66,6 +66,9 @@ endif
 $(OBJS): $(filter .+$$@, $(SRCWILD))
 # Command compiles the src .cpp file with the listed flags and turns it into a bin .o file
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $@
+
+dserver server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(CONVERT)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
 
 tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTests/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/tests 

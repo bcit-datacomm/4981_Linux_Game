@@ -23,7 +23,7 @@
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
 #define MAXEVENTS 100 //although many kernels define it as 5 usually it can support many more
 #define TCP_HEADER_SIZE 5 //4 bytes for int32_t one byte for C/T char
-#define MULTICAST_ADDR "226.23.41.86.1"
+#define MULTICAST_ADDR "226.23.41.86"
 
 struct ClientEntry {
     char username[NAMELEN + 1];

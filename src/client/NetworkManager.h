@@ -22,7 +22,7 @@
 #define MAX_USERS		23
 #define UNAME_SIZE      32
 #define SYNC_PACKET_MAX USHRT_MAX
-#define MULTICAST_ADDR "226.23.41.86.1"
+#define MULTICAST_ADDR "226.23.41.86"
 
 extern bool networked;
 

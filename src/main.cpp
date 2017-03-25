@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
     sendSocketUDP = createSocket(true, true);
     listenSocketTCP = createSocket(false, true);
 
-    if (inet_pton(AF_INET, MULTICAST_ADDR, &sendAddrUDP) != 1) {
+    if (inet_pton(AF_INET, MULTICAST_ADDR, &(sendAddrUDP.sin_addr)) != 1) {
         perror("inet_pton");
         exit(3);
     }
