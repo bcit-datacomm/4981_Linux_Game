@@ -109,9 +109,13 @@ public:
         //renders all of the sprites within the camera viewport
         void render(const SDL_Rect& dest, const TEXTURES spriteType, double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void render(const SDL_Rect& dest, const int spriteType, double angle = 0.0,
+                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
         //renders all of the sprites within the camera viewport
         void render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, double angle = 0.0,
+                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip, double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 

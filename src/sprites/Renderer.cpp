@@ -208,17 +208,45 @@ void Renderer::setWindow(SDL_Window * win) {
     setRenderer();
 }
 
+
+
+/**
+ * DEVELOPER: Isaac Morneau
+ * DESIGNER:  Isaac Morneau
+ * DATE:      March 14, 2017
+ * wraps the call using a texture to an int as
+ * texture is a scoped enum and is no longer auto converted
+ */
+void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip,
+        double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
+    render(dest, static_cast<int>(spriteType), clip, angle, center, flip);
+}
 /**
  * DEVELOPER: Michael Goll
  * DESIGNER:  Michael Goll
  * DATE:      March 14, 2017
+ * REVISION:  Isaac Morneau, March 26, 2017
+ *      added duplicates to autowrap textures to ints
  * renders an object
  */
-void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip,
-    double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
+void Renderer::render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip,
+        double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
-    SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &dest, angle,
+    SDL_RenderCopyEx(renderer, getTexture(spriteType), &clip, &dest, angle,
                      center, flip);
+}
+
+
+/**
+ * DEVELOPER: Isaac Morneau
+ * DESIGNER:  Isaac Morneau
+ * DATE:      March 14, 2017
+ * wraps the call using a texture to an int as
+ * texture is a scoped enum and is no longer auto converted
+ */
+void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double angle,
+    const SDL_Point* center, const SDL_RendererFlip flip) {
+    render(dest, static_cast<int>(spriteType), angle, center, flip);
 }
 
 /**
@@ -227,10 +255,10 @@ void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL
  * DATE:      March 14, 2017
  * renders an object
  */
-void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double angle,
+void Renderer::render(const SDL_Rect& dest, const int spriteType, double angle,
     const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
-    SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), nullptr, &dest, angle,
+    SDL_RenderCopyEx(renderer, getTexture(spriteType), nullptr, &dest, angle,
                      center, flip);
 }
 
