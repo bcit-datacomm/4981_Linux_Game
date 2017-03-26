@@ -38,7 +38,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                Renderer::instance()->render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -46,7 +46,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : marineManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                Renderer::instance()->render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
+                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
                     m.second.getAngle());
             }
         }
@@ -56,7 +56,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& o : objectManager) {
         if (o.second.getX() - camX < camW) {
             if (o.second.getY() - camY < camH) {
-                Renderer::instance()->render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -64,7 +64,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& z : zombieManager) {
         if (z.second.getX() - camX < camW) {
             if (z.second.getY() - camY < camH) {
-                Renderer::instance()->render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
+                Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
             }
         }
     }
@@ -72,7 +72,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : turretManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                Renderer::instance()->render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
+                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
                     m.second.getAngle());
             }
         }
@@ -81,7 +81,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& b : barricadeManager) {
         if (b.second.getX() - camX < camW) {
             if (b.second.getY() - camY < camH) {
-                Renderer::instance()->render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -89,7 +89,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& w : wallManager) {
         if (w.second.getX() - camX < camW) {
             if (w.second.getY() - camY < camH) {
-                Renderer::instance()->render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
