@@ -77,7 +77,7 @@ void Renderer::loadSprites() {
  *
  * Loads a font from a TTF file
  */
-TTF_Font * Renderer::loadFont(const std::string filePath, const int size) {
+TTF_Font* Renderer::loadFont(const std::string& filePath, const int size) {
     TTF_Font * font = nullptr;
 
     if ((font = TTF_OpenFont(filePath.c_str(), size)) == nullptr) {
@@ -93,7 +93,7 @@ TTF_Font * Renderer::loadFont(const std::string filePath, const int size) {
  * DATE:      March 14, 2017
  * creates a texture and adds it to the array
  */
-void Renderer::createTexture(const int index, const std::string filePath) {
+void Renderer::createTexture(const int index, const std::string& filePath) {
 
     SDL_Surface * surface = IMG_Load(filePath.c_str());
 
@@ -116,7 +116,7 @@ void Renderer::createTexture(const int index, const std::string filePath) {
     }
 }
 
-void Renderer::createTexture(const TEXTURES index, const std::string filePath) {
+void Renderer::createTexture(const TEXTURES index, const std::string& filePath) {
     createTexture(static_cast<int>(index), filePath);
 }
 
@@ -126,7 +126,7 @@ void Renderer::createTexture(const TEXTURES index, const std::string filePath) {
  * DATE:      March 20, 2017
  * creates a texture, adds it to the map and returns its ID
  */
-int Renderer::createTempTexture(const std::string filePath) {
+int Renderer::createTempTexture(const std::string& filePath) {
     createTexture(tempIndex, filePath);
     return tempIndex++;
 }
@@ -138,7 +138,7 @@ int Renderer::createTempTexture(const std::string filePath) {
  * creates a texture out of text
  * returns a 0 on error, otherwise returns the id where it is stored
  */
-void Renderer::createText(const TEXTURES index, TTF_Font * font, const std::string text, const SDL_Color colour) {
+void Renderer::createText(const TEXTURES index, TTF_Font* font, const std::string& text, const SDL_Color& colour) {
     SDL_Surface * textSurface = TTF_RenderText_Solid(font, text.c_str(), colour);
 
     if (textSurface == nullptr) {
@@ -164,7 +164,7 @@ void Renderer::createText(const TEXTURES index, TTF_Font * font, const std::stri
  * creates a texture out of text, used for temporary texts (usernames, ect)
  * returns a 0 on error, otherwise returns the id where it is stored
  */
-int Renderer::createTempText(TTF_Font * font, const std::string text, const SDL_Color colour) {
+int Renderer::createTempText(TTF_Font * font, const std::string& text, const SDL_Color& colour) {
     SDL_Surface * textSurface = TTF_RenderText_Solid(font, text.c_str(), colour);
 
     if (textSurface == nullptr) {

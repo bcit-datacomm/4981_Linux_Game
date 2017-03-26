@@ -59,7 +59,7 @@ static constexpr int TOTAL_SPRITES = 20; //number of total sprites
 
 
 class Renderer {
-    public:
+public:
 
 
         /**
@@ -96,40 +96,40 @@ class Renderer {
         //loads all the sprites specified in Renderer.h
         void loadSprites();
 
-        TTF_Font *loadFont(const std::string fonts, const int size);
+        TTF_Font *loadFont(const std::string& fonts, const int size);
 
         //creates a texture from a font file
-        void createText(const TEXTURES index, TTF_Font *font, const std::string text, const SDL_Color colour);
+        void createText(const TEXTURES index, TTF_Font *font, const std::string& text, const SDL_Color& colour);
 
-        int createTempText(TTF_Font *font, const std::string text, const SDL_Color colour);
+        int createTempText(TTF_Font *font, const std::string& text, const SDL_Color& colour);
 
         //creates a temporary texture
-        int createTempTexture(const std::string filePath);
+        int createTempTexture(const std::string& filePath);
 
         //renders all of the sprites within the camera viewport
-        void render(const SDL_Rect &dest, const TEXTURES spriteType, double angle = 0.0,
-            const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void render(const SDL_Rect& dest, const TEXTURES spriteType, double angle = 0.0,
+                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
         //renders all of the sprites within the camera viewport
-        void render(const SDL_Rect &dest, const TEXTURES spriteType, const SDL_Rect &clip, double angle = 0.0,
-            const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, double angle = 0.0,
+                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 
-    private:
+private:
         Renderer(): tempIndex(1000) {}
         ~Renderer();
 
         static Renderer sInstance;
-        SDL_Renderer * renderer;
-        SDL_Window * window;
+        SDL_Renderer* renderer;
+        SDL_Window* window;
         int tempIndex;
 
         //array of all sprites in the game
-        std::map<int, SDL_Texture *> sprites;
+        std::map<int, SDL_Texture*> sprites;
 
         //creates a texture from a file
-        void createTexture(const TEXTURES index, const std::string filePath);
-        void createTexture(const int index, const std::string filePath);
+        void createTexture(const TEXTURES index, const std::string& filePath);
+        void createTexture(const int index, const std::string& filePath);
 
         //sets the renderer
         void setRenderer();

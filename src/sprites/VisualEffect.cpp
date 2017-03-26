@@ -21,7 +21,7 @@ VisualEffect::VisualEffect():preLineId(0), preRectId(0), preTexId(0), postLineId
  * Notes:
  * helper function to calculate the screen rect based on the camera
  */
-inline const SDL_Rect relative(const SDL_Rect& dest, const SDL_Rect& camera){
+inline constexpr SDL_Rect relative(const SDL_Rect& dest, const SDL_Rect& camera){
     return {dest.x - camera.x, dest.y - camera.y, dest.w, dest.h};
 }
 

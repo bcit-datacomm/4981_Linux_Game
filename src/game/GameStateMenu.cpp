@@ -78,18 +78,23 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 bool GameStateMenu::load() {
     logv("Loading Fonts...\n");
 
-    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 110)) == nullptr) {
+    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 
+            110)) == nullptr) {
         return false;
     }
 
-    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
-    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join", 
+        SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", 
+        SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
 
-    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf", FONT_SIZE)) == nullptr) {
+    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf", 
+            FONT_SIZE)) == nullptr) {
         return false;
     }
 
-    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE)) == nullptr) {
+    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", 
+            FONT_SIZE)) == nullptr) {
         return false;
     }
 

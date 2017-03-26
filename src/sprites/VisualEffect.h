@@ -21,7 +21,7 @@
  * All positions taken in are in world coords not screen coords.
  */
 class VisualEffect {
-    public:
+public:
         /**
          * Developer: Isaac Morneau
          * Designer: Isaac Morneau
@@ -65,7 +65,7 @@ class VisualEffect {
         void removePostTex(const int id);
 
 
-    private:
+private:
 
         VisualEffect();
         ~VisualEffect() = default;
