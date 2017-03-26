@@ -11,6 +11,7 @@
 --
 -- REVISIONS:
 -- 1.0 - Feb/25/17 - EY - Created Class
+-- 1.5 - Mar/15/17 - EY - added control packetizing & parsing
 --
 -- DESIGNER: Eva Yu
 --

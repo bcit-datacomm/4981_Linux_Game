@@ -1,27 +1,27 @@
 /*------------------------------------------------------------------------------
--- SOURCE FILE: Packetizer.h - Packetizer class
---
--- PROGRAM: packetizer (class)
---
--- FUNCTIONS:
--- static void parse(const void * syncBuff, size_t len);
---
---
--- DATE: Feb. 25, 2017
---
--- REVISIONS:
--- 1.0 - Feb/25/17 - EY - Created Class
---
--- DESIGNER: Eva Yu
---
--- PROGRAMMER: Eva Yu
---
--- NOTES:
--- This is the packetizer class that holds static functiosn to be
--- used to pack and unpack game packets.
--- The server should only be sending one type of packet out ( GameSync )
--- clients will be making serveral different types of packets which are
--- identified by the headers
+* SOURCE FILE: Packetizer.h - Packetizer class
+*
+* PROGRAM: packetizer (class)
+*
+* FUNCTIONS:
+* static void parse(const void * syncBuff, size_t len);
+*
+*
+* DATE: Feb. 25, 2017
+*
+* REVISIONS:
+* 1.0 - Feb/25/17 - EY - implmeted functon
+*
+* DESIGNER: Eva Yu
+*
+* PROGRAMMER: Eva Yu
+*
+* NOTES:
+* This is the packetizer class that holds static functiosn to be
+* used to pack and unpack game packets.
+* The server should only be sending one type of packet out ( GameSync )
+* clients will be making serveral different types of packets which are
+* identified by the headers
 ------------------------------------------------------------------------------*/
 
 #include <iostream>
@@ -32,6 +32,33 @@
 #include "../UDPHeaders.h"
 #include "../game/GameManager.h"
 
+/*------------------------------------------------------------------------------
+* FUNCTION: packControlMsg
+*
+* DATE: Mar. 15, 2017
+*
+* REVISIONS:
+* 1.0 - Feb/25/17 - EY - implmeted functon
+*
+* DESIGNER: Eva Yu
+*
+* PROGRAMMER: Eva Yu
+*
+* INTERFACE: int Packetizer::packControlMsg (char * buff, size_t bufflen,
+*                                               const char * msg, int32_t id ,
+*                                               const char type)
+* buff    -- buffer to write to
+* bufflen -- size of buff
+* msg     -- the message to write to the buffer
+* id      -- id of the user ( default -1 if no id )
+* type    -- type of control message : T for text or C for control ( defaults to type T )
+*
+* RETURNS:
+* int representing the number of bytes in the message to send
+*
+* NOTES:
+* this is a packetizer function for TCP messages
+------------------------------------------------------------------------*/
 int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
 {
     //make sure buffer can fit message, otherwise, truncate
@@ -44,6 +71,25 @@ int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, in
     return static_cast<int>(strlen(msg))+6;
 }
 
+/*------------------------------------------------------------------------------
+* FUNCTION: parseControlMsg
+*
+* DATE: Mar. 15, 2017
+*
+* REVISIONS:
+* Version, Date and Description
+*
+* DESIGNER: Eva Yu
+*
+* PROGRAMMER: Eva Yu
+*
+* INTERFACE: void Packetizer::parseControlMsg (const void * msgBuff, size_t bytesReads)
+* msgBuff  --  the pointer to the beginning of the buffer
+* bytesRead -- the number of bytes read into the buffer
+*
+* NOTES:
+* static function that parses an incoming control message
+--------------------------------------------------------------------------*/
 void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
     char *pBuff;
     int32_t id;
@@ -70,31 +116,31 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
 }
 
 /*------------------------------------------------------------------------------
--- FUNCTION: parse
---
--- DATE: Feb. 26, 2017
---
--- REVISIONS:
--- 1.0 - Feb/12/17 - IM - completed design and pseudo code
--- 2.0 - Feb/25/17 - EY - implmeted functon and made minor changes design
--- 2.1 - Feb/27/17 - EY - changed cstyle casts to use reinterpret casts
---
--- DESIGNER: Isaac Morneau & Eva Yu
---
--- PROGRAMMER: Eva Yu
---
--- INTERFACE: void parse (const void * syncBuff, size_t bytesReads)
--- syncBuff - represents the starting locations of the buffer that was
---              read into from socket's rcv call
--- bytesRead - represents the number of bytes that were read
---            (the size of the gamesync struct to be casted)
---
--- NOTES:
--- This is a static function from Packetizer class that
---  parses a sync packet and immediately calls the upadtes to the
--- game of the palyers, zombies, and actions
--- note: the packet passed from the server must match
--- the gamesync packet exactly
+* FUNCTION: parse
+*
+* DATE: Feb. 26, 2017
+*
+* REVISIONS:
+* 1.0 - Feb/12/17 - IM - completed design and pseudo code
+* 2.0 - Feb/25/17 - EY - implmeted functon and made minor changes design
+* 2.1 - Feb/27/17 - EY - changed cstyle casts to use reinterpret casts
+*
+* DESIGNER: Isaac Morneau & Eva Yu
+*
+* PROGRAMMER: Eva Yu
+*
+* INTERFACE: void parse (const void * syncBuff, size_t bytesReads)
+* syncBuff - represents the starting locations of the buffer that was
+*              read into from socket's rcv call
+* bytesRead - represents the number of bytes that were read
+*            (the size of the gamesync struct to be casted)
+*
+* NOTES:
+* This is a static function from Packetizer class that
+*  parses a sync packet and immediately calls the upadtes to the
+* game of the palyers, zombies, and actions
+* note: the packet passed from the server must match
+* the gamesync packet exactly
 --------------------------------------------------------------------------*/
  void Packetizer::parseGameSync(const void * syncBuff, size_t bytesReads)
 {
@@ -143,7 +189,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
             pBuff = reinterpret_cast<int32_t *>(++attack);
           }
           break;
-      }
+      } // End of ATTACKACTIONH case, must be enclosed in braces.
       case UDPHeaders::ZOMBIEH: {
         int32_t zCount = *pBuff++;
         for(int32_t i = 0; i  < zCount; i++){
@@ -164,7 +210,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
           */
         }
         break;
-      }
+    }// End of ZOMBIEH case, must be enclosed in braces.
       default:
         break;
      }
