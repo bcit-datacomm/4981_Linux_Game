@@ -173,13 +173,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
     // path to be generated
     string path;
 
-    // current node & child node
-    Node curNode;
-    Node childNode;
-
     // priority queue
     static array<priority_queue<Node>, 2> pq;
-    //static priority_queue<Node> pq[2];
 
     // reset the node maps
     memset(closedNodes, 0, sizeof(closedNodes[0][0]) * ROW * COL);
@@ -190,8 +185,8 @@ string Zombie::generatePath(const float xStart, const float yStart,
     const int xNodeDest = static_cast<int>(xDest / TILE_SIZE);
     const int yNodeDest = static_cast<int>(yDest / TILE_SIZE);
 
-    // create the start node and push into open list
-    curNode = Node(xNodeStart, yNodeStart, 0, 0);
+    // create the start node and push the start node into open list
+    Node curNode(xNodeStart, yNodeStart);
     curNode.updatePriority(xNodeDest, yNodeDest);
     pq[index].push(curNode);
 
@@ -240,7 +235,7 @@ string Zombie::generatePath(const float xStart, const float yStart,
                     || gameMap[xdx][ydy] == 1 || closedNodes[xdx][ydy] == 1)) {
 
                 // generate a child node
-                childNode = Node(xdx, ydy, curNode.getLevel(), curNode.getPriority());
+                Node childNode(xdx, ydy, curNode.getLevel(), curNode.getPriority());
                 childNode.nextLevel(i);
                 childNode.updatePriority(xNodeDest, yNodeDest);
 

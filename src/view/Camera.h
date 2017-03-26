@@ -5,10 +5,10 @@
 class Camera {
 public:
 
-    void setViewSize(int w, int h); // Set camera width and height
-    void move(int x, int  y); // moves the camera based on player
+    void setViewSize(const int w, const int h); // Set camera width and height
+    void move(const int x, const int y); // moves the camera based on player
 
-    Camera(int w, int h);
+    Camera(const int w, const int h);
     ~Camera();
 
     int getX() const {return viewport.x;}

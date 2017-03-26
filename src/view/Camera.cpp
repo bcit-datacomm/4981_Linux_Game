@@ -3,8 +3,7 @@
 #include "../view/Window.h"
 #include "../player/Marine.h"
 
-Camera::Camera(const int w, const int h) {
-    viewport = {0, 0, 0, 0};
+Camera::Camera(const int w, const int h) : viewport() {
     setViewSize(w, h);
 }
 
