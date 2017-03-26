@@ -46,9 +46,9 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::CONCRETE, REPLACE_ME);     //concrete, temporary texture for now
 
     //-------- map object textures --------
-        //nature
-        //comsumables
-        //shops
+    //nature
+    //comsumables
+    //shops
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
 
     //-------- weapon textures --------
@@ -233,7 +233,7 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, const SDL_Rect
         double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
     SDL_RenderCopyEx(renderer, getTexture(spriteType), &clip, &dest, angle,
-                     center, flip);
+            center, flip);
 }
 
 
@@ -245,7 +245,7 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, const SDL_Rect
  * texture is a scoped enum and is no longer auto converted
  */
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double angle,
-    const SDL_Point* center, const SDL_RendererFlip flip) {
+        const SDL_Point* center, const SDL_RendererFlip flip) {
     render(dest, static_cast<int>(spriteType), angle, center, flip);
 }
 
@@ -256,10 +256,10 @@ void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, double an
  * renders an object
  */
 void Renderer::render(const SDL_Rect& dest, const int spriteType, double angle,
-    const SDL_Point* center, const SDL_RendererFlip flip) {
+        const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
     SDL_RenderCopyEx(renderer, getTexture(spriteType), nullptr, &dest, angle,
-                     center, flip);
+            center, flip);
 }
 
 /**
