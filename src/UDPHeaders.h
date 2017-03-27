@@ -93,7 +93,7 @@ enum class UDPHeaders : int32_t {
 --------------------------------------------------------------------------*/
 typedef struct {
     int32_t   turretid;
-    int32_t   actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
+    UDPHeaders actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
     float     xpos;
     float     ypos;
 } __attribute__((packed, aligned(1))) TurretAction;
@@ -121,7 +121,7 @@ typedef struct {
 --------------------------------------------------------------------------*/
 typedef struct {
     int32_t   barricadeid;
-    int32_t   actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
+    UDPHeaders actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
     float     xpos;
     float     ypos;
 } __attribute__((packed, aligned(1))) BarricadeAction;
