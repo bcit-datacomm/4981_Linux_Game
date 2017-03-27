@@ -1,13 +1,14 @@
 #ifndef GAMESTATE_MENU_H
 #define GAMESTATE_MENU_H
 
-#include "GameState.h"
 #include <string>
 #include <sstream>
 #include <iomanip>
 
 #include "../game/Level.h"
 #include "../view/Camera.h"
+#include "GameState.h"
+#include "Game.h"
 
 static constexpr size_t maxLength = 15;
 
@@ -34,16 +35,13 @@ static constexpr int FONT_SIZE = 30;
 
 class GameStateMenu : public GameState {
 public:
-
     GameStateMenu(Game& g);
-
     virtual ~GameStateMenu();
 
     virtual bool load();
     virtual void loop();
 
 private:
-
     virtual void sync() override;
     virtual void handle() override;
     virtual void update(const float delta) override;
@@ -61,7 +59,6 @@ private:
     SDL_Rect optionsRect;
 
     SDL_Rect screenRect;
-
 };
 
 #endif

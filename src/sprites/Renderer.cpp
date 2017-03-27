@@ -8,11 +8,7 @@
 */
 
 Renderer Renderer::rInstance;
-SDL_Renderer * Renderer::renderer = nullptr;
-SDL_Window * Renderer::window = nullptr;
 
-std::map<int, SDL_Texture *> Renderer::sprites;
-int Renderer::tempIndex = 1000;
 
 /* DEVELOPER: Michael Goll
 ** DESIGNER:  Michael Goll

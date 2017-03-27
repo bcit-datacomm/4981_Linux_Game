@@ -6,29 +6,18 @@ Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), 
 
 }
 
-Player::~Player() {
-
-}
-
 void Player::setControl(Marine& newControl) {
     marine = &newControl;
 }
 
-
-void Player::handleMouseUpdate(Window& w, float camX, float camY) {
+void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
     int mouseX;
     int mouseY;
-    int mouseDeltaX;
-    int mouseDeltaY;
-    double radianConvert = 180.0000;
-
     SDL_GetMouseState(&mouseX, &mouseY);
-    mouseDeltaX = w.getWidth()/2 - mouseX;
-    mouseDeltaY = w.getHeight()/2 - mouseY;
+    const int mouseDeltaX = w.getWidth() / 2 - mouseX;
+    const int mouseDeltaY = w.getHeight() / 2 - mouseY;
 
-    double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
-
-    marine->setAngle(angle);
+    marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* 180.0)/M_PI) * - 1);
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
@@ -53,16 +42,14 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(marine->inventory.getCurrent() != nullptr) {
-            if(marine->inventory.getCurrent()->getFireState()) {
-                marine->fireWeapon();
-            }
+        if(marine->inventory.getCurrent() != nullptr){
+            marine->fireWeapon();
         }
     }
 
 }
 
-void Player::handleMouseWheelInput(const SDL_Event *e) {
+void Player::handleMouseWheelInput(const SDL_Event *e){
     marine->inventory.scrollCurrent(e->wheel.y);
 }
 
@@ -98,25 +85,27 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     }
 
     //Inventory inputs
-    if (state[SDL_SCANCODE_1]) {
+    if (state[SDL_SCANCODE_1]){
         marine->inventory.switchCurrent(0);
-    } else if (state[SDL_SCANCODE_2]) {
+    } else if (state[SDL_SCANCODE_2]){
         marine->inventory.switchCurrent(1);
-    } else if (state[SDL_SCANCODE_3]) {
+    } else if (state[SDL_SCANCODE_3]){
         marine->inventory.switchCurrent(2);
     }
 
     //Weapon input
-    if(state[SDL_SCANCODE_R]) {
+    if(state[SDL_SCANCODE_R]){
         marine->inventory.getCurrent()->reloadClip();
     }
-    if(state[SDL_SCANCODE_E]) {
+    if(state[SDL_SCANCODE_E]){
+        marine->checkForPickUp();
         const int currentTime = SDL_GetTicks();
 
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
             const int checkTurret = marine->checkForPickUp();
-            if (checkTurret > -1 && !holdingTurret) {
+            if (checkTurret > -1 && holdingTurret == false)
+            {
                 tempTurretID = checkTurret;
                 GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
                 holdingTurret = true;
@@ -127,7 +116,6 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
     }
-
     marine->setDY(y);
     marine->setDX(x);
 }
@@ -147,7 +135,6 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
 void Player::handleTempTurret(SDL_Renderer *renderer) {
    if(tempTurretID < 0) {
        const double angle = marine->getAngle();
-
        tempTurretID = GameManager::instance()->createTurret(
            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
            marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));

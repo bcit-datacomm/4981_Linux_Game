@@ -8,8 +8,8 @@ using namespace std;
 
 WeaponDrop::WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize,
         int32_t wId): Entity(id, dest, dest, pickupSize), weaponId(wId){
-
-    logv("Created Weapon Drop\n");}
+    logv("Created Weapon Drop\n");
+}
 
 WeaponDrop::~WeaponDrop() {
     logv("Destroy WeaponDrop\n");

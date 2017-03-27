@@ -68,10 +68,13 @@ public:
     bool createZombie(const float x, const float y);
     void deleteZombie(const int32_t id);
     bool createZombieWave(const int n);
+    bool zombieExists(const int32_t id);
+    Zombie& getZombie(const int32_t id);
 
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(const float x, const float y);
     void deleteWeaponDrop(const int32_t id);
+    bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);
