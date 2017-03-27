@@ -36,7 +36,7 @@ static constexpr int FONT_SIZE = 30;
 class GameStateMenu : public GameState {
 public:
     GameStateMenu(Game& g);
-    virtual ~GameStateMenu();
+    ~GameStateMenu();
 
     virtual bool load();
     virtual void loop();

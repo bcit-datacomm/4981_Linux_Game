@@ -46,6 +46,38 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
     menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
 }
 
+/**
+* Function: GameStateMenu dtor
+*
+* Date:
+* MG: March 27, 2017 [added]
+*
+* Designer:
+* Jacob Frank
+*
+* Programmer:
+* Michael Goll
+*
+*
+* Interface: GameStateMenu::~GameStateMenu()
+*
+* Notes:
+* GameStateMenu dtor which frees all of the font pointers.
+*/
+GameStateMenu::~GameStateMenu() {
+    if (menuFont != nullptr) {
+        TTF_CloseFont(menuFont);
+    }
+
+    if (headingFont != nullptr) {
+        TTF_CloseFont(headingFont);
+    }
+
+    if (textboxFont != nullptr) {
+        TTF_CloseFont(textboxFont);
+    }
+}
+
 
 /**
 * Function: load
@@ -78,22 +110,22 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 bool GameStateMenu::load() {
     logv("Loading Fonts...\n");
 
-    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 
+    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf",
             110)) == nullptr) {
         return false;
     }
 
-    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join", 
+    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join",
         SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
-    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", 
+    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options",
         SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
 
-    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf", 
+    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf",
             FONT_SIZE)) == nullptr) {
         return false;
     }
 
-    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", 
+    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf",
             FONT_SIZE)) == nullptr) {
         return false;
     }
@@ -383,33 +415,4 @@ void GameStateMenu::render() {
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
     }
-}
-
-/**
-* Function: ~GameStateMenu dtor
-*
-* Date:
-* JF: February 8, 2017: Created
-*
-* Designer:
-* Jacob Frank
-*
-* Programmer:
-* Jacob Frank
-*
-* Modified by:
-* Michael Goll (March 16, 2017)
-*
-* Interface: ~GameStateMenu()
-*
-* Notes:
-* Deconstructor, frees all allocated memory for textures and fonts
-*
-* Revisions:
-* Removed unnecessary free calls (Michael Goll / March 16, 2017)
-*/
-GameStateMenu::~GameStateMenu() {
-    TTF_CloseFont(textboxFont);
-    TTF_CloseFont(headingFont);
-    TTF_CloseFont(menuFont);
 }
