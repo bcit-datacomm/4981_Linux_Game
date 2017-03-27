@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
-
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../player/Marine.h"
@@ -23,7 +22,7 @@ public:
 
     Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
-        int ammo = 100, bool placed = false);
+        int ammo = 100, bool placed = false, float range = 400.0f);
 
     virtual ~Turret();
 
@@ -53,7 +52,7 @@ public:
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
     void move(const float playerX, const float playerY,
-        const float moveX, const float moveY, CollisionHandler &ch);
+            const float moveX, const float moveY, CollisionHandler &ch);
 
     void placeTurret();
 
@@ -63,13 +62,18 @@ public:
 
     void removeTurret(); // removes the turret
 
-
+    // returns the turret's range.
+    // Jamie, 2017-03-01.
+    float getRange() const {
+        return range;
+    }
 
 private:
     bool activated; // turret activated state
     int health; // turret health pool
     int ammo; // turret ammo pool
     bool placed;
+    float range; // turret's range.
 };
 
 #endif

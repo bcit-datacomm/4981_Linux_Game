@@ -35,6 +35,8 @@ public:
     void setY(float py); //set y coordinate
     float getX() const; // get x coordinate
     float getY() const; // get y coordinate
+    int getW() const;// get w of dest rect
+    int getH() const;// get h of dest rect
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
     

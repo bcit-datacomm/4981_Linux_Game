@@ -38,3 +38,7 @@ bin/
 *.layout
 
 *.h.gch
+
+#vim
+*.swp
+

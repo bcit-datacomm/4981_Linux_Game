@@ -19,6 +19,8 @@
 #include "../view/Window.h"
 #include "../basic/LTimer.h"
 
+// ticks (ms) in 1 second
+static constexpr float TICK_SEC = 1000;
 
 class GameStateMatch : public GameState {
 public:

@@ -70,6 +70,15 @@ float Entity::getY() const{
     return y;
 }
 
+// Get x coordinate
+int Entity::getW() const{
+    return destRect.w;
+}
+
+// Get y coordinate
+int Entity::getH() const{
+    return destRect.h;
+}
 // Set Entity by x and y amount
 void Entity::setPosition(float px, float py) {
     x = px;
