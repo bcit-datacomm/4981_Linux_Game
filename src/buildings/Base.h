@@ -12,11 +12,16 @@
 //#include <utility>
 //#include <SDL2/SDL.h>
 
-//TODO :  change later.
-constexpr int BASE_HEIGHT = 500;
-constexpr int BASE_WIDTH = 500;
-constexpr int MAP_HEIGHT = 2000;
-constexpr int MAP_WIDTH = 2000;
+// base width/height
+static constexpr int BASE_WIDTH  = 500;
+static constexpr int BASE_HEIGHT = 500;
+
+// map width/height
+static constexpr int MAP_WIDTH   = 4000;
+static constexpr int MAP_HEIGHT  = 4000;
+
+//The gab between the spawn point and base.
+static constexpr int GAP = 100;
 
 typedef std::pair<float, float> Point;
 

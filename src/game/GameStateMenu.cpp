@@ -78,18 +78,23 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 bool GameStateMenu::load() {
     logv("Loading Fonts...\n");
 
-    if ((menuFont = Renderer::instance()->loadFont("assets/fonts/Overdrive Sunset.otf", 110)) == nullptr) {
+    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 
+            110)) == nullptr) {
         return false;
     }
 
-    Renderer::instance()->createText(TEXTURES::JOIN_FONT, menuFont, "Join", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
-    Renderer::instance()->createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join", 
+        SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", 
+        SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
 
-    if ((headingFont = Renderer::instance()->loadFont("assets/fonts/SEGUISB.ttf", FONT_SIZE)) == nullptr) {
+    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf", 
+            FONT_SIZE)) == nullptr) {
         return false;
     }
 
-    if ((textboxFont = Renderer::instance()->loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE)) == nullptr) {
+    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", 
+            FONT_SIZE)) == nullptr) {
         return false;
     }
 
@@ -360,24 +365,24 @@ void GameStateMenu::render() {
         screenRect = {ZERO, ZERO, game.window.getWidth(), game.window.getHeight()};
 
         //Clear screen
-        SDL_RenderClear(Renderer::instance()->getRenderer());
+        SDL_RenderClear(Renderer::instance().getRenderer());
 
         //render the splash screen
-        Renderer::instance()->render(screenRect, TEXTURES::MAIN);
+        Renderer::instance().render(screenRect, TEXTURES::MAIN);
 
         //Position all screen elements in the window
         positionElements();
 
         //textboxes
-        Renderer::instance()->render(usernameTextBox, TEXTURES::TEXTBOX);
-        Renderer::instance()->render(hostIPTextBox, TEXTURES::TEXTBOX);
+        Renderer::instance().render(usernameTextBox, TEXTURES::TEXTBOX);
+        Renderer::instance().render(hostIPTextBox, TEXTURES::TEXTBOX);
 
         //Join and Options text
-        Renderer::instance()->render(joinRect, TEXTURES::JOIN_FONT);
-        Renderer::instance()->render(optionsRect, TEXTURES::OPTIONS_FONT);
+        Renderer::instance().render(joinRect, TEXTURES::JOIN_FONT);
+        Renderer::instance().render(optionsRect, TEXTURES::OPTIONS_FONT);
 
         //Update screen
-        SDL_RenderPresent(Renderer::instance()->getRenderer());
+        SDL_RenderPresent(Renderer::instance().getRenderer());
     }
 }
 
