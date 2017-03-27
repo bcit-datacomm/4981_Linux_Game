@@ -3,7 +3,10 @@
 #include "../player/Marine.h"
 #include "../log/log.h"
 #include <iostream>
+#include <cmath>
 #include <cassert>
+#include "../inventory/weapons/Target.h"
+
 
 CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
         quadtreeBarricade(0, {0,0,2000,2000}),quadtreeTurret(0, {0,0,2000,2000}),
@@ -72,37 +75,102 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
 
 }
 
-// Created by DericM 3/8/2017
-// TODO fix collision detection using new quadtrees
-std::priority_queue<const HitBox*> CollisionHandler::detectLineCollision(
-        Marine &marine, const int range) {
+
+/**
+    detectLineCollision
+
+    DISCRIPTION:
+        This checks each relevent quadTrees for targets that are in the weapons sights,
+        and adds them to a priority queue that is sorted by distance from the player.
+
+    AUTHOR: Deric Mccadden 3/8/2017
+        Edited: 3/16/2017 fixed to use new quad trees (cant shoot walls yet)
+        Edited: 3/17/2017 walls work now.
+
+    PARAMS:
+        std::priority_queue<Target>& targetsInSights,
+            This is the queue that will hold the targets that will be determined.
+        Marine &marine,
+            The marine that fired the weapon, this is needed for its x and y and angle.
+        const int range
+            The range of the weapon that is being fired.
+*/
+void CollisionHandler::detectLineCollision(
+        std::priority_queue<Target>& targetsInSights, Marine &marine, const int range) {
 
     const double degrees = marine.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
-    const int playerX = marine.getX() + (MARINE_WIDTH / 2);
-    const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
+    const int originX = marine.getX() + (MARINE_WIDTH / 2);
+    const int originY = marine.getY() + (MARINE_HEIGHT / 2);
     const int deltaX  = range * cos(radians);
     const int deltaY  = range * sin(radians);
-    int aX, aY, bX, bY;
 
-    std::vector<Entity*> allEntities;
+    auto& zombies = quadtreeZombie.objects;
+    auto& turrets = quadtreeTurret.objects;
+    auto& walls   = quadtreeWall.objects;
 
-    //split into check for zombies (check for walls)
-    //allEntities = quadtreePro.objects;
+    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, zombies, TYPE_ZOMBIE);
+    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, turrets, TYPE_TURRET);
+    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, walls, TYPE_WALL);
 
-    std::priority_queue<const HitBox*> targetsInSights;
-    for (unsigned int x = 0, len = allEntities.size(); x < len; x++) {
-            aX = playerX;
-            aY = playerY;
-            bX = aX + deltaX;
-            bY = aY + deltaY;
+    logv("targetsInSights.size(): %d\n", targetsInSights.size());
+}
 
-            if (SDL_IntersectRectAndLine(&(allEntities.at(x)->getProHitBox().getRect()), &aX, &aY , &bX, &bY)) {
-                logv("Shot target at (%d, %d)\n", aX, aY);
-                targetsInSights.push(&(allEntities.at(x)->getProHitBox()));
-            }
+/**
+    checkTargets
+
+    DISCRIPTION:
+        This checks a single vector of *hitboxes for targets that are in the weapons sights,
+        and adds them to a priority queue that is sorted by distance from the player.
+
+    AUTHOR: Deric Mccadden 3/16/2017
+
+    PARAMS:
+        const int originX,
+            The starting x.
+        const int originY,
+            The starting y.
+        const int deltaX,
+            The x distance to the end point from the origin.
+        const int deltaY,
+            The y distance to the end point from the origin.
+        std::priority_queue<Target>& targetsInSights,
+            This is the queue that will hold the targets that will be determined.
+        std::vector<Entity*> allEntities,
+            The entities that will need to be searched for valid targets.
+        int type
+            the type of entity, see target Target.h for definitions.
+            This is needed for identification purposes in InstantWeapon.fire()
+*/
+void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
+        std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
+    int tempOriginX;
+    int tempOriginY;
+    int tempEndX;
+    int tempEndY;
+    int distanceToOrigin;
+
+    for(auto& possibleTarget : allEntities) {
+
+        tempOriginX = originX;
+        tempOriginY = originY;
+        tempEndX = originX + deltaX;
+        tempEndY = originY + deltaY;
+
+        if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()),
+                &tempOriginX, &tempOriginY , &tempEndX, &tempEndY)) {
+
+            logv("Intersect target at (%d, %d)\n", tempEndX, tempEndY);
+
+            distanceToOrigin = std::hypot(originX - tempEndX, originY - tempEndY);
+
+            Target tar(possibleTarget->getId(), type, tempEndX, tempEndY, distanceToOrigin);
+
+            logv("tar.getType(): %d\n", tar.getType());
+
+            targetsInSights.push(tar);
+        }
     }
-    return targetsInSights;
 }
 
 std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree &q, const Entity *entity) {

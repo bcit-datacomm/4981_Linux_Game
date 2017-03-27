@@ -52,6 +52,7 @@ const std::string WEAPONS = SPRITE_PATH + "weapons.png";
 const std::string LASER = SPRITE_PATH  + "laser.png";
 
 const std::string REPLACE_ME = "assets/texture/replace_me.png"; //temporary sprite, will be removed later
+const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be removed later
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
@@ -60,7 +61,6 @@ static constexpr int TOTAL_SPRITES = 20; //number of total sprites
 
 class Renderer {
 public:
-
 
         /**
          * DEVELOPER: Michael Goll
@@ -109,13 +109,14 @@ public:
         //renders all of the sprites within the camera viewport
         void render(const SDL_Rect& dest, const TEXTURES spriteType, double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+
         void render(const SDL_Rect& dest, const int spriteType, double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-        //renders all of the sprites within the camera viewport
-        void render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, double angle = 0.0,
-                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
         void render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip, double angle = 0.0,
+                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+
+        void render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 

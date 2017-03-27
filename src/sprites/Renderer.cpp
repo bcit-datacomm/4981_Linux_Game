@@ -10,11 +10,6 @@
 
 Renderer Renderer::sInstance;
 
-/**
- * DEVELOPER: Michael Goll
- * DESIGNER:  Michael Goll
- * DATE:      March 14, 2017
- */
 Renderer::~Renderer() {
     for (const auto& s : sprites) {
         if (s.second != nullptr) {
@@ -52,7 +47,7 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
 
     //-------- weapon textures --------
-    createTexture(TEXTURES::WEAPONS, REPLACE_ME); //temporary, will be replaced later
+    createTexture(TEXTURES::WEAPONS, RIFLE); //temporary, will be replaced later
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, TEMP_MARINE_TEXTURE);
@@ -229,8 +224,8 @@ void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL
  *      added duplicates to autowrap textures to ints
  * renders an object
  */
-void Renderer::render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip,
-        double angle, const SDL_Point* center, const SDL_RendererFlip flip) {
+void Renderer::render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip, double angle,
+        const SDL_Point* center, const SDL_RendererFlip flip) {
     //Render to screen
     SDL_RenderCopyEx(renderer, getTexture(spriteType), &clip, &dest, angle,
             center, flip);

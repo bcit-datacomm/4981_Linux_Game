@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -14,10 +14,10 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "Game.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-        base(), camera(gameWidth,gameHeight) {
-}
+    base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -28,19 +28,21 @@ bool GameStateMatch::load() {
     GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(100, 500);
-    //GameManager::instance()->createZombie(-100, -100);
-    //GameManager::instance()->createTurret(1000, 500);
-    //GameManager::instance()->createTurret(100, 100);
-    //GameManager::instance()->createWeaponDrop(1800, 1700);
-    //GameManager::instance()->createZombie(100, 100);
+    GameManager::instance()->createMarine(1000, 500);
+    // GameManager::instance()->createZombie(-100, -100);
+    // GameManager::instance()->createTurret(1000, 500);
+    // GameManager::instance()->createTurret(100, 100);
+    GameManager::instance()->createWeaponDrop(850, 850);
+    // GameManager::instance()->createZombie(100, 100);
+
 
     GameManager::instance()->addObject(base);
+
     Point newPoint = base.getSpawnPoint();
 
     //gives the player control of the marine
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
-    player.marine->setPosition(newPoint.first, newPoint.second);
+    player.getMarine()->setPosition(newPoint.first, newPoint.second);
 
     return success;
 }
@@ -157,7 +159,7 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateTurrets(delta);
 
     // Move Camera
-    camera.move(player.marine->getX(), player.marine->getY());
+    camera.move(player.getMarine()->getX(), player.getMarine()->getY());
 }
 
 void GameStateMatch::render() {

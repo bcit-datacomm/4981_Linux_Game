@@ -30,7 +30,7 @@ public:
     virtual bool load();
     virtual void loop();
 
-    GameManager* gameManager = nullptr;
+    GameManager * gameManager = nullptr;
 
     // Frame Display
     std::stringstream frameTimeText;
@@ -40,7 +40,7 @@ private:
     Player player;
     Base base;
     Camera camera;
-
+    
     virtual void sync() override;
     virtual void handle() override;
     virtual void update(const float delta) override;

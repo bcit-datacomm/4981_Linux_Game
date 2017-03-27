@@ -123,7 +123,6 @@ bool GameStateMenu::load() {
 * Listens for events and renders all assets to the screen
 */
 void GameStateMenu::loop() {
-
     // State Loop
     while (play) {
         handle(); // Handle user input
@@ -146,7 +145,7 @@ void GameStateMenu::loop() {
 *
 * Notes:
 * Function currently empty
-* Designed to be used by Game Logic team for connecting to the server
+* Designed to be used by Game logvc team for connecting to the server
 */
 void GameStateMenu::sync() {
 

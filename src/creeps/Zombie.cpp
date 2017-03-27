@@ -46,6 +46,9 @@ void Zombie::onCollision() {
 
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
+    if(health <= 0) {
+        GameManager::instance()->deleteZombie(getId());
+    }
 }
 
 /*
