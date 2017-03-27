@@ -147,6 +147,42 @@ void processPacket(const char *data) {
                 saveAttack(aa);
             }
             break;
+        case UDPHeaders::BARRICADEACTIONH:
+            {
+                const BarricadeAction& ba = mesg->data.ba;
+                Barricade& tempBarricade = GameManager::instance()->getBarricade(ba.barricadeid);
+                if (ba.actionid == UDPHeaders::PICKUP) {
+                    //No noticeable code in game logic for picking up a barricade
+                } else if (ba.actionid == UDPHeaders::DROPOFF) {
+                    if (tempBarricade.isPlaceable()) {
+                        tempBarricade.placeBarricade();
+                        tempBarricade.setPosition(ba.xpos, ba.ypos);
+                    }
+                } else {
+                    logv("Received barricade packet with unknown action id\n");
+                }
+            }
+            break;
+        case UDPHeaders::TURRETACTIONH:
+            {
+                const TurretAction& ta = mesg->data.ta;
+                Turret& tempTurret = GameManager::instance()->getTurret(ta.turretid);
+                if (ta.actionid == UDPHeaders::PICKUP) {
+                    tempTurret.pickUpTurret();
+                    tempTurret.setPosition(ta.xpos, ta.ypos);
+                } else if (ta.actionid == UDPHeaders::DROPOFF) {
+                    tempTurret.placeTurret();
+                    tempTurret.setPosition(ta.xpos, ta.ypos);
+                } else {
+                    logv("Received turret packet with unknown action id\n");
+                }
+            }
+            break;
+        case UDPHeaders::SHOPPURCHASEH:
+            {
+                //const BarricadeAction& ba = mesg->data.ba;
+            }
+            break;
         default:
             logv("Received packet with unknown id\n");
             break;

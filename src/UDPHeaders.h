@@ -117,7 +117,7 @@ typedef struct {
 * float     ypos - yPosition of the item
 *
 * NOTE:
-* A barricade shoudl not be able to move after being dropped off
+* A barricade should not be able to move after being dropped off
 --------------------------------------------------------------------------*/
 typedef struct {
     int32_t   barricadeid;

@@ -77,7 +77,6 @@ void Player::handleMouseWheelInput(const SDL_Event *e) {
 
 // function to handle mouse-click events
 void Player::handlePlacementClick(SDL_Renderer *renderer) {
-
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
         if (tempBarricade.isPlaceable()) {
