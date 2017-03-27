@@ -14,6 +14,7 @@
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
 #include "../sprites/SpriteTypes.h"
+#include "../sprites/Textomagic.h"
 
 
 /**
@@ -375,6 +376,11 @@ void GameStateMenu::render() {
 
         //textboxes
         Renderer::instance().render(usernameTextBox, TEXTURES::TEXTBOX);
+        
+        //demo only, Textomagic should have one per text box needed and should be membervariables of the class
+        Textomagic t(usernameTextBox,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 110), 20, "1234567890", {255,0,255,255}); 
+        t.render();
+
         Renderer::instance().render(hostIPTextBox, TEXTURES::TEXTBOX);
 
         //Join and Options text
