@@ -11,18 +11,6 @@
 
 static constexpr size_t maxLength = 15;
 
-//Color Data
-static constexpr SDL_Color SDL_WHITE_RGB = {255, 255, 255};
-static constexpr SDL_Color SDL_RED_RGB = {143, 63, 61};
-static constexpr SDL_Color SDL_BLACK_RGB = {0, 0, 0};
-static constexpr SDL_Color SDL_GREEN_RGB = {54, 96, 81};
-
-//RGB color information
-static constexpr size_t WHITE_RGB[3] = {255, 255, 255};
-static constexpr size_t YELLOW_RGB[3] = {148, 139, 77};
-static constexpr size_t LT_GREEN_RGB[3] = {92, 133, 108};
-static constexpr int MAX_RGB = 255;
-
 //Position of color in the fontColor array
 static constexpr size_t WHITE = 0;
 static constexpr size_t GREEN = 1;
@@ -61,6 +49,16 @@ private:
     SDL_Rect optionsRect;
 
     SDL_Rect screenRect;
+
+    bool joinSelected;
+    bool optionsSelected;
+    bool hostIPSelected;
+    bool usernameSelected;
+    std::string hostIpDefaultText;
+    std::string usernameDefaultText;
+    std::string hostIpTextInput;
+    std::string usernameTextInput;
+
 
 };
 

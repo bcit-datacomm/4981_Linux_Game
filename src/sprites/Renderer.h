@@ -20,6 +20,7 @@
 const std::string MAIN_SCREEN = "assets/TitleScreen_Marz.png";
 
 const std::string TEXTBOX_TEXTURE = "assets/texture/textbox.png";
+const std::string TEXTBOX_ACTIVE_TEXTURE = "assets/texture/textboxActive.png";
 //#define LOBBY_SCREEN "assets/texture/Map/" // <-- Will be used at a later date to show lobby bg
 
 //-------- Map Textures --------
@@ -54,7 +55,7 @@ const std::string REPLACE_ME = "assets/texture/replace_me.png"; //temporary spri
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 20; //number of total sprites
+static constexpr int TOTAL_SPRITES = 23; //number of total sprites
 
 
 class Renderer {

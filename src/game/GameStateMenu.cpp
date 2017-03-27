@@ -14,6 +14,7 @@
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
 #include "../sprites/SpriteTypes.h"
+#include "../../include/Colors.h"
 
 
 /**
@@ -30,6 +31,7 @@
 *
 * Modified by:
 * Michael Goll (March 16, 2017)
+* Jacob Frank (March 26, 2017)
 *
 * Interface: GameStateMenu(Game& g, int gameWidth, int gameHeight)
 *                           Game& g: The instance of the game which the display window is tied to
@@ -41,9 +43,12 @@
 *
 * Revisions:
 * Removed excess initializations. (Michael Goll / March 16, 2017)
+* Re-added non-excessive initializations (Jacob Frank / March 26, 2017)
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textboxFont(nullptr),
-    menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
+    menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()}, joinSelected(false), optionsSelected(false), hostIPSelected(false), usernameSelected(false),
+    hostIpDefaultText("IP Address"), usernameDefaultText("Username"),
+    hostIpTextInput(hostIpDefaultText), usernameTextInput(usernameDefaultText){
 }
 
 
@@ -61,6 +66,7 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 *
 * Modified by:
 * Michael Goll (March 16, 2017)
+* Jacob Frank (March 26. 2017)
 *
 * Interface: load()
 *
@@ -73,6 +79,7 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 * Revisions:
 * Loads all text files and needed text textures once and stores them in Renderer instance's sprite array.
 * (Michael Goll / March 16, 2017)
+* Changed the font texture and added Textures for active fonts (Jacob Frank / March 26, 2017)
 */
 
 bool GameStateMenu::load() {
@@ -82,8 +89,10 @@ bool GameStateMenu::load() {
         return false;
     }
 
-    Renderer::instance()->createText(TEXTURES::JOIN_FONT, menuFont, "Join", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
-    Renderer::instance()->createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
+    Renderer::instance()->createText(TEXTURES::JOIN_FONT, menuFont, "join", SDL_RED_RGB);
+    Renderer::instance()->createText(TEXTURES::OPTIONS_FONT, menuFont, "options", SDL_RED_RGB);
+    Renderer::instance()->createText(TEXTURES::JOIN_FONT_ACTIVE, menuFont, "join", SDL_GREEN_RGB);
+    Renderer::instance()->createText(TEXTURES::OPTIONS_FONT_ACTIVE, menuFont, "options", SDL_GREEN_RGB);
 
     if ((headingFont = Renderer::instance()->loadFont("assets/fonts/SEGUISB.ttf", FONT_SIZE)) == nullptr) {
         return false;
@@ -168,7 +177,7 @@ void GameStateMenu::sync() {
 * functionality of the main menu
 */
 void GameStateMenu::handle() {
-    //int x, y; // <-- leaving these in for future use
+    int x, y;
 
     SDL_Keycode keyCode;
 
@@ -179,15 +188,52 @@ void GameStateMenu::handle() {
     switch (event.type) {
 
         case SDL_MOUSEBUTTONDOWN:
-            // x = event.button.x;
-            // y = event.button.y;
+             x = event.button.x;
+             y = event.button.y;
 
-            //move to the game when a click occurs
-            //changes the state to tell the Game.cpp loop to start the actual game
-            game.stateID = 2;
+             if (joinSelected) {
+                game.stateID = 2; //changes the state to tell the Game.cpp loop to start the actual game
+                play = false;
+                break;
+             }
 
-            //breaks out of the menu loop and Game.cpp re-evaluates the state
-            play = false;
+            //Checks the mouse position when the mouse click occurred and sets the host Ip textbox
+            //to it's acive state when the mouse button down event occurred within the textbox's bounds
+            if (x >= hostIPTextBox.x && x <= hostIPTextBox.x + hostIPTextBox.w &&
+                y >= hostIPTextBox.y && y <= hostIPTextBox.y + hostIPTextBox.h) {
+                hostIPSelected = true;  //Activate the button
+
+                //If default string is detected, delete it
+                if (hostIpTextInput.compare(hostIpDefaultText) == 0) {
+                    hostIpTextInput = "";
+                }
+            } else {
+                hostIPSelected = false; //deactivate the button
+
+                //Reset textbox text to default text, if textbox is empty
+                if (hostIpTextInput.empty()) {
+                    hostIpTextInput = hostIpDefaultText;
+                }
+            }
+
+            //Checks the mouse position when the mouse click occurred and sets the username textbox
+            //to it's acive state when the mouse button down event occurred within the textbox's bounds
+            if (x >= usernameTextBox.x && x <= usernameTextBox.x + usernameTextBox.w &&
+                y >= usernameTextBox.y && y <= usernameTextBox.y + usernameTextBox.h) {
+                usernameSelected = true;  //Activate the button
+
+                //If default string is detected, delete it
+                if (usernameTextInput.compare(usernameDefaultText) == 0) {
+                    usernameTextInput = "";
+                }
+            } else {
+                usernameSelected = false; //deactivate the button
+
+                //Reset textbox text to default text, if textbox is empty
+                if (usernameTextInput.empty()) {
+                    usernameTextInput = usernameDefaultText;
+                }
+            }
             break;
 
         case SDL_KEYDOWN:
@@ -209,8 +255,26 @@ void GameStateMenu::handle() {
             break;
 
         case SDL_MOUSEMOTION:
-        //intentionally left blank for now
-        //only temporary, will be functional later
+            x = event.motion.x;
+            y = event.motion.y;
+
+            //Checks the mouse position and sets the menu option Join
+            //to it's acive state when the mouse hovers above the Join text
+            if (x >= joinRect.x && x <= joinRect.x + joinRect.w &&
+                y >= joinRect.y && y <= joinRect.y + joinRect.h) {
+                joinSelected = true;  //Activate the button
+            } else {
+                joinSelected = false; //deactivate the button
+            }
+
+            //Checks the mouse position and sets the menu option Options
+            //to it's acive state when the mouse hovers above the Options text
+            if (x >= optionsRect.x && x <= optionsRect.x + optionsRect.w &&
+                y >= optionsRect.y && y <= optionsRect.y + optionsRect.h) {
+                optionsSelected = true;  //Activate the button
+            } else {
+                optionsSelected = false; //deactivate the button
+            }
             break;
 
         case SDL_WINDOWEVENT:
@@ -270,6 +334,7 @@ void GameStateMenu::update(const float delta) {
 *
 * Modified by:
 * Michael Goll (March 16, 2017)
+* Jacob Frank   (March 26, 2017)
 *
 * Interface: positionElements()
 *
@@ -280,15 +345,24 @@ void GameStateMenu::update(const float delta) {
 *
 * Revisions:
 * Renders text in SDL_Rect structures instead of LTextures. (Michael Goll / March 16, 2017)
+* Fixed positional data from restructuring not setting assets in correct position (Jacob Frank / March 26, 2017)
 */
 void GameStateMenu::positionElements() {
 
     int maxTextWidth = ZERO;
     int maxTextHeight = ZERO;
-    int vertPadding = 100;
+    int vertPadding = 50;
 
     std::string longestString = "";
     char largestChar = 'W';
+
+    std::string join = "join";
+    int joinWidth = ZERO;
+    int joinHeight = ZERO;
+
+    std::string options = "options";
+    int optionsWidth = ZERO;
+    int optionsHeight = ZERO;
 
     //Check if TTF was initialized correctly
     if(!TTF_WasInit() && TTF_Init()== -1) {
@@ -300,29 +374,33 @@ void GameStateMenu::positionElements() {
     longestString.resize(maxLength + 1, largestChar);
     TTF_SizeText(textboxFont, longestString.c_str(), &maxTextWidth, &maxTextHeight);
 
+    //Calculate the pixel size the menu options
+    TTF_SizeText(menuFont, join.c_str(), &joinWidth, &joinHeight);
+    TTF_SizeText(menuFont, options.c_str(), &optionsWidth, &optionsHeight);
+
+    //Position the Join text
+    joinRect.w = joinWidth;
+    joinRect.h = joinHeight;
+    joinRect.x = screenRect.w / 2 - joinRect.w / 2;
+    joinRect.y = screenRect.h / 2 + joinRect.h;
+
+    //Position the Options text
+    optionsRect.w = optionsWidth;
+    optionsRect.h = optionsHeight;
+    optionsRect.x = screenRect.w / 2 - optionsRect.w / 2;
+    optionsRect.y = screenRect.h / 2 + optionsRect.h * 2.2;
 
     //Create a textbox for the server IP
-    hostIPTextBox.x = (screenRect.w - hostIPTextBox.w) * 0.5;
-    hostIPTextBox.y = screenRect.h * 0.5;
     hostIPTextBox.w = maxTextWidth;
     hostIPTextBox.h = maxTextHeight;
+    hostIPTextBox.x = screenRect.w / 2 - hostIPTextBox.w / 2;
+    hostIPTextBox.y = joinRect.y - vertPadding;
 
     //Create a textbox for the Username
-    usernameTextBox.x = (screenRect.w - usernameTextBox.w) * 0.5;
-    usernameTextBox.y = hostIPTextBox.y - vertPadding * 0.5;
     usernameTextBox.w = maxTextWidth;
     usernameTextBox.h = maxTextHeight;
-
-    //Position the menu text
-    joinRect.x = hostIPTextBox.x + hostIPTextBox.x * 0.25;
-    joinRect.y = hostIPTextBox.y + vertPadding;
-    joinRect.w = maxTextWidth * 0.5;
-    joinRect.h = maxTextHeight * 2;
-
-    optionsRect.x = hostIPTextBox.x;
-    optionsRect.y = joinRect.y + vertPadding;
-    optionsRect.w = maxTextWidth;
-    optionsRect.h = maxTextHeight * 2;
+    usernameTextBox.x = screenRect.w / 2 - usernameTextBox.w / 2;
+    usernameTextBox.y = hostIPTextBox.y - vertPadding;
 }
 
 /**
@@ -369,12 +447,45 @@ void GameStateMenu::render() {
         positionElements();
 
         //textboxes
-        Renderer::instance()->render(usernameTextBox, TEXTURES::TEXTBOX);
-        Renderer::instance()->render(hostIPTextBox, TEXTURES::TEXTBOX);
+//        Renderer::instance()->render(usernameTextBox, TEXTURES::TEXTBOX);
+//        Renderer::instance()->render(hostIPTextBox, TEXTURES::TEXTBOX);
 
         //Join and Options text
-        Renderer::instance()->render(joinRect, TEXTURES::JOIN_FONT);
-        Renderer::instance()->render(optionsRect, TEXTURES::OPTIONS_FONT);
+        //Change the color of the text when active
+        if (joinSelected) {
+            Renderer::instance()->render(joinRect, TEXTURES::JOIN_FONT_ACTIVE);
+        } else {
+            Renderer::instance()->render(joinRect, TEXTURES::JOIN_FONT);
+        }
+
+        if (optionsSelected) {
+            Renderer::instance()->render(optionsRect, TEXTURES::OPTIONS_FONT_ACTIVE);
+        } else {
+            Renderer::instance()->render(optionsRect, TEXTURES::OPTIONS_FONT);
+        }
+
+        //Host IP and Username textboxes
+        //Change the color of the textbox when active
+        //Used so User knows when textbox is can accept input
+        if (hostIPSelected) {
+            Renderer::instance()->render(hostIPTextBox, TEXTURES::TEXTBOX_ACTIVE);
+        } else {
+            Renderer::instance()->render(hostIPTextBox, TEXTURES::TEXTBOX);
+        }
+
+        if (usernameSelected) {
+            Renderer::instance()->render(usernameTextBox, TEXTURES::TEXTBOX_ACTIVE);
+        } else {
+            Renderer::instance()->render(usernameTextBox, TEXTURES::TEXTBOX);
+        }
+
+        if (!hostIpTextInput.empty()) {
+            Renderer::instance()->createTempText(textboxFont, hostIpTextInput, SDL_BLACK_RGB);
+        }
+
+        if (!usernameTextInput.empty()) {
+            Renderer::instance()->createTempText(textboxFont, usernameTextInput, SDL_BLACK_RGB);
+        }
 
         //Update screen
         SDL_RenderPresent(Renderer::instance()->getRenderer());

@@ -48,6 +48,7 @@ void Renderer::loadSprites() {
     //Main game screen
     createTexture(TEXTURES::MAIN, MAIN_SCREEN);
     createTexture(TEXTURES::TEXTBOX, TEXTBOX_TEXTURE);
+    createTexture(TEXTURES::TEXTBOX_ACTIVE, TEXTBOX_ACTIVE_TEXTURE);
     //createTexture(LOBBY_SCREEN);
 
     //-------- map textures --------
