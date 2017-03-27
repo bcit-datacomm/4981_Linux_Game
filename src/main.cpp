@@ -82,10 +82,15 @@ int main(int argc, char **argv) {
     sendSocketUDP = createSocket(true, true);
     listenSocketTCP = createSocket(false, true);
 
+    memset(&sendAddrUDP, 0, sizeof(sendAddrUDP));
+
     if (inet_pton(AF_INET, MULTICAST_ADDR, &(sendAddrUDP.sin_addr)) != 1) {
         perror("inet_pton");
         exit(3);
     }
+
+    sendAddrUDP.sin_family = AF_INET;
+    sendAddrUDP.sin_port = htons(listen_port_udp);
 
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
     logv("Sockets created and bound\n");
