@@ -38,7 +38,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                Renderer::instance()->render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -46,7 +46,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : marineManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                Renderer::instance()->render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
+                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
                     m.second.getAngle());
             }
         }
@@ -54,9 +54,9 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
 
     for (const auto& o : objectManager) {
-        if (o.second.getX() < camW) {
+        if (o.second.getX() - camX < camW) {
             if (o.second.getY() - camY < camH) {
-                Renderer::instance()->render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -64,7 +64,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& z : zombieManager) {
         if (z.second.getX() - camX < camW) {
             if (z.second.getY() - camY < camH) {
-                Renderer::instance()->render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
+                Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
             }
         }
     }
@@ -72,7 +72,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : turretManager) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
-                Renderer::instance()->render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
+                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
                     m.second.getAngle());
             }
         }
@@ -81,7 +81,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& b : barricadeManager) {
         if (b.second.getX() - camX < camW) {
             if (b.second.getY() - camY < camH) {
-                Renderer::instance()->render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -89,7 +89,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& w : wallManager) {
         if (w.second.getX() - camX < camW) {
             if (w.second.getY() - camY < camH) {
-                Renderer::instance()->render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
@@ -105,10 +105,22 @@ void GameManager::updateMarines(const float delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
-        z.second.generateRandomMove();
-        z.second.move((z.second.getDX()*delta), (z.second.getDY()*delta), collisionHandler);
+        z.second.generateMove();
+        if (z.second.isMoving()) {
+            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
+        }
     }
 }
+
+// Update turret actions.
+// Jamie, 2017-03-01.
+void GameManager::updateTurrets(const float delta) {
+    for (auto& t : turretManager) {
+        t.second.targetScanTurret();
+    }
+}
+
+
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();
@@ -229,7 +241,10 @@ bool GameManager::createZombie(const float x, const float y) {
 
 
     zombieManager.insert({id, Zombie(id, zombieRect, moveRect, projRect, damRect)});
-    zombieManager.at(id).setPosition(x,y);
+
+    zombieManager.at(id).setPosition(x, y);
+    zombieManager.at(id).generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
+    zombieManager.at(id).setState(ZombieState::ZOMBIE_MOVE);
 
     return true;
 }
@@ -444,31 +459,19 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
 bool GameManager::createZombieWave(const int n) {
 
     std::vector<Point> spawnPoints;
-    spawnPoints.emplace_back(Point(-900, -900));
-    spawnPoints.emplace_back(Point(1900, -900));
-    spawnPoints.emplace_back(Point(2900, -900));
+    spawnPoints.emplace_back(Point(100, 100));
+    spawnPoints.emplace_back(Point(500, 100));
+    spawnPoints.emplace_back(Point(1900, 900));
+    spawnPoints.emplace_back(Point(2900, 900));
     spawnPoints.emplace_back(Point(2900, 2900));
     spawnPoints.emplace_back(Point(1900, 2900));
-    spawnPoints.emplace_back(Point(-900, 2900));
+    spawnPoints.emplace_back(Point(900, 2900));
 
-    if(zombieManager.size() >= spawnPoints.size() * 5) {
-        unsigned int count = 0;
-        std::vector<int32_t> ids;
-        for (const auto& z : zombieManager) {
-            if(count >= spawnPoints.size()) {
-                break;
-            }
-            ids.push_back(z.first);
-            ++count;
-        }
-        for (const auto& id : ids) {
-            deleteZombie(id);
-        }
-    }
 
-    for(int i = 0; i < n; ++i) {
-        for(const auto& p : spawnPoints)
+    for (int i = 0; i < n; ++i) {
+        for (const auto& p : spawnPoints) {
             createZombie(p.first, p.second);
+        }
     }
 
     return true;

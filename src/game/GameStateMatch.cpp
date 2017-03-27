@@ -13,10 +13,10 @@
 #include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../log/log.h"
+#include "../sprites/VisualEffect.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-    base(), camera(gameWidth,gameHeight) {
-
+        base(), camera(gameWidth,gameHeight) {
 }
 
 bool GameStateMatch::load() {
@@ -25,15 +25,16 @@ bool GameStateMatch::load() {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     //set the boundary on the map
-    GameManager::instance()->setBoundary(-1000, -1000, 3000, 3000);
+    GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(100, 100);
-    GameManager::instance()->createZombie(800, 800);
-    GameManager::instance()->createTurret(1000, 500);
-    GameManager::instance()->createWeaponDrop(1800, 1700);
+    GameManager::instance()->createMarine(100, 500);
+    //GameManager::instance()->createZombie(-100, -100);
+    //GameManager::instance()->createTurret(1000, 500);
+    //GameManager::instance()->createTurret(100, 100);
+    //GameManager::instance()->createWeaponDrop(1800, 1700);
+    //GameManager::instance()->createZombie(100, 100);
 
-    //creates the base
     GameManager::instance()->addObject(base);
     Point newPoint = base.getSpawnPoint();
 
@@ -78,11 +79,12 @@ void GameStateMatch::loop() {
         update(stepTimer.getTicks() / TIME_SECOND); // Update state values
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
+
         render();    // Render game state to window
 
         ++countedFrames;
 
-        if(fpsTimer.getTicks() / TIME_SECOND > second) {
+        if ((stepTimer.getTicks() / TIME_SECOND) > second) {
             GameManager::instance()->createZombieWave(1);
             second+=5;
         }
@@ -116,7 +118,7 @@ void GameStateMatch::handle() {
             break;
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_RIGHT) {
-                player.handlePlacementClick(Renderer::instance()->getRenderer());
+                player.handlePlacementClick(Renderer::instance().getRenderer());
             }
             break;
         case SDL_KEYDOWN:
@@ -125,7 +127,7 @@ void GameStateMatch::handle() {
                     play = false;
                     break;
                 case SDLK_b:
-                    player.handleTempBarricade(Renderer::instance()->getRenderer());
+                    player.handleTempBarricade(Renderer::instance().getRenderer());
                     break;
                 default:
                     break;
@@ -152,18 +154,17 @@ void GameStateMatch::update(const float delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
+    GameManager::instance()->updateTurrets(delta);
 
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
-
-
 }
 
 void GameStateMatch::render() {
     //Only draw when not minimized
     if (!game.window.isMinimized()) {
 
-        SDL_RenderClear(Renderer::instance()->getRenderer());
+        SDL_RenderClear(Renderer::instance().getRenderer());
 
         //Render textures
         for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
@@ -177,16 +178,20 @@ void GameStateMatch::render() {
                     break;
                 }
 
-                Renderer::instance()->render(
-                        {i * TEXTURE_SIZE - camera.getX(), j * TEXTURE_SIZE -camera.getY(), TEXTURE_SIZE, TEXTURE_SIZE},
-                        TEXTURES::BARREN);
+                Renderer::instance().render(
+                        {i * TEXTURE_SIZE - static_cast<int>(camera.getX()), j * TEXTURE_SIZE - static_cast<int>(camera.getY()),
+                        TEXTURE_SIZE, TEXTURE_SIZE}, TEXTURES::BARREN);
             }
         }
 
+        //render the temps before the objects in the game
+        VisualEffect::instance().renderPreEntity(camera.getViewport());
         //renders objects in game
         GameManager::instance()->renderObjects(camera.getViewport());
+        //render the temps after the object in the game
+        VisualEffect::instance().renderPostEntity(camera.getViewport());
 
         //Update screen
-        SDL_RenderPresent(Renderer::instance()->getRenderer());
+        SDL_RenderPresent(Renderer::instance().getRenderer());
     }
 }
