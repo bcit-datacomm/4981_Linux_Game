@@ -11,14 +11,15 @@
     AUTHOR: Deric Mccadden 01/03/17
 
 */
+#include <queue>
+#include <stdio.h>
+#include <iostream>
+
 #include "InstantWeapon.h"
 #include "../../collision/HitBox.h"
 #include "../../game/GameManager.h"
 #include "../../collision/CollisionHandler.h"
 #include "../../audio/AudioManager.h"
-#include <queue>
-#include <stdio.h>
-#include <iostream>
 #include "../../log/log.h"
 #include "Target.h"
 #include "../../sprites/VisualEffect.h"

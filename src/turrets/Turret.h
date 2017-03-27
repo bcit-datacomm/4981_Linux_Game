@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../player/Marine.h"

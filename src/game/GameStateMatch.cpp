@@ -29,11 +29,7 @@ bool GameStateMatch::load() {
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);
-    // GameManager::instance()->createZombie(-100, -100);
-    // GameManager::instance()->createTurret(1000, 500);
-    // GameManager::instance()->createTurret(100, 100);
     GameManager::instance()->createWeaponDrop(850, 850);
-    // GameManager::instance()->createZombie(100, 100);
 
 
     GameManager::instance()->addObject(base);

@@ -4,9 +4,11 @@
 */
 #ifndef HANDGUN_H
 #define HANDGUN_H
+#include <string>
+
 #include "InstantWeapon.h"
 #include "../../audio/AudioManager.h"
-#include <string>
+
 
 using std::string;
 

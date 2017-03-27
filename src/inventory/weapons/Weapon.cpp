@@ -5,6 +5,7 @@
 #include "Weapon.h"
 #include <iostream>
 #include <atomic>
+
 #include "../../log/log.h"
 #include "../../audio/AudioManager.h"
 

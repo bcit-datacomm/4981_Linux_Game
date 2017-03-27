@@ -1,7 +1,8 @@
+#include <atomic>
+
 #include "WeaponDrop.h"
 #include "../basic/Entity.h"
 #include "../log/log.h"
-#include <atomic>
 
 using namespace std;
 

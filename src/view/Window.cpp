@@ -1,7 +1,8 @@
-#include "Window.h"
 #include <stdio.h>
 #include <string>
 #include <sstream>
+
+#include "Window.h"
 
 Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyboardFocus(false),
         fullScreen(false), minimized(false) {

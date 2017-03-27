@@ -1,6 +1,7 @@
+#include<random>
+
 #include "Base.h"
 #include "../player/Marine.h"
-#include<random>
 #include "../log/log.h"
 
 Base::Base(int32_t nid, const SDL_Rect dest, int health): Object(nid, dest, BASE_HEIGHT, BASE_WIDTH),
