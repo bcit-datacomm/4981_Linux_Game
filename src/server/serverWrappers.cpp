@@ -132,7 +132,8 @@ void processTCPMessage(const int sock, const char *buff, const size_t nbytes) {
                     processCommandMessage(idReceived, buff, nbytes);
                 } else {
                     //Regular chat message - processing TBD
-                    logv("Server received: %s\n", buff + 4);
+                    logv("Server received chat message: %s\n", buff + 4);
+                    sendTCPClientMessage(idReceived, false, buff + 4, nbytes - 4);
                 }
             }
             break;
