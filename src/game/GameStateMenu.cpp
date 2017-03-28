@@ -374,18 +374,21 @@ void GameStateMenu::render() {
         //Position all screen elements in the window
         positionElements();
 
+        //demo only, Textomagic should have one per text box needed and should be membervariables of the class "1234567890"
+        Textomagic t(usernameTextBox,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 110), 20, "WWWWWWWWWWWWWWWWWWWW", {255,0,255,255}); 
+        Textomagic t2(hostIPTextBox,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 110), 20,"This shows scale.", {255,0,255,255}); 
+
         //textboxes
         Renderer::instance().render(usernameTextBox, TEXTURES::TEXTBOX);
-        
-        //demo only, Textomagic should have one per text box needed and should be membervariables of the class
-        Textomagic t(usernameTextBox,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 110), 20, "1234567890", {255,0,255,255}); 
-        t.render();
 
         Renderer::instance().render(hostIPTextBox, TEXTURES::TEXTBOX);
 
         //Join and Options text
         Renderer::instance().render(joinRect, TEXTURES::JOIN_FONT);
         Renderer::instance().render(optionsRect, TEXTURES::OPTIONS_FONT);
+
+        t.render();
+        t2.render();
 
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
