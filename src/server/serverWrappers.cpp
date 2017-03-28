@@ -188,6 +188,15 @@ void setSockNonBlock(const int sock) {
  */
 void handleIncomingTCP(const int epollfd) {
     logv("Accepting player\n");
+    if (isGameRunning.load()) {
+        logv("Game has already started so a client cannot be added\n");
+        if ((epoll_ctl(epollfd, EPOLL_CTL_DEL, listenSocketTCP, nullptr)) == -1) {
+            perror("epoll_ctl");
+            exit(1);
+        }
+        close(listenSocketTCP);
+        return;
+    }
 
     sockaddr_in addr;
     socklen_t addrLen = sizeof(addr);
