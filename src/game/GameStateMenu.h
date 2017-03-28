@@ -11,12 +11,6 @@
 
 static constexpr size_t maxLength = 15;
 
-//Position of color in the fontColor array
-static constexpr size_t WHITE = 0;
-static constexpr size_t GREEN = 1;
-static constexpr size_t BLACK = 2;
-static constexpr size_t RED = 3;
-
 static constexpr int ZERO = 0;
 static constexpr int FONT_SIZE = 30;
 
@@ -46,12 +40,10 @@ private:
     SDL_Rect hostIPTextBox;
 
     SDL_Rect joinRect;
-    SDL_Rect optionsRect;
-
+    SDL_Rect chatInputRect;
     SDL_Rect screenRect;
 
     bool joinSelected;
-    bool optionsSelected;
     bool hostIPSelected;
     bool usernameSelected;
     std::string hostIpDefaultText;

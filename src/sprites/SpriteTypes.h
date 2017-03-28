@@ -21,10 +21,9 @@ enum class TEXTURES : int {
     MAIN, //Splash screen
     TEXTBOX,
     TEXTBOX_ACTIVE,
+    TEXTBOX_TRANSPARENT,
     JOIN_FONT,
     JOIN_FONT_ACTIVE,
-    OPTIONS_FONT,
-    OPTIONS_FONT_ACTIVE,
 
     //LOBBY,
 

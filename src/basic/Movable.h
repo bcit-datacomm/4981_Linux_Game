@@ -16,7 +16,7 @@ public:
             projectileSize, damageSize, pickupSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
 
     virtual ~Movable() = default;
-    
+
     void move(float moveX, float moveY, CollisionHandler& ch); // Moves Marine
     void setDX(float px); //set delta x coordinate
     void setDY(float py); //set delta y coordinate
@@ -27,10 +27,10 @@ public:
     void setAngle(double a);//sets angle of sprite to
     double getAngle() const; //returns sprites angle
 private:
-    int velocity; // velocity of Marine movement
-    float dx; // delta x coordinat
-    float dy; //delta ycoordinate
-    double angle;
+    int velocity; // velocity of object
+    float dx;     // delta x coordinat
+    float dy;     // delta ycoordinate
+    double angle; // moving angle
 };
 
 #endif
