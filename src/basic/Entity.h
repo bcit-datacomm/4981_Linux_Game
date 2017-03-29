@@ -52,13 +52,13 @@ public:
 
     const SDL_Rect& getDestRect() const {return destRect;};
     const SDL_Rect& getSrcRect() const {return srcRect;};
-    void setDestRect(int x, int y, int width, int height);
-    void setSrcRect(int x, int y, int width, int height);
+    void setDestRect(const int x, const int y, const int width, const int height);
+    void setSrcRect(const int x, const int y, const int width, const int height);
 
-    void moveMoveHitBox(int x, int y) { movementHitBox.move(x,y);};
-    void moveProHitBox(int x, int y) { projectileHitBox.move(x,y);};
-    void moveDamHitBox(int x, int y) { damageHitBox.move(x,y);};
-    void movePickUpHitBox(int x, int y) { pickupHitBox.move(x,y);};
+    void moveMoveHitBox(const int x, const int y) { movementHitBox.move(x,y);};
+    void moveProHitBox(const int x, const int y) { projectileHitBox.move(x,y);};
+    void moveDamHitBox(const int x, const int y) { damageHitBox.move(x,y);};
+    void movePickUpHitBox(const int x, const int y) { pickupHitBox.move(x,y);};
 
 private:
 

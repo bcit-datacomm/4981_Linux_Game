@@ -24,9 +24,10 @@ Barricade::~Barricade() {
 //checks the proposed location of the barricade placement to see if it is valid.
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
         const float moveX, const float moveY, CollisionHandler& ch) {
-        const float distanceX = (playerX - moveX) * (playerX - moveX);
-        const float distanceY = (playerY - moveY) * (playerY - moveY);
-        const float distance = sqrt(abs(distanceX+distanceY));
+
+    const float distanceX = (playerX - moveX) * (playerX - moveX);
+    const float distanceY = (playerY - moveY) * (playerY - moveY);
+    const float distance = sqrt(abs(distanceX+distanceY));
 
     placeable = (distance <= 200);
 

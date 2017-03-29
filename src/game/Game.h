@@ -9,13 +9,8 @@
 
 class Game {
 public:
-    Game() : window(), stateID(1){};
+    Game() : window(), stateID(1), screenSurface(nullptr){};
     ~Game();
-
-    // Game window
-    Window window;
-    SDL_Surface *screenSurface = nullptr;
-
 
     bool init();
     void setStateID(const unsigned int id) {stateID = id;}
@@ -23,11 +18,15 @@ public:
     void run();
     void loadState();
     void close();
+    Window& getWindow() {return window;}
 
 private:
-    // Current game state
+    //Current game state
     std::unique_ptr<GameState> state;//stays as a pointer cause we need to be able to switch between match and menu states
-    unsigned int stateID; // Starting game state id
+    Window window; //Game window
+    unsigned int stateID; //Starting game state id
+    SDL_Surface *screenSurface;
+
 };
 
 #endif

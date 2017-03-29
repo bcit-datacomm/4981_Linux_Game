@@ -9,12 +9,12 @@ void Player::setControl(Marine& newControl) {
     marine = &newControl;
 }
 
-void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
+void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    const int mouseDeltaX = w.getWidth() / 2 - mouseX;
-    const int mouseDeltaY = w.getHeight() / 2 - mouseY;
+    const int mouseDeltaX = winWidth / 2 - mouseX;
+    const int mouseDeltaY = winHeight / 2 - mouseY;
 
     marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* 180.0)/M_PI) * - 1);
 

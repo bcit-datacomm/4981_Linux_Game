@@ -16,7 +16,7 @@
 #include "../sprites/VisualEffect.h"
 #include "Game.h"
 
-GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g), 
+GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
         player(), base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
@@ -92,13 +92,13 @@ void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
-    player.handleMouseUpdate(game.window, camera.getX(), camera.getY());
+    player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
-        game.window.handleEvent(event);
+        game.getWindow().handleEvent(event);
         switch(event.type) {
             case SDL_WINDOWEVENT:
-                camera.setViewSize(game.window.getWidth(), game.window.getHeight());
+                camera.setViewSize(game.getWindow().getWidth(), game.getWindow().getHeight());
                 break;
             case SDL_MOUSEWHEEL:
                 player.handleMouseWheelInput(&(event));
@@ -149,7 +149,7 @@ void GameStateMatch::update(const float delta) {
 
 void GameStateMatch::render() {
     //Only draw when not minimized
-    if (!game.window.isMinimized()) {
+    if (!game.getWindow().isMinimized()) {
 
         SDL_RenderClear(Renderer::instance().getRenderer());
 

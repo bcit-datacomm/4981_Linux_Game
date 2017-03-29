@@ -2,11 +2,12 @@
 #define ZOMBIE_H
 
 #include <string>
-#include <math.h>
+#include <cmath>
 #include <random>
 #include <vector>
 #include <utility>
 #include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"

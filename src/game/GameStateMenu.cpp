@@ -43,7 +43,7 @@
 * Removed excess initializations. (Michael Goll / March 16, 2017)
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textboxFont(nullptr),
-    menuFont(nullptr), screenRect{0, 0, game.window.getWidth(), game.window.getHeight()} {
+    menuFont(nullptr), screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()} {
 }
 
 /**
@@ -210,7 +210,7 @@ void GameStateMenu::handle() {
 
     //Handle events on queue
     SDL_WaitEvent(&event);
-    game.window.handleEvent(event);
+    game.getWindow().handleEvent(event);
 
     switch (event.type) {
 
@@ -327,7 +327,7 @@ void GameStateMenu::positionElements() {
     char largestChar = 'W';
 
     //Check if TTF was initialized correctly
-    if (!TTF_WasInit() && TTF_Init()== -1) {
+    if (!TTF_WasInit() && TTF_Init() == -1) {
         logv("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
@@ -391,9 +391,9 @@ void GameStateMenu::positionElements() {
 */
 void GameStateMenu::render() {
     //Only draw when not minimized
-    if (!game.window.isMinimized()) {
+    if (!game.getWindow().isMinimized()) {
 
-        screenRect = {0, 0, game.window.getWidth(), game.window.getHeight()};
+        screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
 
         //Clear screen
         SDL_RenderClear(Renderer::instance().getRenderer());

@@ -18,7 +18,7 @@ public:
     ~Player() = default;
 
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-    void handleMouseUpdate(Window& w, const float camX, const float camY);
+    void handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY);
 
     void setControl(Marine& newControl);
 

@@ -144,25 +144,26 @@ void CollisionHandler::detectLineCollision(
 */
 void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
         std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
+
     int tempOriginX;
     int tempOriginY;
     int tempEndX;
     int tempEndY;
     int distanceToOrigin;
 
-    for(auto& possibleTarget : allEntities) {
+    tempOriginX = originX;
+    tempOriginY = originY;
+    tempEndX = originX + deltaX;
+    tempEndY = originY + deltaY;
 
-        tempOriginX = originX;
-        tempOriginY = originY;
-        tempEndX = originX + deltaX;
-        tempEndY = originY + deltaY;
+    for(auto& possibleTarget : allEntities) {
 
         if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()),
                 &tempOriginX, &tempOriginY , &tempEndX, &tempEndY)) {
 
             logv("Intersect target at (%d, %d)\n", tempEndX, tempEndY);
 
-            distanceToOrigin = std::hypot(originX - tempEndX, originY - tempEndY);
+            distanceToOrigin = std::hypot(deltaX, deltaY);
 
             Target tar(possibleTarget->getId(), type, tempEndX, tempEndY, distanceToOrigin);
 
