@@ -30,11 +30,13 @@ bool GameStateMatch::load() {
 
     //create Weapon for weapon Drop only till sotre is implemented****************
     Rifle w;
+    ShotGun w2;
     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);
     GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
-
+    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
     GameManager::instance()->addObject(base);
 

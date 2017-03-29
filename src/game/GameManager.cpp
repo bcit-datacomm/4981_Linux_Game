@@ -258,6 +258,8 @@ void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
 }
 
+//Created By Maitiu
+//Adds Weapon to Weapon Manager
 int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
     const int32_t id = weapon->getID();
     const auto& elem = weaponManager.emplace(id, weapon);
@@ -265,6 +267,7 @@ int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
     return id;
 }
 
+//Created By Maitiu
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
     weaponDropManager.emplace(id, newWeaponDrop);
@@ -272,6 +275,7 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 }
 
 // Create weapon drop add it to manager, returns success
+//Created By Maitiu
 bool GameManager::createWeaponDrop(const float x, const float y, int32_t wID) {
     const int32_t id = generateID();
 
@@ -279,6 +283,8 @@ bool GameManager::createWeaponDrop(const float x, const float y, int32_t wID) {
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID));
+    getWeaponDrop(id).setPosition(x, y);
+    logv("Created WeaponDrop id: %d\n", id);
     return id;
 }
 
@@ -291,13 +297,13 @@ bool GameManager::weaponDropExists(const int32_t id){
 
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
-    logv("id: %d", id);
+    logv("id: %d\n", id);
     const auto& wd = weaponDropManager[id];
     assert(wd.second);
     return wd.first;
 }
 
-//returns weapon in weaponManager
+//returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];
     assert(w.second);

@@ -97,11 +97,12 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine->inventory.getCurrent()->reloadClip();
     }
     if(state[SDL_SCANCODE_E]){
-        marine->checkForPickUp();
         const int currentTime = SDL_GetTicks();
 
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
+
+            marine->checkForPickUp();
             const int checkTurret = marine->checkForPickUp();
             if (checkTurret > -1 && holdingTurret == false)
             {

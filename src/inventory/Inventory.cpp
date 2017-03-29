@@ -26,17 +26,22 @@ void Inventory::switchCurrent(const int slot){
         current = slot;
     }
 }
-
-bool Inventory::pickUp(int32_t weaponId){
+//Created By Maitiu
+bool Inventory::pickUp(int32_t weaponId, float x, float y){
     if(current == 0){
         logv("Can't Swap default gun \n");
         return false;
     }
+
+
+    Weapon *w = getCurrent();
+    if(w != nullptr){
+        dropWeapon(x, y);
+    }
     logv("Picked up weapon\n");
     logv("Swapped from %d ", weaponIds[current]);
-
     weaponIds[current] = weaponId;
-    logv("to %d\n", weaponIds[current]);
+    logv("to %d\n\n", weaponIds[current]);
     return true;
 }
 
@@ -73,3 +78,14 @@ void Inventory::scrollCurrent(int direction){
     }
 
 }
+
+/**
+ * DEVELOPER: Maitiu
+ * DESIGNER: Maitiu
+ * DATE:      March 29 2017
+ * Creates weapon Drop for Current Weapon
+ */
+ void Inventory::dropWeapon(float x, float y){
+
+     GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
+ }
