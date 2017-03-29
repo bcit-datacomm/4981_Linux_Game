@@ -76,8 +76,8 @@ void GameStateMatch::loop() {
     //Start counting frames per second
     unsigned long countedFrames = 0;
     int frameTicks;
-    unsigned int second = 0;
 #ifndef SERVER
+    unsigned int second = 0;
     float avgFPS = 0;
 #endif
     fpsTimer.start();
