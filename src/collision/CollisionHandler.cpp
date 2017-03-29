@@ -145,16 +145,11 @@ void CollisionHandler::detectLineCollision(
 void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
         std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
 
-    int tempOriginX;
-    int tempOriginY;
-    int tempEndX;
-    int tempEndY;
+    int tempOriginX = originX;
+    int tempOriginY = originY;
+    int tempEndX = originX + deltaX;
+    int tempEndY = originY + deltaY;
     int distanceToOrigin;
-
-    tempOriginX = originX;
-    tempOriginY = originY;
-    tempEndX = originX + deltaX;
-    tempEndY = originY + deltaY;
 
     for(auto& possibleTarget : allEntities) {
 
