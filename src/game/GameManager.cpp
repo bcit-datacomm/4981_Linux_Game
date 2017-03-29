@@ -401,13 +401,14 @@ void GameManager::updateCollider() {
 }
 
 void GameManager::updateMarine(const PlayerData &playerData) {
-    std::cout << "update marine" << std::endl;
     if(marineManager.find(playerData.playerid) == marineManager.end()) {
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager.at(playerData.playerid);
     marine.setPosition(playerData.xpos, playerData.ypos);
     marine.setAngle(playerData.direction);
+    marine.setDX(playerData.xdel);
+    marine.setDY(playerData.ydel);
     marine.setHealth(playerData.health);
 }
 

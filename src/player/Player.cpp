@@ -15,17 +15,12 @@ void Player::setControl(Marine& newControl) {
 }
 
 bool Player::hasChangedAngle() const {
-    return fabs(moveAction.data.ma.direction - marine->getAngle()) > 0.0001;
+    return fabs(moveAction.data.ma.direction - marine->getAngle()) > DOUBLE_COMPARISON_PRECISION;
 }
 
 bool Player::hasChangedCourse() const {
-    std::cout << "x comp: " << moveAction.data.ma.xdel << ", " << marine->getDX() << std::endl;
-    std::cout << "y comp: " << moveAction.data.ma.ydel << ", " << marine->getDY() << std::endl;
-    if (fabs(moveAction.data.ma.xdel - marine->getDX()) > 0.0001 || fabs(moveAction.data.ma.ydel - marine->getDY()) > 0.0001) {
-        return true;
-    }
-
-    return false;
+    return fabs(moveAction.data.ma.xdel - marine->getDX()) > DOUBLE_COMPARISON_PRECISION
+            || fabs(moveAction.data.ma.ydel - marine->getDY()) > DOUBLE_COMPARISON_PRECISION;
 }
 
 void Player::sendServMoveAction() {

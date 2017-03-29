@@ -49,9 +49,9 @@ bool GameStateMatch::load() {
     GameManager::instance()->addObject(base);
     // Create Dummy Entitys
     //GameManager::instance()->createMarine(100, 100);
-    GameManager::instance()->createZombie(800, 800);
-    GameManager::instance()->createTurret(1000, 500);
-    GameManager::instance()->createWeaponDrop(1800, 1700);
+    //GameManager::instance()->createZombie(800, 800);
+    //GameManager::instance()->createTurret(1000, 500);
+    //GameManager::instance()->createWeaponDrop(1800, 1700);
 
     GameManager::instance()->addObject(base);
     //Point newPoint = base.getSpawnPoint();
@@ -96,10 +96,10 @@ void GameStateMatch::loop() {
         // Process frame
         handle();    // Handle user input
 
-        update(stepTimer.getTicks() / 1000.f); // Update state values
 #endif
+    update(stepTimer.getTicks() / 1000.f); // Update state values
 
-        stepTimer.start(); //Restart step timer
+    stepTimer.start(); //Restart step timer
 #ifndef SERVER
         sync();    // Sync game to server
 
@@ -115,10 +115,12 @@ void GameStateMatch::loop() {
 
         ++countedFrames;
 
+        /*
         if ((stepTimer.getTicks() / TIME_SECOND) > second) {
             GameManager::instance()->createZombieWave(1);
             second += 5;
         }
+        */
 
         //If frame finished early
         if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
