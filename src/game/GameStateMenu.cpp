@@ -187,7 +187,7 @@ void GameStateMenu::sync() {
 * Function: handle
 *
 * Date:
-* JF: February 8, 2O17: added handler for window resizing event
+* JF: February 8, 2017: added handler for window resizing event
 *
 * Designer:
 * Jacob Frank

@@ -2,15 +2,14 @@
 
 #include "Player.h"
 
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200) {
+Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
+        marine(nullptr) {}
 
-}
-
-void Player::setControl(Marine& newControl) {
+void Player::setControl(Marine &newControl) {
     marine = &newControl;
 }
 
-void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
+void Player::handleMouseUpdate(Window &w, const float camX, const float camY) {
     int mouseX;
     int mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
@@ -30,7 +29,7 @@ void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
 
-        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+        if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
@@ -41,7 +40,7 @@ void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
     }
 
     //fire weapon on left mouse click
-    if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+    if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if(marine->inventory.getCurrent() != nullptr){
             marine->fireWeapon();
         }
@@ -104,7 +103,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
             const int checkTurret = marine->checkForPickUp();
-            if (checkTurret > -1 && holdingTurret == false)
+            if (checkTurret > -1 & &holdingTurret == false)
             {
                 tempTurretID = checkTurret;
                 GameManager::instance()->getTurret(tempTurretID).pickUpTurret();

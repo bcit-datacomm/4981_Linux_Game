@@ -35,10 +35,10 @@ public:
 private:
     int tempBarricadeID;
     int tempTurretID;
-    Marine * marine = nullptr;
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    Marine * marine;
 };
 
 #endif

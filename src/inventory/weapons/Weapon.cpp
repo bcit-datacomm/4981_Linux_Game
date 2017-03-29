@@ -11,16 +11,16 @@
 
 using std::string;
 
-Weapon::Weapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
-        int fireDelay)
+Weapon::Weapon(const string &type, const string &fireSound, const string &hitSound, const string &reloadSound,
+        const string &emptySound, const int range, const int damage, const int AOE, const int penetration,
+        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay)
 : type(type), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
         range(range), damage(damage), AOE(AOE), penetration(penetration), clip(clip), clipMax(clipMax), ammo(ammo),
         reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(generateWID()){
 
 }
 
-Weapon::Weapon(const Weapon& w)
+Weapon::Weapon(const Weapon &w)
 : type(w.type), fireSound(w.fireSound), hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound),
         range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), clip(w.clip), clipMax(w.clipMax),
         ammo(w.ammo), reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick),

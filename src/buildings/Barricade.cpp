@@ -18,6 +18,7 @@ Barricade::~Barricade() {
     logv("Destroy Barricade\n");
 }
 
+//checks the proposed location of the barricade placement to see if it is valid.
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
         const float moveX, const float moveY, CollisionHandler  &ch) {
     const float distanceX = (playerX - moveX) * (playerX - moveX);
@@ -37,10 +38,12 @@ bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
     return placeable;
 }
 
+//returns whether or not the barricade is able to be placed
 bool Barricade::isPlaceable() {
     return placeable;
 }
 
+//returns whether or not the barricade is placed
 bool Barricade::isPlaced() {
     return placed;
 }

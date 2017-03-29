@@ -16,7 +16,7 @@
 #include "../sprites/VisualEffect.h"
 #include "Game.h"
 
-GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
+GameStateMatch::GameStateMatch(Game &g,  int gameWidth, int gameHeight) : GameState(g), player(),
         base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
@@ -54,23 +54,14 @@ void GameStateMatch::loop() {
     LTimer stepTimer;
 
     //Start counting frames per second
-    unsigned long countedFrames = 0;
     int frameTicks;
     unsigned int second = 0;
-    float avgFPS = 0;
     fpsTimer.start();
 
     // State Loop
     while (play) {
         //Start cap timer
         capTimer.start();
-
-        //Calculate and correct fps
-        avgFPS = countedFrames / (fpsTimer.getTicks() / TIME_SECOND);
-
-        //Set FPS text to be rendered
-        frameTimeText.str("");
-        frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
 
         // Process frame
         handle();    // Handle user input
@@ -79,8 +70,6 @@ void GameStateMatch::loop() {
         sync();    // Sync game to server
 
         render();    // Render game state to window
-
-        ++countedFrames;
 
         if ((stepTimer.getTicks() / TIME_SECOND) > second) {
             GameManager::instance()->createZombieWave(1);
@@ -107,41 +96,41 @@ void GameStateMatch::handle() {
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.window.handleEvent(event);
-           switch(event.type) {
-        case SDL_WINDOWEVENT:
-            camera.setViewSize(game.window.getWidth(), game.window.getHeight());
-            break;
-        case SDL_MOUSEWHEEL:
-            player.handleMouseWheelInput(&(event));
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_RIGHT) {
-                player.handlePlacementClick(Renderer::instance().getRenderer());
-            }
-            break;
-        case SDL_KEYDOWN:
-            switch(event.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                    play = false;
+        switch(event.type) {
+            case SDL_WINDOWEVENT:
+                camera.setViewSize(game.window.getWidth(), game.window.getHeight());
+                break;
+            case SDL_MOUSEWHEEL:
+                player.handleMouseWheelInput(&(event));
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_RIGHT) {
+                    player.handlePlacementClick(Renderer::instance().getRenderer());
+                }
+                break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        play = false;
+                        break;
+                    case SDLK_b:
+                        player.handleTempBarricade(Renderer::instance().getRenderer());
+                        break;
+                    default:
+                        break;
+                    }
                     break;
-                case SDLK_b:
-                    player.handleTempBarricade(Renderer::instance().getRenderer());
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case SDL_KEYUP:
-            switch(event.key.keysym.sym) {
-                default:
-                   break;
-            }
-            break;
-        case SDL_QUIT:
-            play = false;
-            break;
-        default:
-            break;
+            case SDL_KEYUP:
+                switch(event.key.keysym.sym) {
+                    default:
+                        break;
+                }
+                break;
+            case SDL_QUIT:
+                play = false;
+                break;
+            default:
+                break;
         }
     }
 }

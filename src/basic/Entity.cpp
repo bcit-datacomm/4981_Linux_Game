@@ -39,7 +39,7 @@ Entity::Entity(const Entity &e): id(e.id), destRect(e.destRect), srcRect(e.srcRe
         damageHitBox(e.damageHitBox), pickupHitBox(e.pickupHitBox), x(e.x), y(e.y) {
 }
 
-const SDL_Rect Entity::getRelativeDestRect(const SDL_Rect& view) const {
+const SDL_Rect Entity::getRelativeDestRect(const SDL_Rect &view) const {
     return {destRect.x - view.x , destRect.y - view.y, static_cast<int>(destRect.w), static_cast<int>(destRect.h)};
 }
 

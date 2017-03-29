@@ -21,9 +21,9 @@ constexpr static int PLACE_DISTANCE = 200;
 class Turret : public Movable {
 public:
 
-    Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
-        int ammo = 100, bool placed = false, float range = 400.0f);
+    Turret(const int32_t id, const SDL_Rect &dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
+        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, const bool activated = false,
+        const int health = 200, const int ammo = 100, const bool placed = false, const float range = 400.0f);
 
     virtual ~Turret();
 

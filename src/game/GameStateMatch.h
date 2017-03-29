@@ -24,7 +24,7 @@ static constexpr float TICK_SEC = 1000;
 
 class GameStateMatch : public GameState {
 public:
-    GameStateMatch(Game& g, int gameWidth, int gameHeight);
+    GameStateMatch(Game &g, int gameWidth, int gameHeight);
     virtual ~GameStateMatch() = default;
 
     virtual bool load();
