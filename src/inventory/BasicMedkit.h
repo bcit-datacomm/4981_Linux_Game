@@ -6,8 +6,10 @@
 */
 #ifndef BASICMEDKIT_H
 #define BASICMEDKIT_H
-#include "Consumable.h"
 #include <string>
+
+#include "Consumable.h"
+
 
 /*
     This class represents a simple consumable in order to test basic consumable functionality.

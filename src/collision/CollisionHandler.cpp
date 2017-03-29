@@ -27,10 +27,10 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
 
 // Check for projectile collisions, return object it hits
 const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getDamHitBox().getRect(), &obj->getDamHitBox().getRect())
-                && !(entity->getDamHitBox().isPlayerFriendly() && obj->getDamHitBox().isPlayerFriendly())){
+                && !(entity->getDamHitBox().isPlayerFriendly() && obj->getDamHitBox().isPlayerFriendly())) {
             return &(obj->getDamHitBox());
         }
     }
@@ -39,10 +39,10 @@ const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> retur
 
 // Check for projectile collisions, return object it hits
 const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getProHitBox().getRect(), &obj->getProHitBox().getRect())
-                && !(entity->getProHitBox().isPlayerFriendly() && obj->getProHitBox().isPlayerFriendly())){
+                && !(entity->getProHitBox().isPlayerFriendly() && obj->getProHitBox().isPlayerFriendly())) {
             return &(obj->getProHitBox());
         }
     }
@@ -51,10 +51,10 @@ const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> r
 
 // Check for collisions during movement
 bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getMoveHitBox().getRect())
-                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getMoveHitBox().isPlayerFriendly())){
+                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getMoveHitBox().isPlayerFriendly())) {
             return true;
         }
     }
@@ -63,10 +63,10 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
 
 //check for pickup collision
 Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects){
+    for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getPickUpHitBox().getRect())
-                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getPickUpHitBox().isPlayerFriendly())){
+                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getPickUpHitBox().isPlayerFriendly())) {
             return obj;
         }
     }
@@ -90,13 +90,13 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     PARAMS:
         std::priority_queue<Target>& targetsInSights,
             This is the queue that will hold the targets that will be determined.
-        Marine &marine, 
+        Marine &marine,
             The marine that fired the weapon, this is needed for its x and y and angle.
         const int range
             The range of the weapon that is being fired.
 */
 void CollisionHandler::detectLineCollision(
-        std::priority_queue<Target>& targetsInSights, Marine &marine, const int range) {
+        std::priority_queue<Target>& targetsInSights, Marine& marine, const int range) {
 
     const double degrees = marine.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
@@ -104,7 +104,7 @@ void CollisionHandler::detectLineCollision(
     const int originY = marine.getY() + (MARINE_HEIGHT / 2);
     const int deltaX  = range * cos(radians);
     const int deltaY  = range * sin(radians);
-    
+
     auto& zombies = quadtreeZombie.objects;
     auto& turrets = quadtreeTurret.objects;
     auto& walls   = quadtreeWall.objects;
@@ -113,7 +113,7 @@ void CollisionHandler::detectLineCollision(
     checkTargets(originX, originY, deltaX, deltaY, targetsInSights, turrets, TYPE_TURRET);
     checkTargets(originX, originY, deltaX, deltaY, targetsInSights, walls, TYPE_WALL);
 
-    logi("targetsInSights.size(): %d\n", targetsInSights.size());
+    logv("targetsInSights.size(): %d\n", targetsInSights.size());
 }
 
 /**
@@ -126,17 +126,17 @@ void CollisionHandler::detectLineCollision(
     AUTHOR: Deric Mccadden 3/16/2017
 
     PARAMS:
-        const int originX, 
+        const int originX,
             The starting x.
-        const int originY, 
+        const int originY,
             The starting y.
-        const int deltaX, 
+        const int deltaX,
             The x distance to the end point from the origin.
         const int deltaY,
             The y distance to the end point from the origin.
-        std::priority_queue<Target>& targetsInSights, 
+        std::priority_queue<Target>& targetsInSights,
             This is the queue that will hold the targets that will be determined.
-        std::vector<Entity*> allEntities, 
+        std::vector<Entity*> allEntities,
             The entities that will need to be searched for valid targets.
         int type
             the type of entity, see target Target.h for definitions.
@@ -144,37 +144,31 @@ void CollisionHandler::detectLineCollision(
 */
 void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
         std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
-    int tempOriginX; 
-    int tempOriginY;
-    int tempEndX;
-    int tempEndY;
+
+    int tempOriginX = originX;
+    int tempOriginY = originY;
+    int tempEndX = originX + deltaX;
+    int tempEndY = originY + deltaY;
     int distanceToOrigin;
 
     for(auto& possibleTarget : allEntities) {
 
-        tempOriginX = originX;
-        tempOriginY = originY;
-        tempEndX = originX + deltaX;
-        tempEndY = originY + deltaY;
-
-        if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()), 
+        if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()),
                 &tempOriginX, &tempOriginY , &tempEndX, &tempEndY)) {
 
-            logi("Intersect target at (%d, %d)\n", tempEndX, tempEndY);
+            logv("Intersect target at (%d, %d)\n", tempEndX, tempEndY);
 
-            distanceToOrigin = std::hypot(originX - tempEndX, originY - tempEndY);
+            distanceToOrigin = std::hypot(deltaX, deltaY);
 
             Target tar(possibleTarget->getId(), type, tempEndX, tempEndY, distanceToOrigin);
 
-            logi("tar.getType(): %d\n", tar.getType());
+            logv("tar.getType(): %d\n", tar.getType());
 
             targetsInSights.push(tar);
         }
     }
 }
 
-std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree &q, const Entity *entity){
-    std::vector<Entity*> returnObjects;
+std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q, const Entity *entity) {
     return q.retrieve(entity);
 }
-

@@ -1,5 +1,6 @@
 //created 2/5/17 Maitiu
 #include <memory>
+
 #include "Inventory.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
@@ -21,21 +22,21 @@ Inventory::~Inventory(){
 
 void Inventory::switchCurrent(const int slot){
     if (current != slot) {
-        logi("Switched to slot: %d\n", slot);
+        logv("Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
 bool Inventory::pickUp(int32_t weaponId){
     if(current == 0){
-        logi("Can't Swap default gun \n");
+        logv("Can't Swap default gun \n");
         return false;
     }
-    logi("Picked up weapon\n");
-    logi("Swapped from %d ", weaponIds[current]);
+    logv("Picked up weapon\n");
+    logv("Swapped from %d ", weaponIds[current]);
 
     weaponIds[current] = weaponId;
-    logi("to %d\n", weaponIds[current]);
+    logv("to %d\n", weaponIds[current]);
     return true;
 }
 
@@ -68,7 +69,7 @@ void Inventory::scrollCurrent(int direction){
         } else {
             current = direction;
         }
-        logi("Switched to slot:%d\n", current);
+        logv("Switched to slot:%d\n", current);
     }
 
 }

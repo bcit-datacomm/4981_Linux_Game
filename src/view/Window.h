@@ -1,7 +1,10 @@
 #ifndef WINDOW_H
 #define WINDOW_H
+
 #include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
+
 
 //Screen dimension constants
 constexpr int SCREEN_WIDTH = 1280;
@@ -19,10 +22,6 @@ public:
 
     //Creates window
     bool init();
-
-    //Creates renderer from internal window
-    SDL_Renderer *createRenderer();
-    
     // Gets the scrren surface of the window
     SDL_Surface *getScreenSurface();
 

@@ -1,37 +1,42 @@
 #ifndef ENTITY_H
 #define ENTITY_H
+
 #include <string>
 #include <memory>
-#include "../collision/HitBox.h"
-#include "../sprites/LTexture.h"
 #include <SDL2/SDL.h>
+
+#include "../collision/HitBox.h"
+
 
 class Entity {
 public:
     //all values the same
-    Entity(int32_t nid, const SDL_Rect dest);
+    Entity(const int32_t nid, const SDL_Rect& dest);
     //size and movement different the rest are sprite size
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize);
     //size movement, and pickup different size, the rest are sprite size
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
-        const SDL_Rect &pickupSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& pickupSize);
     //pickup is the same as sprite size
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
-        const SDL_Rect &projectileSize, const SDL_Rect &damageSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize);
     //all values are different
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
-        const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize, const SDL_Rect& pickupSize);
+
+    ~Entity() = default;
 
 
-    Entity(const Entity &e);
-    virtual ~Entity();
+    Entity(const Entity& e);
     virtual void onCollision();
     virtual void collidingProjectile(const int damage);
     void setPosition(const float x, const float y); // Set marine position
     void setX(float px); //set x coordinate
     void setY(float py); //set y coordinate
-    float getX() const; // get x coordinate
-    float getY() const; // get y coordinate
+    float getX() const {return x;} // Get x coordinate
+    float getY() const{return y;} // Get y coordinate
+    int getW() const{return destRect.w;} // Get width
+    int getH() const{return destRect.h;} // Get height
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
 
@@ -43,18 +48,17 @@ public:
     const HitBox& getDamHitBox()const {return damageHitBox;};
     const HitBox& getPickUpHitBox()const {return pickupHitBox;};
 
+    const SDL_Rect getRelativeDestRect(const SDL_Rect& view) const;
 
     const SDL_Rect& getDestRect() const {return destRect;};
     const SDL_Rect& getSrcRect() const {return srcRect;};
-    void setDestRect(int x, int y, int width, int height);
-    void setSrcRect(int x, int y, int width, int height);
+    void setDestRect(const int x, const int y, const int width, const int height);
+    void setSrcRect(const int x, const int y, const int width, const int height);
 
-    void moveMoveHitBox(int x, int y){ movementHitBox.move(x,y);};
-    void moveProHitBox(int x, int y){ projectileHitBox.move(x,y);};
-    void moveDamHitBox(int x, int y){ damageHitBox.move(x,y);};
-    void movePickUpHitBox(int x, int y){ pickupHitBox.move(x,y);};
-
-    LTexture texture;
+    void moveMoveHitBox(const int x, const int y) { movementHitBox.move(x,y);};
+    void moveProHitBox(const int x, const int y) { projectileHitBox.move(x,y);};
+    void moveDamHitBox(const int x, const int y) { damageHitBox.move(x,y);};
+    void movePickUpHitBox(const int x, const int y) { pickupHitBox.move(x,y);};
 
 private:
 

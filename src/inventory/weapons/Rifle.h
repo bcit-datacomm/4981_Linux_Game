@@ -3,9 +3,10 @@
 */
 #ifndef RIFLE_H
 #define RIFLE_H
+#include <string>
+
 #include "InstantWeapon.h"
 #include "../../audio/AudioManager.h"
-#include <string>
 
 using std::string;
 
@@ -25,7 +26,7 @@ namespace RifleVars {
     constexpr int CLIP          = 2;
     constexpr int CLIPMAX       = 2;
     constexpr int AMMO          = 1000;
-    
+
     constexpr int RELOADDELAY   = 3000;
     constexpr int FIREDELAY     = 1000;
 }

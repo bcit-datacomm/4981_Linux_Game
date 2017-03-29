@@ -1,12 +1,14 @@
-#include "log.h"
 #include <cstdarg>
 #include <stdio.h>
+
+#include "log.h"
+
 
 int log_verbose = 0;
 
 
-void logi(const char *msg, ...) {
-    if(log_verbose != 3) {
+void logv(const int spec, const char *msg, ...) {
+    if(log_verbose != spec) {
         return;
     }
     va_list args;
@@ -15,7 +17,6 @@ void logi(const char *msg, ...) {
     va_end(args);
     fflush(stdout);
 }
-
 
 void logv(const char *msg, ...) {
     if(log_verbose != 2) {
@@ -38,5 +39,3 @@ void loge(const char *msg, ...) {
     vfprintf(stderr,msg, args);
     va_end(args);
 }
-
-

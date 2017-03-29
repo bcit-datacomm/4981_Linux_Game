@@ -1,23 +1,25 @@
 #ifndef WEAPONDROP_H
 #define WEAPONDROP_H
+
 #include <string>
-#include "../sprites/LTexture.h"
+#include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
 #include "weapons/Weapon.h"
-#include <SDL2/SDL.h>
+
 
 class WeaponDrop: public Entity{
 public:
-    WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize, int32_t wId);
+    WeaponDrop(const int32_t id, const SDL_Rect& dest, const SDL_Rect& pickupSize, const int32_t wId);
 
     ~WeaponDrop();
-    void setPosition(int x, int y);
+    void setPosition(const int x, const int y);
     void onCollision();
     int32_t getId() const;
 
-    void collidingProjectile(int damage);
+    void collidingProjectile(const int damage);
 
     int getX() const;
     int getY() const;
