@@ -20,7 +20,7 @@ void Marine::onCollision() {
 }
 
 void Marine::collidingProjectile(const int damage) {
-    health = health - damage;
+    health -= damage;
 }
 
 // Created by DericM 3/8/2017
@@ -33,9 +33,7 @@ void Marine::fireWeapon() {
     }
 }
 
-
 int32_t Marine::checkForPickUp() {
-
     int32_t pickId = -1;
     GameManager *gm = GameManager::instance();
     CollisionHandler& ch = gm->getCollisionHandler();
@@ -44,12 +42,10 @@ int32_t Marine::checkForPickUp() {
     if(ep != nullptr) {
         logv("Searching for id:%d in weaponDropManager\n", pickId);
         const auto& tm = gm->getTurretManager();
-
         //get Entity drop Id
         pickId = ep->getId();
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
-        const auto& it = tm.find(pickId);
-        if (it != tm.end()) {
+        if (gm->getTurretManager().count(pickId)) {
             return pickId;
         }
         //Checks if WeaponDrop exists
@@ -65,7 +61,7 @@ int32_t Marine::checkForPickUp() {
             logv("unable to find id:%d in weaponDropManager\n", pickId);
         }
     } else {
-        logv("Pick id was nullpPtr\n");
+        loge("Pick id was nullptr\n");
     }
     return -1;
 }

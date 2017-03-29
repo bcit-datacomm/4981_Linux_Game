@@ -16,7 +16,8 @@
 #include "../buildings/Wall.h"
 #include "../buildings/Barricade.h"
 #include "../inventory/WeaponDrop.h"
-
+#include "GameHashMap.h"
+#include <memory>
 
 //just for tesing weapon drop
 #include "../inventory/weapons/Weapon.h"
@@ -101,15 +102,14 @@ private:
 
     CollisionHandler collisionHandler;
     std::unique_ptr<WeaponDrop> wdPointer;
-    std::map<int32_t, Marine> marineManager;
-    std::map<int32_t, Object> objectManager;
-    std::map<int32_t, Zombie> zombieManager;
-    std::map<int32_t, Turret> turretManager;
-    std::map<int32_t, WeaponDrop> weaponDropManager;
-    std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
-    std::map<int32_t, Barricade> barricadeManager;
-    std::map<int32_t, Wall> wallManager;
-
+    GameHashMap<int32_t, Marine> marineManager;
+    GameHashMap<int32_t, Object> objectManager;
+    GameHashMap<int32_t, Zombie> zombieManager;
+    GameHashMap<int32_t, Turret> turretManager;
+    GameHashMap<int32_t, WeaponDrop> weaponDropManager;
+    GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
+    GameHashMap<int32_t, Barricade> barricadeManager;
+    GameHashMap<int32_t, Wall> wallManager;
 };
 
 

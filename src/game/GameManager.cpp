@@ -1,6 +1,7 @@
 #include <memory>
 #include <utility>
 #include <atomic>
+#include <cassert>
 
 #include "../collision/HitBox.h"
 #include "../log/log.h"
@@ -30,7 +31,6 @@ GameManager::~GameManager() {
 
 // Render all objects in level
 void GameManager::renderObjects(const SDL_Rect& cam) {
-
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
@@ -43,7 +43,6 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
                 m.second.getAngle());
         }
     }
-
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
@@ -80,7 +79,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 // Update marine movements. health, and actions
 void GameManager::updateMarines(const float delta) {
     for (auto& m : marineManager) {
-        m.second.move((m.second.getDX()*delta), (m.second.getDY()*delta), collisionHandler);
+        m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
     }
 }
 
@@ -113,8 +112,7 @@ int32_t GameManager::createMarine() {
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
 
-    Marine m(id, marineRect, moveRect, projRect, damRect);
-    marineManager.insert({id, m});
+    marineManager.emplace(id, Marine(id, marineRect, moveRect, projRect, damRect));
     return id;
 }
 
@@ -127,10 +125,8 @@ bool GameManager::createMarine(const float x, const float y) {
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
 
-    Marine m(id, marineRect, moveRect, projRect, damRect);
-    marineManager.insert({id, m});
-
-    marineManager.at(id).setPosition(x,y);
+    const auto& elem = marineManager.emplace(id, Marine(id, marineRect, moveRect, projRect, damRect));
+    elem->second.setPosition(x,y);
     return true;
 }
 
@@ -138,21 +134,20 @@ void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
 }
 
-
 // Adds marine to level
 bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
     if (marineManager.count(id)) {
         return false;
     }
-
-    marineManager.insert({id,newMarine});
+    marineManager.emplace(id, newMarine);
     return true;
 }
 
 // Get a marine by its id
 Marine& GameManager::getMarine(const int32_t id) {
-    return marineManager.find(id)->second;
-
+    const auto& mar = marineManager[id];
+    assert(mar.second);
+    return mar.first;
 }
 
 // Create Turret add it to manager, returns tower id
@@ -166,7 +161,7 @@ int32_t GameManager::createTurret() {
     SDL_Rect damRect = temp;
     SDL_Rect pickRect = temp;
 
-    turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
+    turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect));
     return id;
 }
 
@@ -180,7 +175,7 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
     if (turretManager.count(id)) {
         return false;
     }
-    turretManager.insert({id, newTurret});
+    turretManager.emplace(id, newTurret);
     return true;
 }
 
@@ -195,20 +190,21 @@ int32_t GameManager::createTurret(const float x, const float y) {
     SDL_Rect damRect = temp;
     SDL_Rect pickRect = {INITVAL, INITVAL, PUSIZE, PUSIZE};
 
-    turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
-    turretManager.at(id).setPosition(x,y);
+    const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect));
+    elem->second.setPosition(x,y);
     return id;
 }
 
 // Get a tower by its id
 Turret& GameManager::getTurret(const int32_t id) {
-    return turretManager.find(id)->second;
+    const auto& turr = turretManager[id];
+    assert(turr.second);
+    return turr.first;
 }
 
 int32_t GameManager::addZombie(const Zombie& newZombie) {
     const int32_t id = generateID();
-
-    zombieManager.insert({id,newZombie});
+    zombieManager.emplace(id, newZombie);
     return id;
 }
 
@@ -222,20 +218,16 @@ bool GameManager::createZombie(const float x, const float y) {
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
 
-
-    zombieManager.insert({id, Zombie(id, zombieRect, moveRect, projRect, damRect)});
-
-    zombieManager.at(id).setPosition(x, y);
-    zombieManager.at(id).generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    zombieManager.at(id).setState(ZombieState::ZOMBIE_MOVE);
-
+    const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
+    elem->second.setPosition(x,y);
+    elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
+    elem->second.setState(ZombieState::ZOMBIE_MOVE);
     return true;
 }
 
 // Deletes zombie from level
 void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
-
 }
 
 /*
@@ -251,12 +243,13 @@ bool GameManager::zombieExists(const int32_t id) {
     DESC: returns zombie that matches id from zombieManager
  */
 Zombie& GameManager::getZombie(const int32_t id) {
-    return zombieManager.at(id);
+    const auto& z = zombieManager[id];
+    assert(z.second);
+    return z.first;
 }
 
-
 int32_t GameManager::addObject(const Object& newObject) {
-    objectManager.insert({newObject.getId(), newObject});
+    objectManager.emplace(newObject.getId(), newObject);
     return newObject.getId();
 }
 
@@ -265,33 +258,21 @@ void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
 }
 
-
-int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
-
+int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
     const int32_t id = weapon->getId();
-    weaponManager.insert({id, weapon});
-
-    if (weaponManager.count(id)) {
-        weaponManager.at(id)->setId(id);
-        return id;
-    }
-
-    return -1;
-
+    const auto& elem = weaponManager.emplace(id, weapon);
+    elem->second->setId(id);
+    return id;
 }
 
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
-
-    weaponDropManager.insert({id, newWeaponDrop});
+    weaponDropManager.emplace(id, newWeaponDrop);
     return id;
 }
 
-
-
 // Create weapon drop add it to manager, returns success
 bool GameManager::createWeaponDrop(const float x, const float y) {
-
     Rifle w;
     const int32_t wid = w.getId();
     const int32_t id = generateID();
@@ -302,8 +283,7 @@ bool GameManager::createWeaponDrop(const float x, const float y) {
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
     WeaponDrop wd(id, weaponDropRect, pickRect, wid);
-    weaponDropManager.insert({id, wd});
-
+    const auto& elem = weaponDropManager.emplace(id, wd);
     return id;
 }
 
@@ -317,31 +297,21 @@ bool GameManager::weaponDropExists(const int32_t id){
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     logv("id: %d", id);
-    return weaponDropManager.at(id);
+    const auto& wd = weaponDropManager[id];
+    assert(wd.second);
+    return wd.first;
 }
 
-
 //returns weapon in weaponManager
-std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
-
-    if (weaponManager.count(id)) {
-        return weaponManager.at(id);
-    }
-
-    logv("Couldnt find Weapon\n");
-    return nullptr;
-
+std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
+    const auto& w = weaponManager[id];
+    assert(w.second);
+    return w.first;
 }
 
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
-
-    if (weaponDropManager.count(id)) {
-        weaponDropManager.erase(id);
-    } else {
-        logv("Couldnt Delete Weapon Drop\n");
-    }
-
+    weaponDropManager.erase(id);
 }
 
 // Returns Collision Handler
@@ -396,20 +366,20 @@ int32_t GameManager::createBarricade(const float x, const float y) {
     SDL_Rect moveRect = temp;
     SDL_Rect pickRect = temp;
 
-    Barricade b(id, barricadeRect, moveRect, pickRect);
-    barricadeManager.insert({id, b});
-
-    barricadeManager.at(id).setPosition(x,y);
+    const auto& elem = barricadeManager.emplace(id, Barricade(id, barricadeRect, moveRect, pickRect));
+    elem->second.setPosition(x,y);
     return id;
 }
-
 
 void GameManager::deleteBarricade(const int32_t id) {
     barricadeManager.erase(id);
 }
+
 // Get a barricade by its id
 Barricade& GameManager::getBarricade(const int32_t id) {
-    return barricadeManager.find(id)->second;
+    const auto& bar = barricadeManager[id];
+    assert(bar.second);
+    return bar.first;
 }
 
 // Create zombie add it to manager, returns success
@@ -421,10 +391,11 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
     SDL_Rect moveRect = {static_cast<int>(x), static_cast<int>(y), w, h};
     SDL_Rect pickRect = {static_cast<int>(x), static_cast<int>(y), w, h};
 
-    wallManager.insert({id, Wall(id, wallRect, moveRect, pickRect, h, h)});
+    const auto& elem = wallManager.emplace(id, Wall(id, wallRect, moveRect, pickRect, h, h));
+    elem->second.texture.setDimensions(w, h);
+    elem->second.setPosition(x,y);
     return id;
 }
-
 
 void GameManager::setBoundary(const float startX, const float startY, const float endX, const float endY) {
 
@@ -466,23 +437,19 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
 }
 
 bool GameManager::createZombieWave(const int n) {
-
     std::vector<Point> spawnPoints;
-    spawnPoints.emplace_back(Point(100, 100));
-    spawnPoints.emplace_back(Point(500, 100));
-    spawnPoints.emplace_back(Point(1900, 900));
-    spawnPoints.emplace_back(Point(2900, 900));
-    spawnPoints.emplace_back(Point(2900, 2900));
-    spawnPoints.emplace_back(Point(1900, 2900));
-    spawnPoints.emplace_back(Point(900, 2900));
-
+    spawnPoints.emplace_back(100, 100);
+    spawnPoints.emplace_back(500, 100);
+    spawnPoints.emplace_back(1900, 900);
+    spawnPoints.emplace_back(2900, 900);
+    spawnPoints.emplace_back(2900, 2900);
+    spawnPoints.emplace_back(1900, 2900);
+    spawnPoints.emplace_back(900, 2900);
 
     for (int i = 0; i < n; ++i) {
         for (const auto& p : spawnPoints) {
             createZombie(p.first, p.second);
         }
     }
-
     return true;
-
 }
