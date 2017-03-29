@@ -189,7 +189,9 @@ typedef struct {
 * REVISIONS:
 * V1, Feb 07 2017 Deisgned by IM
 * V1, Feb 08 2017 Written by EY
-* V1, Feb 27 2017 Changed x and y velocity to just velocity to match game logic
+* V1.1, Feb 27 2017 - EY - Changed x and y velocity to just velocity to match game logic
+* V1.2, Mar 27 2017 - EY - added delta x and y
+*
 *
 * DESIGNER: Isaac Morneau
 *
@@ -199,6 +201,8 @@ typedef struct {
 * int32_t   id - int32_t to signify the playerid
 * float xpos - the X position`
 * float ypos - the Y position
+* float xdel - the delta X of the player
+* float xdel - the delta Y of the player
 * float vel - the velocity of the player
 * float direction -- the direction the weapon is facing
 --------------------------------------------------------------------------*/
@@ -207,6 +211,8 @@ typedef struct
     int32_t   id;
     float xpos;
     float ypos;
+    float xdel;
+    float ydel;
     float vel;
     float direction;
 } __attribute__((packed, aligned(1))) MoveAction;
