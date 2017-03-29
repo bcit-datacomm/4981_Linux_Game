@@ -275,6 +275,7 @@ void readUDP(const int sock, sockaddr *servaddr, socklen_t *servAddrLen) {
     int nmesg;
     if ((nmesg = recvmmsg(sock, udpMesgs, MAX_UDP_PACKET_COUNT, MSG_DONTWAIT, nullptr)) == -1) {
         perror("recvmmsg");
+        return;
     }
 
     logv("Received %d messages\n", nmesg);
@@ -403,7 +404,6 @@ bool rawClientSend(const int sock, const char *outBuff, const size_t bufferSize)
  * John Agapeyev March 19
  */
 void processCommandMessage(const int32_t idReceived, const char *buff, const int nbytes) {
-    //Command message
     if (strncmp(buff + TCP_HEADER_SIZE + 1, "ready", nbytes - (TCP_HEADER_SIZE + 1)) == 0) {
         //Ready command
         processReadyMessage(idReceived);

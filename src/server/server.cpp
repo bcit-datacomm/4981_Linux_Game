@@ -62,6 +62,7 @@ void initSync(const int sock) {
                         break;
                     }
                 }
+#pragma omp critical
                 close(events[i].data.fd);
                 continue;
             }
@@ -75,6 +76,7 @@ void initSync(const int sock) {
                         break;
                     }
                 }
+#pragma omp critical
                 close(events[i].data.fd);
                 continue;
             }
@@ -115,11 +117,13 @@ void listenForPackets(const sockaddr_in servaddr) {
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
                 perror("Socket error");
+#pragma omp critical
                 close(events[i].data.fd);
                 continue;
             }
             if (events[i].events & EPOLLHUP) {
                 //Peer closed the connection
+#pragma omp critical
                 close(events[i].data.fd);
                 continue;
             }
