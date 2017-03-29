@@ -401,6 +401,7 @@ void GameManager::updateCollider() {
 }
 
 void GameManager::updateMarine(const PlayerData &playerData) {
+    std::cout << "update marine" << std::endl;
     if(marineManager.find(playerData.playerid) == marineManager.end()) {
         createMarine(playerData.playerid);
     }

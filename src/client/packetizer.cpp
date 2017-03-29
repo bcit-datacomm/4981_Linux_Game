@@ -163,6 +163,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
 
         for(int32_t i = 0; i  < pCount; i++) {
           player = reinterpret_cast<PlayerData *>(pBuff);
+          /*
           std::cout << "\nPlayer playerid:" << player->playerid;
           std::cout << "\n\tPlayer xpos:" << player->xpos;
           std::cout << "\n\tPlayer ypos:" << player->ypos;
@@ -170,6 +171,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
           std::cout << "\n\tPlayer direction:" << player->direction;
           std::cout << "\n\tPlayer health:" << player->health;
           std::cout << std::endl;
+          */
           GameManager::instance()->updateMarine(*player);
           pBuff = reinterpret_cast<int32_t *>(++player);
         }
@@ -193,6 +195,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
       case UDPHeaders::ZOMBIEH: {
         int32_t zCount = *pBuff++;
         for(int32_t i = 0; i  < zCount; i++){
+            /*
           zombie = reinterpret_cast<ZombieData *>(pBuff);
           std::cout << "\nZombie zombieid:" << zombie->zombieid;
           std::cout << "\n\tZombie xpos:" << zombie->xpos;
@@ -201,6 +204,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
           std::cout << "\n\tZombie health:" << zombie->health;
           std::cout << std::endl;
           pBuff = reinterpret_cast<int32_t *>(++zombie);
+          */
           /*
           UpdateZombie (zombie->zombieid,
                           zombie->xpos,

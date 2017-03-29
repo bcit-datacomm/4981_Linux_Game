@@ -97,8 +97,6 @@ void GameStateMatch::loop() {
         handle();    // Handle user input
 
         update(stepTimer.getTicks() / 1000.f); // Update state values
-        if (networked && stepTimer.getTicks() % (SCREEN_TICK_PER_FRAME * (1/30)+1) == 0)
-            updateServ();
 #endif
 
         stepTimer.start(); //Restart step timer
@@ -131,11 +129,7 @@ void GameStateMatch::loop() {
 }
 
 void GameStateMatch::updateServ() {
-    MoveAction moveAction = player.getMoveAction();
-    ClientMessage clientMessage;
-    clientMessage.id = static_cast<int32_t>(UDPHeaders::WALK);
-    clientMessage.data.ma = moveAction;
-    NetworkManager::instance().writeUDPSocket((char *)&clientMessage, sizeof(ClientMessage));
+
 }
 
 void GameStateMatch::sync() {
@@ -194,6 +188,9 @@ void GameStateMatch::update(const float delta) {
 #ifndef SERVER
     // Move player
     if (networked) {
+        if (player.hasChangedCourse() || player.hasChangedAngle()) {
+            player.sendServMoveAction();
+        }
         player.marine->move(player.marine->getDX() * delta, player.marine->getDY() * delta,
             GameManager::instance()->getCollisionHandler());
     } else {
@@ -226,8 +223,8 @@ void GameStateMatch::render() {
                     break;
                 }
 
-                Renderer::instance().render({i * TEXTURE_SIZE - static_cast<int>(camera.getX()), 
-                    j * TEXTURE_SIZE - static_cast<int>(camera.getY()), TEXTURE_SIZE, TEXTURE_SIZE}, 
+                Renderer::instance().render({i * TEXTURE_SIZE - static_cast<int>(camera.getX()),
+                    j * TEXTURE_SIZE - static_cast<int>(camera.getY()), TEXTURE_SIZE, TEXTURE_SIZE},
                     TEXTURES::BARREN);
             }
         }
