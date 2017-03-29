@@ -51,11 +51,13 @@ void initSync(const int sock) {
     int nevents = 0;
     for (;;) {
         nevents = waitForEpollEvent(epollfd, events);
+#pragma omp parallel for schedule(static) firstprivate(clientList)
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
                 perror("Socket error");
                 for (const auto& it : clientList) {
                     if (it.second.entry.sock == events[i].data.fd) {
+#pragma omp critical
                         clientList.erase(it.first);
                         break;
                     }
@@ -68,6 +70,7 @@ void initSync(const int sock) {
                 logv("Peer closed connection\n");
                 for (const auto& it : clientList) {
                     if (it.second.entry.sock == events[i].data.fd) {
+#pragma omp critical
                         clientList.erase(it.first);
                         break;
                     }
