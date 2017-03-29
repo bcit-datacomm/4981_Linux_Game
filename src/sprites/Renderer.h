@@ -32,6 +32,9 @@ const std::string TEXTURE_MIDDLE = MAP_TEXTURE_PATH + "middle_dirt.png"; //dead 
 //TODO: remove these textures, temporary for now
 const std::string TEMP_MARINE_TEXTURE = "assets/texture/arrow.png";
 const std::string TEMP_ZOMBIE_TEXTURE = "assets/texture/babyz1.png";
+const std::string TEMP_SHOTGUN_TEXTURE = "assets/texture/shotGun.png";
+const std::string TEMP_RIFLE_TEXTURE = "assets/texture/Rifle.png";
+const std::string TEMP_HANDGUN_TEXTURE = "assets/texture/HandGun.png";
 
 //Sprite Sheet folder path
 const std::string SPRITE_PATH = "assets/texture/SpriteSheets/";

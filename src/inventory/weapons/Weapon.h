@@ -7,6 +7,7 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include "../../sprites/SpriteTypes.h"
 
 using std::string;
 
@@ -15,7 +16,7 @@ class Marine;
 class Weapon {
 public:
 
-    Weapon(const string& type = "no type", const string& fireSound = "", const string& hitSound = "",
+    Weapon(const string& type = "no type", TEXTURES sprite = TEXTURES::CONCRETE, const string& fireSound = "", const string& hitSound = "",
         const string& reloadSound = "", const string& emptySound = "", const int range = 0,
         const int damage = 0, const int AOE = 0, const int penetration = 0, const int clip = 0,
         const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0);
@@ -36,6 +37,8 @@ public:
     int getReloadSpeed() const { return reloadDelay; }
     int getFireRate() const { return fireDelay; }
 
+    TEXTURES getTexture() const{ return spriteType;};
+
     bool reduceClip(const int rounds);
     bool reloadClip();
     bool chamberRound();
@@ -46,8 +49,10 @@ public:
     virtual bool fire(Marine& marine);
 
 protected:
+
     string type;
 
+    TEXTURES spriteType;
     string fireSound;
     string hitSound;
     string reloadSound;

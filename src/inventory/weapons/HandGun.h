@@ -8,7 +8,8 @@
 
 #include "InstantWeapon.h"
 #include "../../audio/AudioManager.h"
-
+#include "../../sprites/Renderer.h"
+#include "../../sprites/SpriteTypes.h"
 
 using std::string;
 

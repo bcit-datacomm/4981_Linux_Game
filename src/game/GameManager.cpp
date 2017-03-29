@@ -33,7 +33,7 @@ GameManager::~GameManager() {
 void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(m.second.getRelativeDestRect(cam), getWeapon(m.second.getWeaponId())->getTexture());
         }
     }
 
