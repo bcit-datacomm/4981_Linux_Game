@@ -10,10 +10,34 @@
 #include "../sprites/Textomagic.h"
 
 static constexpr size_t maxLength = 15;
-static constexpr int FONT_SIZE = 100;
+static constexpr int FONT_SIZE = 110;
+static constexpr int JOIN_LEN = 4;
 
 static const std::string HOST_DEFAULT("Hostname");
 static const std::string USER_DEFAULT("Username");
+
+static constexpr float HOST_X_RAT = 1.0 / 3;
+static constexpr float HOST_Y_RAT = 1.0 / 2;
+static constexpr float HOST_W_RAT = 1.0 / 3;
+static constexpr float HOST_H_RAT = 1.0 / 14;
+
+static constexpr float USER_X_RAT = 1.0 / 3;
+static constexpr float USER_Y_RAT = 9.0 / 14;
+static constexpr float USER_W_RAT = 1.0 / 3;
+static constexpr float USER_H_RAT = 1.0 / 14;
+
+static constexpr float JOIN_X_RAT = 5.0 / 12;
+static constexpr float JOIN_Y_RAT = 11.0 / 14;
+static constexpr float JOIN_W_RAT = 1.0 / 6;
+static constexpr float JOIN_H_RAT = 1.0 / 14;
+
+//Color Data
+static constexpr SDL_Color WHITE = {255, 255, 255, 255};
+static constexpr SDL_Color RED = {143, 63, 61, 255};
+static constexpr SDL_Color BLACK = {0, 0, 0, 255};
+static constexpr SDL_Color GREEN = {54, 96, 81, 255};
+
+
 
 class GameStateMenu : public GameState {
 public:

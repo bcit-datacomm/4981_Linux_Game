@@ -15,7 +15,6 @@
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
 #include "../sprites/SpriteTypes.h"
-#include "../../include/Colors.h"
 #include "../sprites/Textomagic.h"
 
 
@@ -46,30 +45,32 @@
  * Revisions:
  * Removed excess initializations. (Michael Goll / March 16, 2017)
  * JF Mar 26: Re-added non-excessive initializations
+ * Isaac Morneau, March 29, 2017 Re-removed the initializations that were in fact excessive
+ *      then refactored the menu system to operate more logically and cleanly
 
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g),
         screenRect{0, 0, g.getWindow().getWidth(), g.getWindow().getHeight()},
         hostRect{
-            static_cast<int>(screenRect.w * 4 / 12), 
-            static_cast<int>(screenRect.h * 1 / 2), 
-            static_cast<int>(screenRect.w * 1 / 3), 
-            static_cast<int>(screenRect.h * 1 / 14)},
+            static_cast<int>(screenRect.w * HOST_X_RAT), 
+            static_cast<int>(screenRect.h * HOST_Y_RAT), 
+            static_cast<int>(screenRect.w * HOST_W_RAT), 
+            static_cast<int>(screenRect.h * HOST_H_RAT)},
         userRect{
-            static_cast<int>(screenRect.w * 4 / 12), 
-            static_cast<int>(screenRect.h * 9 / 14), 
-            static_cast<int>(screenRect.w * 1 / 3), 
-            static_cast<int>(screenRect.h * 1 / 14)},
+            static_cast<int>(screenRect.w * USER_X_RAT), 
+            static_cast<int>(screenRect.h * USER_Y_RAT), 
+            static_cast<int>(screenRect.w * USER_W_RAT), 
+            static_cast<int>(screenRect.h * USER_H_RAT)},
         joinRect{
-            static_cast<int>(screenRect.w * 5 / 12), 
-            static_cast<int>(screenRect.h * 11 / 14), 
-            static_cast<int>(screenRect.w * 1 / 6), 
-            static_cast<int>(screenRect.h * 1 / 14)},
+            static_cast<int>(screenRect.w * JOIN_X_RAT), 
+            static_cast<int>(screenRect.h * JOIN_Y_RAT), 
+            static_cast<int>(screenRect.w * JOIN_W_RAT), 
+            static_cast<int>(screenRect.h * JOIN_H_RAT)},
         joinSelected(false), hostIPSelected(false), usernameSelected(false),
         hostInput(HOST_DEFAULT), userInput(USER_DEFAULT),
         hostMagic(hostRect, Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE), maxLength, HOST_DEFAULT),
         userMagic(userRect, Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE), maxLength, USER_DEFAULT),
-        joinMagic(joinRect,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 110), 4, "  join") {
+        joinMagic(joinRect,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", FONT_SIZE), JOIN_LEN, "join") {
 
 }
 
@@ -188,6 +189,8 @@ void GameStateMenu::sync() {
  * JF Mar 28: Removed the Options menu item as it was removed from the scope of the game
  * JF Mar 28: Re-added logic for typing text into the text edit boxes that was removed during the great refactoring
  * JF Mar 28: Re-added logic Highlighting and Clicking a menu option that was removed during the great refactoring
+ * Isaac Morneau, March 29, 2017 Fixed highlighting, clicking, and typing to work with the improved renderer that now
+ *      makes sense because of the god send that was the great refactoring.
  */
 void GameStateMenu::handle() {
     int x, y;
@@ -323,8 +326,9 @@ void GameStateMenu::handle() {
             switch (event.window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
                     //Re-render with the new size
-                    //data1 --> new window width, | data2 --> new window height
                     screenRect = {0, 0, event.window.data1, event.window.data2};
+                    //Position all screen elements in the window
+                    positionElements();
                     break;
             }
             break;
@@ -397,26 +401,28 @@ void GameStateMenu::update(const float delta) {
  * JF Mar 26, 2017: Fixed positional data from restructuring not setting assets in correct position
  * JF Mar 28: Removed the Options menu item as it was removed from the scope of the game
  * JF Mar 28: Added chat box below Join Button for the displaying of chat and server information
+ * Isaac Morneau, March 29, 2017: Replaced all the incremental calculations with ratios
  */
 void GameStateMenu::positionElements() {
     screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
-    hostRect = {
-        static_cast<int>(screenRect.w * 4 / 12), 
-        static_cast<int>(screenRect.h * 1 / 2), 
-        static_cast<int>(screenRect.w * 1 / 3), 
-        static_cast<int>(screenRect.h * 1 / 14)};
+    
+    hostRect = {static_cast<int>(screenRect.w * HOST_X_RAT), 
+        static_cast<int>(screenRect.h * HOST_Y_RAT), 
+        static_cast<int>(screenRect.w * HOST_W_RAT), 
+        static_cast<int>(screenRect.h * HOST_H_RAT)};
+
+    userRect = {static_cast<int>(screenRect.w * USER_X_RAT), 
+        static_cast<int>(screenRect.h * USER_Y_RAT), 
+        static_cast<int>(screenRect.w * USER_W_RAT), 
+        static_cast<int>(screenRect.h * USER_H_RAT)};
+    
+    joinRect = { static_cast<int>(screenRect.w * JOIN_X_RAT), 
+        static_cast<int>(screenRect.h * JOIN_Y_RAT), 
+        static_cast<int>(screenRect.w * JOIN_W_RAT), 
+        static_cast<int>(screenRect.h * JOIN_H_RAT) };
+
     hostMagic.setRect(hostRect);
-    userRect = {
-        static_cast<int>(screenRect.w * 4 / 12), 
-        static_cast<int>(screenRect.h * 9 / 14), 
-        static_cast<int>(screenRect.w * 1 / 3), 
-        static_cast<int>(screenRect.h * 1 / 14)};
     userMagic.setRect(userRect);
-    joinRect = {
-        static_cast<int>(screenRect.w * 5 / 12), 
-        static_cast<int>(screenRect.h * 11 / 14), 
-        static_cast<int>(screenRect.w * 1 / 6), 
-        static_cast<int>(screenRect.h * 1 / 14)};
     joinMagic.setRect(joinRect);
 }
 
@@ -449,15 +455,14 @@ void GameStateMenu::positionElements() {
  * Revisions:
  * Now renders solely with the Renderer instance. (Michael Goll / March 16, 2017)
  * JF Mar 28: Removed the Options menu item as it was removed from the scope of the game
+ * Isaac Morneau, March 29, 2017: Replaced raw rendering with the wrapped text rendering of
+ *      the textomagic objects.
  */
 void GameStateMenu::render() {
     //Only draw when not minimized
     if (game.getWindow().isMinimized()) {
         return;
     }
-
-    //Position all screen elements in the window
-    positionElements();
 
     //Clear screen
     SDL_RenderClear(Renderer::instance().getRenderer());
@@ -468,9 +473,9 @@ void GameStateMenu::render() {
     //Join and Options text
     //Change the color of the text when active
     if (joinSelected) {
-        joinMagic.setColor(SDL_RED_RGB);
+        joinMagic.setColor(RED);
     } else {
-        joinMagic.setColor(SDL_BLACK_RGB);
+        joinMagic.setColor(BLACK);
     }
 
     //Host IP and Username textboxes
@@ -478,18 +483,18 @@ void GameStateMenu::render() {
     //Used so User knows when textbox is can accept input
     if (hostIPSelected) {
         Renderer::instance().render(hostRect, TEXTURES::TEXTBOX_ACTIVE);
-        hostMagic.setColor(SDL_RED_RGB);
+        hostMagic.setColor(RED);
     } else {
         Renderer::instance().render(hostRect, TEXTURES::TEXTBOX);
-        hostMagic.setColor(SDL_BLACK_RGB);
+        hostMagic.setColor(BLACK);
     }
 
     if (usernameSelected) {
         Renderer::instance().render(userRect, TEXTURES::TEXTBOX_ACTIVE);
-        userMagic.setColor(SDL_RED_RGB);
+        userMagic.setColor(RED);
     } else {
         Renderer::instance().render(userRect, TEXTURES::TEXTBOX);
-        userMagic.setColor(SDL_BLACK_RGB);
+        userMagic.setColor(BLACK);
     }
 
     userMagic.setText(userInput);
@@ -502,3 +507,4 @@ void GameStateMenu::render() {
     //Update screen
     SDL_RenderPresent(Renderer::instance().getRenderer());
 }
+
