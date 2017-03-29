@@ -19,6 +19,11 @@ enum class TEXTURES : int {
     //--------------------- Menu textures ---------------------
     //Main Menu
     MAIN, //Splash screen
+    TEXTBOX,
+    TEXTBOX_ACTIVE,
+    TEXTBOX_TRANSPARENT,
+    JOIN_FONT,
+    JOIN_FONT_ACTIVE,
 
     //LOBBY,
 
@@ -297,7 +302,7 @@ enum class TEXTURES : int {
     // DIGGER_ZOMBIE_DEAD,
 
     //---------- Boss Zombie ----------
-    BOSS_ZOMBIE, //Sprite sheet, not split
+    BOSS_ZOMBIE //Sprite sheet, not split
     // BOSS_ZOMBIE_FRONT_IDLE,
     // BOSS_ZOMBIE_FRONT_STEP_LEFT,
     // BOSS_ZOMBIE_FRONT_STEP_RIGHT,
@@ -355,10 +360,6 @@ enum class TEXTURES : int {
     //
     // //Boss Death
     // BOSS_ZOMBIE_DEAD
-
-    TEXTBOX,
-    JOIN_FONT,
-    OPTIONS_FONT
 };
 
 #endif
