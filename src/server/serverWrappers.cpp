@@ -1,4 +1,3 @@
-#include <omp.h>
 #include <cstdint>
 #include <cstdlib>
 #include <cstdio>
@@ -360,21 +359,22 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
 void updateClientWithCurrentLobby(const int sock, char *outBuff, const size_t bufferSize) {
     //Send new client a list of already existing clients 
     int32_t *id;
-    for (const auto& it : clientList) {
-        if (it.second.entry.sock != sock && it.second.hasSentUsername) {
+#pragma omp parallel for schedule(static)
+    for (auto it = clientList.cbegin(); it != clientList.cend(); ++it) {
+        if (it->second.entry.sock != sock && it->second.hasSentUsername) {
             memset(outBuff, '\0', bufferSize);
             id = reinterpret_cast<int32_t *>(outBuff);
-            *id = it.first;
+            *id = it->first;
             outBuff[4] = 'C';
             outBuff[5] = '/';
-            strncpy(outBuff + TCP_HEADER_SIZE + 1, it.second.entry.username, NAMELEN);
+            strncpy(outBuff + TCP_HEADER_SIZE + 1, it->second.entry.username, NAMELEN);
 
             if (!rawClientSend(sock, outBuff, bufferSize)) {
                 break;
             }
             outBuff[4] = 'T';
             memset(outBuff + TCP_HEADER_SIZE + 1, '\0', NAMELEN);
-            if (it.second.isPlayerReady) {
+            if (it->second.isPlayerReady) {
                 strncpy(outBuff + TCP_HEADER_SIZE + 1, "ready", 5);                
             } else {
                 strncpy(outBuff + TCP_HEADER_SIZE + 1, "unready", 7);                
