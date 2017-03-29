@@ -12,7 +12,7 @@ Renderer Renderer::sInstance;
 
 Renderer::~Renderer() {
     for (const auto& s : sprites) {
-        if (s.second != nullptr) {
+        if (s.second) {
             SDL_DestroyTexture(s.second);
         }
     }
@@ -264,7 +264,7 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, double angle,
  * returns the sprite or sprite sheet that the object is looking to render
  */
 SDL_Texture * Renderer::getTexture(int spriteType) {
-    auto texture = sprites.find(spriteType);
+    const auto& texture = sprites.find(spriteType);
 
     if (texture != sprites.end()) {
         return texture->second;

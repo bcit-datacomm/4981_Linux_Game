@@ -24,13 +24,6 @@ static constexpr size_t YELLOW_RGB[3] = {148, 139, 77};
 static constexpr size_t LT_GREEN_RGB[3] = {92, 133, 108};
 static constexpr int MAX_RGB = 255;
 
-//Position of color in the fontColor array
-static constexpr size_t WHITE = 0;
-static constexpr size_t GREEN = 1;
-static constexpr size_t BLACK = 2;
-static constexpr size_t RED = 3;
-
-static constexpr int ZERO = 0;
 static constexpr int FONT_SIZE = 30;
 
 class GameStateMenu : public GameState {

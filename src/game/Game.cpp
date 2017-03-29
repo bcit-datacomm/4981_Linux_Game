@@ -119,14 +119,9 @@ bool Game::loadMedia() {
 }
 
 void Game::close() {
-
-    //Destroy window
-    window.free();
-
     //Quit SDL subsystems
     Mix_Quit();
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
-
 }

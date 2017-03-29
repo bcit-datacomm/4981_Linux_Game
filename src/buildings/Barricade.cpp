@@ -62,5 +62,5 @@ void Barricade::collidingProjectile(const int damage) {
 
 void Barricade::placeBarricade() {
     // texture.setAlpha(255);
-    placed=true;
+    placed = true;
 }

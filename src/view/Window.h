@@ -30,7 +30,6 @@ public:
 
     int getWidth() const {return width;}
     int getHeight() const {return height;}
-    void free();
     bool hasMouseFocus() const {return mouseFocus;}
     bool hasKeyboardFocus() const {return keyboardFocus;}
     bool isMinimized() const {return minimized;}

@@ -12,7 +12,7 @@
 
 */
 #include <queue>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 #include "InstantWeapon.h"
@@ -37,7 +37,7 @@ InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, str
 // DericM, 01/03/17
 bool InstantWeapon::fire(Marine &marine) {
 
-    if(!Weapon::fire(marine)) {
+    if (!Weapon::fire(marine)) {
         return false;
     }
     logv("InstantWeapon::fire()\n");
@@ -49,11 +49,11 @@ bool InstantWeapon::fire(Marine &marine) {
     collisionHandler.detectLineCollision(targets, marine, range);
 
     for(int i = 0; i < penetration; i++) {
-        if(targets.empty()) {
+        if (targets.empty()) {
             logv("targets.empty()\n");
             break;
         }
-        if(targets.top().getType() != TYPE_ZOMBIE) {
+        if (targets.top().getType() != TYPE_ZOMBIE) {
             logv("target is of type: %d\n", targets.top().getType());
             break;
         }
@@ -62,7 +62,7 @@ bool InstantWeapon::fire(Marine &marine) {
         logv("Shot target of type: %d\n", targets.top().getType());
 
         int32_t id = targets.top().getId();
-        if(!gameManager->zombieExists(id)) {
+        if (!gameManager->zombieExists(id)) {
             logv("!gameManager.zombieExists(id)\n");
             break;
         }

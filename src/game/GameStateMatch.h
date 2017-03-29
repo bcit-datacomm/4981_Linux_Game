@@ -32,20 +32,16 @@ public:
 
     GameManager * gameManager = nullptr;
 
-    // Frame Display
-    std::stringstream frameTimeText;
-    //TTF_Font* frameFont = nullptr;
-
 private:
     Player player;
     Base base;
     Camera camera;
-    
+    std::stringstream frameTimeText;
+
     virtual void sync() override;
     virtual void handle() override;
     virtual void update(const float delta) override;
     virtual void render() override;
-
 };
 
 #endif

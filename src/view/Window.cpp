@@ -10,9 +10,14 @@ Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyb
 }
 
 Window::~Window() {
-    if (window != nullptr) {
+    if (window) {
         SDL_DestroyWindow(window);
     }
+
+    mouseFocus = false;
+    keyboardFocus = false;
+    width = 0;
+    height = 0;
 }
 
 bool Window::init() {
@@ -35,7 +40,7 @@ SDL_Surface* Window::getScreenSurface() {
 
 void Window::handleEvent(SDL_Event& e) {
     //Window event occured
-    if(e.type == SDL_WINDOWEVENT) {
+    if (e.type == SDL_WINDOWEVENT) {
         switch(e.window.event) {
             //Get new dimensions
             case SDL_WINDOWEVENT_SIZE_CHANGED:
@@ -84,7 +89,7 @@ void Window::handleEvent(SDL_Event& e) {
                 minimized = false;
                 break;
         }
-    } else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
+    } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
         //Enter exit full screen on return key
         if (fullScreen) {
             SDL_SetWindowFullscreen(window, SDL_FALSE);
@@ -98,15 +103,4 @@ void Window::handleEvent(SDL_Event& e) {
             minimized = false;
         }
     }
-}
-
-void Window::free() {
-    if(window != NULL) {
-        SDL_DestroyWindow(window);
-    }
-
-    mouseFocus = false;
-    keyboardFocus = false;
-    width = 0;
-    height = 0;
 }

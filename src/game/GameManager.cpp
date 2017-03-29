@@ -30,67 +30,49 @@ GameManager::~GameManager() {
 
 // Render all objects in level
 void GameManager::renderObjects(const SDL_Rect& cam) {
-    const int camX = cam.x;
-    const int camY = cam.y;
-    const int camW = cam.w;
-    const int camH = cam.h;
 
     for (const auto& m : weaponDropManager) {
-        if (m.second.getX() - camX < camW) {
-            if (m.second.getY() - camY < camH) {
-                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-            }
+        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
         }
     }
 
     for (const auto& m : marineManager) {
-        if (m.second.getX() - camX < camW) {
-            if (m.second.getY() - camY < camH) {
-                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                    m.second.getAngle());
-            }
+        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
+                m.second.getAngle());
         }
     }
 
 
     for (const auto& o : objectManager) {
-        if (o.second.getX() - camX < camW) {
-            if (o.second.getY() - camY < camH) {
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-            }
+        if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
         }
     }
 
     for (const auto& z : zombieManager) {
-        if (z.second.getX() - camX < camW) {
-            if (z.second.getY() - camY < camH) {
-                Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
-            }
+        if (z.second.getX() - cam.x < cam.w && z.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
         }
     }
 
     for (const auto& m : turretManager) {
-        if (m.second.getX() - camX < camW) {
-            if (m.second.getY() - camY < camH) {
-                Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
-                    m.second.getAngle());
-            }
+        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
+                m.second.getAngle());
         }
     }
 
     for (const auto& b : barricadeManager) {
-        if (b.second.getX() - camX < camW) {
-            if (b.second.getY() - camY < camH) {
-                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-            }
+        if (b.second.getX() - cam.x < cam.w && b.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
         }
     }
 
     for (const auto& w : wallManager) {
-        if (w.second.getX() - camX < camW) {
-            if (w.second.getY() - camY < camH) {
-                Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-            }
+        if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
         }
     }
 }
@@ -114,7 +96,7 @@ void GameManager::updateZombies(const float delta) {
 
 // Update turret actions.
 // Jamie, 2017-03-01.
-void GameManager::updateTurrets(const float delta) {
+void GameManager::updateTurrets() {
     for (auto& t : turretManager) {
         t.second.targetScanTurret();
     }
@@ -124,7 +106,7 @@ void GameManager::updateTurrets(const float delta) {
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();
-    SDL_Rect temp = {initVal, initVal, defaultSize, defaultSize};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
     SDL_Rect marineRect = temp;
     SDL_Rect moveRect = temp;
@@ -138,7 +120,7 @@ int32_t GameManager::createMarine() {
 
 bool GameManager::createMarine(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {initVal, initVal, defaultSize, defaultSize};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
     SDL_Rect marineRect = temp;
     SDL_Rect moveRect = temp;
@@ -176,7 +158,7 @@ Marine& GameManager::getMarine(const int32_t id) {
 // Create Turret add it to manager, returns tower id
 int32_t GameManager::createTurret() {
     const int32_t id = generateID();
-    SDL_Rect temp = {initVal, initVal, defaultSize, defaultSize};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
     SDL_Rect turretRect = temp;
     SDL_Rect moveRect = temp;
@@ -205,13 +187,13 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
 // Create turret add it to turret, returns if success
 int32_t GameManager::createTurret(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {initVal, initVal, defaultSize, defaultSize};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
     SDL_Rect turretRect = temp;
     SDL_Rect moveRect = temp;
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
-    SDL_Rect pickRect = {initVal, initVal, PUSize, PUSize};
+    SDL_Rect pickRect = {INITVAL, INITVAL, PUSIZE, PUSIZE};
 
     turretManager.insert({id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect)});
     turretManager.at(id).setPosition(x,y);
@@ -233,7 +215,7 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 // Create zombie add it to manager, returns success
 bool GameManager::createZombie(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {initVal, initVal, defaultSize, defaultSize};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
     SDL_Rect zombieRect = temp;
     SDL_Rect moveRect = temp;
@@ -289,7 +271,7 @@ int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
     const int32_t id = weapon->getId();
     weaponManager.insert({id, weapon});
 
-    if(weaponManager.count(id)) {
+    if (weaponManager.count(id)) {
         weaponManager.at(id)->setId(id);
         return id;
     }
@@ -314,8 +296,8 @@ bool GameManager::createWeaponDrop(const float x, const float y) {
     const int32_t wid = w.getId();
     const int32_t id = generateID();
 
-    SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y),defaultSize, defaultSize};
-    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y),defaultSize, defaultSize};
+    SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
 
@@ -342,7 +324,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
 //returns weapon in weaponManager
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
 
-    if(weaponManager.count(id)) {
+    if (weaponManager.count(id)) {
         return weaponManager.at(id);
     }
 
@@ -354,7 +336,7 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
 
-    if(weaponDropManager.count(id)) {
+    if (weaponDropManager.count(id)) {
         weaponDropManager.erase(id);
     } else {
         logv("Couldnt Delete Weapon Drop\n");
@@ -408,7 +390,7 @@ void GameManager::updateCollider() {
 // Create barricade add it to manager, returns success
 int32_t GameManager::createBarricade(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {initVal, initVal, defaultSize, defaultSize};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
     SDL_Rect barricadeRect = temp;
     SDL_Rect moveRect = temp;
@@ -447,34 +429,34 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
 void GameManager::setBoundary(const float startX, const float startY, const float endX, const float endY) {
 
     int width = endX - startX + 200;
-    int height = defaultSize;
+    int height = DEFAULT_SIZE;
 
-    const float x = startX - defaultSize;
-    const float y = startY - defaultSize;
+    const float x = startX - DEFAULT_SIZE;
+    const float y = startY - DEFAULT_SIZE;
 
     createWall(x, y, width, height);
     createWall(x, endY, width, height);
 
-    width = defaultSize;
-    height = endY - startY + defaultSize;
+    width = DEFAULT_SIZE;
+    height = endY - startY + DEFAULT_SIZE;
 
     createWall(endX, startY, width, height);
     createWall(x, startY, width, height);
 
-    const float sX = (endX + startX) / 2 - BASE_WIDTH - defaultSize;
-    const float eX = (endX + startX) / 2 + BASE_WIDTH + defaultSize;
-    const float sY = (endY + startY) / 2 - BASE_HEIGHT - defaultSize;
-    const float eY = (endY + startY) / 2 + BASE_HEIGHT + defaultSize;
+    const float sX = (endX + startX) / 2 - BASE_WIDTH - DEFAULT_SIZE;
+    const float eX = (endX + startX) / 2 + BASE_WIDTH + DEFAULT_SIZE;
+    const float sY = (endY + startY) / 2 - BASE_HEIGHT - DEFAULT_SIZE;
+    const float eY = (endY + startY) / 2 + BASE_HEIGHT + DEFAULT_SIZE;
 
     width = eX - sX;
-    height = defaultSize;
+    height = DEFAULT_SIZE;
 
     createWall(sX, sY, width / 2, height);
     createWall(sX + (width / 4 * 3), sY, width / 4, height);
     createWall(sX, eY, width / 4, height);
-    createWall(sX + width / 2 + defaultSize, eY, width / 2, height);
+    createWall(sX + width / 2 + DEFAULT_SIZE, eY, width / 2, height);
 
-    width = defaultSize;
+    width = DEFAULT_SIZE;
     height = eY - sY;
 
     createWall(sX, sY, width, height / 2);

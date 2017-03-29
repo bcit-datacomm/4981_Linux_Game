@@ -24,9 +24,9 @@
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 
-constexpr int initVal = 0;
-constexpr int defaultSize = 100;
-constexpr int PUSize = 120;
+static constexpr int INITVAL = 0;
+static constexpr int DEFAULT_SIZE = 100;
+static constexpr int PUSIZE = 120;
 
 
 class GameManager {
@@ -60,7 +60,7 @@ public:
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float delta); // Update marine actions
     void updateZombies(const float delta); // Update zombie actions
-    void updateTurrets(const float delta); // Update turret actions
+    void updateTurrets(); // Update turret actions
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.

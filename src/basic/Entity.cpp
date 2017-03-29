@@ -11,7 +11,6 @@ Entity::Entity(int32_t nid, const SDL_Rect dest):id(nid), destRect(dest), srcRec
 Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize): id(nid), destRect(dest),
         srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(dest),
         damageHitBox(dest), pickupHitBox(dest), x(dest.x), y(dest.y) {
-
 }
 
 //Weapon drops
@@ -19,7 +18,6 @@ Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
         const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
         movementHitBox(movementSize), projectileHitBox(dest), damageHitBox(dest),pickupHitBox(pickupSize),
         x(dest.x), y(dest.y) {
-
 }
 
 Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
@@ -34,7 +32,6 @@ Entity::Entity(int32_t nid,  const SDL_Rect dest, const SDL_Rect &movementSize, 
         const SDL_Rect &damageSize, const SDL_Rect &pickupSize): id(nid), destRect(dest),
         srcRect({0,0, dest.w, dest.h}), movementHitBox(movementSize), projectileHitBox(projectileSize),
         damageHitBox(damageSize), pickupHitBox(pickupSize), x(dest.x), y(dest.y) {
-
 }
 
 Entity::Entity(const Entity &e): id(e.id), destRect(e.destRect), srcRect(e.srcRect),
@@ -60,25 +57,6 @@ void Entity::setY(const float py) {
     updateHitBoxes();
 }
 
-// Get x coordinate
-float Entity::getX() const{
-    return x;
-}
-
-// Get y coordinate
-float Entity::getY() const{
-    return y;
-}
-
-// Get x coordinate
-int Entity::getW() const{
-    return destRect.w;
-}
-
-// Get y coordinate
-int Entity::getH() const{
-    return destRect.h;
-}
 // Set Entity by x and y amount
 void Entity::setPosition(float px, float py) {
     x = px;

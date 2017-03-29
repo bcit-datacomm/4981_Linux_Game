@@ -17,7 +17,7 @@
 #include "Game.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-    base(), camera(gameWidth,gameHeight) {}
+        base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -84,7 +84,7 @@ void GameStateMatch::loop() {
 
         if ((stepTimer.getTicks() / TIME_SECOND) > second) {
             GameManager::instance()->createZombieWave(1);
-            second+=5;
+            second += 5;
         }
 
         //If frame finished early
@@ -152,7 +152,7 @@ void GameStateMatch::update(const float delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
-    GameManager::instance()->updateTurrets(delta);
+    GameManager::instance()->updateTurrets();
 
     // Move Camera
     camera.move(player.getMarine()->getX(), player.getMarine()->getY());

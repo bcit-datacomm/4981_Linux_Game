@@ -43,7 +43,7 @@
 * Removed excess initializations. (Michael Goll / March 16, 2017)
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textboxFont(nullptr),
-    menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
+    menuFont(nullptr), screenRect{0, 0, game.window.getWidth(), game.window.getHeight()} {
 }
 
 /**
@@ -65,15 +65,15 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 * GameStateMenu dtor which frees all of the font pointers.
 */
 GameStateMenu::~GameStateMenu() {
-    if (menuFont != nullptr) {
+    if (menuFont) {
         TTF_CloseFont(menuFont);
     }
 
-    if (headingFont != nullptr) {
+    if (headingFont) {
         TTF_CloseFont(headingFont);
     }
 
-    if (textboxFont != nullptr) {
+    if (textboxFont) {
         TTF_CloseFont(textboxFont);
     }
 }
@@ -177,7 +177,7 @@ void GameStateMenu::loop() {
 *
 * Notes:
 * Function currently empty
-* Designed to be used by Game logvc team for connecting to the server
+* Designed to be used by Game logic team for connecting to the server
 */
 void GameStateMenu::sync() {
 
@@ -254,7 +254,7 @@ void GameStateMenu::handle() {
                 case SDL_WINDOWEVENT_RESIZED:
                     //Re-render with the new size
                     //data1 --> new window width, | data2 --> new window height
-                    screenRect = {ZERO, ZERO, event.window.data1, event.window.data2};
+                    screenRect = {0, 0, event.window.data1, event.window.data2};
                 break;
             }
             break;
@@ -319,15 +319,15 @@ void GameStateMenu::update(const float delta) {
 */
 void GameStateMenu::positionElements() {
 
-    int maxTextWidth = ZERO;
-    int maxTextHeight = ZERO;
+    int maxTextWidth = 0;
+    int maxTextHeight = 0;
     int vertPadding = 100;
 
     std::string longestString = "";
     char largestChar = 'W';
 
     //Check if TTF was initialized correctly
-    if(!TTF_WasInit() && TTF_Init()== -1) {
+    if (!TTF_WasInit() && TTF_Init()== -1) {
         logv("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
@@ -393,7 +393,7 @@ void GameStateMenu::render() {
     //Only draw when not minimized
     if (!game.window.isMinimized()) {
 
-        screenRect = {ZERO, ZERO, game.window.getWidth(), game.window.getHeight()};
+        screenRect = {0, 0, game.window.getWidth(), game.window.getHeight()};
 
         //Clear screen
         SDL_RenderClear(Renderer::instance().getRenderer());

@@ -9,13 +9,13 @@
 
 class Game {
 public:
-    Game():window(){};
+    Game() : window(), stateID(1){};
     ~Game();
 
     // Game window
     Window window;
     SDL_Surface* screenSurface = nullptr;
-    unsigned int stateID = 1; // Starting game state id
+    unsigned int stateID; // Starting game state id
 
     bool init();
     void setStateID(const unsigned int id) {stateID = id;}

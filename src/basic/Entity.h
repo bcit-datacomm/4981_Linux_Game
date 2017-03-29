@@ -33,10 +33,10 @@ public:
     void setPosition(const float x, const float y); // Set marine position
     void setX(float px); //set x coordinate
     void setY(float py); //set y coordinate
-    float getX() const; // get x coordinate
-    float getY() const; // get y coordinate
-    int getW() const;// get w of dest rect
-    int getH() const;// get h of dest rect
+    float getX() const {return x;} // Get x coordinate
+    float getY() const{return y;} // Get y coordinate
+    int getW() const{return destRect.w;} // Get width
+    int getH() const{return destRect.h;} // Get height
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
 
