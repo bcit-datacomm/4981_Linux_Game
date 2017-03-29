@@ -273,7 +273,6 @@ Sends buf to servAddr. Reliable even when len exceeds MTU.
 void NetworkManager::writeUDPSocket(const char *buf, const int &len) const {
     /* NetworkManager::run should be called before this is writeUDPSocket is called. */
     assert(state != NetworkState::NOT_RUNNING);
-
     int res = sendto(sockUDP, buf, len, 0, (const sockaddr *)&servUDPAddr, servUDPAddrLen);
     if (res < 0) {
 		perror("read");

@@ -7,6 +7,7 @@
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
+#include "../client/NetworkManager.h"
 #include "../UDPHeaders.h"
 #include "../game/GameManager.h"
 
@@ -29,7 +30,9 @@ public:
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
 
-    MoveAction getMoveAction();
+    void sendServMoveAction();
+    bool hasChangedAngle() const;
+    bool hasChangedCourse() const;
     void setId(const int32_t newId) {id = newId;};
     Player();
     ~Player();
@@ -44,6 +47,7 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    ClientMessage moveAction;
 };
 
 #endif

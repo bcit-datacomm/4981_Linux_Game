@@ -3,7 +3,7 @@
 #include "Player.h"
 
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200) {
-
+    moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
 }
 
 Player::~Player() {
@@ -14,14 +14,30 @@ void Player::setControl(Marine& newControl) {
     marine = &newControl;
 }
 
-MoveAction Player::getMoveAction() {
-    MoveAction moveAction;
-    moveAction.id = id;
-    moveAction.xpos = marine->getX();
-    moveAction.ypos = marine->getY();
-    moveAction.vel = marine->getVelocity();
-    moveAction.direction = marine->getAngle();
-    return moveAction;
+bool Player::hasChangedAngle() const {
+    return fabs(moveAction.data.ma.direction - marine->getAngle()) > 0.0001;
+}
+
+bool Player::hasChangedCourse() const {
+    std::cout << "x comp: " << moveAction.data.ma.xdel << ", " << marine->getDX() << std::endl;
+    std::cout << "y comp: " << moveAction.data.ma.ydel << ", " << marine->getDY() << std::endl;
+    if (fabs(moveAction.data.ma.xdel - marine->getDX()) > 0.0001 || fabs(moveAction.data.ma.ydel - marine->getDY()) > 0.0001) {
+        return true;
+    }
+
+    return false;
+}
+
+void Player::sendServMoveAction() {
+    moveAction.data.ma.id = id;
+    moveAction.data.ma.xpos = marine->getX();
+    moveAction.data.ma.ypos = marine->getY();
+    moveAction.data.ma.xdel = marine->getDX();
+    moveAction.data.ma.ydel = marine->getDY();
+    moveAction.data.ma.vel = marine->getVelocity();
+    moveAction.data.ma.direction = marine->getAngle();
+    std::cout << "send move action" << std::endl;
+    NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
 }
 
 void Player::handleMouseUpdate(Window& w, float camX, float camY) {
