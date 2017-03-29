@@ -6,7 +6,7 @@
 ** DATE:      March 14, 2017
 */
 
-#include <stdlib.h>
+#include <cstdlib>
 
 /**
 *   NOTE: If you change any of the sprites (ex. adding a new sprite), you

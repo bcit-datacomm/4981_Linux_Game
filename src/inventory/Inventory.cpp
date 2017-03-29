@@ -1,5 +1,6 @@
 //created 2/5/17 Maitiu
 #include <memory>
+
 #include "Inventory.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"

@@ -8,7 +8,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <unistd.h>
 
-#include "../game/GameStateMenu.h"
+#include "GameStateMenu.h"
+#include "Game.h"
 #include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../sprites/Renderer.h"
@@ -17,9 +18,6 @@
 #include "../../include/Colors.h"
 #include "../sprites/Textomagic.h"
 
-
-static constexpr SDL_Color BLACK = {0, 0, 0, 255};
-static constexpr SDL_Color RED = {143, 63, 61, 255};
 
 /**
  * Function: GameStateMenu ctor
@@ -51,7 +49,7 @@ static constexpr SDL_Color RED = {143, 63, 61, 255};
 
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g),
-        screenRect{0, 0, game.window.getWidth(), game.window.getHeight()},
+        screenRect{0, 0, g.getWindow().getWidth(), g.getWindow().getHeight()},
         hostRect{
             static_cast<int>(screenRect.w * 4 / 12), 
             static_cast<int>(screenRect.h * 1 / 2), 
@@ -198,7 +196,7 @@ void GameStateMenu::handle() {
 
     //Handle events on queue
     SDL_WaitEvent(&event);
-    game.window.handleEvent(event);
+    game.getWindow().handleEvent(event);
 
     switch (event.type) {
 
@@ -207,7 +205,7 @@ void GameStateMenu::handle() {
             y = event.button.y;
 
             if (joinSelected) {
-                game.stateID = 2; //changes the state to tell the Game.cpp loop to start the actual game
+                game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
                 play = false;
                 break;
             }
@@ -333,7 +331,7 @@ void GameStateMenu::handle() {
 
         case SDL_QUIT:
             play = false;
-            game.stateID = 0;
+            game.setStateID(0);
             break;
 
         default:
@@ -401,6 +399,7 @@ void GameStateMenu::update(const float delta) {
  * JF Mar 28: Added chat box below Join Button for the displaying of chat and server information
  */
 void GameStateMenu::positionElements() {
+    screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
     hostRect = {
         static_cast<int>(screenRect.w * 4 / 12), 
         static_cast<int>(screenRect.h * 1 / 2), 
@@ -453,10 +452,9 @@ void GameStateMenu::positionElements() {
  */
 void GameStateMenu::render() {
     //Only draw when not minimized
-    if (game.window.isMinimized()) {
+    if (game.getWindow().isMinimized()) {
         return;
     }
-    screenRect = {0, 0, game.window.getWidth(), game.window.getHeight()};
 
     //Position all screen elements in the window
     positionElements();
@@ -470,9 +468,9 @@ void GameStateMenu::render() {
     //Join and Options text
     //Change the color of the text when active
     if (joinSelected) {
-        joinMagic.setColor(RED);
+        joinMagic.setColor(SDL_RED_RGB);
     } else {
-        joinMagic.setColor(BLACK);
+        joinMagic.setColor(SDL_BLACK_RGB);
     }
 
     //Host IP and Username textboxes
@@ -480,18 +478,18 @@ void GameStateMenu::render() {
     //Used so User knows when textbox is can accept input
     if (hostIPSelected) {
         Renderer::instance().render(hostRect, TEXTURES::TEXTBOX_ACTIVE);
-        hostMagic.setColor(RED);
+        hostMagic.setColor(SDL_RED_RGB);
     } else {
         Renderer::instance().render(hostRect, TEXTURES::TEXTBOX);
-        hostMagic.setColor(BLACK);
+        hostMagic.setColor(SDL_BLACK_RGB);
     }
 
     if (usernameSelected) {
         Renderer::instance().render(userRect, TEXTURES::TEXTBOX_ACTIVE);
-        userMagic.setColor(RED);
+        userMagic.setColor(SDL_RED_RGB);
     } else {
         Renderer::instance().render(userRect, TEXTURES::TEXTBOX);
-        userMagic.setColor(BLACK);
+        userMagic.setColor(SDL_BLACK_RGB);
     }
 
     userMagic.setText(userInput);
