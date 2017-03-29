@@ -235,8 +235,6 @@ typedef struct
 * int32_t   playerid - int32_t to signify the playerid
 * float xpos - the X position`
 * float ypos - the Y position
-* float xdel - the delta X of the player
-* float xdel - the delta Y of the player
 * float vel - the Velocity of the player
 * float direction - the direction the player is going towards
 * int32_t   health - health of the player
@@ -246,8 +244,6 @@ typedef struct {
     int32_t   playerid;
     float     xpos;
     float     ypos;
-    float     xdel;
-    float     ydel;
     float     vel;
     float     direction;
     int32_t   health;
