@@ -43,8 +43,7 @@ void Textomagic::updateScale(){
     //W is the widest latin character for non monospaced fonts on average
     //in this case its being used to calculate the width to height ratio
     SDL_Surface *wSurf = TTF_RenderText_Solid(font, "W", { 0 });
-    hScale =  wSurf->h / draw.h;
-    wScale = wSurf->w * maxLen / draw.w;
+    wScale = static_cast<float>(draw.w) / (wSurf->w * maxLen);
     SDL_FreeSurface(wSurf);
 }
 
@@ -56,7 +55,7 @@ void Textomagic::updateScale(){
  *  recalculats the render destination box based on the texture generated
  */
 void Textomagic::updateBox(const int wid) {
-    textBox.w = wid / wScale;
+    textBox.w = wid * wScale;
 }
 
 /**
@@ -69,6 +68,7 @@ void Textomagic::updateBox(const int wid) {
 void Textomagic::setRect(const SDL_Rect& newDraw) {
     draw = newDraw;
     textBox = newDraw;
+    updateScale();
     makeTex();
 }
 
@@ -95,6 +95,7 @@ void Textomagic::setFont(TTF_Font* newFont) {
  */
 void Textomagic::setScale(const int scaleLen) {
     maxLen = scaleLen;
+    updateScale();
 }
 
 /**
@@ -132,7 +133,9 @@ void Textomagic::setColor(const SDL_Color& newColor) {
  *  displays the text via the renderer
  */
 void Textomagic::render() {
-    SDL_RenderCopyEx(renderer, textTex, nullptr, &textBox, 0, nullptr, SDL_FLIP_NONE);
+    if (!text.empty()) {
+        SDL_RenderCopyEx(renderer, textTex, nullptr, &textBox, 0, nullptr, SDL_FLIP_NONE);
+    }
 }
 
 /**
