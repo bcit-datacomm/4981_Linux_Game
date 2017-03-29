@@ -1,17 +1,17 @@
 #include "Object.h"
 #include "../log/log.h"
 
-Object::Object(int32_t nid, const SDL_Rect dest, int width, int height, double angle):
-        Entity(nid, dest), width(width), height(height), angle(angle){
+Object::Object(const int32_t nid, const SDL_Rect& dest, const int width, const int height, const double angle):
+        Entity(nid, dest), width(width), height(height), angle(angle) {
     setHeight(height);
     setWidth(width);
     updateRectHitBoxes();
 }
 
 
-Object::Object(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
-        int width, int height, double angle): Entity(nid, dest,movementSize, pickupSize), width(width),
-        height(height), angle(angle){
+Object::Object(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& pickupSize,
+        const int width, const int height, const double angle): Entity(nid, dest,movementSize, pickupSize),
+        width(width), height(height), angle(angle) {
     setHeight(height);
     setWidth(width);
     updateRectHitBoxes();
@@ -27,10 +27,10 @@ void Object::setHeight(const int h) {
 void Object::setWidth(const int w) {
     width = w;
 }
-int Object::getHeight(){
+int Object::getHeight() {
     return height;
 }
-int Object::getWidth(){
+int Object::getWidth() {
     return width;
 }
 
@@ -39,11 +39,11 @@ void Object::onCollision() {
 }
 
 //sets the angle of object's sprite
-void Object::setAngle(const double a){
+void Object::setAngle(const double a) {
     angle = a;
 }
 
 //returns the angle of the object's sprite
-double Object::getAngle(){
+double Object::getAngle() {
     return angle;
 }

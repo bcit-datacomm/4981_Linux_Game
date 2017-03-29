@@ -1,22 +1,28 @@
-#include "Window.h"
 #include <stdio.h>
 #include <string>
 #include <sstream>
 
-Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyboardFocus(false), 
+#include "Window.h"
+
+Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyboardFocus(false),
         fullScreen(false), minimized(false) {
 
 }
 
 Window::~Window() {
-    if (window != nullptr) {
+    if (window) {
         SDL_DestroyWindow(window);
     }
+
+    mouseFocus = false;
+    keyboardFocus = false;
+    width = 0;
+    height = 0;
 }
 
 bool Window::init() {
     //Create window
-    window = SDL_CreateWindow( "4981 Linux Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+    window = SDL_CreateWindow( "4981 Linux Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
     if (window != nullptr) {
         mouseFocus = true;
@@ -32,13 +38,9 @@ SDL_Surface* Window::getScreenSurface() {
     return SDL_GetWindowSurface(window);
 }
 
-SDL_Renderer* Window::createRenderer() {
-    return SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-}
-
 void Window::handleEvent(SDL_Event& e) {
     //Window event occured
-    if(e.type == SDL_WINDOWEVENT) {
+    if (e.type == SDL_WINDOWEVENT) {
         switch(e.window.event) {
             //Get new dimensions
             case SDL_WINDOWEVENT_SIZE_CHANGED:
@@ -52,7 +54,7 @@ void Window::handleEvent(SDL_Event& e) {
                     SDL_SetWindowSize(window, e.window.data1, MIN_SCREEN_HEIGHT);
                     height = MIN_SCREEN_HEIGHT;
                 } else {
-                    height = e.window.data2;        
+                    height = e.window.data2;
                 }
                 break;
                 //Repaint on exposure
@@ -87,7 +89,7 @@ void Window::handleEvent(SDL_Event& e) {
                 minimized = false;
                 break;
         }
-    } else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
+    } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
         //Enter exit full screen on return key
         if (fullScreen) {
             SDL_SetWindowFullscreen(window, SDL_FALSE);
@@ -102,4 +104,3 @@ void Window::handleEvent(SDL_Event& e) {
         }
     }
 }
-

@@ -2,9 +2,9 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Marine::Marine(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
-        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY){
+Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -19,14 +19,14 @@ void Marine::onCollision() {
     // Do nothing for now
 }
 
-void Marine::collidingProjectile(int damage) {
+void Marine::collidingProjectile(const int damage) {
     health = health - damage;
 }
 
 // Created by DericM 3/8/2017
 void Marine::fireWeapon() {
-    Weapon* w = inventory.getCurrent();
-    if( w != nullptr){
+    Weapon *w = inventory.getCurrent();
+    if(w) {
         w->fire(*this);
     } else {
         logv("Slot Empty\n");
@@ -34,16 +34,17 @@ void Marine::fireWeapon() {
 }
 
 
-int32_t Marine::checkForPickUp(){
+int32_t Marine::checkForPickUp() {
 
     int32_t pickId = -1;
     GameManager *gm = GameManager::instance();
-    CollisionHandler &ch = gm->getCollisionHandler();
+    CollisionHandler& ch = gm->getCollisionHandler();
 
-    Entity* ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
-    if(ep != nullptr){
+    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
+    if(ep != nullptr) {
         logv("Searching for id:%d in weaponDropManager\n", pickId);
         const auto& tm = gm->getTurretManager();
+
         //get Entity drop Id
         pickId = ep->getId();
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
@@ -52,12 +53,12 @@ int32_t Marine::checkForPickUp(){
             return pickId;
         }
         //Checks if WeaponDrop exists
-        if(gm->weaponDropExists(pickId)){
-            const WeaponDrop &wd = gm->getWeaponDrop(pickId);
+        if(gm->weaponDropExists(pickId)) {
+            const WeaponDrop& wd = gm->getWeaponDrop(pickId);
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();
 
-            if(inventory.pickUp(pickId)){
+            if(inventory.pickUp(pickId)) {
                 gm->deleteWeaponDrop(wd.getId());
             }
         } else {
