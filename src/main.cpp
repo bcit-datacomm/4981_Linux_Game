@@ -92,6 +92,16 @@ int main(int argc, char **argv) {
     sendAddrUDP.sin_family = AF_INET;
     sendAddrUDP.sin_port = htons(listen_port_udp);
 
+    memset(&udpMesgs, 0, sizeof(udpMesgs));
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i < MAX_UDP_PACKET_COUNT; ++i) {
+        iovecs[i].iov_base = readBuffers[i];
+        iovecs[i].iov_len = IN_PACKET_SIZE;
+        udpMesgs[i].msg_hdr.msg_iov = &iovecs[i];
+        udpMesgs[i].msg_hdr.msg_iovlen = 1;
+    }
+
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
     logv("Sockets created and bound\n");
     initSync(listenSocketTCP);
