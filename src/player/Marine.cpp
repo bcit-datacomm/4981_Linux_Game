@@ -41,7 +41,6 @@ int32_t Marine::checkForPickUp() {
     Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
     if(ep != nullptr) {
         logv("Searching for id:%d in weaponDropManager\n", pickId);
-        const auto& tm = gm->getTurretManager();
         //get Entity drop Id
         pickId = ep->getId();
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id

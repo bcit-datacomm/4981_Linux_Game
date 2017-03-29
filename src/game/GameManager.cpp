@@ -281,9 +281,7 @@ bool GameManager::createWeaponDrop(const float x, const float y) {
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-
-    WeaponDrop wd(id, weaponDropRect, pickRect, wid);
-    const auto& elem = weaponDropManager.emplace(id, wd);
+    weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wid));
     return id;
 }
 
@@ -391,9 +389,7 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
     SDL_Rect moveRect = {static_cast<int>(x), static_cast<int>(y), w, h};
     SDL_Rect pickRect = {static_cast<int>(x), static_cast<int>(y), w, h};
 
-    const auto& elem = wallManager.emplace(id, Wall(id, wallRect, moveRect, pickRect, h, h));
-    elem->second.texture.setDimensions(w, h);
-    elem->second.setPosition(x,y);
+    wallManager.emplace(id, Wall(id, wallRect, moveRect, pickRect, h, h));
     return id;
 }
 
