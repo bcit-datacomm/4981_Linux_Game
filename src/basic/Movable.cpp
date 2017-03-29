@@ -1,4 +1,5 @@
 #include "Movable.h"
+#include <cmath>
 
 // Move Movable by x and y amount
 void Movable::move(float moveX, float moveY, CollisionHandler &ch){
@@ -58,7 +59,7 @@ int Movable::getVelocity() const{
 }
 
 //sets the angle of the player's Movable sprite
-void Movable::setAngle(double a){
+void Movable::setAngle(double a) {
     angle = a;
 }
 

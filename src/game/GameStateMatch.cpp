@@ -198,7 +198,7 @@ void GameStateMatch::update(const float delta) {
             GameManager::instance()->getCollisionHandler());
     } else {
 #endif
-        GameManager::instance()->updateMarines(delta);
+        //GameManager::instance()->updateMarines(delta);
         GameManager::instance()->updateZombies(delta);
         GameManager::instance()->updateTurrets(delta);
 #ifndef SERVER

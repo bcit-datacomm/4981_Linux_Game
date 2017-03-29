@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "../collision/CollisionHandler.h"
 
+constexpr double THREE_HUNDRED_SIXTY_DEGREES = 360.0;
 class Movable : public virtual Entity {
 public:
     //for Marines and Zombies

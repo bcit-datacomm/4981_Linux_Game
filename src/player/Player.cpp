@@ -19,8 +19,8 @@ bool Player::hasChangedAngle() const {
 }
 
 bool Player::hasChangedCourse() const {
-    return fabs(moveAction.data.ma.xdel - marine->getDX()) > DOUBLE_COMPARISON_PRECISION
-            || fabs(moveAction.data.ma.ydel - marine->getDY()) > DOUBLE_COMPARISON_PRECISION;
+    return moveAction.data.ma.xdel - marine->getDX()
+            || moveAction.data.ma.ydel - marine->getDY();
 }
 
 void Player::sendServMoveAction() {
