@@ -56,6 +56,7 @@ void Textomagic::updateScale(){
  */
 void Textomagic::updateBox(const int wid) {
     textBox.w = wid * wScale;
+    textBox.x = (draw.x + draw.w / 2) - textBox.w / 2;
 }
 
 /**
