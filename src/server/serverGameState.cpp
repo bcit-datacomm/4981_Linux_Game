@@ -37,6 +37,8 @@ void updateMarine(const MoveAction& ma) {
     if (gm->hasMarine(ma.id)) {
         Marine& marine = gm->getMarine(ma.id);
         marine.setPosition(ma.xpos, ma.ypos);
+        marine.setDX(ma.xdel);
+        marine.setDY(ma.ydel);
         marine.setVelocity(ma.vel);
         marine.setAngle(ma.direction);
     } else {

@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -191,17 +191,21 @@ void GameStateMatch::handle() {
 
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
+#ifndef SERVER
     // Move player
     if (networked) {
         player.marine->move(player.marine->getDX() * delta, player.marine->getDY() * delta,
             GameManager::instance()->getCollisionHandler());
     } else {
+#endif
         GameManager::instance()->updateMarines(delta);
         GameManager::instance()->updateZombies(delta);
         GameManager::instance()->updateTurrets(delta);
+#ifndef SERVER
     }
     // Move Camera
     camera.move(player.marine->getX(), player.marine->getY());
+#endif
 }
 
 void GameStateMatch::render() {
@@ -222,9 +226,9 @@ void GameStateMatch::render() {
                     break;
                 }
 
-                Renderer::instance().render(
-                        {i * TEXTURE_SIZE - static_cast<int>(camera.getX()), j * TEXTURE_SIZE - static_cast<int>(camera.getY()),
-                        TEXTURE_SIZE, TEXTURE_SIZE}, TEXTURES::BARREN);
+                Renderer::instance().render({i * TEXTURE_SIZE - static_cast<int>(camera.getX()), 
+                    j * TEXTURE_SIZE - static_cast<int>(camera.getY()), TEXTURE_SIZE, TEXTURE_SIZE}, 
+                    TEXTURES::BARREN);
             }
         }
 
