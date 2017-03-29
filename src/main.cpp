@@ -14,6 +14,7 @@
 int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
     setenv("OMP_DYNAMIC", "TRUE", 1);
+    setenv("OMP_NESTED", "TRUE", 1);
 #ifdef SERVER
     signal(SIGINT, SIG_IGN);
 #endif
@@ -91,6 +92,16 @@ int main(int argc, char **argv) {
 
     sendAddrUDP.sin_family = AF_INET;
     sendAddrUDP.sin_port = htons(listen_port_udp);
+
+    memset(&udpMesgs, 0, sizeof(udpMesgs));
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i < MAX_UDP_PACKET_COUNT; ++i) {
+        iovecs[i].iov_base = readBuffers[i];
+        iovecs[i].iov_len = IN_PACKET_SIZE;
+        udpMesgs[i].msg_hdr.msg_iov = &iovecs[i];
+        udpMesgs[i].msg_hdr.msg_iovlen = 1;
+    }
 
     listenTCP(listenSocketTCP, INADDR_ANY, listen_port_tcp);
     logv("Sockets created and bound\n");

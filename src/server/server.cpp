@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 #include <sys/signal.h>
+#include <sys/socket.h>
 #include <arpa/inet.h>
 
 #include "../UDPHeaders.h"
@@ -24,6 +25,9 @@ int sendSocketUDP;
 bool verbose = false;
 std::unordered_map<int32_t, PlayerJoin> clientList;
 std::atomic_bool isGameRunning{false};
+char readBuffers[MAX_UDP_PACKET_COUNT][IN_PACKET_SIZE];
+iovec iovecs[MAX_UDP_PACKET_COUNT];
+mmsghdr udpMesgs[MAX_UDP_PACKET_COUNT];
 
 /**
  * The TCP sync loop.
@@ -47,11 +51,13 @@ void initSync(const int sock) {
     int nevents = 0;
     for (;;) {
         nevents = waitForEpollEvent(epollfd, events);
+#pragma omp parallel for schedule(static) firstprivate(clientList)
         for (int i = 0; i < nevents; ++i) {
             if (events[i].events & EPOLLERR) {
                 perror("Socket error");
                 for (const auto& it : clientList) {
                     if (it.second.entry.sock == events[i].data.fd) {
+#pragma omp critical
                         clientList.erase(it.first);
                         break;
                     }
@@ -64,6 +70,7 @@ void initSync(const int sock) {
                 logv("Peer closed connection\n");
                 for (const auto& it : clientList) {
                     if (it.second.entry.sock == events[i].data.fd) {
+#pragma omp critical
                         clientList.erase(it.first);
                         break;
                     }

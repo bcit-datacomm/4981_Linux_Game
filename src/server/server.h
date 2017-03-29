@@ -1,7 +1,12 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
 #include <netinet/in.h>
+#include <sys/socket.h>
 #include <cstdarg>
 #include <climits>
 #include <atomic>
@@ -21,7 +26,8 @@
 #define OPT_STRING "ni:p:hl:L:c:evo:"
 #define MAX_PORT 65535
 #define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
-#define MAXEVENTS 100 //although many kernels define it as 5 usually it can support many more
+#define MAXEVENTS 100 //Maximum number of simultaneous epoll events
+#define MAX_UDP_PACKET_COUNT 500 //Maximum number of packets to read from the UDP socket in one go
 #define TCP_HEADER_SIZE 5 //4 bytes for int32_t one byte for C/T char
 #define MULTICAST_ADDR "226.23.41.86"
 
@@ -48,6 +54,9 @@ extern int listen_port_udp;
 extern int listen_port_tcp;
 extern size_t client_count;
 extern int outputLength;
+extern char readBuffers[MAX_UDP_PACKET_COUNT][IN_PACKET_SIZE];
+extern iovec iovecs[MAX_UDP_PACKET_COUNT];
+extern mmsghdr udpMesgs[MAX_UDP_PACKET_COUNT];
 
 void initSync(const int sock);
 void processPacket(const char *data);
