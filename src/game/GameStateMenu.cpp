@@ -314,12 +314,8 @@ void GameStateMenu::handle() {
 
             //Checks the mouse position and sets the menu option Join
             //to it's acive state when the mouse hovers above the Join text
-            if (x >= joinRect.x && x <= joinRect.x + joinRect.w &&
-                    y >= joinRect.y && y <= joinRect.y + joinRect.h) {
-                joinSelected = true;  //Activate the button
-            } else {
-                joinSelected = false; //deactivate the button
-            }
+            joinSelected = (x >= joinRect.x && x <= joinRect.x + joinRect.w &&
+                y >= joinRect.y && y <= joinRect.y + joinRect.h);
             break;
 
         case SDL_WINDOWEVENT:
