@@ -20,7 +20,9 @@
  * John Agapeyev March 19
  */
 int32_t getPlayerId() {
+#pragma omp shared (counter)
     static std::atomic<int32_t> counter{-1};
+#pragma omp atomic
     return ++counter;
 }
 
@@ -274,8 +276,7 @@ void readTCP(const int sock) {
 void readUDP(const int sock, sockaddr *servaddr, socklen_t *servAddrLen) {
     char buff[IN_PACKET_SIZE];
     int nbytes;
-    while ((nbytes = recvfrom(sock, buff, IN_PACKET_SIZE, 
-                    0, servaddr, servAddrLen)) > 0) {
+    while ((nbytes = recvfrom(sock, buff, IN_PACKET_SIZE, 0, servaddr, servAddrLen)) > 0) {
         logv("Received %d bytes\n", nbytes);
 #pragma omp task
         processPacket(buff);
