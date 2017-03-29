@@ -166,7 +166,8 @@ void GameStateMatch::render() {
                 }
 
                 Renderer::instance().render(
-                        {i * TEXTURE_SIZE - static_cast<int>(camera.getX()), j * TEXTURE_SIZE - static_cast<int>(camera.getY()),
+                        {i * TEXTURE_SIZE - static_cast<int>(camera.getX()),
+                        j * TEXTURE_SIZE - static_cast<int>(camera.getY()),
                         TEXTURE_SIZE, TEXTURE_SIZE}, TEXTURES::BARREN);
             }
         }

@@ -15,7 +15,7 @@ public:
     // Game window
     Window window;
     SDL_Surface* screenSurface = nullptr;
-    unsigned int stateID; // Starting game state id
+
 
     bool init();
     void setStateID(const unsigned int id) {stateID = id;}
@@ -27,6 +27,7 @@ public:
 private:
     // Current game state
     std::unique_ptr<GameState> state;//stays as a pointer cause we need to be able to switch between match and menu states
+    unsigned int stateID; // Starting game state id
 };
 
 #endif

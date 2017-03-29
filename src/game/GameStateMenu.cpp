@@ -220,7 +220,7 @@ void GameStateMenu::handle() {
 
             //move to the game when a click occurs
             //changes the state to tell the Game.cpp loop to start the actual game
-            game.stateID = 2;
+            game.setStateID(2);
 
             //breaks out of the menu loop and Game.cpp re-evaluates the state
             play = false;
@@ -261,7 +261,7 @@ void GameStateMenu::handle() {
 
         case SDL_QUIT:
             play = false;
-            game.stateID = 0;
+            game.setStateID(0);
             break;
 
         default:

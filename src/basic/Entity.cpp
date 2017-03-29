@@ -4,8 +4,8 @@
 #include "../log/log.h"
 
 Entity::Entity(int32_t nid, const SDL_Rect dest):id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
-        movementHitBox(dest), projectileHitBox(dest), damageHitBox(dest), pickupHitBox(dest), x(dest.x),
-        y(dest.y) {
+        movementHitBox(dest), projectileHitBox(dest), damageHitBox(dest), pickupHitBox(dest),
+        x(dest.x), y(dest.y) {
 }
 
 Entity::Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize): id(nid), destRect(dest),

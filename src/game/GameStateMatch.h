@@ -30,13 +30,10 @@ public:
     virtual bool load();
     virtual void loop();
 
-    GameManager * gameManager = nullptr;
-
 private:
     Player player;
     Base base;
     Camera camera;
-    std::stringstream frameTimeText;
 
     virtual void sync() override;
     virtual void handle() override;
