@@ -40,7 +40,7 @@ public:
     bool reloadClip();
     bool chamberRound();
 
-    int32_t getId()const{return wID;};
+    int32_t getID()const{return wID;};
     void setId(const int32_t num){wID = num;};
 
     virtual bool fire(Marine& marine);

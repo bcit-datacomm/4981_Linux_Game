@@ -24,7 +24,7 @@ Weapon::Weapon(const Weapon& w)
 : type(w.type), fireSound(w.fireSound), hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound),
         range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), clip(w.clip), clipMax(w.clipMax),
         ammo(w.ammo), reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick),
-        fireTick(w.fireTick), wID(w.getId()){
+        fireTick(w.fireTick), wID(w.getID()){
 }
 
 

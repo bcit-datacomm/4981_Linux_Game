@@ -79,13 +79,16 @@ public:
     bool zombieExists(const int32_t id);
     Zombie& getZombie(const int32_t id);
 
+    //Weapon Drops
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
-    bool createWeaponDrop(const float x, const float y);
+    bool createWeaponDrop(const float x, const float y, int32_t wID);
     void deleteWeaponDrop(const int32_t id);
     bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
+
+    //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
-    int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);
+    int32_t addWeapon(std::shared_ptr<Weapon> weapon);
 
     int32_t createBarricade(const float x, const float y);
     void deleteBarricade(const int32_t id);
