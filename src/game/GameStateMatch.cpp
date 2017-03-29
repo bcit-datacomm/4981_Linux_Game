@@ -76,8 +76,8 @@ void GameStateMatch::loop() {
     //Start counting frames per second
     unsigned long countedFrames = 0;
     int frameTicks;
-    unsigned int second = 0;
 #ifndef SERVER
+    unsigned int second = 0;
     float avgFPS = 0;
 #endif
     fpsTimer.start();
@@ -197,7 +197,7 @@ void GameStateMatch::update(const float delta) {
             GameManager::instance()->getCollisionHandler());
     } else {
 #endif
-        GameManager::instance()->updateMarines(delta);
+        //GameManager::instance()->updateMarines(delta);
         GameManager::instance()->updateZombies(delta);
         GameManager::instance()->updateTurrets(delta);
 #ifndef SERVER

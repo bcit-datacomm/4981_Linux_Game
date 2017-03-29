@@ -407,8 +407,6 @@ void GameManager::updateMarine(const PlayerData &playerData) {
     Marine& marine = marineManager.at(playerData.playerid);
     marine.setPosition(playerData.xpos, playerData.ypos);
     marine.setAngle(playerData.direction);
-    marine.setDX(playerData.xdel);
-    marine.setDY(playerData.ydel);
     marine.setHealth(playerData.health);
 }
 
