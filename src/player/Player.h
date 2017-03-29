@@ -38,7 +38,7 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
-    Marine * marine;
+    Marine *marine;
 };
 
 #endif

@@ -41,9 +41,9 @@ private:
     void positionElements();
     virtual void render() override;
 
-    TTF_Font* headingFont;
-    TTF_Font* textboxFont;
-    TTF_Font* menuFont;
+    TTF_Font *headingFont;
+    TTF_Font *textboxFont;
+    TTF_Font *menuFont;
 
     SDL_Rect usernameTextBox;
     SDL_Rect hostIPTextBox;

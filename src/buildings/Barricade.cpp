@@ -1,15 +1,18 @@
-#include "Barricade.h"
-#include "../game/GameManager.h"
 #include <math.h>
 #include <random>
-#include "../log/log.h"
 #include <cassert>
+
+#include "Barricade.h"
+#include "../game/GameManager.h"
+#include "../log/log.h"
+
 #define PI 3.14159265
 
 
-Barricade::Barricade(int32_t nid, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &pickupSize,
-        int health, int state, bool placeable, bool placed): Object(nid, dest, movementSize, pickupSize,
-        BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state), placeable(placeable), placed(placed) {
+Barricade::Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& pickupSize,
+        const int health, const int state, const bool placeable, const bool placed): Object(nid, dest,
+        movementSize, pickupSize, BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state),
+        placeable(placeable), placed(placed) {
     logv("Create Barricade\n");
 
 }
@@ -20,10 +23,10 @@ Barricade::~Barricade() {
 
 //checks the proposed location of the barricade placement to see if it is valid.
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
-        const float moveX, const float moveY, CollisionHandler  &ch) {
-    const float distanceX = (playerX - moveX) * (playerX - moveX);
-    const float distanceY = (playerY - moveY) * (playerY - moveY);
-    const float distance = sqrt(abs(distanceX+distanceY));
+        const float moveX, const float moveY, CollisionHandler& ch) {
+        const float distanceX = (playerX - moveX) * (playerX - moveX);
+        const float distanceY = (playerY - moveY) * (playerY - moveY);
+        const float distance = sqrt(abs(distanceX+distanceY));
 
     placeable = (distance <= 200);
 
@@ -50,7 +53,7 @@ bool Barricade::isPlaced() {
 
 // Move Zombie by x and y amount
 void Barricade::move(const float playerX, const float playerY, const float moveX,
-        const float moveY, CollisionHandler &ch) {
+        const float moveY, CollisionHandler& ch) {
     setPosition(moveX, moveY);
 }
 

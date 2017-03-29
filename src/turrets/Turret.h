@@ -21,8 +21,8 @@ constexpr static int PLACE_DISTANCE = 200;
 class Turret : public Movable {
 public:
 
-    Turret(const int32_t id, const SDL_Rect &dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, const bool activated = false,
+    Turret(const int32_t id, const SDL_Rect& dest,const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated = false,
         const int health = 200, const int ammo = 100, const bool placed = false, const float range = 400.0f);
 
     virtual ~Turret();
@@ -32,7 +32,7 @@ public:
     bool placementCheckTurret(); // checks if turret placement is within bounds
 
     // checks if the turret placement overlaps with any currently existing objects
-    bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &);
+    bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler&);
 
     void activateTurret(); // activates the turret
 
@@ -53,7 +53,7 @@ public:
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
 
     void move(const float playerX, const float playerY,
-            const float moveX, const float moveY, CollisionHandler &ch);
+            const float moveX, const float moveY, CollisionHandler& ch);
 
     void placeTurret();
 

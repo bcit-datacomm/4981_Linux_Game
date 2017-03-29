@@ -43,7 +43,7 @@ public:
     int32_t getId()const{return wID;};
     void setId(const int32_t num){wID = num;};
 
-    virtual bool fire(Marine &marine);
+    virtual bool fire(Marine& marine);
 
 protected:
     string type;

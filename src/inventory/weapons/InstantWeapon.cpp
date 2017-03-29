@@ -35,7 +35,7 @@ InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, str
 
 
 // DericM, 01/03/17
-bool InstantWeapon::fire(Marine &marine) {
+bool InstantWeapon::fire(Marine& marine) {
 
     if (!Weapon::fire(marine)) {
         return false;
@@ -43,7 +43,7 @@ bool InstantWeapon::fire(Marine &marine) {
     logv("InstantWeapon::fire()\n");
 
     std::priority_queue<Target> targets;
-    GameManager* gameManager = GameManager::instance();
+    GameManager *gameManager = GameManager::instance();
     auto& collisionHandler = gameManager->getCollisionHandler();
 
     collisionHandler.detectLineCollision(targets, marine, range);

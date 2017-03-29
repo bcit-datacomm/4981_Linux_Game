@@ -11,23 +11,23 @@
 class Entity {
 public:
     //all values the same
-    Entity(int32_t nid, const SDL_Rect dest);
+    Entity(const int32_t nid, const SDL_Rect& dest);
     //size and movement different the rest are sprite size
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize);
     //size movement, and pickup different size, the rest are sprite size
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
-        const SDL_Rect &pickupSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& pickupSize);
     //pickup is the same as sprite size
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
-        const SDL_Rect &projectileSize, const SDL_Rect &damageSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize);
     //all values are different
-    Entity(int32_t nid, const SDL_Rect dest, const SDL_Rect &movementSize,
-        const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize);
+    Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize, const SDL_Rect& pickupSize);
 
     ~Entity() = default;
 
 
-    Entity(const Entity &e);
+    Entity(const Entity& e);
     virtual void onCollision();
     virtual void collidingProjectile(const int damage);
     void setPosition(const float x, const float y); // Set marine position

@@ -7,15 +7,15 @@
 using namespace std;
 
 
-WeaponDrop::WeaponDrop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize,
-        int32_t wId): Entity(id, dest, dest, pickupSize), weaponId(wId){
+WeaponDrop::WeaponDrop(const int32_t id, const SDL_Rect& dest, const SDL_Rect& pickupSize,
+        const int32_t wId): Entity(id, dest, dest, pickupSize), weaponId(wId) {
     logv("Created Weapon Drop\n");
 }
 
 WeaponDrop::~WeaponDrop() {
     logv("Destroy WeaponDrop\n");
 }
-void WeaponDrop::setPosition(int x, int y){
+void WeaponDrop::setPosition(const int x, const int y) {
     xCoord = x;
     yCoord = y;
 }
@@ -36,7 +36,7 @@ void WeaponDrop::onCollision() {
     // Do nothing for now
 }
 
-void WeaponDrop::collidingProjectile(int damage) {
+void WeaponDrop::collidingProjectile(const int damage) {
 }
 
 int32_t WeaponDrop::getId() const {

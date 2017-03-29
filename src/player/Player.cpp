@@ -5,11 +5,11 @@
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {}
 
-void Player::setControl(Marine &newControl) {
+void Player::setControl(Marine& newControl) {
     marine = &newControl;
 }
 
-void Player::handleMouseUpdate(Window &w, const float camX, const float camY) {
+void Player::handleMouseUpdate(Window& w, const float camX, const float camY) {
     int mouseX;
     int mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
@@ -19,13 +19,13 @@ void Player::handleMouseUpdate(Window &w, const float camX, const float camY) {
     marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* 180.0)/M_PI) * - 1);
 
     if (tempBarricadeID > -1) {
-        Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
+        Barricade& tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
         tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
     }
 
     if (tempTurretID > -1) {
-        Turret &tempTurret = GameManager::instance()->getTurret(tempTurretID);
+        Turret& tempTurret = GameManager::instance()->getTurret(tempTurretID);
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
 
@@ -56,7 +56,7 @@ void Player::handleMouseWheelInput(const SDL_Event *e){
 void Player::handlePlacementClick(SDL_Renderer *renderer) {
 
     if (tempBarricadeID > -1) {
-        Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
+        Barricade& tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
         if (tempBarricade.isPlaceable()) {
             tempBarricade.placeBarricade();
             tempBarricadeID = -1;
@@ -103,7 +103,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
             const int checkTurret = marine->checkForPickUp();
-            if (checkTurret > -1 & &holdingTurret == false)
+            if (checkTurret > -1 && holdingTurret == false)
             {
                 tempTurretID = checkTurret;
                 GameManager::instance()->getTurret(tempTurretID).pickUpTurret();

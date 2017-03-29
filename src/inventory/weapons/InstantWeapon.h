@@ -12,11 +12,11 @@ using std::string;
 class InstantWeapon: public Weapon  {
 public:
     InstantWeapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-	        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, 
+	        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
 	        int fireDelay);
     ~InstantWeapon() = default;
 
-    virtual bool fire(Marine &marine);
+    virtual bool fire(Marine& marine);
 
 };
 

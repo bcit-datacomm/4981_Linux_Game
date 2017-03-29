@@ -96,7 +96,7 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
             The range of the weapon that is being fired.
 */
 void CollisionHandler::detectLineCollision(
-        std::priority_queue<Target>& targetsInSights, Marine &marine, const int range) {
+        std::priority_queue<Target>& targetsInSights, Marine& marine, const int range) {
 
     const double degrees = marine.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
@@ -173,6 +173,6 @@ void CollisionHandler::checkTargets(const int originX, const int originY, const 
     }
 }
 
-std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree &q, const Entity *entity) {
+std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q, const Entity *entity) {
     return q.retrieve(entity);
 }

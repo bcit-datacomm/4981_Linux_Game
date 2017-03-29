@@ -14,7 +14,7 @@ public:
 
     // Game window
     Window window;
-    SDL_Surface* screenSurface = nullptr;
+    SDL_Surface *screenSurface = nullptr;
 
 
     bool init();

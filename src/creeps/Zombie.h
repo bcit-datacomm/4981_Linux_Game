@@ -68,8 +68,8 @@ enum class ZombieState {
 
 class Zombie : public Movable {
 public:
-    Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const int health = ZOMBIE_INIT_HP,
+    Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize, const int health = ZOMBIE_INIT_HP,
         const ZombieState state = ZombieState::ZOMBIE_IDLE,
         const int step = 0, const ZombieDirection dir = ZombieDirection::DIR_INVALID,
         const int frame = ZOMBIE_FRAMES);

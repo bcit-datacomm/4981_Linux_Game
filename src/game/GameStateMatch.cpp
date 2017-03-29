@@ -16,8 +16,8 @@
 #include "../sprites/VisualEffect.h"
 #include "Game.h"
 
-GameStateMatch::GameStateMatch(Game &g,  int gameWidth, int gameHeight) : GameState(g), player(),
-        base(), camera(gameWidth,gameHeight) {}
+GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g), 
+        player(), base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
     bool success = true;

@@ -1,7 +1,7 @@
 #include "Movable.h"
 
 // Move Movable by x and y amount
-void Movable::move(float moveX, float moveY, CollisionHandler &ch){
+void Movable::move(float moveX, float moveY, CollisionHandler& ch){
     //Move the Movable left or right
     setX(getX() + moveX);
 

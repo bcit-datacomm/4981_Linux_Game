@@ -107,17 +107,18 @@ public:
         int createTempTexture(const std::string& filePath);
 
         //renders all of the sprites within the camera viewport
-        void render(const SDL_Rect& dest, const TEXTURES spriteType, double angle = 0.0,
+        void render(const SDL_Rect& dest, const TEXTURES spriteType, const double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-        void render(const SDL_Rect& dest, const int spriteType, double angle = 0.0,
+        void render(const SDL_Rect& dest, const int spriteType, const double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-        void render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip, double angle = 0.0,
+        void render(const SDL_Rect& dest, const int spriteType, const SDL_Rect& clip, const double angle = 0.0,
                 const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-        void render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, double angle = 0.0,
-                const SDL_Point *center = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip,
+                const double angle = 0.0, const SDL_Point *center = nullptr,
+                const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 
 private:
@@ -125,8 +126,8 @@ private:
         ~Renderer();
 
         static Renderer sInstance;
-        SDL_Renderer* renderer;
-        SDL_Window* window;
+        SDL_Renderer *renderer;
+        SDL_Window *window;
         int tempIndex;
 
         //array of all sprites in the game

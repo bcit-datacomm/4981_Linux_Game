@@ -5,8 +5,8 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Turret::Turret(const int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, const bool activated, const int health,
+Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
         const int ammo, const bool placed, const float range): Entity(id, dest, movementSize,
         projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize,
         damageSize, pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), placed(placed),
@@ -28,7 +28,7 @@ bool Turret::placementCheckTurret(){
 
 // checks if the turret placement overlaps with any currently existing objects
 bool Turret::collisionCheckTurret(const float playerX, const float playerY, const float moveX,
-        const float moveY, CollisionHandler &ch) {
+        const float moveY, CollisionHandler& ch) {
     SDL_Rect checkBox;
 
     checkBox.h = TURRET_HEIGHT;
@@ -84,7 +84,7 @@ bool Turret::healthCheckTurret() {
 }
 
 void Turret::move(const float playerX, const float playerY,
-        const float moveX, const float moveY, CollisionHandler &ch) {
+        const float moveX, const float moveY, CollisionHandler& ch) {
 
     setPosition(moveX, moveY);
 
