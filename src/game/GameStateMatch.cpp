@@ -105,12 +105,13 @@ void GameStateMatch::loop() {
 
         render();    // Render game state to window
 #else
-        if (countedFrames % 2 == 0) {
-            //Server side sync packet sending
-            genOutputPacket();
-            sendSyncPacket(sendSocketUDP);
-            clearAttackActions();
-        }
+        //Server side sync packet sending
+        //This will send update packets every frame
+        //Currently at 60, so this is fine
+        //If frame rate changes, this may need limiting
+        genOutputPacket();
+        sendSyncPacket(sendSocketUDP);
+        clearAttackActions();
 #endif
 
         ++countedFrames;
