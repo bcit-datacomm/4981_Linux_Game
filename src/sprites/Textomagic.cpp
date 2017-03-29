@@ -12,8 +12,8 @@
  *  of it blank but 20  `W`s will take up the whole space.
  */
 Textomagic::Textomagic(const SDL_Rect& draw, TTF_Font* font, const int scaleLen,
-        const std::string& initText, const SDL_Color& color)
-        :draw(draw), font(font), maxLen(scaleLen), text(initText), color(color), textTex(nullptr),
+        const std::string& initText, const SDL_Color& color, const bool center)
+        :draw(draw), font(font), maxLen(scaleLen), text(initText), color(color), center(center), textTex(nullptr),
         textBox(draw), renderer(Renderer::instance().getRenderer()) {
     updateScale();
     makeTex();
@@ -56,7 +56,9 @@ void Textomagic::updateScale(){
  */
 void Textomagic::updateBox(const int wid) {
     textBox.w = wid * wScale;
-    textBox.x = (draw.x + draw.w / 2) - textBox.w / 2;
+    if (center) {
+        textBox.x = (draw.x + draw.w / 2) - textBox.w / 2;
+    }
 }
 
 /**
