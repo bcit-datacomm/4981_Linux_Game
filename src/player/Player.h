@@ -11,6 +11,7 @@
 #include "../UDPHeaders.h"
 #include "../game/GameManager.h"
 
+constexpr int DOUBLE_COMPARISON_PRECISION = 0.00001;
 constexpr int PLAYER_PLACE_DISTANCE = 100;
 
 class Player {
