@@ -40,15 +40,12 @@ bool GameStateMatch::load() {
         GameManager::instance()->createTurret(1000, 500);
         GameManager::instance()->createWeaponDrop(1800, 1700);
     }
+#else
+    GameManager::instance()->createZombieWave(1);
 #endif
     bool success = true;
-
     //set the boundary on the map
     GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
-
-
-    GameManager::instance()->createZombieWave(1);
-
     return success;
 }
 
@@ -156,7 +153,6 @@ void GameStateMatch::handle() {
 }
 
 void GameStateMatch::update(const float delta) {
-    std::lock_guard<std::mutex> lock(mut);
     GameManager::instance()->updateCollider();
 #ifndef SERVER
     // Move player
