@@ -285,6 +285,7 @@ bool GameManager::createWeaponDrop(const float x, const float y, int32_t wID) {
     weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID));
     getWeaponDrop(id).setPosition(x, y);
     logv("Created WeaponDrop id: %d\n", id);
+
     return id;
 }
 
