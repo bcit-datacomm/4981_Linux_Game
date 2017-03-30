@@ -3,7 +3,7 @@
 
     DISCRIPTION:
         InstantWewapon Weapons construct a line from the weapons mussle to its
-        theoretical range limit, and then get all the intersecting targets.
+        range limit, and then gets all the intersecting targets.
         Tergets are sorted in a priority queue by distance from player, and then
         they are damaged in order untill something invulnrable is hit, or
         penertation runs out.
@@ -34,53 +34,74 @@ InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, str
 }
 
 
-// DericM, 01/03/17
-bool InstantWeapon::fire(Marine& marine) {
+/**
+    InstantWeapon::fire
 
-    if (!Weapon::fire(marine)) {
+    DISCRIPTION:
+        construct a line from the weapons mussle to its
+        range limit, and then gets all the intersecting targets.
+        Tergets are sorted in a priority queue by distance from player, and then
+        they are damaged in order untill something invulnrable is hit, or
+        penertation runs out.
+
+        Movable& movable: The thing thats holding the weapon that is firing.
+        Its needed for its x and y cords, and for its angle.
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+bool InstantWeapon::fire(Movable& movable) {
+
+    if (!Weapon::fire(movable)) {
         return false;
     }
-    logv("InstantWeapon::fire()\n");
+    logv(3, "InstantWeapon::fire()\n");
 
-    std::priority_queue<Target> targets;
-    GameManager *gameManager = GameManager::instance();
-    auto& collisionHandler = gameManager->getCollisionHandler();
+    TargetList targetList;
 
-    collisionHandler.detectLineCollision(targets, marine, range);
+    GameManager::instance()->getCollisionHandler().detectLineCollision(targetList, movable, range);
 
-    for(int i = 0; i < penetration; i++) {
-        if (targets.empty()) {
-            logv("targets.empty()\n");
+    int finalX = targetList.getEndX();
+    int finalY = targetList.getEndY();
+
+    for(int i = 0; i <= penetration; i++) {
+        if (targetList.isEmpty()) {
+            logv(3, "targets.empty()\n");
             break;
         }
-        if (targets.top().getType() != TYPE_ZOMBIE) {
-            logv("target is of type: %d\n", targets.top().getType());
+        Target target = targetList.getNextTarget();
+
+        //if we have run out of penatration set the end point to here.
+        if(i == penetration){
+            finalX = target.getHitX();
+            finalY = target.getHitY();
+        }
+
+        //if the target is invincible break because we cant hit anything more.
+        if (!target.isType(TYPE_ZOMBIE)) {
+            finalX = target.getHitX();
+            finalY = target.getHitY();
+            logv(3, "target is of type: %d\n", target.getType());
             break;
         }
 
-        logv("targets.size():%d\n", targets.size());
-        logv("Shot target of type: %d\n", targets.top().getType());
+        logv(3, "targets.size():%d\n", targetList.numTargets());
+        logv(3, "Shot target of type: %d\n", target.getType());
 
-        int32_t id = targets.top().getId();
-        if (!gameManager->zombieExists(id)) {
-            logv("!gameManager.zombieExists(id)\n");
+        int32_t id = target.getId();
+
+        if (!GameManager::instance()->zombieExists(id)) {
+            logv(3, "!gameManager.zombieExists(id)\n");
             break;
         }
-        gameManager->getZombie(id).collidingProjectile(damage);
-        targets.pop();
+        //damage target
+        GameManager::instance()->getZombie(id).collidingProjectile(damage);
+
+        targetList.removeTop();
     }
+    const int originX = targetList.getOriginX();
+    const int originY = targetList.getOriginY();
+    VisualEffect::instance().addPreLine(5, originX, originY, finalX, finalY, 0, 255, 0);
 
-
-    //similar as to what happens in the line collision and is used to show a use of the line effect
-    const double degrees = marine.getAngle() - 90;
-    const double radians = degrees * M_PI / 180;
-    const int playerX = marine.getX() + (MARINE_WIDTH / 2);
-    const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
-    const int deltaX  = playerX + range * cos(radians);
-    const int deltaY  = playerY + range * sin(radians);
-
-    //5 frames to display ie 1/12th of a second at 60fps
-    //0 red, 255 green, 0 blue
-    VisualEffect::instance().addPreLine(5, playerX, playerY, deltaX, deltaY, 0, 255, 0);
     return true;
 }

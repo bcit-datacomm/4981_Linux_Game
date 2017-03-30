@@ -10,7 +10,7 @@
 
 using std::string;
 
-class Marine;
+class Movable;
 
 class Weapon {
 public:
@@ -43,7 +43,7 @@ public:
     int32_t getId()const{return wID;};
     void setId(const int32_t num){wID = num;};
 
-    virtual bool fire(Marine& marine);
+    virtual bool fire(Movable& movable);
 
 protected:
     string type;

@@ -16,7 +16,7 @@ public:
 	        int fireDelay);
     ~InstantWeapon() = default;
 
-    virtual bool fire(Marine& marine);
+    virtual bool fire(Movable& movable);
 
 };
 

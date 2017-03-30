@@ -30,7 +30,7 @@ Weapon::Weapon(const Weapon& w)
 
 //Deric M       3/3/2017
 bool Weapon::reduceClip(const int rounds){
-    logv("Current ammo: %d/%d\n", clip, ammo + clip);
+    logv(3, "Current ammo: %d/%d\n", clip, ammo + clip);
     if(clip < rounds){
         reloadClip();
     }
@@ -89,8 +89,8 @@ int32_t generateWID() {
 
 
 //Deric M       3/15/2017
-bool Weapon::fire(Marine& marine){
-    logv("Weapon::fire()\n");
+bool Weapon::fire(Movable& movable){
+    logv(3, "Weapon::fire()\n");
     if(!chamberRound()){
         return false;
     }
