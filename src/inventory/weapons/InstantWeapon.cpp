@@ -26,6 +26,18 @@
 
 using std::string;
 
+/**
+ * Date: Mar 1, 2017
+ * Modified: Mar 13, 2017 - Mark Tattrie
+ * Author: Deric Mccadden
+ * Function Interface: InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound,
+ *       string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+ *       int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
+ *       : Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
+ *          penetration, clip, clipMax, ammo, reloadDelay, fireDelay)
+ * Description:
+ * Ctor for Instant Weapon
+ */
 InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
         int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
 : Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo,
@@ -69,7 +81,6 @@ bool InstantWeapon::fire(Marine& marine) {
         gameManager->getZombie(id).collidingProjectile(damage);
         targets.pop();
     }
-
 
     //similar as to what happens in the line collision and is used to show a use of the line effect
     const double degrees = marine.getAngle() - 90;

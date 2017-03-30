@@ -33,6 +33,14 @@ void Marine::fireWeapon() {
     }
 }
 
+/**
+* Date: Mar. 1, 2017
+* Modified: Mar. 15 2017 - Mark Tattrie
+* Author: Maitiu Morton
+* Function Interface: int32_t Marine::checkForPickUp()
+* Description:
+* Checks for and returns the id of a pickup underneath the marine
+*/
 int32_t Marine::checkForPickUp() {
     int32_t pickId = -1;
     GameManager *gm = GameManager::instance();

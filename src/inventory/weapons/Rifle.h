@@ -1,5 +1,6 @@
 /*
     Created by Maitiu Morton 2/8/2017
+        Edited by MarkT 3/13/2017
 */
 #ifndef RIFLE_H
 #define RIFLE_H

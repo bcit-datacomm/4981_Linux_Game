@@ -1,5 +1,6 @@
 /*
     Created  by Deric M       01/03/17
+    Edited by Mark T 3/13/2017
 */
 #ifndef INSTANTWEAPON_H
 #define INSTANTWEAPON_H
