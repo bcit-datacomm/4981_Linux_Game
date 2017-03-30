@@ -21,7 +21,8 @@
 class Textomagic {
     public:
         Textomagic(const SDL_Rect& draw, TTF_Font* font, const int scaleLen = 0, 
-            const std::string& initText = "", const SDL_Color& color = {255,255,255,255});
+            const std::string& initText = "", const SDL_Color& color = {255,255,255,255}, 
+            const bool center = true);
         ~Textomagic();
 
         void setRect(const SDL_Rect& draw);
@@ -38,6 +39,7 @@ class Textomagic {
         float wScale, hScale;
         std::string text;
         SDL_Color color;
+        bool center;
 
         //recalculate render destination
         void updateBox(const int w);
