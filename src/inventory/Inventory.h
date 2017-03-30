@@ -25,7 +25,7 @@ public:
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
     Inventory();
-    ~Inventory()=default;
+    ~Inventory() = default;
 
 private:
     int current = 0;//current weapon

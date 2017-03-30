@@ -21,7 +21,7 @@ void Inventory::switchCurrent(const int slot) {
     }
 }
 //Created By Maitiu
-bool Inventory::pickUp(int32_t weaponId, float x, float y) {
+bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
     if (current == 0) {
         logv("Can't Swap default gun \n");
         return false;
@@ -42,9 +42,8 @@ bool Inventory::pickUp(int32_t weaponId, float x, float y) {
 Weapon* Inventory::getCurrent() {
     if (weaponIds[current] >= 0) {
         return GameManager::instance()->getWeapon(weaponIds[current]).get();
-    } else {
-        return nullptr;
     }
+    return nullptr;
 }
 
 void Inventory::useItem() {
@@ -80,7 +79,7 @@ void Inventory::scrollCurrent(int direction) {
  * DATE:      March 29 2017
  * Checks is current CSLot has Weapon then Checks its ammo and creates a weaponDrop and renders it.
  */
- void Inventory::dropWeapon(float x, float y) {
+ void Inventory::dropWeapon(const float x, const float y) {
      Weapon *w = getCurrent();
      if (w != nullptr) {
          if (w->getAmmo() > 0) {
