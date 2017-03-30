@@ -51,6 +51,23 @@ void updateMarine(const MoveAction& ma) {
     }
 }
 
+void performAttack(const AttackAction& aa) {
+    if (gm->hasMarine(aa.playerid)) {
+        const auto& p = gm->getMarine(aa.playerid);
+        if (!p.second) {
+            logv("Marine not found with id %d\n", aa.playerid);
+            return;
+        }
+        auto& marine = p.first;
+        marine.setPosition(aa.xpos, aa.ypos);
+        marine.setAngle(aa.direction);
+        const auto& weapon = gm->getWeapon(aa.weaponid);
+        weapon->fire(marine);
+    } else {
+        logv("Marine not found with id %d\n", aa.playerid);
+    }
+}
+
 /**
  * Creates a vector of PlayerData structs for use in generating outut
  * packets.
