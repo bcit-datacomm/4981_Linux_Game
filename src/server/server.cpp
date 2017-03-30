@@ -155,6 +155,7 @@ void processPacket(const char *data) {
         case UDPHeaders::ATTACKACTIONH:
             {
                 const AttackAction& aa = mesg->data.aa;
+                performAttack(aa);
                 saveAttack(aa);
             }
             break;

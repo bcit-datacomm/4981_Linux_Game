@@ -11,6 +11,7 @@ extern GameManager *gm;
 extern std::vector<AttackAction> attackList;
 
 void updateMarine(const MoveAction& ma);
+void performAttack(const AttackAction& aa);
 void saveAttack(const AttackAction& aa);
 void clearAttackActions();
 void startGame();
