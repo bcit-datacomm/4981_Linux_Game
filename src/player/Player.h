@@ -10,7 +10,6 @@
 #include "../inventory/Inventory.h"
 #include "../client/NetworkManager.h"
 #include "../UDPHeaders.h"
-#include "../game/GameManager.h"
 
 static constexpr double DOUBLE_COMPARISON_PRECISION = 0.001;
 static constexpr int PLAYER_PLACE_DISTANCE = 100;
@@ -33,22 +32,27 @@ public:
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
 
+    void fireWeapon();
+
     void sendServMoveAction();
+    void sendServAttackAction();
     bool hasChangedAngle() const;
     bool hasChangedCourse() const;
     void setId(const int32_t newId) {id = newId;};
+    int32_t getId() const {return id;};
 
     //Stays as pointer cause the player gets a marine object after the ctor is called
     Marine * getMarine() const {return marine;}
 
 private:
-    int32_t id;
     int tempBarricadeID;
     int tempTurretID;
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    int32_t id;
     ClientMessage moveAction;
+    ClientMessage attackAction;
     Marine *marine;
 };
 

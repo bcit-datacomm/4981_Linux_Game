@@ -32,7 +32,6 @@ public:
     virtual void loop();
 
 private:
-    Player player;
     Base base;
     Camera camera;
 

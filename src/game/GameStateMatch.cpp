@@ -20,17 +20,19 @@
 #include "Game.h"
 
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        player(), base(), camera(gameWidth,gameHeight) {}
+        base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
 #ifndef SERVER
     if (networked) {
-        player.setControl(GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
-        player.setId(NetworkManager::instance().getPlayerId());
+        GameManager::instance()->getPlayer().setControl(
+                GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
+        GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
         Point newPoint = base.getSpawnPoint();
-        player.setControl(GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
-        player.getMarine()->setPosition(newPoint.first, newPoint.second);
+        GameManager::instance()->getPlayer().setControl(
+                GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
+        GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
 
         // Create Dummy Entitys
         //GameManager::instance()->createMarine(100, 100);
@@ -105,8 +107,9 @@ void GameStateMatch::sync() {
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
-    player.handleKeyboardInput(state);
-    player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+    GameManager::instance()->getPlayer().handleKeyboardInput(state);
+    GameManager::instance()->getPlayer().handleMouseUpdate(
+            game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);
@@ -115,11 +118,13 @@ void GameStateMatch::handle() {
                 camera.setViewSize(game.getWindow().getWidth(), game.getWindow().getHeight());
                 break;
             case SDL_MOUSEWHEEL:
-                player.handleMouseWheelInput(&(event));
+                GameManager::instance()->getPlayer().handleMouseWheelInput(&(event));
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_RIGHT) {
-                    player.handlePlacementClick(Renderer::instance().getRenderer());
+                    GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
+                } else if (event.button.button == SDL_BUTTON_LEFT) {
+                    GameManager::instance()->getPlayer().fireWeapon();
                 }
                 break;
             case SDL_KEYDOWN:
@@ -128,7 +133,8 @@ void GameStateMatch::handle() {
                         play = false;
                         break;
                     case SDLK_b:
-                        player.handleTempBarricade(Renderer::instance().getRenderer());
+                        GameManager::instance()->getPlayer().handleTempBarricade(
+                                Renderer::instance().getRenderer());
                         break;
                     default:
                         break;
@@ -153,24 +159,26 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 #ifndef SERVER
     // Move player
-    if (networked) {
-        if (player.hasChangedCourse() || player.hasChangedAngle()) {
-            player.sendServMoveAction();
+    if (GameManager::instance()->getPlayer().hasChangedCourse()
+            || GameManager::instance()->getPlayer().hasChangedAngle()) {
+        if (networked) {
+            GameManager::instance()->getPlayer().sendServMoveAction();
         }
-        player.getMarine()->move(player.getMarine()->getDX() * delta, player.getMarine()->getDY() * delta,
-            GameManager::instance()->getCollisionHandler());
-    } else {
-        player.getMarine()->move(player.getMarine()->getDX() * delta, player.getMarine()->getDY() * delta,
-            GameManager::instance()->getCollisionHandler());
-#endif
-        //GameManager::instance()->updateMarines(delta);
-        GameManager::instance()->updateZombies(delta);
-        GameManager::instance()->updateTurrets();
-#ifndef SERVER
+        GameManager::instance()->getPlayer().getMarine()->move(
+                GameManager::instance()->getPlayer().getMarine()->getDX() * delta,
+                GameManager::instance()->getPlayer().getMarine()->getDY() * delta,
+                GameManager::instance()->getCollisionHandler());
     }
+
     // Move Camera
-    camera.move(player.getMarine()->getX(), player.getMarine()->getY());
+    camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
+            GameManager::instance()->getPlayer().getMarine()->getY());
 #endif
+    if (!networked) {
+        GameManager::instance()->updateMarines(delta);
+    }
+    GameManager::instance()->updateZombies(delta);
+    GameManager::instance()->updateTurrets();
 }
 
 void GameStateMatch::render() {

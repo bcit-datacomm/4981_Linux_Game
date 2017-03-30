@@ -379,7 +379,8 @@ void GameManager::updateCollider() {
 }
 
 void GameManager::updateMarine(const PlayerData &playerData) {
-    if(marineManager.count(playerData.playerid)) {
+    if(marineManager.count(playerData.playerid) == 0) {
+        std::cout << "create marine" << std::endl;
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager[playerData.playerid].first;
@@ -396,6 +397,23 @@ void GameManager::updateZombie(const ZombieData &zombieData) {
     zombie.setPosition(zombieData.xpos, zombieData.ypos);
     zombie.setAngle(zombieData.direction);
     zombie.setHealth(zombieData.health);
+}
+
+
+void GameManager::handleAttackAction(const AttackAction& attackAction) {
+    if (!(attackAction.playerid == player.getId())) {
+        auto marine = marineManager[attackAction.playerid];
+        if (marine.second) {
+            int curX = marine.first.getX();
+            int curY = marine.first.getY();
+            double curAngle = marine.first.getAngle();
+            marine.first.setPosition(attackAction.xpos, attackAction.ypos);
+            marine.first.setAngle(attackAction.direction);
+            marine.first.fireWeapon();
+            marine.first.setPosition(curX, curY);
+            marine.first.setAngle(curAngle);
+        }
+    }
 }
 
 

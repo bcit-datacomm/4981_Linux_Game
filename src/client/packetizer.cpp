@@ -188,6 +188,7 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
             std::cout << "\n\tAction ypos:" << attack->ypos;
             std::cout << "\n\tAction direction:" << attack->direction;
             std::cout << std::endl;
+            GameManager::instance()->handleAttackAction(*attack);
             pBuff = reinterpret_cast<int32_t *>(++attack);
           }
           break;
@@ -204,8 +205,8 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
           std::cout << "\n\tZombie health:" << zombie->health;
           std::cout << std::endl;
           */
-          pBuff = reinterpret_cast<int32_t *>(++zombie);
           GameManager::instance()->updateZombie(*zombie);
+          pBuff = reinterpret_cast<int32_t *>(++zombie);
         }
         break;
     }// End of ZOMBIEH case, must be enclosed in braces.

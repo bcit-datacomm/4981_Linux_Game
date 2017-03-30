@@ -12,7 +12,7 @@
 GameManager *gm = GameManager::GameManager::instance();
 std::vector<AttackAction> attackList;
 
-/** 
+/**
  * Saves a attack action in the vector.
  * This vector stores every attack action received since the last sync packet was sent.
  * John Agapeyev March 19
@@ -61,8 +61,13 @@ void performAttack(const AttackAction& aa) {
         auto& marine = p.first;
         marine.setPosition(aa.xpos, aa.ypos);
         marine.setAngle(aa.direction);
-        const auto& weapon = gm->getWeapon(aa.weaponid);
-        weapon->fire(marine);
+
+        /* Using marine.fireWeapon instead because weapon ids aren't implemented and I wanted
+        to get shooting working. */
+        //const auto& weapon = gm->getWeapon(aa.weaponid);
+        //weapon->fire(marine);
+
+        marine.fireWeapon();
     } else {
         logv("Marine not found with id %d\n", aa.playerid);
     }

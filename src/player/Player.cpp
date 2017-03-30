@@ -1,10 +1,13 @@
 #include <cmath>
 
 #include "Player.h"
+#include "../game/GameManager.h"
+
 
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
+    attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
 
 void Player::setControl(Marine& newControl) {
@@ -31,6 +34,17 @@ void Player::sendServMoveAction() {
     NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
 }
 
+void Player::sendServAttackAction() {
+    attackAction.data.aa.playerid = id;
+    attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
+    attackAction.data.aa.weaponid = marine->inventory.getCurrent()->getId();
+    attackAction.data.aa.xpos = marine->getX();
+    attackAction.data.aa.ypos = marine->getY();
+    attackAction.data.aa.direction = marine->getAngle();
+
+    NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
+}
+
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
@@ -51,7 +65,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
 
-        if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
@@ -60,14 +74,26 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
             }
         }
     }
-
+/*
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if(marine->inventory.getCurrent() != nullptr){
             marine->fireWeapon();
+            if (networked) {
+                sendServAttackAction();
+            }
         }
     }
+*/
+}
 
+void Player::fireWeapon() {
+    if(marine->inventory.getCurrent() != nullptr){
+        marine->fireWeapon();
+        if (networked) {
+            sendServAttackAction();
+        }
+    }
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){

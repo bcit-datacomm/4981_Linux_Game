@@ -36,7 +36,6 @@ InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, str
 
 // DericM, 01/03/17
 bool InstantWeapon::fire(Marine& marine) {
-
     if (!Weapon::fire(marine)) {
         return false;
     }

@@ -27,6 +27,7 @@
 #include "../inventory/WeaponDrop.h"
 #include "GameHashMap.h"
 #include <memory>
+#include "../player/Player.h"
 
 //just for tesing weapon drop
 #include "../inventory/weapons/Weapon.h"
@@ -112,14 +113,18 @@ public:
     //network update Methods
     void updateMarine(const PlayerData &playerData);
     void updateZombie(const ZombieData &zombieData);
+    void handleAttackAction(const AttackAction& attackAction);
 
     void setPlayerUsername(int32_t id, const char * username);
     const std::string& getNameFromId(int32_t id);
+
+    Player& getPlayer() {return player;};
 
 private:
     GameManager();
     ~GameManager();
     static GameManager sInstance;
+    Player player;
 
     CollisionHandler collisionHandler;
     std::unique_ptr<WeaponDrop> wdPointer;
