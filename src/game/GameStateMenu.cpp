@@ -58,12 +58,12 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
             static_cast<int>(screenRect.h * HOST_H_RAT)},
         userRect{
             static_cast<int>(screenRect.w * USER_X_RAT), 
-            static_cast<int>(screenRect.h * USER_Y_RAT), 
+            static_cast<int>(hostRect.y + hostRect.h + USER_Y_PAD), 
             static_cast<int>(screenRect.w * USER_W_RAT), 
             static_cast<int>(screenRect.h * USER_H_RAT)},
         joinRect{
             static_cast<int>(screenRect.w * JOIN_X_RAT), 
-            static_cast<int>(screenRect.h * JOIN_Y_RAT), 
+            static_cast<int>(userRect.y + userRect.h + JOIN_Y_PAD), 
             static_cast<int>(screenRect.w * JOIN_W_RAT), 
             static_cast<int>(screenRect.h * JOIN_H_RAT)},
         joinSelected(false), hostIPSelected(false), usernameSelected(false),
@@ -408,12 +408,12 @@ void GameStateMenu::positionElements() {
         static_cast<int>(screenRect.h * HOST_H_RAT)};
 
     userRect = {static_cast<int>(screenRect.w * USER_X_RAT), 
-        static_cast<int>(screenRect.h * USER_Y_RAT), 
+        static_cast<int>(hostRect.h + hostRect.y + USER_Y_PAD), 
         static_cast<int>(screenRect.w * USER_W_RAT), 
         static_cast<int>(screenRect.h * USER_H_RAT)};
     
     joinRect = { static_cast<int>(screenRect.w * JOIN_X_RAT), 
-        static_cast<int>(screenRect.h * JOIN_Y_RAT), 
+        static_cast<int>(userRect.h + userRect.y + JOIN_Y_PAD), 
         static_cast<int>(screenRect.w * JOIN_W_RAT), 
         static_cast<int>(screenRect.h * JOIN_H_RAT) };
 
@@ -469,9 +469,9 @@ void GameStateMenu::render() {
     //Join and Options text
     //Change the color of the text when active
     if (joinSelected) {
-        joinMagic.setColor(RED);
+        joinMagic.setColor(GREEN);
     } else {
-        joinMagic.setColor(BLACK);
+        joinMagic.setColor(RED);
     }
 
     //Host IP and Username textboxes

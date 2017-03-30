@@ -10,7 +10,7 @@
 #include "../sprites/Textomagic.h"
 
 static constexpr size_t maxLength = 15;
-static constexpr int FONT_SIZE = 110;
+static constexpr int FONT_SIZE = 256;
 static constexpr int JOIN_LEN = 4;
 
 static const std::string HOST_DEFAULT("Hostname");
@@ -22,14 +22,14 @@ static constexpr float HOST_W_RAT = 1.0 / 3;
 static constexpr float HOST_H_RAT = 1.0 / 14;
 
 static constexpr float USER_X_RAT = 1.0 / 3;
-static constexpr float USER_Y_RAT = 9.0 / 14;
+static constexpr float USER_Y_PAD = 50;
 static constexpr float USER_W_RAT = 1.0 / 3;
 static constexpr float USER_H_RAT = 1.0 / 14;
 
-static constexpr float JOIN_X_RAT = 5.0 / 12;
-static constexpr float JOIN_Y_RAT = 11.0 / 14;
-static constexpr float JOIN_W_RAT = 1.0 / 6;
-static constexpr float JOIN_H_RAT = 1.0 / 14;
+static constexpr float JOIN_X_RAT = 4.0 / 12;
+static constexpr float JOIN_Y_PAD = 50;
+static constexpr float JOIN_W_RAT = 1.0 / 3;
+static constexpr float JOIN_H_RAT = 1.0 / 7;
 
 //Color Data
 static constexpr SDL_Color WHITE = {255, 255, 255, 255};
@@ -70,7 +70,6 @@ private:
     Textomagic hostMagic;
     Textomagic userMagic;
     Textomagic joinMagic;
-
 };
 
 #endif
