@@ -25,11 +25,11 @@ public:
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
     Inventory();
-    ~Inventory();
+    ~Inventory()=default;
 
 private:
     int current = 0;//current weapon
-    int32_t weaponIds[3]; //Array of ids for the weapons in inventory
+    std::array<int32_t, 3> weaponIds;//array of weapon ids
     HandGun defaultGun;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());

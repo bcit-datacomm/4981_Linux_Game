@@ -36,7 +36,7 @@ void Marine::fireWeapon() {
 /*
  * Created By Maitiu
  * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
- * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method. 
+ * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
  */
 int32_t Marine::checkForPickUp() {
     int32_t pickId = -1;
@@ -53,8 +53,7 @@ int32_t Marine::checkForPickUp() {
             return pickId;
         }
         //Checks if WeaponDrop exists
-        int found = gm->weaponDropExists(pickId);
-        if(found) {
+        if(gm->weaponDropExists(pickId)) {
             const WeaponDrop& wd = gm->getWeaponDrop(pickId);
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();

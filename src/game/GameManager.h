@@ -81,7 +81,7 @@ public:
 
     //Weapon Drops
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
-    bool createWeaponDrop(const float x, const float y, int32_t wID);
+    bool createWeaponDrop(const float x, const float y, const int32_t wID);
     void deleteWeaponDrop(const int32_t id);
     bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);

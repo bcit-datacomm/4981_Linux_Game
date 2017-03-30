@@ -276,14 +276,14 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 
 // Create weapon drop add it to manager, returns success
 //Created By Maitiu
-bool GameManager::createWeaponDrop(const float x, const float y, int32_t wID) {
+bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
-    weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID));
-    getWeaponDrop(id).setPosition(x, y);
+    weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
+
     logv("Created WeaponDrop id: %d\n", id);
 
     return id;

@@ -14,11 +14,11 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
         const ZombieDirection dir, const int frame) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
         health(health), state(state), step(step), dir(dir), frame(frame) {
-    //logv("Create Zombie\n");
+    logv("Create Zombie\n");
 }
 
 Zombie::~Zombie() {
-    //logv("Destroy Zombie\n");
+    logv("Destroy Zombie\n");
 }
 
 /**

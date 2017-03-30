@@ -13,9 +13,6 @@ Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()) {
 
 }
 
-Inventory::~Inventory() {
-
-}
 
 void Inventory::switchCurrent(const int slot) {
     if (current != slot) {
