@@ -42,7 +42,7 @@ void initSync(const int sock) {
     epoll_event *events = createEpollEventList();
 
     epoll_event ev;
-    ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
+    ev.events = EPOLLIN | EPOLLET | 1u << 28;
     ev.data.fd = sock;
 
     int epollfd = createEpollFD();
@@ -104,7 +104,7 @@ void listenForPackets(const sockaddr_in servaddr) {
     epoll_event *events = createEpollEventList();
 
     epoll_event ev;
-    ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
+    ev.events = EPOLLIN | EPOLLET | 1u << 28;
     ev.data.fd = listenSocketUDP;
 
     int epollfd = createEpollFD();
@@ -231,7 +231,7 @@ void genOutputPacket() {
     *pBuff++ = attackList.size();
     AttackAction *pAttack = reinterpret_cast<AttackAction *>(pBuff);
     for (const auto& aa : attackList) {
-        memcpy(pAttack++, &aa, sizeof(AttackAction)); 
+        memcpy(pAttack++, &aa, sizeof(AttackAction));
     }
     pBuff = reinterpret_cast<int32_t *>(pAttack);
 
@@ -284,4 +284,3 @@ void listenUDP(const int socket, const unsigned long ip, const unsigned short po
     logv("UDP server started\n");
     listenForPackets(servaddrudp);
 }
-

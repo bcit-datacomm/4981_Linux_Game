@@ -43,6 +43,10 @@ bool GameStateMatch::load() {
 
     //set the boundary on the map
     GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+
+
+    GameManager::instance()->createZombieWave(1);
+
     return success;
 }
 

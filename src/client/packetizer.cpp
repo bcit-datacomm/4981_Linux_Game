@@ -195,23 +195,17 @@ void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
       case UDPHeaders::ZOMBIEH: {
         int32_t zCount = *pBuff++;
         for(int32_t i = 0; i  < zCount; i++){
-            /*
           zombie = reinterpret_cast<ZombieData *>(pBuff);
+          /*
           std::cout << "\nZombie zombieid:" << zombie->zombieid;
           std::cout << "\n\tZombie xpos:" << zombie->xpos;
           std::cout << "\n\tZombie ypos:" << zombie->ypos;
           std::cout << "\n\tZombie direction:" << zombie->direction;
           std::cout << "\n\tZombie health:" << zombie->health;
           std::cout << std::endl;
+          */
           pBuff = reinterpret_cast<int32_t *>(++zombie);
-          */
-          /*
-          UpdateZombie (zombie->zombieid,
-                          zombie->xpos,
-                          zombie->ypos,
-                          zombie->health,
-                          zombie->direction);
-          */
+          GameManager::instance()->updateZombie(*zombie);
         }
         break;
     }// End of ZOMBIEH case, must be enclosed in braces.

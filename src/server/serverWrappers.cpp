@@ -35,7 +35,7 @@ sockaddr_in bindSocket(const int sock, const unsigned long ip, const unsigned sh
     memset(&servaddrudp, 0, sizeof(servaddrudp));
     servaddrudp.sin_family = AF_INET;
     servaddrudp.sin_addr.s_addr = htonl(ip);
-    servaddrudp.sin_port = htons(port); 
+    servaddrudp.sin_port = htons(port);
 
     if ((bind(sock, (struct sockaddr *) &servaddrudp, sizeof(servaddrudp))) == -1) {
         perror("Bind");
@@ -219,7 +219,7 @@ void handleIncomingTCP(const int epollfd) {
 
     epoll_event clientEv;
     memset(&clientEv, 0, sizeof(epoll_event));
-    clientEv.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
+    clientEv.events = EPOLLIN | EPOLLET | 1u << 28;
     clientEv.data.fd = clientSock;
 
     PlayerJoin cli{0};
@@ -358,7 +358,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
  * John Agapeyev March 19
  */
 void updateClientWithCurrentLobby(const int sock, char *outBuff, const size_t bufferSize) {
-    //Send new client a list of already existing clients 
+    //Send new client a list of already existing clients
     int32_t *id;
     for (const auto& it : clientList) {
         if (it.second.entry.sock != sock && it.second.hasSentUsername) {
@@ -375,9 +375,9 @@ void updateClientWithCurrentLobby(const int sock, char *outBuff, const size_t bu
             outBuff[4] = 'T';
             memset(outBuff + TCP_HEADER_SIZE + 1, '\0', NAMELEN);
             if (it.second.isPlayerReady) {
-                strncpy(outBuff + TCP_HEADER_SIZE + 1, "ready", 5);                
+                strncpy(outBuff + TCP_HEADER_SIZE + 1, "ready", 5);
             } else {
-                strncpy(outBuff + TCP_HEADER_SIZE + 1, "unready", 7);                
+                strncpy(outBuff + TCP_HEADER_SIZE + 1, "unready", 7);
             }
             if (!rawClientSend(sock, outBuff, bufferSize)) {
                 break;
@@ -421,7 +421,7 @@ void processCommandMessage(const int32_t idReceived, const char *buff, const int
  * John Agapeyev March 19
  */
 bool checkIfAllClientsAreReady() {
-    return std::all_of(clientList.cbegin(), clientList.cend(), 
+    return std::all_of(clientList.cbegin(), clientList.cend(),
             [](const auto& elem){return elem.second.isPlayerReady;});
 }
 
@@ -446,7 +446,7 @@ void processReadyMessage(const int32_t idReceived) {
 
 /**
  * Handles an unready message from a client.
- * It chaanges the ready status of the client, and then updates the 
+ * It chaanges the ready status of the client, and then updates the
  * lobby with the newly updated status.
  * John Agapeyev March 19
  */
