@@ -342,7 +342,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     strncpy(outBuff + TCP_HEADER_SIZE + 1, client.second.entry.username, NAMELEN);
 
     gm->createMarine(client.first);
-    gm->getMarine(client.first).setPosition(100, yPos);
+    gm->getMarine(client.first).first.setPosition(100, yPos);
     yPos += 150;
 
     //Send client their allocated id and username

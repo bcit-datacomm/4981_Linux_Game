@@ -1,6 +1,8 @@
-#include "log.h"
 #include <cstdarg>
 #include <cstdio>
+
+#include "log.h"
+
 
 int log_verbose = 0;
 

@@ -16,7 +16,6 @@ public:
 private:
     static int width;
     static int height;
-    SDL_Surface* levelImg;
 
 };
 

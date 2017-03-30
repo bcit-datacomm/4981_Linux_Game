@@ -35,7 +35,12 @@ void clearAttackActions() {
  */
 void updateMarine(const MoveAction& ma) {
     if (gm->hasMarine(ma.id)) {
-        Marine& marine = gm->getMarine(ma.id);
+        const auto& p = gm->getMarine(ma.id);
+        if (!p.second) {
+            logv("Marine not found with id %d\n", ma.id);
+            return;
+        }
+        auto& marine = p.first;
         marine.setPosition(ma.xpos, ma.ypos);
         marine.setDX(ma.xdel);
         marine.setDY(ma.ydel);

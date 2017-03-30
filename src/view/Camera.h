@@ -15,7 +15,7 @@ public:
     int getY() const {return viewport.y;}
     int getW() const {return viewport.w;}
     int getH() const {return viewport.h;}
-    SDL_Rect getViewport() const {return viewport;}
+    SDL_Rect& getViewport() {return viewport;}
 
 private:
     SDL_Rect viewport; // Camera area of view

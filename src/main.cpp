@@ -60,6 +60,9 @@ int main(int argc, char **argv) {
             case 'n':
                 networked = true;
                 break;
+            case 'i'://verbose
+                log_verbose = 3;
+                break;
             case 'v'://verbose
                 log_verbose = 2;
                 break;
@@ -68,6 +71,9 @@ int main(int argc, char **argv) {
                 break;
             case 'o':
                 log_verbose = atoi(optarg);
+                break;
+            case '?':
+                printf("-v verbose\n-e error\nverbose enables error as well.\n");
                 break;
         }
     }
@@ -113,15 +119,16 @@ int main(int argc, char **argv) {
 
     //Start up SDL and create window
     if (game.init() && game.loadMedia()) {
-        logv( "Running...\n");
+        logv("Running...\n");
         game.run();
     } else {
-        logv( "Failed to start!\n" );
+        logv("Failed to start!\n");
     }
 
     game.close();
+    logv("Exit\n");
 
-    logv( "Exit\n" );
 #endif
+    return 0;
 }
 

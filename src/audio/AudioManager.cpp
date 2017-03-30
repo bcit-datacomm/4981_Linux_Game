@@ -23,8 +23,10 @@ AudioManager& AudioManager::instance() {
 }
 
 AudioManager::AudioManager(){
- 
-    Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 );
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        logv("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    }
 
     loadFiles();
 }
@@ -67,7 +69,7 @@ void AudioManager::playEffect(const char * fileName){
     logv("%s\n", fileName);
 
     if (Mix_PlayChannel(-1, chunk, 0) == -1 ){
-        logv("Mix_PlayMusic: %s\n", Mix_GetError());
+        logv("Mix_PlayChannel: %s\n", Mix_GetError());
     }
 }
 
