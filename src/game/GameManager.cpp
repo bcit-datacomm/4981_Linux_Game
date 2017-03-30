@@ -295,7 +295,7 @@ bool GameManager::createWeaponDrop(const float x, const float y, int32_t wID) {
 bool GameManager::weaponDropExists(const int32_t id){
     return weaponDropManager.count(id);
 }
-
+//created by Maitiu
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     logv("id: %d\n", id);
@@ -304,6 +304,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     return wd.first;
 }
 
+//created by Maitiu
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];

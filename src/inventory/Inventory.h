@@ -11,7 +11,11 @@
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
 
-
+/*
+ * Created By Maitiu Morton
+ * THe inventory class acts as the marine's inventory. It sotres the ids for all the objects that the
+ * Marine has equipped such as Weapons and Consumables.
+ */
 class Inventory {
 public:
     void switchCurrent(int slot);//switches currently selected slot based on key input
@@ -25,8 +29,7 @@ public:
 
 private:
     int current = 0;//current weapon
-    int32_t weaponIds[3];
-    std::array<std::shared_ptr<Weapon>, 3> weapons;
+    int32_t weaponIds[3]; //Array of ids for the weapons in inventory
     HandGun defaultGun;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());
