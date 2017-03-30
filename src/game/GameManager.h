@@ -89,6 +89,7 @@ public:
     //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     int32_t addWeapon(std::shared_ptr<Weapon> weapon);
+    void removeWeapon(const int32_t id);
 
     int32_t createBarricade(const float x, const float y);
     void deleteBarricade(const int32_t id);

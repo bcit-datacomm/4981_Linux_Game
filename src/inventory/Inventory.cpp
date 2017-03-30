@@ -85,10 +85,11 @@ void Inventory::scrollCurrent(int direction) {
      if (w != nullptr) {
          if (w->getAmmo() > 0) {
              GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
-             weaponIds[current] = -1;
+
          } else {
              //delete weapon From Weapon Manager
+             GameManager::instance()->removeWeapon(weaponIds[current]);
          }
-
+         weaponIds[current] = -1;
      }
  }

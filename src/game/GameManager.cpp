@@ -267,6 +267,13 @@ int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
     return id;
 }
 
+/*
+ *Created By Maitiu March 30 2017
+ */
+void GameManager::removeWeapon(const int32_t id){
+    weaponManager.erase(id);
+}
+
 //Created By Maitiu
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
