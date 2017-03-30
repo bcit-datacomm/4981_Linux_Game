@@ -32,7 +32,7 @@ bool Inventory::pickUp(int32_t weaponId, float x, float y){
 
 
     Weapon *w = getCurrent();
-    if(w != nullptr){
+    if(w != nullptr && w->getAmmo() > 0){
         dropWeapon(x, y);
     }
     logv("Picked up weapon\n");
@@ -42,6 +42,7 @@ bool Inventory::pickUp(int32_t weaponId, float x, float y){
     return true;
 }
 
+//Created By Maitiu
 Weapon* Inventory::getCurrent() {
     if(weaponIds[current] >= 0){
         return GameManager::instance()->getWeapon(weaponIds[current]).get();
@@ -58,6 +59,7 @@ void Inventory::useItem() {
 
 }
 
+//Created By Maitiu
 void Inventory::scrollCurrent(int direction){
     int currentTime = SDL_GetTicks();
 
