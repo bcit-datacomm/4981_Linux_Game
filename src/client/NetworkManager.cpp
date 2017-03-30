@@ -125,7 +125,7 @@ void NetworkManager::runTCPClient(const std::string username) {
     for(;;) {
         readSet = initSet;
 
-        if (select(sockTCP + 1, &readSet, NULL, NULL, NULL) < 0) {
+        if (select(sockTCP + 1, &readSet, nullptr, nullptr, nullptr) < 0) {
             perror("select");
             exit(1);
         }

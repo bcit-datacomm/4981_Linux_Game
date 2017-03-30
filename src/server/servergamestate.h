@@ -12,6 +12,8 @@ extern std::vector<AttackAction> attackList;
 
 void updateMarine(const MoveAction& ma);
 void performAttack(const AttackAction& aa);
+void processBarricade(const BarricadeAction& ba);
+void processTurret(const TurretAction& ta);
 void saveAttack(const AttackAction& aa);
 void clearAttackActions();
 void startGame();

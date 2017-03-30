@@ -34,6 +34,7 @@ void clearAttackActions() {
  * John Agapeyev March 19
  */
 void updateMarine(const MoveAction& ma) {
+    std::lock_guard<std::mutex> lock(mut);
     if (gm->hasMarine(ma.id)) {
         const auto& p = gm->getMarine(ma.id);
         if (!p.second) {
@@ -52,6 +53,7 @@ void updateMarine(const MoveAction& ma) {
 }
 
 void performAttack(const AttackAction& aa) {
+    std::lock_guard<std::mutex> lock(mut);
     if (gm->hasMarine(aa.playerid)) {
         const auto& p = gm->getMarine(aa.playerid);
         if (!p.second) {
@@ -73,6 +75,35 @@ void performAttack(const AttackAction& aa) {
     }
 }
 
+void processBarricade(const BarricadeAction& ba) {
+    std::lock_guard<std::mutex> lock(mut);
+    Barricade& tempBarricade = GameManager::instance()->getBarricade(ba.barricadeid);
+    if (ba.actionid == UDPHeaders::PICKUP) {
+        //No noticeable code in game logic for picking up a barricade
+    } else if (ba.actionid == UDPHeaders::DROPOFF) {
+        if (tempBarricade.isPlaceable()) {
+            tempBarricade.placeBarricade();
+            tempBarricade.setPosition(ba.xpos, ba.ypos);
+        }
+    } else {
+        logv("Received barricade packet with unknown action id\n");
+    }
+}
+
+void processTurret(const TurretAction& ta) {
+    std::lock_guard<std::mutex> lock(mut);
+    Turret& tempTurret = GameManager::instance()->getTurret(ta.turretid);
+    if (ta.actionid == UDPHeaders::PICKUP) {
+        tempTurret.pickUpTurret();
+        tempTurret.setPosition(ta.xpos, ta.ypos);
+    } else if (ta.actionid == UDPHeaders::DROPOFF) {
+        tempTurret.placeTurret();
+        tempTurret.setPosition(ta.xpos, ta.ypos);
+    } else {
+        logv("Received turret packet with unknown action id\n");
+    }
+}
+
 /**
  * Creates a vector of PlayerData structs for use in generating outut
  * packets.
@@ -82,6 +113,7 @@ void performAttack(const AttackAction& aa) {
 std::vector<PlayerData> getPlayers() {
     std::vector<PlayerData> rtn;
     PlayerData tempPlayer;
+    std::lock_guard<std::mutex> lock(mut);
     for (const auto& idPlayerPair : gm->getAllMarines()) {
         const auto& marine = idPlayerPair.second;
         memset(&tempPlayer, 0, sizeof(tempPlayer));
@@ -107,6 +139,7 @@ std::vector<PlayerData> getPlayers() {
 std::vector<ZombieData> getZombies() {
     std::vector<ZombieData> rtn;
     ZombieData tempZombie;
+    std::lock_guard<std::mutex> lock(mut);
     for (const auto& idZombiePair : gm->getAllZombies()) {
         const auto& zombie = idZombiePair.second;
         memset(&tempZombie, 0, sizeof(tempZombie));

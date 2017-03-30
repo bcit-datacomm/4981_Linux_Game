@@ -7,10 +7,17 @@
 
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <sys/epoll.h>
 #include <cstdarg>
 #include <climits>
 #include <atomic>
+#include <mutex>
 #include <unordered_map>
+
+//Fix issue where Brody has out-of-date system that doesn't have epoll exclusive
+#ifndef EPOLLEXCLUSIVE
+#define EPOLLEXCLUSIVE 1u << 28
+#endif
 
 //Temp variable to represent client count
 #define CLIENT_COUNT 10
@@ -57,6 +64,7 @@ extern int outputLength;
 extern char readBuffers[MAX_UDP_PACKET_COUNT][IN_PACKET_SIZE];
 extern iovec iovecs[MAX_UDP_PACKET_COUNT];
 extern mmsghdr udpMesgs[MAX_UDP_PACKET_COUNT];
+extern std::mutex mut;
 
 void initSync(const int sock);
 void processPacket(const char *data);
