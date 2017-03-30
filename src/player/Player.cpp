@@ -31,7 +31,6 @@ void Player::sendServMoveAction() {
     moveAction.data.ma.ydel = marine->getDY();
     moveAction.data.ma.vel = marine->getVelocity();
     moveAction.data.ma.direction = marine->getAngle();
-    std::cout << "send move action" << std::endl;
     NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
 }
 
