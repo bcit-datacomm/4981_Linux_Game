@@ -54,19 +54,19 @@
 GameStateMenu::GameStateMenu(Game& g):GameState(g),
         screenRect{0, 0, g.getWindow().getWidth(), g.getWindow().getHeight()},
         hostRect{
-            static_cast<int>(screenRect.w * HOST_X_RAT), 
-            static_cast<int>(screenRect.h * HOST_Y_RAT), 
-            static_cast<int>(screenRect.w * HOST_W_RAT), 
+            static_cast<int>(screenRect.w * HOST_X_RAT),
+            static_cast<int>(screenRect.h * HOST_Y_RAT),
+            static_cast<int>(screenRect.w * HOST_W_RAT),
             static_cast<int>(screenRect.h * HOST_H_RAT)},
         userRect{
-            static_cast<int>(screenRect.w * USER_X_RAT), 
-            static_cast<int>(hostRect.y + hostRect.h + USER_Y_PAD), 
-            static_cast<int>(screenRect.w * USER_W_RAT), 
+            static_cast<int>(screenRect.w * USER_X_RAT),
+            static_cast<int>(hostRect.y + hostRect.h + USER_Y_PAD),
+            static_cast<int>(screenRect.w * USER_W_RAT),
             static_cast<int>(screenRect.h * USER_H_RAT)},
         joinRect{
-            static_cast<int>(screenRect.w * JOIN_X_RAT), 
-            static_cast<int>(userRect.y + userRect.h + JOIN_Y_PAD), 
-            static_cast<int>(screenRect.w * JOIN_W_RAT), 
+            static_cast<int>(screenRect.w * JOIN_X_RAT),
+            static_cast<int>(userRect.y + userRect.h + JOIN_Y_PAD),
+            static_cast<int>(screenRect.w * JOIN_W_RAT),
             static_cast<int>(screenRect.h * JOIN_H_RAT)},
         joinSelected(false), hostIPSelected(false), usernameSelected(false),
         hostInput(HOST_DEFAULT), userInput(USER_DEFAULT),
@@ -216,9 +216,10 @@ void GameStateMenu::handle() {
             if (joinSelected) {
                 if (networked) {
                     NetworkManager::instance().run(hostInput, userInput);
+                } else {
+                    game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
+                    play = false;
                 }
-                game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
-                play = false;
                 break;
             }
 
@@ -410,20 +411,20 @@ void GameStateMenu::update(const float delta) {
  */
 void GameStateMenu::positionElements() {
     screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
-    
-    hostRect = {static_cast<int>(screenRect.w * HOST_X_RAT), 
-        static_cast<int>(screenRect.h * HOST_Y_RAT), 
-        static_cast<int>(screenRect.w * HOST_W_RAT), 
+
+    hostRect = {static_cast<int>(screenRect.w * HOST_X_RAT),
+        static_cast<int>(screenRect.h * HOST_Y_RAT),
+        static_cast<int>(screenRect.w * HOST_W_RAT),
         static_cast<int>(screenRect.h * HOST_H_RAT)};
 
-    userRect = {static_cast<int>(screenRect.w * USER_X_RAT), 
-        static_cast<int>(hostRect.h + hostRect.y + USER_Y_PAD), 
-        static_cast<int>(screenRect.w * USER_W_RAT), 
+    userRect = {static_cast<int>(screenRect.w * USER_X_RAT),
+        static_cast<int>(hostRect.h + hostRect.y + USER_Y_PAD),
+        static_cast<int>(screenRect.w * USER_W_RAT),
         static_cast<int>(screenRect.h * USER_H_RAT)};
-    
-    joinRect = { static_cast<int>(screenRect.w * JOIN_X_RAT), 
-        static_cast<int>(userRect.h + userRect.y + JOIN_Y_PAD), 
-        static_cast<int>(screenRect.w * JOIN_W_RAT), 
+
+    joinRect = { static_cast<int>(screenRect.w * JOIN_X_RAT),
+        static_cast<int>(userRect.h + userRect.y + JOIN_Y_PAD),
+        static_cast<int>(screenRect.w * JOIN_W_RAT),
         static_cast<int>(screenRect.h * JOIN_H_RAT) };
 
     hostMagic.setRect(hostRect);
@@ -512,4 +513,3 @@ void GameStateMenu::render() {
     //Update screen
     SDL_RenderPresent(Renderer::instance().getRenderer());
 }
-
