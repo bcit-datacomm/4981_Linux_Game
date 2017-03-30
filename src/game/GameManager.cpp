@@ -378,9 +378,19 @@ void GameManager::updateCollider() {
     }
 }
 
+/**
+Date: 30. 17, 2017
+Programmer: Brody McCrone
+Interface: void GameManager::updateMarine(const PlayerData &playerData)
+    playerData: Player data struct received from the server containing
+        updated player info.
+Description:
+Checks if there is a marine in the marineManager with the id in the
+playData struct, if not it creates a marine with that id. Whether it
+created it or not it updates it's positition angle and health.
+*/
 void GameManager::updateMarine(const PlayerData &playerData) {
     if(marineManager.count(playerData.playerid) == 0) {
-        std::cout << "create marine" << std::endl;
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager[playerData.playerid].first;
@@ -389,6 +399,17 @@ void GameManager::updateMarine(const PlayerData &playerData) {
     marine.setHealth(playerData.health);
 }
 
+/**
+Date: 30. 17, 2017
+Programmer: Brody McCrone
+Interface: void GameManager::updateZombie(const ZombieData &zombieData)
+    zobmieData: Zombie data struct received from the server containing
+        updated zombie info.
+Description:
+Checks if there is a zombie in the zombieManager with the id in the
+playData struct, if not it creates that zombie with that id. Whether
+it created it or not it updates it's positition angle and health.
+*/
 void GameManager::updateZombie(const ZombieData &zombieData) {
     if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
         createZombie(zombieData.zombieid);
@@ -399,7 +420,19 @@ void GameManager::updateZombie(const ZombieData &zombieData) {
     zombie.setHealth(zombieData.health);
 }
 
-
+/**
+Date: 30. 17, 2017
+Programmer: Brody McCrone and Deric Mccadden
+Interface: void GameManager::handleAttackAction(const AttackAction& attackAction)
+    attackAction: Information about an attack a marine performed received from
+        the server.
+Description:
+-Doesn't update the players marine, because the player performs actions before
+sending information to them about the server.
+-If the marine exits, it fires its current weapon. Weapon id is in the attack
+action but support for weapon ids hasn't been implemented so ignores it and
+fires current weapon.
+*/
 void GameManager::handleAttackAction(const AttackAction& attackAction) {
     if (!(attackAction.playerid == player.getId())) {
         auto marine = marineManager[attackAction.playerid];
