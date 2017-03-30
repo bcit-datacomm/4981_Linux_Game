@@ -80,8 +80,8 @@ private:
 class TargetList{
 public:
 
-    void addTarget(Target t){targets.push(t);}
-    Target getNextTarget(){return targets.top();}
+    void addTarget(const Target t){targets.push(t);}
+    const Target& getNextTarget() {return targets.top();}
     void removeTop(){targets.pop();}
     bool isEmpty(){return targets.empty();}
     int numTargets(){return targets.size();}
