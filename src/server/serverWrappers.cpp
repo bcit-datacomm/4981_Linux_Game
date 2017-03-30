@@ -219,7 +219,7 @@ void handleIncomingTCP(const int epollfd) {
 
     epoll_event clientEv;
     memset(&clientEv, 0, sizeof(epoll_event));
-    clientEv.events = EPOLLIN | EPOLLET | 1u << 28;
+    clientEv.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
     clientEv.data.fd = clientSock;
 
     PlayerJoin cli{0};

@@ -7,10 +7,16 @@
 
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <sys/epoll.h>
 #include <cstdarg>
 #include <climits>
 #include <atomic>
 #include <unordered_map>
+
+//Fix issue where Brody has out-of-date system that doesn't have epoll exclusive
+#ifndef EPOLLEXCLUSIVE
+#define EPOLLEXCLUSIVE 1u << 28
+#endif
 
 //Temp variable to represent client count
 #define CLIENT_COUNT 10

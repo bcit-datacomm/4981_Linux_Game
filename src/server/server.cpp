@@ -42,7 +42,7 @@ void initSync(const int sock) {
     epoll_event *events = createEpollEventList();
 
     epoll_event ev;
-    ev.events = EPOLLIN | EPOLLET | 1u << 28;
+    ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
     ev.data.fd = sock;
 
     int epollfd = createEpollFD();
@@ -104,7 +104,7 @@ void listenForPackets(const sockaddr_in servaddr) {
     epoll_event *events = createEpollEventList();
 
     epoll_event ev;
-    ev.events = EPOLLIN | EPOLLET | 1u << 28;
+    ev.events = EPOLLIN | EPOLLET | EPOLLEXCLUSIVE;
     ev.data.fd = listenSocketUDP;
 
     int epollfd = createEpollFD();
