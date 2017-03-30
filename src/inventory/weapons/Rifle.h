@@ -36,7 +36,7 @@ namespace RifleVars {
 class Rifle: public InstantWeapon {
 public:
 
-    Rifle();
+    Rifle(int32_t id);
     ~Rifle() = default;
 };
 

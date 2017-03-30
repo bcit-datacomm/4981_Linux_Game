@@ -37,7 +37,7 @@ namespace ShotgunVars {
 class ShotGun: public InstantWeapon {
 public:
 
-    ShotGun();
+    ShotGun(int32_t id);
     ~ShotGun() = default;
 
 };

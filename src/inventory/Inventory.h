@@ -28,8 +28,6 @@ private:
     int32_t weaponIds[3];
     std::array<std::shared_ptr<Weapon>, 3> weapons;
     HandGun defaultGun;
-    Rifle tempRifle;
-    ShotGun tempShotGun;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());
     int slotScrollTick = 0;

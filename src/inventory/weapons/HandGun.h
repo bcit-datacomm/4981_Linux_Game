@@ -38,7 +38,7 @@ namespace HandgunVars {
 class HandGun: public InstantWeapon {
 public:
 
-    HandGun();
+    HandGun(int32_t id);
     ~HandGun() = default;
 };
 

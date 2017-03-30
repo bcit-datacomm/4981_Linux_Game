@@ -5,10 +5,7 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(){
-    weapons[0] = std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun));
-    weapons[1] = std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(tempRifle));
-    weapons[2] = std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(tempShotGun));
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()){
     weaponIds[0] = defaultGun.getID();
     weaponIds[1] = -1;
     weaponIds[2] = -1;

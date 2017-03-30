@@ -13,10 +13,10 @@ using std::string;
 
 Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
         const string& emptySound, const int range, const int damage, const int AOE, const int penetration,
-        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay)
+        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
 : type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
         range(range), damage(damage), AOE(AOE), penetration(penetration), clip(clip), clipMax(clipMax), ammo(ammo),
-        reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(generateWID()){
+        reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id){
 
 }
 
@@ -80,13 +80,6 @@ bool Weapon::chamberRound() {
     }
     return true;
 }
-
-
-int32_t generateWID() {
-    static std::atomic<int32_t> counter{-1};
-    return ++counter;
-}
-
 
 //Deric M       3/15/2017
 bool Weapon::fire(Marine& marine){
