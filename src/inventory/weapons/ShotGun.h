@@ -22,7 +22,7 @@ namespace ShotgunVars {
     constexpr int RANGE         = 200;
     constexpr int DAMAGE        = 100;
     constexpr int AOE           = 1;
-    constexpr int PENETRATION   = 1;
+    constexpr int PENETRATION   = 0;
 
     constexpr int CLIP          = 2;
     constexpr int CLIPMAX       = 2;
