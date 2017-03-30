@@ -49,7 +49,9 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
 
     //-------- weapon textures --------
-    createTexture(TEXTURES::WEAPONS, RIFLE); //temporary, will be replaced later
+    createTexture(TEXTURES::RIFLE, TEMP_RIFLE_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::SHOTGUN, TEMP_SHOTGUN_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::HANDGUN, TEMP_HANDGUN_TEXTURE); //temporary, will be replaced later
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, TEMP_MARINE_TEXTURE);

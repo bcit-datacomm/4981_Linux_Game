@@ -41,7 +41,7 @@ GameManager::~GameManager() {
 void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(m.second.getRelativeDestRect(cam), getWeapon(m.second.getWeaponId())->getTexture());
         }
     }
 
@@ -296,19 +296,30 @@ void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
 }
 
+//Created By Maitiu
+//Adds Weapon to Weapon Manager
 int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
-    const int32_t id = weapon->getId();
+    const int32_t id = weapon->getID();
     const auto& elem = weaponManager.emplace(id, weapon);
     elem->second->setId(id);
     return id;
 }
 
+/*
+ *Created By Maitiu March 30 2017
+ */
+void GameManager::removeWeapon(const int32_t id){
+    weaponManager.erase(id);
+}
+
+//Created By Maitiu 2017-03-12
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
     weaponDropManager.emplace(id, newWeaponDrop);
     return id;
 }
 
+<<<<<<< HEAD
 
 /**
 * Date: Mar. 1, 2017
@@ -321,13 +332,20 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 bool GameManager::createWeaponDrop(const float x, const float y) {
     Rifle w;
     const int32_t wid = w.getId();
+=======
+// Create weapon drop add it to manager, returns success
+//Created By Maitiu 2017-03-12
+bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
+>>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
-    addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-    weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wid));
+    weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
+
+    logv("Created WeaponDrop id: %d\n", id);
+
     return id;
 }
 
@@ -337,16 +355,17 @@ bool GameManager::createWeaponDrop(const float x, const float y) {
 bool GameManager::weaponDropExists(const int32_t id){
     return weaponDropManager.count(id);
 }
-
+//created by Maitiu 2017-03-12
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
-    logv("id: %d", id);
+    logv("id: %d\n", id);
     const auto& wd = weaponDropManager[id];
     assert(wd.second);
     return wd.first;
 }
 
-//returns weapon in weaponManager
+//created by Maitiu 2017-03-12 
+//returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];
     assert(w.second);

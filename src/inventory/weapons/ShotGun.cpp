@@ -5,6 +5,7 @@
 */
 #include "ShotGun.h"
 
+<<<<<<< HEAD
 /**
  * Date: Feb 8, 2017
  * Modified: Mar 13, 2017 - Mark Tattrie
@@ -18,7 +19,10 @@
  * Ctor for Shotgun
  */
 ShotGun::ShotGun() : InstantWeapon(ShotgunVars::TYPE, ShotgunVars::FIRESOUND, ShotgunVars::HITSOUND,
+=======
+ShotGun::ShotGun(int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::SHOTGUN, ShotgunVars::FIRESOUND, ShotgunVars::HITSOUND,
+>>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
         ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, ShotgunVars::RANGE, ShotgunVars::DAMAGE,
         ShotgunVars::AOE, ShotgunVars::PENETRATION, ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO,
-        ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY) {
+        ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY, id) {
 }

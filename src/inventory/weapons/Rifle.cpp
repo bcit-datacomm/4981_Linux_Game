@@ -5,6 +5,7 @@
 */
 #include "Rifle.h"
 
+<<<<<<< HEAD
 /**
  * Date: Feb 8, 2017
  * Modified: Mar 13, 2017 - Mark Tattrie
@@ -19,5 +20,10 @@
 Rifle::Rifle() : InstantWeapon(RifleVars::TYPE, RifleVars::FIRESOUND, RifleVars::HITSOUND, RifleVars::RELOADSOUND,
         RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE, RifleVars::PENETRATION,
         RifleVars::CLIP, RifleVars::CLIPMAX, RifleVars::AMMO, RifleVars::RELOADDELAY, RifleVars::FIREDELAY) {
+=======
+Rifle::Rifle(int32_t id) : InstantWeapon(RifleVars::TYPE, TEXTURES::RIFLE, RifleVars::FIRESOUND, RifleVars::HITSOUND, RifleVars::RELOADSOUND,
+        RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE, RifleVars::PENETRATION,
+        RifleVars::CLIP, RifleVars::CLIPMAX, RifleVars::AMMO, RifleVars::RELOADDELAY, RifleVars::FIREDELAY, id) {
+>>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
 
 }

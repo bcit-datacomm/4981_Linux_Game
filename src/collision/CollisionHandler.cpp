@@ -133,32 +133,38 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
         Edited: 3/17/2017 walls work now.
 
     PARAMS:
-        std::priority_queue<Target>& targetsInSights,
-            This is the queue that will hold the targets that will be determined.
-        Marine &marine,
-            The marine that fired the weapon, this is needed for its x and y and angle.
+        TargetList &targetList,
+            This is the priority queue wrapper that will hold the targets that will be determined.
+        Movable &moveble,
+            The movable that fired the weapon, this is needed for its x and y and angle.
         const int range
             The range of the weapon that is being fired.
 */
-void CollisionHandler::detectLineCollision(
-        std::priority_queue<Target>& targetsInSights, Marine& marine, const int range) {
+void CollisionHandler::detectLineCollision(TargetList &targetList, Movable& movable, const int range){
 
-    const double degrees = marine.getAngle() - 90;
+    const double degrees = movable.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
-    const int originX = marine.getX() + (MARINE_WIDTH / 2);
-    const int originY = marine.getY() + (MARINE_HEIGHT / 2);
-    const int deltaX  = range * cos(radians);
-    const int deltaY  = range * sin(radians);
+    const int originX = movable.getX() + (MARINE_WIDTH / 2);
+    const int originY = movable.getY() + (MARINE_HEIGHT / 2);
+    const int deltaX = range * cos(radians);
+    const int deltaY = range * sin(radians);
+    const int endX = originX + deltaX;
+    const int endY = originY + deltaY;
+
+    targetList.setOriginX(originX);
+    targetList.setOriginY(originY);
+    targetList.setEndX(endX);
+    targetList.setEndY(endY);
 
     auto& zombies = quadtreeZombie.objects;
     auto& turrets = quadtreeTurret.objects;
     auto& walls   = quadtreeWall.objects;
 
-    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, zombies, TYPE_ZOMBIE);
-    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, turrets, TYPE_TURRET);
-    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, walls, TYPE_WALL);
+    checkForTargetsInVector(originX, originY, endX, endY, targetList, zombies, TYPE_ZOMBIE);
+    checkForTargetsInVector(originX, originY, endX, endY, targetList, turrets, TYPE_TURRET);
+    checkForTargetsInVector(originX, originY, endX, endY, targetList, walls,   TYPE_WALL);
 
-    logv("targetsInSights.size(): %d\n", targetsInSights.size());
+    logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
 
 /**
@@ -172,44 +178,54 @@ void CollisionHandler::detectLineCollision(
 
     PARAMS:
         const int originX,
-            The starting x.
         const int originY,
-            The starting y.
-        const int deltaX,
-            The x distance to the end point from the origin.
-        const int deltaY,
-            The y distance to the end point from the origin.
-        std::priority_queue<Target>& targetsInSights,
-            This is the queue that will hold the targets that will be determined.
+            The x and y where the bullet is fired from. 
+
+        const int endX,
+        const int endY,
+            The furthest point the bullet can travel.
+
+        TargetList &targetList,
+            This is the priority queue wrapper that will hold the targets that will be determined.
+
         std::vector<Entity*> allEntities,
             The entities that will need to be searched for valid targets.
+
         int type
             the type of entity, see target Target.h for definitions.
             This is needed for identification purposes in InstantWeapon.fire()
 */
-void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
-        std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
-
-    int tempOriginX = originX;
-    int tempOriginY = originY;
-    int tempEndX = originX + deltaX;
-    int tempEndY = originY + deltaY;
-    int distanceToOrigin;
+void CollisionHandler::checkForTargetsInVector(const int originX, const int originY, const int endX, const int endY,
+        TargetList &targetList, std::vector<Entity*> &allEntities, int type) {
 
     for(auto& possibleTarget : allEntities) {
 
+        /* These values are initialized to the end points of a line spanning from the gun muzzle 
+        to the point at the end of the guns range. After SDL_IntersectRectAndLine is called
+        they are changed to the end points of a line that intersects the hitbox starting with
+        the entrance wound and ending with the exit wound as if the bullet were to pass straight
+        through the hitbox and exit on the other side while maintaing its starting trajectory.
+        This is why they are not const as the function has to be able to change them. */
+        int entranceWoundX = originX;
+        int entranceWoundY = originY;
+        int exitWoundX = endX;
+        int exitWoundY = endY;
+
         if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()),
-                &tempOriginX, &tempOriginY , &tempEndX, &tempEndY)) {
+                &entranceWoundX, &entranceWoundY , &exitWoundX, &exitWoundY)) {
 
-            logv("Intersect target at (%d, %d)\n", tempEndX, tempEndY);
+            //the change in x and y from the firing origin to the spot the bullet hits the target.
+            int localDeltaX = entranceWoundX - originX;
+            int localDeltaY = entranceWoundY - originY;
+            //the direct distance from the firing origin to the spot the bullet hits each target.
+            int distanceToOrigin = std::hypot(localDeltaX, localDeltaY);
 
-            distanceToOrigin = std::hypot(deltaX, deltaY);
+            Target tar(possibleTarget->getId(), type, entranceWoundX, entranceWoundY, distanceToOrigin);
+            targetList.addTarget(tar);
 
-            Target tar(possibleTarget->getId(), type, tempEndX, tempEndY, distanceToOrigin);
-
-            logv("tar.getType(): %d\n", tar.getType());
-
-            targetsInSights.push(tar);
+            logv(3, "CollisionHandler::checkTargets() Intersect target at (%d, %d)\n", entranceWoundX, entranceWoundY);
+            logv(3, "CollisionHandler::checkTargets() distanceToOrigin %d\n", distanceToOrigin);
+            logv(3, "CollisionHandler::checkTargets() tar.getType(): %d\n", tar.getType());
         }
     }
 }
