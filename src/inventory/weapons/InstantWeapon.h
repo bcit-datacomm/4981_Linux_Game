@@ -17,6 +17,7 @@ public:
     ~InstantWeapon() = default;
 
     virtual bool fire(Movable& movable);
+    void fireSingleProjectile(int gunX, int gunY, double angle);
 
 };
 

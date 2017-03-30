@@ -90,24 +90,28 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     PARAMS:
         TargetList &targetList,
             This is the priority queue wrapper that will hold the targets that will be determined.
-        Movable &moveble,
-            The movable that fired the weapon, this is needed for its x and y and angle.
+        
+        const int gunX, const int gunY, 
+            coordinates of the weapons muzzle.
+
+        const double angle
+            angle the weapon is facing.
+
         const int range
             The range of the weapon that is being fired.
 */
-void CollisionHandler::detectLineCollision(TargetList &targetList, Movable& movable, const int range){
+void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY, 
+        const double angle, const int range){
 
-    const double degrees = movable.getAngle() - 90;
+    const double degrees = angle - 90;
     const double radians = degrees * M_PI / 180;
-    const int originX = movable.getX() + (MARINE_WIDTH / 2);
-    const int originY = movable.getY() + (MARINE_HEIGHT / 2);
     const int deltaX = range * cos(radians);
     const int deltaY = range * sin(radians);
-    const int endX = originX + deltaX;
-    const int endY = originY + deltaY;
+    const int endX = gunX + deltaX;
+    const int endY = gunY + deltaY;
 
-    targetList.setOriginX(originX);
-    targetList.setOriginY(originY);
+    targetList.setOriginX(gunX);
+    targetList.setOriginY(gunY);
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
@@ -115,9 +119,9 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, Movable& mova
     auto& turrets = quadtreeTurret.objects;
     auto& walls   = quadtreeWall.objects;
 
-    checkForTargetsInVector(originX, originY, endX, endY, targetList, zombies, TYPE_ZOMBIE);
-    checkForTargetsInVector(originX, originY, endX, endY, targetList, turrets, TYPE_TURRET);
-    checkForTargetsInVector(originX, originY, endX, endY, targetList, walls,   TYPE_WALL);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombies, TYPE_ZOMBIE);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, turrets, TYPE_TURRET);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, walls,   TYPE_WALL);
 
     logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
@@ -132,8 +136,8 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, Movable& mova
     AUTHOR: Deric Mccadden 3/16/2017
 
     PARAMS:
-        const int originX,
-        const int originY,
+        const int gunX,
+        const int gunY,
             The x and y where the bullet is fired from. 
 
         const int endX,
@@ -150,7 +154,7 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, Movable& mova
             the type of entity, see target Target.h for definitions.
             This is needed for identification purposes in InstantWeapon.fire()
 */
-void CollisionHandler::checkForTargetsInVector(const int originX, const int originY, const int endX, const int endY,
+void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList &targetList, std::vector<Entity*> &allEntities, int type) {
 
     for(auto& possibleTarget : allEntities) {
@@ -161,8 +165,8 @@ void CollisionHandler::checkForTargetsInVector(const int originX, const int orig
         the entrance wound and ending with the exit wound as if the bullet were to pass straight
         through the hitbox and exit on the other side while maintaing its starting trajectory.
         This is why they are not const as the function has to be able to change them. */
-        int entranceWoundX = originX;
-        int entranceWoundY = originY;
+        int entranceWoundX = gunX;
+        int entranceWoundY = gunY;
         int exitWoundX = endX;
         int exitWoundY = endY;
 
@@ -170,8 +174,8 @@ void CollisionHandler::checkForTargetsInVector(const int originX, const int orig
                 &entranceWoundX, &entranceWoundY , &exitWoundX, &exitWoundY)) {
 
             //the change in x and y from the firing origin to the spot the bullet hits the target.
-            int localDeltaX = entranceWoundX - originX;
-            int localDeltaY = entranceWoundY - originY;
+            int localDeltaX = entranceWoundX - gunX;
+            int localDeltaY = entranceWoundY - gunY;
             //the direct distance from the firing origin to the spot the bullet hits each target.
             int distanceToOrigin = std::hypot(localDeltaX, localDeltaY);
 

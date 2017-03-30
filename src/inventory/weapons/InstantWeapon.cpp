@@ -38,11 +38,8 @@ InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, str
     InstantWeapon::fire
 
     DISCRIPTION:
-        construct a line from the weapons mussle to its
-        range limit, and then gets all the intersecting targets.
-        Tergets are sorted in a priority queue by distance from player, and then
-        they are damaged in order untill something invulnrable is hit, or
-        penertation runs out.
+        Default behaviour for instant weapon is that it fires one projectile in the direction
+        that the movable is facing.
 
         Movable& movable: The thing thats holding the weapon that is firing.
         Its needed for its x and y cords, and for its angle.
@@ -57,9 +54,40 @@ bool InstantWeapon::fire(Movable& movable) {
     }
     logv(3, "InstantWeapon::fire()\n");
 
+    const int gunX = movable.getX() + (MARINE_WIDTH / 2);
+    const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
+    const double angle = movable.getAngle();
+    
+    fireSingleProjectile(gunX, gunY, angle);
+
+    return true;
+}
+
+
+
+/**
+    InstantWeapon::fire
+
+    DISCRIPTION:
+        construct a line from the weapons mussle to its
+        range limit, and then gets all the intersecting targets.
+        Tergets are sorted in a priority queue by distance from player, and then
+        they are damaged in order untill something invulnrable is hit, or
+        penertation runs out.
+
+        int gunX, int gunY
+            The x and y coordinates of the guns muzzle.
+
+        double angle 
+            the angle gun is facing.
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const double angle){
     TargetList targetList;
 
-    GameManager::instance()->getCollisionHandler().detectLineCollision(targetList, movable, range);
+    GameManager::instance()->getCollisionHandler().detectLineCollision(targetList, gunX, gunY, angle, range);
 
     int finalX = targetList.getEndX();
     int finalY = targetList.getEndY();
@@ -99,9 +127,6 @@ bool InstantWeapon::fire(Movable& movable) {
 
         targetList.removeTop();
     }
-    const int originX = targetList.getOriginX();
-    const int originY = targetList.getOriginY();
-    VisualEffect::instance().addPreLine(5, originX, originY, finalX, finalY, 0, 255, 0);
 
-    return true;
+    VisualEffect::instance().addPreLine(5, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
 }

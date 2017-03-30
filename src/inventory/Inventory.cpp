@@ -11,8 +11,9 @@ Inventory::Inventory(){
     weapons[2] = std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(tempShotGun));
     weaponIds[0] = defaultGun.getId();
     weaponIds[1] = -1;
-    weaponIds[2] = -1;
+    weaponIds[2] = tempShotGun.getId();
     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(tempShotGun)));
 
 }
 
@@ -22,21 +23,21 @@ Inventory::~Inventory(){
 
 void Inventory::switchCurrent(const int slot){
     if (current != slot) {
-        logv("Switched to slot: %d\n", slot);
+        logv(3, "Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
 bool Inventory::pickUp(int32_t weaponId){
     if(current == 0){
-        logv("Can't Swap default gun \n");
+        logv(3, "Can't Swap default gun \n");
         return false;
     }
-    logv("Picked up weapon\n");
-    logv("Swapped from %d ", weaponIds[current]);
+    logv(3, "Picked up weapon\n");
+    logv(3, "Swapped from %d ", weaponIds[current]);
 
     weaponIds[current] = weaponId;
-    logv("to %d\n", weaponIds[current]);
+    logv(3, "to %d\n", weaponIds[current]);
     return true;
 }
 
@@ -69,7 +70,7 @@ void Inventory::scrollCurrent(int direction){
         } else {
             current = direction;
         }
-        logv("Switched to slot:%d\n", current);
+        logv(3, "Switched to slot:%d\n", current);
     }
 
 }
