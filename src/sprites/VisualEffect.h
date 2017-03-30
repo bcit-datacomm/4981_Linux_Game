@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <unordered_map>
+
 #include "SpriteTypes.h"
 
 
@@ -32,7 +33,7 @@ public:
         }
 
         void renderPreEntity(const SDL_Rect &camera);
-        
+
         void renderPostEntity(const SDL_Rect &camera);
 
         int addPreLine(const int dur, const int startx, const int starty, const int endx,
@@ -53,9 +54,9 @@ public:
 
 
         void removePreLine(const int id);
-        
+
         void removePreRect(const int id);
-        
+
         void removePreTex(const int id);
 
         void removePostLine(const int id);
@@ -93,7 +94,7 @@ private:
             int dur;
             //rect to draw
             SDL_Rect s;
-            
+
             //red green blue alpha
             Uint8 r;
             Uint8 g;
@@ -119,7 +120,7 @@ private:
         int postLineId;
         int postRectId;
         int postTexId;
-        
+
         std::unordered_map<int, Line> preLines;
         std::unordered_map<int, Rect> preRects;
         std::unordered_map<int, Tex> preTex;

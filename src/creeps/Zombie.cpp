@@ -2,16 +2,17 @@
 #include <random>
 #include <cassert>
 #include <utility>
+
 #include "Zombie.h"
 #include "Node.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
 using namespace std;
 
-Zombie::Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, int health, ZombieState state, int step, ZombieDirection dir, int frame)
-        : Entity(id, dest, movementSize, projectileSize, damageSize),
-        Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
+Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize, const int health, const ZombieState state, const int step,
+        const ZombieDirection dir, const int frame) : Entity(id, dest, movementSize, projectileSize,
+        damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
         health(health), state(state), step(step), dir(dir), frame(frame) {
     logv("Create Zombie\n");
 }
@@ -32,10 +33,6 @@ ZombieDirection Zombie::getMoveDir() const {
 
     const int sp = getStep();
     const string pth = getPath();
-    /*
-    cout << "path: " << pth << endl;
-    cout << sp << '-' << pth.length() << endl;
-    */
 
     return static_cast<ZombieDirection>(sp < static_cast<int>(pth.length()) ? stoi(pth.substr(sp,1)) : -1);
 }
@@ -46,6 +43,9 @@ void Zombie::onCollision() {
 
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
+    if(health <= 0) {
+        GameManager::instance()->deleteZombie(getId());
+    }
 }
 
 /*

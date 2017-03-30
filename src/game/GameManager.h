@@ -16,7 +16,8 @@
 #include "../buildings/Wall.h"
 #include "../buildings/Barricade.h"
 #include "../inventory/WeaponDrop.h"
-
+#include "GameHashMap.h"
+#include <memory>
 
 //just for tesing weapon drop
 #include "../inventory/weapons/Weapon.h"
@@ -24,9 +25,9 @@
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 
-constexpr int initVal = 0;
-constexpr int defaultSize = 100;
-constexpr int PUSize = 120;
+static constexpr int INITVAL = 0;
+static constexpr int DEFAULT_SIZE = 100;
+static constexpr int PUSIZE = 120;
 
 
 class GameManager {
@@ -60,7 +61,7 @@ public:
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float delta); // Update marine actions
     void updateZombies(const float delta); // Update zombie actions
-    void updateTurrets(const float delta); // Update turret actions
+    void updateTurrets(); // Update turret actions
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.
@@ -75,10 +76,13 @@ public:
     bool createZombie(const float x, const float y);
     void deleteZombie(const int32_t id);
     bool createZombieWave(const int n);
+    bool zombieExists(const int32_t id);
+    Zombie& getZombie(const int32_t id);
 
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
     bool createWeaponDrop(const float x, const float y);
     void deleteWeaponDrop(const int32_t id);
+    bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);
@@ -98,15 +102,14 @@ private:
 
     CollisionHandler collisionHandler;
     std::unique_ptr<WeaponDrop> wdPointer;
-    std::map<int32_t, Marine> marineManager;
-    std::map<int32_t, Object> objectManager;
-    std::map<int32_t, Zombie> zombieManager;
-    std::map<int32_t, Turret> turretManager;
-    std::map<int32_t, WeaponDrop> weaponDropManager;
-    std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
-    std::map<int32_t, Barricade> barricadeManager;
-    std::map<int32_t, Wall> wallManager;
-
+    GameHashMap<int32_t, Marine> marineManager;
+    GameHashMap<int32_t, Object> objectManager;
+    GameHashMap<int32_t, Zombie> zombieManager;
+    GameHashMap<int32_t, Turret> turretManager;
+    GameHashMap<int32_t, WeaponDrop> weaponDropManager;
+    GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
+    GameHashMap<int32_t, Barricade> barricadeManager;
+    GameHashMap<int32_t, Wall> wallManager;
 };
 
 

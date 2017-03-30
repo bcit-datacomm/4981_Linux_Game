@@ -20,8 +20,6 @@ public:
     virtual ~Consumable(){logv("Destroy Consumable\n");};
     //abstarct method that must be filled in for each consumable type
     virtual void OnConsume() = 0;
-
-protected:
 };
 
 #endif

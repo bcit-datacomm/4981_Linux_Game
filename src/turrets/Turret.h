@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../player/Marine.h"
@@ -20,50 +21,31 @@ constexpr static int PLACE_DISTANCE = 200;
 class Turret : public Movable {
 public:
 
-    Turret(int32_t id, const SDL_Rect dest,const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, const SDL_Rect &pickupSize, bool activated = false, int health = 200,
-        int ammo = 100, bool placed = false, float range = 400.0f);
+    Turret(const int32_t id, const SDL_Rect& dest,const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated = false,
+        const int health = 200, const int ammo = 100, const bool placed = false, const float range = 400.0f);
 
     virtual ~Turret();
 
     void spawnTurret(); // spawns a DEACTIVATED turret
-
     bool placementCheckTurret(); // checks if turret placement is within bounds
-
     // checks if the turret placement overlaps with any currently existing objects
-    bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &);
-
+    bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler&);
     void activateTurret(); // activates the turret
-
-    void onCollision();
-
     void collidingProjectile(const int damage);
-
     void damageTurret(const int damage); // decrements the turrets health by damage parameter
-
-    void decrementAmmo(const int amount); // turret ammo pool decrements by this amount
-
     void shootTurret(); // turret shoots, this is not yet defined
-
-    bool ammoCheckTurret();  // returns true if turret has >0 ammo, false otherwise
-
-    bool healthCheckTurret();  // returns true if turret has >0 health, false otherwise
-
-    bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
-
+    bool ammoCheckTurret();  // returns true if turret has > 0 ammo, false otherwise
+    // Mark Chen, 2017-03-01
+    bool healthCheckTurret() {return health > 0;};  // returns true if turret has >0 health, false otherwise
+    bool targetScanTurret(); // checks if there are any enemies in the turret's coverage
     void move(const float playerX, const float playerY,
-            const float moveX, const float moveY, CollisionHandler &ch);
-
+            const float moveX, const float moveY, CollisionHandler& ch);
     void placeTurret();
-
     bool isPlaced() {return placed;};
-
     void pickUpTurret();
-
     void removeTurret(); // removes the turret
-
-    // returns the turret's range.
-    // Jamie, 2017-03-01.
+    // Jamie Lee, 2017-03-01.
     float getRange() const {
         return range;
     }
