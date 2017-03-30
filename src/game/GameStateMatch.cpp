@@ -156,6 +156,7 @@ void GameStateMatch::handle() {
 }
 
 void GameStateMatch::update(const float delta) {
+    std::lock_guard<std::mutex> lock(mut);
     GameManager::instance()->updateCollider();
 #ifndef SERVER
     // Move player

@@ -28,6 +28,7 @@ std::atomic_bool isGameRunning{false};
 char readBuffers[MAX_UDP_PACKET_COUNT][IN_PACKET_SIZE];
 iovec iovecs[MAX_UDP_PACKET_COUNT];
 mmsghdr udpMesgs[MAX_UDP_PACKET_COUNT];
+std::mutex mut;
 
 /**
  * The TCP sync loop.
@@ -162,32 +163,13 @@ void processPacket(const char *data) {
         case UDPHeaders::BARRICADEACTIONH:
             {
                 const BarricadeAction& ba = mesg->data.ba;
-                Barricade& tempBarricade = GameManager::instance()->getBarricade(ba.barricadeid);
-                if (ba.actionid == UDPHeaders::PICKUP) {
-                    //No noticeable code in game logic for picking up a barricade
-                } else if (ba.actionid == UDPHeaders::DROPOFF) {
-                    if (tempBarricade.isPlaceable()) {
-                        tempBarricade.placeBarricade();
-                        tempBarricade.setPosition(ba.xpos, ba.ypos);
-                    }
-                } else {
-                    logv("Received barricade packet with unknown action id\n");
-                }
+                processBarricade(ba);
             }
             break;
         case UDPHeaders::TURRETACTIONH:
             {
                 const TurretAction& ta = mesg->data.ta;
-                Turret& tempTurret = GameManager::instance()->getTurret(ta.turretid);
-                if (ta.actionid == UDPHeaders::PICKUP) {
-                    tempTurret.pickUpTurret();
-                    tempTurret.setPosition(ta.xpos, ta.ypos);
-                } else if (ta.actionid == UDPHeaders::DROPOFF) {
-                    tempTurret.placeTurret();
-                    tempTurret.setPosition(ta.xpos, ta.ypos);
-                } else {
-                    logv("Received turret packet with unknown action id\n");
-                }
+                processTurret(ta);
             }
             break;
         case UDPHeaders::SHOPPURCHASEH:

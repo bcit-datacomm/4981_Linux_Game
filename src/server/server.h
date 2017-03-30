@@ -11,6 +11,7 @@
 #include <cstdarg>
 #include <climits>
 #include <atomic>
+#include <mutex>
 #include <unordered_map>
 
 //Fix issue where Brody has out-of-date system that doesn't have epoll exclusive
@@ -63,6 +64,7 @@ extern int outputLength;
 extern char readBuffers[MAX_UDP_PACKET_COUNT][IN_PACKET_SIZE];
 extern iovec iovecs[MAX_UDP_PACKET_COUNT];
 extern mmsghdr udpMesgs[MAX_UDP_PACKET_COUNT];
+extern std::mutex mut;
 
 void initSync(const int sock);
 void processPacket(const char *data);
