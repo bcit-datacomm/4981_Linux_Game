@@ -33,6 +33,11 @@ void Marine::fireWeapon() {
     }
 }
 
+/*
+ * Created By Maitiu
+ * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
+ * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
+ */
 int32_t Marine::checkForPickUp() {
     int32_t pickId = -1;
     GameManager *gm = GameManager::instance();
@@ -40,9 +45,9 @@ int32_t Marine::checkForPickUp() {
 
     Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
     if(ep != nullptr) {
-        logv("Searching for id:%d in weaponDropManager\n", pickId);
         //get Entity drop Id
         pickId = ep->getId();
+        logv("Searching for id:%d in weaponDropManager\n", pickId);
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
         if (gm->getTurretManager().count(pickId)) {
             return pickId;
@@ -53,7 +58,8 @@ int32_t Marine::checkForPickUp() {
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();
 
-            if(inventory.pickUp(pickId)) {
+            //Picks up Weapon
+            if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
                 gm->deleteWeaponDrop(wd.getId());
             }
         } else {

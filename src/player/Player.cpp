@@ -96,12 +96,14 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_R]){
         marine->inventory.getCurrent()->reloadClip();
     }
+    //pickup button
     if(state[SDL_SCANCODE_E]){
-        marine->checkForPickUp();
         const int currentTime = SDL_GetTicks();
 
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
+
+            marine->checkForPickUp();
             const int checkTurret = marine->checkForPickUp();
             if (checkTurret > -1 && holdingTurret == false)
             {
@@ -111,7 +113,11 @@ void Player::handleKeyboardInput(const Uint8 *state) {
             }
         }
     }
-
+    //Drop button
+    if(state[SDL_SCANCODE_F]){
+        marine->inventory.dropWeapon(marine->getX(), marine->getY());
+    }
+    //use Inventory
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
     }

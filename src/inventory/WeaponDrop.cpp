@@ -15,28 +15,9 @@ WeaponDrop::WeaponDrop(const int32_t id, const SDL_Rect& dest, const SDL_Rect& p
 WeaponDrop::~WeaponDrop() {
     logv("Destroy WeaponDrop\n");
 }
-void WeaponDrop::setPosition(const int x, const int y) {
-    xCoord = x;
-    yCoord = y;
-}
-
-int WeaponDrop::getX() const{
-    return xCoord;
-}
-
-int WeaponDrop::getY() const{
-    return yCoord;
-}
 
 int32_t WeaponDrop::getWeaponId() const{
     return weaponId;
-}
-
-void WeaponDrop::onCollision() {
-    // Do nothing for now
-}
-
-void WeaponDrop::collidingProjectile(const int damage) {
 }
 
 int32_t WeaponDrop::getId() const {

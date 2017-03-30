@@ -27,10 +27,16 @@ bool GameStateMatch::load() {
     //set the boundary on the map
     GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
+
+    //create Weapon for weapon Drop only till sotre is implemented****************
+    Rifle w(GameManager::instance()->generateID());
+    ShotGun w2(GameManager::instance()->generateID());
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);
-    GameManager::instance()->createWeaponDrop(850, 850);
-
+    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
+    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
     GameManager::instance()->addObject(base);
 
