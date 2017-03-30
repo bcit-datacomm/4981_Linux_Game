@@ -96,6 +96,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_R]){
         marine->inventory.getCurrent()->reloadClip();
     }
+    //pickup button
     if(state[SDL_SCANCODE_E]){
         const int currentTime = SDL_GetTicks();
 
@@ -112,7 +113,11 @@ void Player::handleKeyboardInput(const Uint8 *state) {
             }
         }
     }
-
+    //Drop button
+    if(state[SDL_SCANCODE_F]){
+        marine->inventory.dropWeapon(marine->getX(), marine->getY());
+    }
+    //use Inventory
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
     }
