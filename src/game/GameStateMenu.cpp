@@ -45,7 +45,39 @@
 * Removed excess initializations. (Michael Goll / March 16, 2017)
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textboxFont(nullptr),
-    menuFont(nullptr), screenRect{ZERO, ZERO, game.window.getWidth(), game.window.getHeight()} {
+    menuFont(nullptr), screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()} {
+}
+
+/**
+* Function: GameStateMenu dtor
+*
+* Date:
+* MG: March 27, 2017 [added]
+*
+* Designer:
+* Jacob Frank
+*
+* Programmer:
+* Michael Goll
+*
+*
+* Interface: GameStateMenu::~GameStateMenu()
+*
+* Notes:
+* GameStateMenu dtor which frees all of the font pointers.
+*/
+GameStateMenu::~GameStateMenu() {
+    if (menuFont) {
+        TTF_CloseFont(menuFont);
+    }
+
+    if (headingFont) {
+        TTF_CloseFont(headingFont);
+    }
+
+    if (textboxFont) {
+        TTF_CloseFont(textboxFont);
+    }
 }
 
 
@@ -80,22 +112,22 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g), headingFont(nullptr), textbo
 bool GameStateMenu::load() {
     logv("Loading Fonts...\n");
 
-    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", 
+    if ((menuFont = Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf",
             110)) == nullptr) {
         return false;
     }
 
-    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join", 
+    Renderer::instance().createText(TEXTURES::JOIN_FONT, menuFont, "Join",
         SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
-    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options", 
+    Renderer::instance().createText(TEXTURES::OPTIONS_FONT, menuFont, "Options",
         SDL_Color{MAX_RGB, MAX_RGB, MAX_RGB, MAX_RGB});
 
-    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf", 
+    if ((headingFont = Renderer::instance().loadFont("assets/fonts/SEGUISB.ttf",
             FONT_SIZE)) == nullptr) {
         return false;
     }
 
-    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", 
+    if ((textboxFont = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf",
             FONT_SIZE)) == nullptr) {
         return false;
     }
@@ -136,7 +168,7 @@ void GameStateMenu::loop() {
     // State Loop
     while (play) {
         if(networked && NetworkManager::instance().getNetworkState() >= NetworkState::GAME_STARTED) {
-            game.stateID = 2;
+            game.setStateID(2);
             play = false;
         }
 
@@ -160,7 +192,7 @@ void GameStateMenu::loop() {
 *
 * Notes:
 * Function currently empty
-* Designed to be used by Game Logic team for connecting to the server
+* Designed to be used by Game logic team for connecting to the server
 */
 void GameStateMenu::sync() {
 
@@ -170,7 +202,7 @@ void GameStateMenu::sync() {
 * Function: handle
 *
 * Date:
-* JF: February 8, 2O17: added handler for window resizing event
+* JF: February 8, 2017: added handler for window resizing event
 *
 * Designer:
 * Jacob Frank
@@ -193,7 +225,7 @@ void GameStateMenu::handle() {
 
     //Handle events on queue
     SDL_WaitEvent(&event);
-    game.window.handleEvent(event);
+    game.getWindow().handleEvent(event);
 
     switch (event.type) {
 
@@ -204,7 +236,7 @@ void GameStateMenu::handle() {
 
             //move to the game when a click occurs
             //changes the state to tell the Game.cpp loop to start the actual game
-            game.stateID = 2;
+            game.setStateID(2);
 
             //breaks out of the menu loop and Game.cpp re-evaluates the state
             play = false;
@@ -238,14 +270,14 @@ void GameStateMenu::handle() {
                 case SDL_WINDOWEVENT_RESIZED:
                     //Re-render with the new size
                     //data1 --> new window width, | data2 --> new window height
-                    screenRect = {ZERO, ZERO, event.window.data1, event.window.data2};
+                    screenRect = {0, 0, event.window.data1, event.window.data2};
                 break;
             }
             break;
 
         case SDL_QUIT:
             play = false;
-            game.stateID = 0;
+            game.setStateID(0);
             break;
 
         default:
@@ -303,15 +335,15 @@ void GameStateMenu::update(const float delta) {
 */
 void GameStateMenu::positionElements() {
 
-    int maxTextWidth = ZERO;
-    int maxTextHeight = ZERO;
+    int maxTextWidth = 0;
+    int maxTextHeight = 0;
     int vertPadding = 100;
 
     std::string longestString = "";
     char largestChar = 'W';
 
     //Check if TTF was initialized correctly
-    if(!TTF_WasInit() && TTF_Init()== -1) {
+    if (!TTF_WasInit() && TTF_Init() == -1) {
         logv("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
@@ -375,9 +407,9 @@ void GameStateMenu::positionElements() {
 */
 void GameStateMenu::render() {
     //Only draw when not minimized
-    if (!game.window.isMinimized()) {
+    if (!game.getWindow().isMinimized()) {
 
-        screenRect = {ZERO, ZERO, game.window.getWidth(), game.window.getHeight()};
+        screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
 
         //Clear screen
         SDL_RenderClear(Renderer::instance().getRenderer());
@@ -399,33 +431,4 @@ void GameStateMenu::render() {
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
     }
-}
-
-/**
-* Function: ~GameStateMenu dtor
-*
-* Date:
-* JF: February 8, 2017: Created
-*
-* Designer:
-* Jacob Frank
-*
-* Programmer:
-* Jacob Frank
-*
-* Modified by:
-* Michael Goll (March 16, 2017)
-*
-* Interface: ~GameStateMenu()
-*
-* Notes:
-* Deconstructor, frees all allocated memory for textures and fonts
-*
-* Revisions:
-* Removed unnecessary free calls (Michael Goll / March 16, 2017)
-*/
-GameStateMenu::~GameStateMenu() {
-    TTF_CloseFont(textboxFont);
-    TTF_CloseFont(headingFont);
-    TTF_CloseFont(menuFont);
 }

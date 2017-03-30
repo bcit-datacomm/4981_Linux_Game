@@ -20,19 +20,17 @@ const int MARINE_WIDTH = 100;
 
 class Marine : public Movable {
 public:
-    Marine(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize,
-        const SDL_Rect &projectileSize, const SDL_Rect &damageSize);
+    Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize);
     virtual ~Marine();
 
     void create(); //function displays character
     void onCollision();
-    void collidingProjectile(int damage);
     int getHealth() const {return health;}
-    
+    void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
     Inventory inventory;
-
     void setHealth(const int& hlth) {health = hlth;};
 private:
     std::string username;

@@ -2,11 +2,12 @@
 #define ZOMBIE_H
 
 #include <string>
-#include <math.h>
+#include <cmath>
 #include <random>
 #include <vector>
 #include <utility>
 #include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
@@ -17,10 +18,10 @@
 #include "../basic/Movable.h"
 
 static constexpr int ZOMBIE_VELOCITY = 50;
-static constexpr int ZOMBIE_INIT_HP  = 100;
-static constexpr int ZOMBIE_FRAMES   = 50;
-static constexpr int ZOMBIE_HEIGHT   = 125;
-static constexpr int ZOMBIE_WIDTH    = 75;
+static constexpr int ZOMBIE_INIT_HP = 100;
+static constexpr int ZOMBIE_FRAMES = 50;
+static constexpr int ZOMBIE_HEIGHT = 125;
+static constexpr int ZOMBIE_WIDTH = 75;
 
 /* 8 possible directions combining left, right, up, down.
  * Fred Yang
@@ -68,9 +69,11 @@ enum class ZombieState {
 
 class Zombie : public Movable {
 public:
-    Zombie(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize, int health = ZOMBIE_INIT_HP, ZombieState state = ZombieState::ZOMBIE_IDLE,
-        int step = 0, ZombieDirection dir = ZombieDirection::DIR_INVALID, int frame = ZOMBIE_FRAMES);
+    Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize, const int health = ZOMBIE_INIT_HP,
+        const ZombieState state = ZombieState::ZOMBIE_IDLE,
+        const int step = 0, const ZombieDirection dir = ZombieDirection::DIR_INVALID,
+        const int frame = ZOMBIE_FRAMES);
 
     virtual ~Zombie();
 

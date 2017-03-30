@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <array>
 #include <memory>
+
 #include "Consumable.h"
 #include "BasicMedkit.h"
 #include "weapons/Weapon.h"

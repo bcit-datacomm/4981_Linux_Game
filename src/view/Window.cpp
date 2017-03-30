@@ -1,150 +1,106 @@
-#include "Window.h"
 #include <stdio.h>
 #include <string>
 #include <sstream>
 
-Window::Window() {
-    //Initialize non-existant window
-    mWindow = NULL;
-    mMouseFocus = false;
-    mKeyboardFocus = false;
-    mFullScreen = false;
-    mMinimized = false;
-    mWidth = 0;
-    mHeight = 0;
+#include "Window.h"
+
+Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyboardFocus(false),
+        fullScreen(false), minimized(false) {
+
+}
+
+Window::~Window() {
+    if (window) {
+        SDL_DestroyWindow(window);
+    }
+
+    mouseFocus = false;
+    keyboardFocus = false;
+    width = 0;
+    height = 0;
 }
 
 bool Window::init() {
     //Create window
-    mWindow = SDL_CreateWindow("4981 Linux Game",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH, SCREEN_HEIGHT,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-        
-    if(mWindow != NULL) {
-        mMouseFocus = true;
-        mKeyboardFocus = true;
-        mWidth = SCREEN_WIDTH;
-        mHeight = SCREEN_HEIGHT;
+    window = SDL_CreateWindow( "4981 Linux Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+    if (window != nullptr) {
+        mouseFocus = true;
+        keyboardFocus = true;
+        width = SCREEN_WIDTH;
+        height = SCREEN_HEIGHT;
+        return true;
     }
-
-    return mWindow != NULL;
+    return false;
 }
 
 SDL_Surface* Window::getScreenSurface() {
-    return  SDL_GetWindowSurface(mWindow);
+    return SDL_GetWindowSurface(window);
 }
 
 void Window::handleEvent(SDL_Event& e) {
     //Window event occured
-    if(e.type == SDL_WINDOWEVENT) {
-
+    if (e.type == SDL_WINDOWEVENT) {
         switch(e.window.event) {
             //Get new dimensions
             case SDL_WINDOWEVENT_SIZE_CHANGED:
                 if (e.window.data1 < MIN_SCREEN_WIDTH) {
-                    SDL_SetWindowSize(mWindow, MIN_SCREEN_WIDTH, e.window.data2);
-                    mWidth = MIN_SCREEN_WIDTH;
+                    SDL_SetWindowSize(window, MIN_SCREEN_WIDTH, e.window.data2);
+                    width = MIN_SCREEN_WIDTH;
                 } else {
-                    mWidth = e.window.data1;
+                    width = e.window.data1;
                 }
                 if (e.window.data2 < MIN_SCREEN_HEIGHT) {
-                    SDL_SetWindowSize(mWindow, e.window.data1, MIN_SCREEN_HEIGHT);
-                    mHeight = MIN_SCREEN_HEIGHT;
+                    SDL_SetWindowSize(window, e.window.data1, MIN_SCREEN_HEIGHT);
+                    height = MIN_SCREEN_HEIGHT;
                 } else {
-                    mHeight = e.window.data2;
+                    height = e.window.data2;
                 }
-            break;
-
-            //Repaint on exposure
+                break;
+                //Repaint on exposure
             case SDL_WINDOWEVENT_EXPOSED:
-            break;
-
-            //Mouse entered window
+                break;
+                //Mouse entered window
             case SDL_WINDOWEVENT_ENTER:
-                mMouseFocus = true;
-            break;
-
-            //Mouse left window
+                mouseFocus = true;
+                break;
+                //Mouse left window
             case SDL_WINDOWEVENT_LEAVE:
-                mMouseFocus = false;
-            break;
-
-            //Window has keyboard focus
+                mouseFocus = false;
+                break;
+                //Window has keyboard focus
             case SDL_WINDOWEVENT_FOCUS_GAINED:
-                mKeyboardFocus = true;
-            break;
-
-            //Window lost keyboard focus
+                keyboardFocus = true;
+                break;
+                //Window lost keyboard focus
             case SDL_WINDOWEVENT_FOCUS_LOST:
-                mKeyboardFocus = false;
-            break;
-
-            //Window minimized
+                keyboardFocus = false;
+                break;
+                //Window minimized
             case SDL_WINDOWEVENT_MINIMIZED:
-                mMinimized = true;
-            break;
-
-            //Window maxized
+                minimized = true;
+                break;
+                //Window maxized
             case SDL_WINDOWEVENT_MAXIMIZED:
-                mMinimized = false;
-            break;
-
-            //Window restored
+                minimized = false;
+                break;
+                //Window restored
             case SDL_WINDOWEVENT_RESTORED:
-                mMinimized = false;
-            break;
+                minimized = false;
+                break;
         }
-    } else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
+    } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_TAB) {
         //Enter exit full screen on return key
-        if(mFullScreen) {
-            SDL_SetWindowFullscreen(mWindow, SDL_FALSE);
-            mFullScreen = false;
+        if (fullScreen) {
+            SDL_SetWindowFullscreen(window, SDL_FALSE);
+            fullScreen = false;
         } else {
             SDL_DisplayMode DM;
             SDL_GetDesktopDisplayMode(0, &DM);
-            auto Width = DM.w;
-            auto Height = DM.h;
-            SDL_SetWindowSize(mWindow, Width, Height);
-            SDL_SetWindowFullscreen(mWindow, SDL_TRUE);
-            mFullScreen = true;
-            mMinimized = false;
+            SDL_SetWindowSize(window, DM.w, DM.h);
+            SDL_SetWindowFullscreen(window, SDL_TRUE);
+            fullScreen = true;
+            minimized = false;
         }
     }
-}
-
-void Window::free() {
-    if(mWindow != NULL) {
-        SDL_DestroyWindow(mWindow);
-    }
-
-    mMouseFocus = false;
-    mKeyboardFocus = false;
-    mWidth = 0;
-    mHeight = 0;
-}
-
-int Window::getWidth() {
-    return mWidth;
-}
-
-int Window::getHeight() {
-    return mHeight;
-}
-
-bool Window::hasMouseFocus() {
-    return mMouseFocus;
-}
-
-bool Window::hasKeyboardFocus() {
-    return mKeyboardFocus;
-}
-
-bool Window::isMinimized() {
-    return mMinimized;
-}
-
-SDL_Window * Window::getWindow() {
-    return mWindow;
 }

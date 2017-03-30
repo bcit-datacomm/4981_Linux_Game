@@ -7,13 +7,13 @@ constexpr double THREE_HUNDRED_SIXTY_DEGREES = 360.0;
 class Movable : public virtual Entity {
 public:
     //for Marines and Zombies
-    Movable(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-            const SDL_Rect &damageSize, int vel) : Entity(id, dest, movementSize, projectileSize,
+    Movable(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+            const SDL_Rect& damageSize, const int vel) : Entity(id, dest, movementSize, projectileSize,
             damageSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
 
     //for turrets
-    Movable(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-            const SDL_Rect &damageSize, const SDL_Rect &pickupSize, int vel) : Entity(id, dest, movementSize,
+    Movable(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+            const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const int vel) : Entity(id, dest, movementSize,
             projectileSize, damageSize, pickupSize), velocity(vel), dx(0), dy(0), angle(0.0) {};
 
     virtual ~Movable() = default;
@@ -25,7 +25,7 @@ public:
     float getDX() const; // get delta x coordinate
     float getDY() const; //get delta y coordinate
     int getVelocity() const; // get velocity of Marine movement
-    void setAngle(double a);//sets angle of sprite to
+    void setAngle(const double a);//sets angle of sprite to
     double getAngle() const; //returns sprites angle
 private:
     int velocity; // velocity of object
