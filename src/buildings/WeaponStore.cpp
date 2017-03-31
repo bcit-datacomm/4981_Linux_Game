@@ -4,6 +4,7 @@
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 #include "../inventory/weapons/HandGun.h"
+#include "DropPoint.h"
 #include <memory>
 
 /*
@@ -20,14 +21,49 @@ WeaponStore::~WeaponStore(){
     logv("Destoryed Store");
 }
 
-/*makes the weapon that the user wishes to purchase
-int num what the player wants to purchase
-maitiu March 30*/
+/*
+ *Created by maitiu March 30
+ *Checks for available Drop Points and then creates weapon
+ *int num what the player wants to purchase
+ */
 int32_t WeaponStore::purchase(int num){
 
     GameManager *gm = GameManager::instance();
+    if(gm->checkFreeDropPoints()){
+        int32_t dropPId = gm->getFreeDropPointId();
+        int32_t weaponId = createWeapon(num);
+        int32_t wDropId;
+
+        DropPoint dp = gm->getDropPoint(dropPId);
+        float x = dp.getCoord().first;
+        float y = dp.getCoord().second;
+
+        logv("Purchased From WeaponStore\n");
+
+        wDropId = gm->createWeaponDrop(x, y, weaponId);
+
+        if(gm->weaponDropExists(wDropId)){
+            gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
+        }
+        return weaponId;
+    }
+    logv("NO OPEN DROP POINTS!!!\n");
+    return -1;
+}
+
+/*
+ *Created by maitiu March 30
+ */
+int WeaponStore::selectItem(){
+    return 0;
+}
+/*
+ *Created by maitiu March 30
+ * Creates weapon
+ */
+int32_t WeaponStore::createWeapon(int num){
+    GameManager *gm = GameManager::instance();
     int32_t id = gm->generateID();
-    logv("Purchased From WeaponStore\n");
     switch(num){
         case 1:
         {
@@ -50,10 +86,6 @@ int32_t WeaponStore::purchase(int num){
             break;
         }
     }
-    gm->createWeaponDrop(300, 500, id);
-    return id;
-}
 
-int WeaponStore::selectItem(){
-    return 0;
+    return id;
 }

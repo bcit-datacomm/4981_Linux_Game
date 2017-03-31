@@ -12,6 +12,11 @@ public:
     Drop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize);
 
     ~Drop();
+
+    void setDropPoint(const int32_t id) { dropPoint = id; };
+    int32_t getDropPoint() const { return dropPoint; };
+private:
+    int32_t dropPoint = -1;
 };
 
 #endif

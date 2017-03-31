@@ -42,6 +42,12 @@ bool GameStateMatch::load() {
     //createStores
     GameManager::instance()->createWeaponStore(500, 500);
 
+    //createDropPoint
+    GameManager::instance()->createDropPoint(100 ,100);
+    GameManager::instance()->createDropPoint(100, 300);
+    GameManager::instance()->createDropPoint(300 ,100);
+    GameManager::instance()->createDropPoint(300, 300);
+
     GameManager::instance()->addObject(base);
 
     Point newPoint = base.getSpawnPoint();

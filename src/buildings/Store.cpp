@@ -2,6 +2,7 @@
 #include "../log/log.h"
 #include <array>
 #include <algorithm>
+#include "DropPoint.h"
 
 
 Store::Store(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize):

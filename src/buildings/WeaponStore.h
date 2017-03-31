@@ -15,6 +15,7 @@ public:
 
     int32_t purchase(int num);//creates item and item drop for user
     int selectItem();//selected what item the user wants
+    int32_t createWeapon(int num);
 
 private:
 
