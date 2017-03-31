@@ -27,8 +27,9 @@ void Player::handleMouseUpdate(Window& w, float camX, float camY) {
     mouseDeltaY = w.getHeight()/2 - mouseY;
 
     double angle = ((atan2(mouseDeltaX, mouseDeltaY)* radianConvert)/M_PI) * - 1;
-
     marine->setAngle(angle);
+    
+
 
     if (tempBarricadeID > -1) {
         Barricade &tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);

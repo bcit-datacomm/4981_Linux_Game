@@ -57,7 +57,7 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::WEAPONS, REPLACE_ME); //temporary, will be replaced later
 
     //-------- marine textures --------
-    createTexture(TEXTURES::MARINE, TEMP_MARINE_TEXTURE);
+    createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);
 
     //-------- zombie textures --------
     //baby

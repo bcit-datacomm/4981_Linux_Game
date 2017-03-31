@@ -27,7 +27,7 @@ public:
 private:
 
     virtual void sync() override;
-    virtual void handle() override;
+    virtual void handle(unsigned long countedFrames) override;
     virtual void update(const float delta) override;
     void positionElements();
     virtual void render() override;

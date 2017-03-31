@@ -47,7 +47,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
         if (m.second.getX() - camX < camW) {
             if (m.second.getY() - camY < camH) {
                 Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                    m.second.getAngle());
+                    m.second.getSrcRect()); 
             }
         }
     }

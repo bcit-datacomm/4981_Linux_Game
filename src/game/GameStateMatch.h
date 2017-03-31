@@ -42,10 +42,9 @@ private:
     Camera camera;
 
     virtual void sync() override;
-    virtual void handle() override;
+    virtual void handle(unsigned long countedFrames) override;
     virtual void update(const float delta) override;
     virtual void render() override;
-
 };
 
 #endif

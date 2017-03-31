@@ -79,6 +79,18 @@ int Entity::getW() const{
 int Entity::getH() const{
     return destRect.h;
 }
+
+//Get X coordinate in sprite sheet
+int Entity::getSpritePosX() {
+    return spritePosX;
+}
+
+//Get Y coorindate in sprite sheet
+int Entity::getSpritePosY() {
+    return spritePosY;
+}            
+
+
 // Set Entity by x and y amount
 void Entity::setPosition(float px, float py) {
     x = px;
@@ -124,4 +136,14 @@ void Entity::setSrcRect(const int x, const int y, const int width, const int hei
     srcRect.y = y;
     srcRect.w = width;
     srcRect.h = height;
+}
+
+//Set X coorindate in sprite sheet
+void Entity::setSpritePosX(int x) {
+    spritePosX = x;
+}
+
+//Set Y coorindate in sprite sheet
+void Entity::setSpritePosY(int y) {
+    spritePosY = y;
 }

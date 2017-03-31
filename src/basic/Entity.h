@@ -59,6 +59,10 @@ public:
     void moveProHitBox(int x, int y) { projectileHitBox.move(x,y);};
     void moveDamHitBox(int x, int y) { damageHitBox.move(x,y);};
     void movePickUpHitBox(int x, int y) { pickupHitBox.move(x,y);};
+    int getSpritePosX();
+    int getSpritePosY();
+    void setSpritePosX(int x);
+    void setSpritePosY(int y);
 
 private:
 
@@ -71,6 +75,10 @@ private:
     HitBox pickupHitBox;
     float x;
     float y;
+
+    //rendering
+    int spritePosX;
+    int spritePosY;
 };
 
 #endif

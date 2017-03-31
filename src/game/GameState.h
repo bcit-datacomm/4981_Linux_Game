@@ -21,7 +21,7 @@ public:
     bool play = true;
 
 private:
-    virtual void handle() = 0;
+    virtual void handle(unsigned long countedFrames) = 0;
     virtual void update(const float delta) = 0;
     virtual void render() = 0;
     virtual void sync() = 0;

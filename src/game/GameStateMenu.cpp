@@ -130,7 +130,7 @@ void GameStateMenu::loop() {
 
     // State Loop
     while (play) {
-        handle(); // Handle user input
+        handle(0); // Handle user input
         render(); // Render game state to window
     }
 }
@@ -184,7 +184,7 @@ void GameStateMenu::sync() {
 * JF Mar 28: Re-added logic for typing text into the text edit boxes that was removed during the great refactoring
 * JF Mar 28: Re-added logic Highlighting and Clicking a menu option that was removed during the great refactoring
 */
-void GameStateMenu::handle() {
+void GameStateMenu::handle(unsigned long countedFrames) {
     int x, y;
 
     SDL_Keycode keyCode;

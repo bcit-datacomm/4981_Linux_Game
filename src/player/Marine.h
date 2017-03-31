@@ -13,6 +13,9 @@
 #include "../view/Window.h"
 
 #define MARINE_VELOCITY 500
+#define SPRITE_SIZE_X 75 //width of any marine image
+#define SPRITE_SIZE_Y 125 //height of any marine image 
+#define FRAME_COUNT_WALK 10 //speed of walking animation
 
 const int MARINE_HEIGHT = 100;
 const int MARINE_WIDTH = 100;
@@ -28,7 +31,10 @@ public:
     void collidingProjectile(int damage);
     void fireWeapon();
     int32_t checkForPickUp();
+    void updateImageDirection(); 
+    void updateImageWalk(const Uint8 *state, double frameCount);
     Inventory inventory;
+
 
 private:
     int health = 100;
