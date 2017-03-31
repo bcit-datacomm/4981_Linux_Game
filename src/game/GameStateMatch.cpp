@@ -34,10 +34,10 @@ bool GameStateMatch::load() {
 
 
     //createStores
-    GameManager::instance()->createWeaponStore(500, 900);
+    GameManager::instance()->createWeaponStore(storeX, storeY);
 
     //createDropPoint
-    GameManager::instance()->createDropZone(100 ,100, 4);
+    GameManager::instance()->createDropZone(dropZoneX , dropZoneY, dropZoneSize);
 
     GameManager::instance()->addObject(base);
 
