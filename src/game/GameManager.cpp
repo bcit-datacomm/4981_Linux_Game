@@ -334,7 +334,7 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
     int32_t id = generateID();
 
     SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), 400, 400};
-    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), 1000, 1000};
+    SDL_Rect pickRect = {static_cast<int>(x) - 25,static_cast<int>(y) - 25, 450, 450};
 
     WeaponStore ws(id, weaponStoreRect, pickRect);
     addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(ws)));
