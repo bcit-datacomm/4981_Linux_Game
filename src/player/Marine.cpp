@@ -74,19 +74,12 @@ int32_t Marine::checkForPickUp() {
 }
 
 /**
-* Function: Marine::updateImageDirection
-*
 * Date: Mar 27 
-*
-* Designer: Aing Ragunathan
-*
-* Programmer: Aing Ragunathan
+* Author: Aing Ragunathan
 *
 * Interface: void Marine::updateImageDirection()
 *
-* Returns: void
-*
-* Notes:
+* Description:
 *       This function changes the direction that the character is facing.
 *       It is called from GameStateMatch::handle after every frame and
 *       updates the direction of the sprite according to the angle of the
@@ -126,20 +119,13 @@ void Marine::updateImageDirection() {
 }
 
 /**
-* Function: Marine::updateImageWalk
-*
 * Date: Mar 30 
+* Author: Aing Ragunathan
 *
-* Designer: Aing Ragunathan
-*
-* Programmer: Aing Ragunathan
-*
-* Interface: void Marine::updateImageWalk(double frameCount)
+* Function Interface: void Marine::updateImageWalk(double frameCount)
 *       double frameCount - counted frames while walking
 *
-* Returns: void
-*
-* Notes:
+* Description:
 *       This function repeatedly updates the image of the marine in order to animate 
 *       walking. It is called from GameStateMatch::handle after every frame and updates
 *       the feet placement of the marine.
