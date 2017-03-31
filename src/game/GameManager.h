@@ -110,6 +110,7 @@ public:
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
 
+    void createDropZone(float x, float y, int num);
     int32_t createDropPoint(const float x, const float y);
     bool dropPointExists(const int32_t id);
     int32_t getFreeDropPointId();

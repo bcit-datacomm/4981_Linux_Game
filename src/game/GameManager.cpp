@@ -410,6 +410,20 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
      return s.first;
  }
 
+/*
+ * created by Maitiu March 31
+ * creates a square area of DropPoints
+ */
+void GameManager::createDropZone(float x, float y, int num){
+    float coordX = x;
+    float coordY = y;
+    for(int i = 0; i < num; i++){
+        for(int j = 0; j < num; j++){
+            createDropPoint(coordX + (200*i), coordY + (200*j));
+        }
+    }
+}
+
  /*
   * Created by Maitiu March 30
   */
