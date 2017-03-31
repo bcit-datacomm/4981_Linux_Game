@@ -2,8 +2,8 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Marine::Marine(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize, const SDL_Rect &projectileSize,
-        const SDL_Rect &damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
+Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+        const SDL_Rect& damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
         Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -19,14 +19,14 @@ void Marine::onCollision() {
     // Do nothing for now
 }
 
-void Marine::collidingProjectile(int damage) {
-    health = health - damage;
+void Marine::collidingProjectile(const int damage) {
+    health -= damage;
 }
 
 // Created by DericM 3/8/2017
 void Marine::fireWeapon() {
-    Weapon* w = inventory.getCurrent();
-    if( w != nullptr) {
+    Weapon *w = inventory.getCurrent();
+    if(w) {
         w->fire(*this);
     } else {
         logv("Slot Empty\n");
@@ -34,34 +34,41 @@ void Marine::fireWeapon() {
 }
 
 
+/*
+ * Created By Maitiu
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
+ * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
+ */
 int32_t Marine::checkForPickUp() {
+    int32_t pickId = -1;
+    GameManager *gm = GameManager::instance();
+    CollisionHandler& ch = gm->getCollisionHandler();
 
-    int32_t PickId = -1;
-
-    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-
-    Entity* ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
-
+    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
     if(ep != nullptr) {
-        const auto& tm = GameManager::instance()->getTurretManager();
         //get Entity drop Id
-        PickId = ep->getId();
+        pickId = ep->getId();
+        logv("Searching for id:%d in weaponDropManager\n", pickId);
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
-        const auto& it = tm.find(PickId);
-
-        if (it != tm.end()) {
-            return PickId;
+        if (gm->getTurretManager().count(pickId)) {
+            return pickId;
         }
+        //Checks if WeaponDrop exists
+        if(gm->weaponDropExists(pickId)) {
+            const WeaponDrop& wd = gm->getWeaponDrop(pickId);
+            //Get Weaopn id from weapon drop
+            pickId = wd.getWeaponId();
 
-        const WeaponDrop &wd = GameManager::instance()->getWeaponDrop(PickId);
-
-        //Get Weaopn id from weapon drop
-        PickId = wd.getWeaponId();
-
-        if(inventory.pickUp(PickId)) {
-
-            GameManager::instance()->deleteWeaponDrop(wd.getId());
+            //Picks up Weapon
+            if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
+                gm->deleteWeaponDrop(wd.getId());
+            }
+        } else {
+            logv("unable to find id:%d in weaponDropManager\n", pickId);
         }
+    } else {
+        loge("Pick id was nullptr\n");
     }
     return -1;
 }
@@ -139,11 +146,11 @@ void Marine::updateImageDirection() {
 */
 void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
     if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
-        if(getSpritePosX() == 0){
+        if (getSpritePosX() == 0) {
             setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
         }
-        else if((int)frameCount % FRAME_COUNT_WALK == 0){
-            if(getSpritePosX() < SPRITE_SIZE_X*2){
+        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSpritePosX() < SPRITE_SIZE_X*2) {
                 setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
             } else {
                 setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
@@ -151,11 +158,11 @@ void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
         } 
     }
     else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
-        if(getSpritePosX() == 0){
+        if (getSpritePosX() == 0) {
             setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
         }
-        else if((int)frameCount % FRAME_COUNT_WALK == 0){
-            if(getSpritePosX() < SPRITE_SIZE_X*2){
+        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSpritePosX() < SPRITE_SIZE_X*2) {
                 setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
             } else {
                 setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
@@ -163,11 +170,11 @@ void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
         } 
     }
     else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
-        if(getSpritePosX() == 0){
+        if (getSpritePosX() == 0) {
             setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
         }
-        else if((int)frameCount % FRAME_COUNT_WALK == 0){
-            if(getSpritePosX() < SPRITE_SIZE_X*2){
+        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSpritePosX() < SPRITE_SIZE_X*2) {
                 setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
             } else {
                 setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
@@ -175,11 +182,11 @@ void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
         } 
     }
     else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
-        if(getSpritePosX() == 0){
+        if (getSpritePosX() == 0) {
             setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
         }
-        else if((int)frameCount % FRAME_COUNT_WALK == 0){
-            if(getSpritePosX() < SPRITE_SIZE_X*2){
+        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSpritePosX() < SPRITE_SIZE_X*2) {
                 setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
             } else {
                 setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
@@ -189,7 +196,7 @@ void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
     else if (state[SDL_SCANCODE_H]) {  
         setSpritePosX(SPRITE_SIZE_X*3); //testing hit state (change to when HP delta > 0)
     }
-    else if (state[SDL_SCANCODE_J]){
+    else if (state[SDL_SCANCODE_J]) {
         setSrcRect(SPRITE_SIZE_X*4, SPRITE_SIZE_Y*7, 110, 100); //testing dead state (change to when HP == 0)
     }
     else{

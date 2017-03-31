@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -14,10 +14,10 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "Game.h"
 
-GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-        base(), camera(gameWidth,gameHeight) {
-}
+GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
+        player(), base(), camera(gameWidth,gameHeight) {}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -27,26 +27,32 @@ bool GameStateMatch::load() {
     //set the boundary on the map
     GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
+
+    //create Weapon for weapon Drop only till sotre is implemented****************
+    Rifle w(GameManager::instance()->generateID());
+    ShotGun w2(GameManager::instance()->generateID());
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(100, 500);
-    //GameManager::instance()->createZombie(-100, -100);
-    //GameManager::instance()->createTurret(1000, 500);
-    //GameManager::instance()->createTurret(100, 100);
-    //GameManager::instance()->createWeaponDrop(1800, 1700);
-    //GameManager::instance()->createZombie(100, 100);
+    GameManager::instance()->createMarine(1000, 500);
+    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
+    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
     GameManager::instance()->addObject(base);
+
     Point newPoint = base.getSpawnPoint();
 
     //gives the player control of the marine
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
-    player.marine->setPosition(newPoint.first, newPoint.second);
-    player.marine->setSrcRect(0, 0, 75, 125);
-
+    player.getMarine()->setPosition(newPoint.first, newPoint.second);
+    player.getMarine()->setSrcRect(0, 0, 75, 125);
+    
     return success;
 }
 
 void GameStateMatch::loop() {
+    double countedFrames = 0;
+
     //The frames per second timer
     LTimer fpsTimer;
 
@@ -57,10 +63,8 @@ void GameStateMatch::loop() {
     LTimer stepTimer;
 
     //Start counting frames per second
-    unsigned long countedFrames = 0;
     int frameTicks;
     unsigned int second = 0;
-    float avgFPS = 0;
     fpsTimer.start();
 
     // State Loop
@@ -68,15 +72,8 @@ void GameStateMatch::loop() {
         //Start cap timer
         capTimer.start();
 
-        //Calculate and correct fps
-        avgFPS = countedFrames / (fpsTimer.getTicks() / TIME_SECOND);
-
-        //Set FPS text to be rendered
-        frameTimeText.str("");
-        frameTimeText << std::fixed << std::setprecision(0) << "FPS: " << avgFPS;
-
         // Process frame
-        handle(countedFrames);    // Handle user input
+        handle(countedFrames++);    // Handle user input
         update(stepTimer.getTicks() / TIME_SECOND); // Update state values
         
 
@@ -85,11 +82,9 @@ void GameStateMatch::loop() {
 
         render();    // Render game state to window
 
-        ++countedFrames;
-
         if ((stepTimer.getTicks() / TIME_SECOND) > second) {
             GameManager::instance()->createZombieWave(1);
-            second+=5;
+            second += 5;
         }
 
         //If frame finished early
@@ -108,48 +103,48 @@ void GameStateMatch::handle(unsigned long countedFrames) {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
-    player.handleMouseUpdate(game.window, camera.getX(), camera.getY()); 
-    player.marine->updateImageDirection(); //Update direction of player
-    player.marine->updateImageWalk(state, countedFrames);  //Update walking animation
-    
+    player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+    player.getMarine()->updateImageDirection(); //Update direction of player
+    player.getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
+
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
-        game.window.handleEvent(event);
-           switch(event.type) {
-        case SDL_WINDOWEVENT:
-            camera.setViewSize(game.window.getWidth(), game.window.getHeight());
-            break;
-        case SDL_MOUSEWHEEL:
-            player.handleMouseWheelInput(&(event));
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_RIGHT) {
-                player.handlePlacementClick(Renderer::instance().getRenderer());
-            }
-            break;
-        case SDL_KEYDOWN:
-            switch(event.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                    play = false;
+        game.getWindow().handleEvent(event);
+        switch(event.type) {
+            case SDL_WINDOWEVENT:
+                camera.setViewSize(game.getWindow().getWidth(), game.getWindow().getHeight());
+                break;
+            case SDL_MOUSEWHEEL:
+                player.handleMouseWheelInput(&(event));
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_RIGHT) {
+                    player.handlePlacementClick(Renderer::instance().getRenderer());
+                }
+                break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        play = false;
+                        break;
+                    case SDLK_b:
+                        player.handleTempBarricade(Renderer::instance().getRenderer());
+                        break;
+                    default:
+                        break;
+                    }
                     break;
-                case SDLK_b:
-                    player.handleTempBarricade(Renderer::instance().getRenderer());
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case SDL_KEYUP:
-            switch(event.key.keysym.sym) {
-                default:
-                   break;
-            }
-            break;
-        case SDL_QUIT:
-            play = false;
-            break;
-        default:
-            break;
+            case SDL_KEYUP:
+                switch(event.key.keysym.sym) {
+                    default:
+                        break;
+                }
+                break;
+            case SDL_QUIT:
+                play = false;
+                break;
+            default:
+                break;
         }
     }
 }
@@ -160,15 +155,15 @@ void GameStateMatch::update(const float delta) {
     // Move player
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
-    GameManager::instance()->updateTurrets(delta);
+    GameManager::instance()->updateTurrets();
 
     // Move Camera
-    camera.move(player.marine->getX(), player.marine->getY());
+    camera.move(player.getMarine()->getX(), player.getMarine()->getY());
 }
 
 void GameStateMatch::render() {
     //Only draw when not minimized
-    if (!game.window.isMinimized()) {
+    if (!game.getWindow().isMinimized()) {
 
         SDL_RenderClear(Renderer::instance().getRenderer());
 
@@ -185,7 +180,8 @@ void GameStateMatch::render() {
                 }
 
                 Renderer::instance().render(
-                        {i * TEXTURE_SIZE - static_cast<int>(camera.getX()), j * TEXTURE_SIZE - static_cast<int>(camera.getY()),
+                        {i * TEXTURE_SIZE - static_cast<int>(camera.getX()),
+                        j * TEXTURE_SIZE - static_cast<int>(camera.getY()),
                         TEXTURE_SIZE, TEXTURE_SIZE}, TEXTURES::BARREN);
             }
         }

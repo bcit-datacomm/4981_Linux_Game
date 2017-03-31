@@ -1,20 +1,25 @@
 /*
     Created  by Deric M       01/03/17
+    Edited by Mark T 3/13/2017
 */
 #ifndef INSTANTWEAPON_H
 #define INSTANTWEAPON_H
 #include "Weapon.h"
 #include "../../collision/CollisionHandler.h"
+#include "Target.h"
+#include "../../sprites/SpriteTypes.h"
 
+using std::string;
 
 class InstantWeapon: public Weapon  {
 public:
-    InstantWeapon(std::string type, int range, int damage,
-    int clip, int clipMax, int ammo, int AOE, int reloadSpeed, int fireRate, bool isReadyToFire);
+    InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound, string reloadSound, string emptySound,
+            int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
+            int fireDelay, int32_t id);
     ~InstantWeapon() = default;
 
-
-    void fire(Marine &marine);
+    virtual bool fire(Movable& movable);
+    void fireSingleProjectile(int gunX, int gunY, double angle);
 
 };
 

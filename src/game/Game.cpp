@@ -17,6 +17,15 @@
 #include "../view/Camera.h"
 #include "../log/log.h"
 
+Game::~Game() {
+    state.reset();
+
+    //Quit SDL subsystems
+    Mix_Quit();
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+}
 
 void Game::run() {
     // End program if stateID is 0 after a end of a loop
@@ -30,19 +39,17 @@ void Game::run() {
 }
 
 void Game::loadState() {
-    if (state != NULL) {
-        delete state;
-    }
+    logv("Starting ");
+    state.reset();
     // Sets the state by the state ID
     switch(stateID) {
         case 1:
             logv("Menu State\n");
-            state = new GameStateMenu(*this);
+            state = std::make_unique<GameStateMenu>(*this);
             break;
         case 2:
             logv("Match State\n");
-            state = new GameStateMatch(*this, window.getWidth(), window.getHeight());
-
+            state = std::make_unique<GameStateMatch>(*this, window.getWidth(), window.getHeight());
             break;
         default:
             break;
@@ -77,7 +84,6 @@ bool Game::init() {
                 logv("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
                 success = false;
             } else {
-
                 //Initialize renderer color
                 SDL_SetRenderDrawColor(Renderer::instance().getRenderer() , 0xFF, 0xFF, 0xFF, 0xFF);
 
@@ -113,18 +119,9 @@ bool Game::loadMedia() {
 }
 
 void Game::close() {
-
-    if (state != NULL) {
-        delete state;
-    }
-
-    //Destroy window
-    window.free();
-
     //Quit SDL subsystems
     Mix_Quit();
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
-
 }

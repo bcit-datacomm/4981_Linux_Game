@@ -22,13 +22,13 @@ const int MARINE_WIDTH = 100;
 
 class Marine : public Movable {
 public:
-    Marine(int32_t id, const SDL_Rect &dest, const SDL_Rect &movementSize,
-        const SDL_Rect &projectileSize, const SDL_Rect &damageSize);
+    Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize);
     virtual ~Marine();
 
     void create(); //function displays character
     void onCollision();
-    void collidingProjectile(int damage);
+    void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
     void updateImageDirection(); 
