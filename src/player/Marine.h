@@ -28,6 +28,8 @@ public:
     void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
+    int getHealth();
+
     Inventory inventory;
 
 private:
