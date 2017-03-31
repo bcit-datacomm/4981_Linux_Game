@@ -32,6 +32,8 @@ void Renderer::loadSprites() {
     //Main game screen
     createTexture(TEXTURES::MAIN, MAIN_SCREEN);
     createTexture(TEXTURES::TEXTBOX, TEXTBOX_TEXTURE);
+    createTexture(TEXTURES::TEXTBOX_ACTIVE, TEXTBOX_ACTIVE_TEXTURE);
+    createTexture(TEXTURES::TEXTBOX_TRANSPARENT, TEXTBOX_TRANSPARENT_TEXTURE);
     //createTexture(LOBBY_SCREEN);
 
     //-------- map textures --------
@@ -47,7 +49,9 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
 
     //-------- weapon textures --------
-    createTexture(TEXTURES::WEAPONS, RIFLE); //temporary, will be replaced later
+    createTexture(TEXTURES::RIFLE, TEMP_RIFLE_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::SHOTGUN, TEMP_SHOTGUN_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::HANDGUN, TEMP_HANDGUN_TEXTURE); //temporary, will be replaced later
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, TEMP_MARINE_TEXTURE);

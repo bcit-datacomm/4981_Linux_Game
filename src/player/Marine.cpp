@@ -20,7 +20,7 @@ void Marine::onCollision() {
 }
 
 void Marine::collidingProjectile(const int damage) {
-    health = health - damage;
+    health -= damage;
 }
 
 // Created by DericM 3/8/2017
@@ -33,23 +33,23 @@ void Marine::fireWeapon() {
     }
 }
 
-
+/*
+ * Created By Maitiu
+ * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
+ * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
+ */
 int32_t Marine::checkForPickUp() {
-
     int32_t pickId = -1;
     GameManager *gm = GameManager::instance();
     CollisionHandler& ch = gm->getCollisionHandler();
 
     Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
     if(ep != nullptr) {
-        logv("Searching for id:%d in weaponDropManager\n", pickId);
-        const auto& tm = gm->getTurretManager();
-
         //get Entity drop Id
         pickId = ep->getId();
+        logv("Searching for id:%d in weaponDropManager\n", pickId);
         // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
-        const auto& it = tm.find(pickId);
-        if (it != tm.end()) {
+        if (gm->getTurretManager().count(pickId)) {
             return pickId;
         }
         //Checks if WeaponDrop exists
@@ -58,14 +58,15 @@ int32_t Marine::checkForPickUp() {
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();
 
-            if(inventory.pickUp(pickId)) {
+            //Picks up Weapon
+            if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
                 gm->deleteWeaponDrop(wd.getId());
             }
         } else {
             logv("unable to find id:%d in weaponDropManager\n", pickId);
         }
     } else {
-        logv("Pick id was nullpPtr\n");
+        loge("Pick id was nullptr\n");
     }
     return -1;
 }

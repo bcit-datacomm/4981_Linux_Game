@@ -8,7 +8,8 @@
 
 #include "InstantWeapon.h"
 #include "../../audio/AudioManager.h"
-
+#include "../../sprites/Renderer.h"
+#include "../../sprites/SpriteTypes.h"
 
 using std::string;
 
@@ -37,7 +38,7 @@ namespace HandgunVars {
 class HandGun: public InstantWeapon {
 public:
 
-    HandGun();
+    HandGun(int32_t id);
     ~HandGun() = default;
 };
 

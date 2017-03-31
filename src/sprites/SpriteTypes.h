@@ -20,8 +20,10 @@ enum class TEXTURES : int {
     //Main Menu
     MAIN, //Splash screen
     TEXTBOX,
+    TEXTBOX_ACTIVE,
+    TEXTBOX_TRANSPARENT,
     JOIN_FONT,
-    OPTIONS_FONT,
+    JOIN_FONT_ACTIVE,
 
     //LOBBY,
 
@@ -55,6 +57,9 @@ enum class TEXTURES : int {
     //--------------------- Weapons ---------------------
 
     WEAPONS,
+    RIFLE,
+    SHOTGUN,
+    HANDGUN,
     //Pistol
     // PISTOL_FRONT,
     // PISTOL_FRONT_LEFT,

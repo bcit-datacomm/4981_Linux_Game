@@ -28,43 +28,24 @@ public:
     virtual ~Turret();
 
     void spawnTurret(); // spawns a DEACTIVATED turret
-
     bool placementCheckTurret(); // checks if turret placement is within bounds
-
     // checks if the turret placement overlaps with any currently existing objects
     bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler&);
-
     void activateTurret(); // activates the turret
-
-    void onCollision();
-
     void collidingProjectile(const int damage);
-
     void damageTurret(const int damage); // decrements the turrets health by damage parameter
-
-    void decrementAmmo(const int amount); // turret ammo pool decrements by this amount
-
     void shootTurret(); // turret shoots, this is not yet defined
-
-    bool ammoCheckTurret();  // returns true if turret has >0 ammo, false otherwise
-
-    bool healthCheckTurret();  // returns true if turret has >0 health, false otherwise
-
-    bool targetScanTurret(); // checks if there are any enemies in the turret's coverage area
-
+    bool ammoCheckTurret();  // returns true if turret has > 0 ammo, false otherwise
+    // Mark Chen, 2017-03-01
+    bool healthCheckTurret() {return health > 0;};  // returns true if turret has >0 health, false otherwise
+    bool targetScanTurret(); // checks if there are any enemies in the turret's coverage
     void move(const float playerX, const float playerY,
             const float moveX, const float moveY, CollisionHandler& ch);
-
     void placeTurret();
-
     bool isPlaced() {return placed;};
-
     void pickUpTurret();
-
     void removeTurret(); // removes the turret
-
-    // returns the turret's range.
-    // Jamie, 2017-03-01.
+    // Jamie Lee, 2017-03-01.
     float getRange() const {
         return range;
     }

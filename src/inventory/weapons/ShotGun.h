@@ -8,6 +8,8 @@
 
 #include "InstantWeapon.h"
 #include "../../audio/AudioManager.h"
+#include "../../sprites/Renderer.h"
+#include "../../sprites/SpriteTypes.h"
 
 using std::string;
 
@@ -20,7 +22,7 @@ namespace ShotgunVars {
     const string EMPTYSOUND     = EFX_PDROP01;
 
     constexpr int RANGE         = 700;
-    constexpr int DAMAGE        = 10;
+    constexpr int DAMAGE        = 50;
     constexpr int AOE           = 1;
     constexpr int PENETRATION   = 0;
 
@@ -38,7 +40,7 @@ namespace ShotgunVars {
 class ShotGun: public InstantWeapon {
 public:
 
-    ShotGun();
+    ShotGun(int32_t id);
     ~ShotGun() = default;
 
 

@@ -16,7 +16,8 @@
 #include "../buildings/Wall.h"
 #include "../buildings/Barricade.h"
 #include "../inventory/WeaponDrop.h"
-
+#include "GameHashMap.h"
+#include <memory>
 
 //just for tesing weapon drop
 #include "../inventory/weapons/Weapon.h"
@@ -78,13 +79,17 @@ public:
     bool zombieExists(const int32_t id);
     Zombie& getZombie(const int32_t id);
 
+    //Weapon Drops
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
-    bool createWeaponDrop(const float x, const float y);
+    bool createWeaponDrop(const float x, const float y, const int32_t wID);
     void deleteWeaponDrop(const int32_t id);
     bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
+
+    //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
-    int32_t addWeapon(std::shared_ptr<Weapon> newWeaponDrop);
+    int32_t addWeapon(std::shared_ptr<Weapon> weapon);
+    void removeWeapon(const int32_t id);
 
     int32_t createBarricade(const float x, const float y);
     void deleteBarricade(const int32_t id);
@@ -101,15 +106,14 @@ private:
 
     CollisionHandler collisionHandler;
     std::unique_ptr<WeaponDrop> wdPointer;
-    std::map<int32_t, Marine> marineManager;
-    std::map<int32_t, Object> objectManager;
-    std::map<int32_t, Zombie> zombieManager;
-    std::map<int32_t, Turret> turretManager;
-    std::map<int32_t, WeaponDrop> weaponDropManager;
-    std::map<int32_t, std::shared_ptr<Weapon>> weaponManager;
-    std::map<int32_t, Barricade> barricadeManager;
-    std::map<int32_t, Wall> wallManager;
-
+    GameHashMap<int32_t, Marine> marineManager;
+    GameHashMap<int32_t, Object> objectManager;
+    GameHashMap<int32_t, Zombie> zombieManager;
+    GameHashMap<int32_t, Turret> turretManager;
+    GameHashMap<int32_t, WeaponDrop> weaponDropManager;
+    GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
+    GameHashMap<int32_t, Barricade> barricadeManager;
+    GameHashMap<int32_t, Wall> wallManager;
 };
 
 
