@@ -106,7 +106,6 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
 
-            marine->checkForPickUp();
             const int checkTurret = marine->checkForPickUp();
             if (checkTurret > -1 && holdingTurret == false)
             {
