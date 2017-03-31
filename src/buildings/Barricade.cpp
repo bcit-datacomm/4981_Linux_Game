@@ -71,8 +71,12 @@ void Barricade::onCollision() {
     // Do nothing for now
 }
 
+//modified: Mar 31, 2017 - Mark Tattrie
 void Barricade::collidingProjectile(const int damage) {
     health -= damage;
+    if(health <= 0){
+        GameManager::instance()->deleteBarricade(getId());
+    }
 }
 
 void Barricade::placeBarricade() {
