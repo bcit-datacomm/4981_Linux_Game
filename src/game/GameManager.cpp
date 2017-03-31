@@ -7,6 +7,7 @@
 #include "../log/log.h"
 #include "../game/GameManager.h"
 #include "../sprites/Renderer.h"
+#include "../buildings/WeaponStore.h"
 
 Weapon w;
 GameManager GameManager::sInstance;
@@ -260,11 +261,8 @@ void GameManager::deleteObject(const int32_t id) {
 
 //Created By Maitiu
 //Adds Weapon to Weapon Manager
-int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
-    const int32_t id = weapon->getID();
-    const auto& elem = weaponManager.emplace(id, weapon);
-    elem->second->setId(id);
-    return id;
+void GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
+    weaponManager.emplace(weapon->getID(), weapon);
 }
 
 /*
@@ -311,7 +309,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     return wd.first;
 }
 
-//created by Maitiu 2017-03-12 
+//created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];
@@ -323,6 +321,31 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
 void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
 }
+
+/*
+ * Created By Maitiu March 30 2017
+ * Creates a Weapon store object and then calls addStore to add it to the manager.
+ */
+int32_t GameManager::createWeaponStore(const float x, const float y){
+    int32_t id = generateID();
+
+    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), 400, 400};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), 400, 400};
+
+    WeaponStore ws(id, weaponStoreRect, pickRect);
+
+    addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(ws)));
+
+    return id;
+}
+
+/*
+ * Created By Maitiu March 30 2017
+ * adds Store to store manager
+ */
+ void GameManager::addStore(int32_t id ,std::shared_ptr<Store> store){
+     storeManager.emplace(id, store);
+ }
 
 // Returns Collision Handler
 CollisionHandler& GameManager::getCollisionHandler() {

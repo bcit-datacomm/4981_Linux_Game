@@ -44,7 +44,6 @@ public:
     bool chamberRound();
 
     int32_t getID()const{return wID;};
-    void setId(const int32_t num){wID = num;};
 
     virtual bool fire(Movable& movable);
 

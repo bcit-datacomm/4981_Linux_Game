@@ -10,7 +10,7 @@
 
 class Store: public Object{
 public:
-    Store(int32_t id, const SDL_Rect dest);
+    Store(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize);
 
     ~Store();
 

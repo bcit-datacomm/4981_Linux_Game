@@ -10,7 +10,7 @@
 int32_t id of the Store
 SDL_RECT dest the rect of the store
 maitiu March 16*/
-WeaponStore::WeaponStore(int32_t id, const SDL_Rect dest): Store(id, dest){
+WeaponStore::WeaponStore(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize): Store(id, dest, pickupSize){
 
 }
 

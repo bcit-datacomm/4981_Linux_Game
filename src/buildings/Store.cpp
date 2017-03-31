@@ -4,8 +4,8 @@
 #include <algorithm>
 
 
-Store::Store(int32_t id, const SDL_Rect dest): Object(id, dest), dropCols(4), dropPoints(5){
-
+Store::Store(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize):
+        Object(id, dest, dest, pickupSize, 400, 400, 0){
 }
 
 //maitiu March 16

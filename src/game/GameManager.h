@@ -14,6 +14,7 @@
 #include "../buildings/Object.h"
 #include "../buildings/Base.h"
 #include "../buildings/Wall.h"
+#include "../buildings/Store.h"
 #include "../buildings/Barricade.h"
 #include "../inventory/WeaponDrop.h"
 #include "GameHashMap.h"
@@ -88,7 +89,7 @@ public:
 
     //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
-    int32_t addWeapon(std::shared_ptr<Weapon> weapon);
+    void addWeapon(std::shared_ptr<Weapon> weapon);
     void removeWeapon(const int32_t id);
 
     int32_t createBarricade(const float x, const float y);
@@ -98,7 +99,8 @@ public:
     int32_t createWall(const float x, const float y, const int h, const int w); // create Wall object
     void setBoundary(const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
 
-
+    int32_t createWeaponStore(const float x, const float y);//creates a weapon store
+    void addStore(int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
 private:
     GameManager();
     ~GameManager();
@@ -114,6 +116,7 @@ private:
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
     GameHashMap<int32_t, Barricade> barricadeManager;
     GameHashMap<int32_t, Wall> wallManager;
+    GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
 };
 
 

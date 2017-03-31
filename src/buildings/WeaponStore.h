@@ -9,7 +9,7 @@
 
 class WeaponStore: public Store{
 public:
-    WeaponStore(int32_t id, const SDL_Rect dest);
+    WeaponStore(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize);
 
     ~WeaponStore();
 
