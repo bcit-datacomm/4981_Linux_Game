@@ -28,7 +28,7 @@ ShotGun::ShotGun(int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::SHOTGU
 
 */
 bool ShotGun::fire(Movable& movable){
-	if (!Weapon::fire(movable)) {
+    if (!Weapon::fire(movable)) {
         return false;
     }
     logv(3, "ShotGun::fire()\n");
@@ -48,8 +48,8 @@ bool ShotGun::fire(Movable& movable){
 
     double currentAngle = startAngle;
     for(int i = 0; i < numberOfShots; i++){
-    	fireSingleProjectile(gunX, gunY, currentAngle);
-    	currentAngle += seperation;
+        fireSingleProjectile(gunX, gunY, currentAngle);
+        currentAngle += seperation;
     }
 
     return true;

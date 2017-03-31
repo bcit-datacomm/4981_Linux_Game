@@ -157,7 +157,7 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, const int gun
 void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList &targetList, std::vector<Entity*> &allEntities, int type) {
 
-    for(auto& possibleTarget : allEntities) {
+    for(const auto& possibleTarget : allEntities) {
 
         /* These values are initialized to the end points of a line spanning from the gun muzzle 
         to the point at the end of the guns range. After SDL_IntersectRectAndLine is called
