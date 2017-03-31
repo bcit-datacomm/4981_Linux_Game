@@ -102,15 +102,16 @@ public:
     Barricade& getBarricade(const int32_t id);
 
     int32_t createWall(const float x, const float y, const int h, const int w); // create Wall object
-    void setBoundary(const float startX, const float startY, const float endX, const float endY); // place walls for the boundaries
+    // place walls for the boundaries
+    void setBoundary(const float startX, const float startY, const float endX, const float endY);
 
     int32_t createWeaponStore(const float x, const float y);//creates a weapon store
-    void addStore(int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
+    void addStore(const int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
     auto& getStoreManager() const {return storeManager;};
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
 
-    void createDropZone(float x, float y, int num);
+    void createDropZone(const float x, const float y, const int num);
     int32_t createDropPoint(const float x, const float y);
     bool dropPointExists(const int32_t id);
     int32_t getFreeDropPointId();
@@ -136,6 +137,10 @@ private:
     GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
     GameHashMap<int32_t, DropPoint> dropPointManager;
     std::vector<int32_t> openDropPoints;
+
+    int dropPointSpace = 200;
+    int storeSize = 400;
+    int storePickupSize = 50;
 };
 
 

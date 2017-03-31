@@ -1,5 +1,5 @@
 #include "Marine.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
@@ -86,7 +86,7 @@ int32_t Marine::checkForPickUp() {
  *Create by Maitiu March 30
  * Takes in an Entity that is a store and attempts a purchase
  */
-void Marine::activateStore(Entity *ep){
+void Marine::activateStore(const Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
         int r = rand()% 2 + 1;//random number temp for testing

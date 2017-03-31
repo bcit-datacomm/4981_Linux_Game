@@ -9,13 +9,12 @@
 
 class WeaponStore: public Store{
 public:
-    WeaponStore(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize);
+    WeaponStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize);
 
     ~WeaponStore();
 
-    int32_t purchase(int num);//creates item and item drop for user
-    int selectItem();//selected what item the user wants
-    int32_t createWeapon(int num);
+    int32_t purchase(const int num);//creates item and item drop for user
+    int32_t createWeapon(const int num);
 
 private:
 

@@ -29,7 +29,7 @@ public:
     void fireWeapon();
     int32_t checkForPickUp();
 
-    void activateStore(Entity *ep);
+    void activateStore(const Entity *ep);
 
     Inventory inventory;
 

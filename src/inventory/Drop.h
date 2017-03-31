@@ -9,9 +9,9 @@
 
 class Drop: public Entity {
 public:
-    Drop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize);
+    Drop(const int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize);
 
-    ~Drop();
+    ~Drop() = default;
 
     void setDropPoint(const int32_t id) { dropPoint = id; };
     int32_t getDropPoint() const { return dropPoint; };

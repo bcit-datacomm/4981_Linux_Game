@@ -305,14 +305,14 @@ void GameManager::deleteObject(const int32_t id) {
 
 //Created By Maitiu
 //Adds Weapon to Weapon Manager
-void GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
+void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
     weaponManager.emplace(weapon->getID(), weapon);
 }
 
 /*
  *Created By Maitiu March 30 2017
  */
-void GameManager::removeWeapon(const int32_t id){
+void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
 }
 
@@ -346,7 +346,7 @@ int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_
 /*create by maitiu March 21
  * Checks if id can be found in weaponDropManager
  */
-bool GameManager::weaponDropExists(const int32_t id){
+bool GameManager::weaponDropExists(const int32_t id) {
     return weaponDropManager.count(id);
 }
 //created by Maitiu 2017-03-12
@@ -360,7 +360,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
 
 //created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
-std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
+std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
     const auto& w = weaponManager[id];
     assert(w.second);
     return w.first;
@@ -375,11 +375,11 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
  * Created By Maitiu March 30 2017
  * Creates a Weapon store object and then calls addStore to add it to the manager.
  */
-int32_t GameManager::createWeaponStore(const float x, const float y){
-    int32_t id = generateID();
+int32_t GameManager::createWeaponStore(const float x, const float y) {
+    const int32_t id = generateID();
 
-    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), 400, 400};
-    SDL_Rect pickRect = {static_cast<int>(x) - 25,static_cast<int>(y) - 25, 450, 450};
+    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), storeSize, storeSize};
+    SDL_Rect pickRect = {static_cast<int>(x) - storePickupSize/2 ,static_cast<int>(y) - storePickupSize/2, storeSize + storePickupSize, storeSize + storePickupSize};
 
     WeaponStore ws(id, weaponStoreRect, pickRect);
     addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(ws)));
@@ -391,14 +391,14 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
  * Created By Maitiu March 30 2017
  * adds Store to store manager
  */
- void GameManager::addStore(int32_t id ,std::shared_ptr<Store> store){
+ void GameManager::addStore(const int32_t id ,std::shared_ptr<Store> store) {
      storeManager.emplace(id, store);
  }
 
  /*create by maitiu March 30
   * Checks if id can be found in storeManager
   */
- bool GameManager::storeExists(const int32_t id){
+ bool GameManager::storeExists(const int32_t id) {
      return storeManager.count(id);
  }
 
@@ -414,12 +414,11 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
  * created by Maitiu March 31
  * creates a square area of DropPoints
  */
-void GameManager::createDropZone(float x, float y, int num){
-    float coordX = x;
-    float coordY = y;
-    for(int i = 0; i < num; i++){
-        for(int j = 0; j < num; j++){
-            createDropPoint(coordX + (200*i), coordY + (200*j));
+void GameManager::createDropZone(const float x, const float y, const int num) {
+
+    for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
+            createDropPoint(x + (dropPointSpace * i), y + (dropPointSpace * j));
         }
     }
 }
@@ -427,7 +426,7 @@ void GameManager::createDropZone(float x, float y, int num){
  /*
   * Created by Maitiu March 30
   */
- int32_t GameManager::createDropPoint(const float x, const float y){
+ int32_t GameManager::createDropPoint(const float x, const float y) {
      const int32_t id = generateID();
 
      DropPoint dp(id, x, y);
@@ -440,14 +439,14 @@ void GameManager::createDropZone(float x, float y, int num){
  /*
   * Created by Maitiu March 30
   */
-bool GameManager::dropPointExists(const int32_t id){
+bool GameManager::dropPointExists(const int32_t id) {
     return storeManager.count(id);
 }
 
 /*
  * Created by Maitiu March 30
  */
-bool GameManager::checkFreeDropPoints(){
+bool GameManager::checkFreeDropPoints() {
     return !openDropPoints.empty();
 }
 
@@ -455,8 +454,8 @@ bool GameManager::checkFreeDropPoints(){
  * Created by Maitiu March 30
  * gets a free drop point but also removes it form the vector
  */
-int32_t GameManager::getFreeDropPointId(){
-     int32_t id = openDropPoints.back();
+int32_t GameManager::getFreeDropPointId() {
+     const int32_t id = openDropPoints.back();
      openDropPoints.pop_back();
      return id;
 }
@@ -465,14 +464,14 @@ int32_t GameManager::getFreeDropPointId(){
  * Created by Maitiu March 30
  * adds DropPoint id to freeDropPoints vector
  */
-void GameManager::freeDropPoint(const int32_t id){
+void GameManager::freeDropPoint(const int32_t id) {
     openDropPoints.push_back(id);
 }
 
 /*
  * Created by Maitiu March 30
  */
-DropPoint& GameManager::getDropPoint(const int32_t id){
+DropPoint& GameManager::getDropPoint(const int32_t id) {
     const auto& s = dropPointManager[id];
     assert(s.second);
     return s.first;

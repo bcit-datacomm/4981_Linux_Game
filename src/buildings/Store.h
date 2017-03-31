@@ -10,12 +10,11 @@
 
 class Store: public Object{
 public:
-    Store(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize);
+    Store(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize);
 
     ~Store();
 
-    virtual int32_t purchase(int num);//creates item and item drop for user
-    virtual int selectItem();//selected what item the user wants
+    virtual int32_t purchase(const int num);//creates item and item drop for user
     std::pair<int,int> dropLocation();
     int32_t getVacantDropPoint();
     void addVacantDropPoint(const int32_t id);

@@ -9,10 +9,6 @@ DropPoint::DropPoint(int32_t id, float x, float y):id(id), dropId(-1), xCoord(x)
 
 }
 
-/*maitiu March 16*/
-DropPoint::~DropPoint(){
-}
-
 /*wdid: id of weapondrop in droppoint
 maitiu March 16*/
 void DropPoint::occupy(const int32_t wdid){

@@ -44,7 +44,7 @@ public:
     bool reloadClip();
     bool chamberRound();
 
-    int32_t getID()const{return wID;};
+    int32_t getID() const {return wID;};
 
     virtual bool fire(Movable& movable);
 

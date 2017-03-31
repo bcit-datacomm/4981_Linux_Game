@@ -18,8 +18,6 @@ Entity::Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movement
         const SDL_Rect &pickupSize): id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
         movementHitBox(movementSize), projectileHitBox(dest), damageHitBox(dest),pickupHitBox(pickupSize),
         x(dest.x), y(dest.y) {
-            logv("Store PickupSize: %d\n", pickupSize.w);
-            logv("Store x: %d y: %d\n", pickupSize.x, pickupSize.y);
 }
 
 Entity::Entity(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
