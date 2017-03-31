@@ -29,7 +29,15 @@ GameManager::~GameManager() {
     logv("Destroy GM\n");
 }
 
-// Render all objects in level
+
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Author: Maitiu Morton
+ * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
+ * Description:
+ * Render all objects in level
+ */
 void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
@@ -116,6 +124,14 @@ int32_t GameManager::createMarine() {
     return id;
 }
 
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author:
+ * Function Interface: bool GameManager::createMarine(const float x, const float y) {
+ * Description:
+ * create a marine at position x,y and add it to the marine manager
+ */
 bool GameManager::createMarine(const float x, const float y) {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
@@ -130,6 +146,14 @@ bool GameManager::createMarine(const float x, const float y) {
     return true;
 }
 
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author:
+ * Function Interface: void GameManager::deleteMarine(const int32_t id) {
+ * Description:
+ * remove the marine by its id from the marineManager
+ */
 void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
 }
@@ -150,7 +174,7 @@ Marine& GameManager::getMarine(const int32_t id) {
     return mar.first;
 }
 
-// Create Turret add it to manager, returns tower id
+ //Create Turret add it to manager, returns tower id
 int32_t GameManager::createTurret() {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
@@ -179,7 +203,14 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
     return true;
 }
 
-// Create turret add it to turret, returns if success
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author:
+ * Function Interface: int32_t GameManager::createTurret(const float x, const float y) {
+ * Description:
+ * Create turret add it to turret, returns if success
+ */
 int32_t GameManager::createTurret(const float x, const float y) {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
@@ -208,7 +239,14 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
     return id;
 }
 
-// Create zombie add it to manager, returns success
+/**
+* Date: Mar. 1, 2017
+* Modified: Mar. 15 2017 - Mark Tattrie
+* Author:
+* Function Interface: bool GameManager::createZombie(const float x, const float y)
+* Description:
+* Create zombie add it to manager, returns success
+*/
 bool GameManager::createZombie(const float x, const float y) {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
@@ -281,9 +319,16 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     return id;
 }
 
-// Create weapon drop add it to manager, returns success
-//Created By Maitiu 2017-03-12
+/**
+* Date: Mar. 3, 2017
+* Modified: Mar. 15 2017 - Mark Tattrie
+* Author: Maitiu Morton
+* Function Interface: bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID)
+* Description:
+* Create weapon drop add it to manager, returns success
+*/
 bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
+
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
@@ -311,7 +356,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     return wd.first;
 }
 
-//created by Maitiu 2017-03-12 
+//created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];
@@ -329,7 +374,14 @@ CollisionHandler& GameManager::getCollisionHandler() {
     return collisionHandler;
 }
 
-// Update colliders to current state
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Author: Maitiu Morton
+ * Function Interface: void GameManager::updateCollider()
+ * Description:
+ * Update colliders to current state
+ */
 void GameManager::updateCollider() {
     collisionHandler = CollisionHandler();
 
@@ -367,7 +419,14 @@ void GameManager::updateCollider() {
     }
 }
 
-// Create barricade add it to manager, returns success
+/**
+* Date: Mar. 1, 2017
+* Modified: Mar. 15 2017 - Mark Tattrie
+* Author: Maitiu Morton
+* Function Interface: int32_t GameManager::createBarricade(const float x, const float y)
+* Description:
+* Create barricade add it to manager, returns success
+*/
 int32_t GameManager::createBarricade(const float x, const float y) {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
@@ -392,7 +451,17 @@ Barricade& GameManager::getBarricade(const int32_t id) {
     return bar.first;
 }
 
-// Create zombie add it to manager, returns success
+
+/**
+* Date: Mar. 14, 2017
+* Modified: Mar. 15 2017 - Mark Tattrie
+*           Mar. 16 2017 - Micheal Goll
+* Author: Maitiu Morton
+* Function Interface: int32_t GameManager::createWall(const float x, const float y, const int w,
+*       const int h)
+* Description:
+* Create wall, add it to manager, returns success
+*/
 int32_t GameManager::createWall(const float x, const float y, const int w, const int h) {
 
     const int32_t id = generateID();

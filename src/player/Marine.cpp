@@ -33,8 +33,10 @@ void Marine::fireWeapon() {
     }
 }
 
+
 /*
  * Created By Maitiu
+ * Modified: Mar. 15 2017 - Mark Tattrie
  * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
  * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
  */

@@ -21,7 +21,15 @@ Barricade::~Barricade() {
     logv("Destroy Barricade\n");
 }
 
-//checks the proposed location of the barricade placement to see if it is valid.
+/**
+ * Date: Feb 2, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author: Terry Kang
+ * Function Interface: bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
+ *       const float moveX, const float moveY, CollisionHandler& ch)
+ * Description:
+ * checks the proposed location of the barricade placement to see if it is valid.
+ */
 bool Barricade::checkPlaceablePosition(const float playerX, const float playerY,
         const float moveX, const float moveY, CollisionHandler& ch) {
 
