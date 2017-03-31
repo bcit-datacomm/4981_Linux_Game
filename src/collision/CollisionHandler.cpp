@@ -135,8 +135,8 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     PARAMS:
         TargetList &targetList,
             This is the priority queue wrapper that will hold the targets that will be determined.
-        
-        const int gunX, const int gunY, 
+
+        const int gunX, const int gunY,
             coordinates of the weapons muzzle.
 
         const double angle
@@ -145,7 +145,7 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
         const int range
             The range of the weapon that is being fired.
 */
-void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY, 
+void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY,
         const double angle, const int range){
 
     const double degrees = angle - 90;
@@ -172,6 +172,26 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, const int gun
 }
 
 /**
+ * Date: Mar. 28, 2017
+ * Author: Mark Tattrie
+ * Function Interface: std::vector<Entity *> CollisionHandler::detectMeleeCollision(
+ *      std::vector<Entity*> returnObjects, const Entity *entity, const HitBox hb)
+ * Description:
+ * returns a vector of entities that have a damage hitbox collision between the vector of entities
+ * and the entity you pass in 
+ */
+std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*> returnObjects, const Entity *entity, const HitBox hb){
+    std::vector<Entity*> allEntities;
+    for (const auto& obj: returnObjects){
+        if (obj != nullptr && entity != obj
+            && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())){
+            allEntities.push_back(obj);
+        }
+    }
+    return allEntities;
+}
+
+/**
     checkTargets
 
     DISCRIPTION:
@@ -183,7 +203,7 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, const int gun
     PARAMS:
         const int gunX,
         const int gunY,
-            The x and y where the bullet is fired from. 
+            The x and y where the bullet is fired from.
 
         const int endX,
         const int endY,
@@ -204,7 +224,7 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
 
     for(const auto& possibleTarget : allEntities) {
 
-        /* These values are initialized to the end points of a line spanning from the gun muzzle 
+        /* These values are initialized to the end points of a line spanning from the gun muzzle
         to the point at the end of the guns range. After SDL_IntersectRectAndLine is called
         they are changed to the end points of a line that intersects the hitbox starting with
         the entrance wound and ending with the exit wound as if the bullet were to pass straight
