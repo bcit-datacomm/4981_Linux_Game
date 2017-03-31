@@ -26,22 +26,20 @@ maitiu March 16*/
 int32_t WeaponStore::purchase(int num){
     GameManager *gm = GameManager::instance();
     int32_t id = gm->generateID();
+    logv("Purchased From WeaponStore\n");
     switch(num){
         case 1:
         {
             //make rifle
             Rifle r(id);
+            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(r)));
             break;
         }
         case 2:
         {
             //make shotgun
             ShotGun s(id);
-            break;
-        }
-        case 3:
-        {
-            //make what ever
+            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(s)));
             break;
         }
         default:
@@ -51,6 +49,7 @@ int32_t WeaponStore::purchase(int num){
             break;
         }
     }
+    gm->createWeaponDrop(300, 500, id);
     return id;
 }
 

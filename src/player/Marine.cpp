@@ -45,7 +45,7 @@ int32_t Marine::checkForPickUp() {
 
     Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this);
     if(ep){
-        logv("Store Found\n");
+        activateStore(ep);
         return -1;
     }
     ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
@@ -74,4 +74,11 @@ int32_t Marine::checkForPickUp() {
         loge("Pick id was nullptr\n");
     }
     return -1;
+}
+
+void Marine::activateStore(Entity *ep){
+    GameManager *gm = GameManager::instance();
+    if(gm->storeExists(ep->getId())){
+        gm->getStore(ep->getId())->purchase(2);
+    }
 }

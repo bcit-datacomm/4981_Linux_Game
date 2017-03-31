@@ -101,6 +101,9 @@ public:
 
     int32_t createWeaponStore(const float x, const float y);//creates a weapon store
     void addStore(int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
+    auto& getStoreManager() const {return storeManager;};
+    bool storeExists(const int32_t id);
+    std::shared_ptr<Store> getStore(const int32_t id);
 private:
     GameManager();
     ~GameManager();

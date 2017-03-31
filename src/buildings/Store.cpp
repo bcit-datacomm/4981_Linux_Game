@@ -17,6 +17,7 @@ Store::~Store(){
 //int num what the player wants to purchase
 //Maitiu March 16
 int32_t Store::purchase(int num){
+    logv("Purchased from Store");
     return -1;
 }
 

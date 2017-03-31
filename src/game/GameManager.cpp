@@ -352,6 +352,21 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
      storeManager.emplace(id, store);
  }
 
+ /*create by maitiu March 30
+  * Checks if id can be found in storeManager
+  */
+ bool GameManager::storeExists(const int32_t id){
+     return storeManager.count(id);
+ }
+ //created by Maitiu 2017-03-12
+ //returns store in StoreManager
+ std::shared_ptr<Store> GameManager::getStore(const int32_t id) {
+     logv("id: %d\n", id);
+     const auto& s = storeManager[id];
+     assert(s.second);
+     return s.first;
+ }
+
 // Returns Collision Handler
 CollisionHandler& GameManager::getCollisionHandler() {
     return collisionHandler;
