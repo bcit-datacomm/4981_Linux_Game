@@ -66,7 +66,7 @@ bool InstantWeapon::fire(Movable& movable) {
 
 
 /**
-    InstantWeapon::fire
+    InstantWeapon::fireSingleProjectile
 
     DISCRIPTION:
         construct a line from the weapons mussle to its
