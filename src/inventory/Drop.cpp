@@ -10,7 +10,7 @@
  * pickupSize: Thse Rect for the pickup hitbox
  *
  */
-Drop::Drop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize): Entity(id, dest, pickupSize){
+Drop::Drop(int32_t id, const SDL_Rect &dest, const SDL_Rect &pickupSize): Entity(id, dest, dest, pickupSize){
 
     logv("Created Drop\n");
 }
