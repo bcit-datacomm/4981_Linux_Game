@@ -24,7 +24,7 @@ namespace HandgunVars {
     constexpr int RANGE         = 500;
     constexpr int DAMAGE        = 200;
     constexpr int AOE           = 1;
-    constexpr int PENETRATION   = 1;
+    constexpr int PENETRATION   = 2;
 
     constexpr int CLIP          = 5;
     constexpr int CLIPMAX       = 5;

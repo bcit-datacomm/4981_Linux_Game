@@ -21,13 +21,16 @@ namespace ShotgunVars {
     const string RELOADSOUND    = EFX_WRELOAD01;
     const string EMPTYSOUND     = EFX_PDROP01;
 
-    constexpr int RANGE         = 200;
-    constexpr int DAMAGE        = 100;
+    constexpr int RANGE         = 700;
+    constexpr int DAMAGE        = 50;
     constexpr int AOE           = 1;
     constexpr int PENETRATION   = 0;
 
-    constexpr int CLIP          = 2;
-    constexpr int CLIPMAX       = 2;
+    constexpr int SPREAD_ANGLE  = 30;
+    constexpr int SPREAD_SHOTS  = 5;
+
+    constexpr int CLIP          = 5;
+    constexpr int CLIPMAX       = 5;
     constexpr int AMMO          = 1000;
 
     constexpr int RELOADDELAY   = 3000;
@@ -39,6 +42,9 @@ public:
 
     ShotGun(int32_t id);
     ~ShotGun() = default;
+
+
+    bool fire(Movable& movable);
 
 };
 

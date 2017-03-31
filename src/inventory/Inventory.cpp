@@ -16,14 +16,15 @@ Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()) {
 
 void Inventory::switchCurrent(const int slot) {
     if (current != slot) {
-        logv("Switched to slot: %d\n", slot);
+        logv(3, "Switched to slot: %d\n", slot);
         current = slot;
     }
 }
+
 //Created By Maitiu
 bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
     if (current == 0) {
-        logv("Can't Swap default gun \n");
+        logv(3, "Can't Swap default gun \n");
         return false;
     }
 
@@ -31,10 +32,10 @@ bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
 
     dropWeapon(x, y);
 
-    logv("Picked up weapon\n");
-    logv("Swapped from %d ", weaponIds[current]);
+    logv(3, "Picked up weapon\n");
+    logv(3, "Swapped from %d ", weaponIds[current]);
     weaponIds[current] = weaponId;
-    logv("to %d\n\n", weaponIds[current]);
+    logv(3, "to %d\n\n", weaponIds[current]);
     return true;
 }
 
@@ -68,7 +69,7 @@ void Inventory::scrollCurrent(int direction) {
         } else {
             current = direction;
         }
-        logv("Switched to slot:%d\n", current);
+        logv(3, "Switched to slot:%d\n", current);
     }
 
 }
