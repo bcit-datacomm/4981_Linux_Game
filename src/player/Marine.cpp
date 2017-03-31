@@ -63,7 +63,6 @@ int32_t Marine::checkForPickUp() {
             const WeaponDrop& wd = gm->getWeaponDrop(pickId);
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();
-
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
                 int32_t DropPoint = wd.getDropPoint();
