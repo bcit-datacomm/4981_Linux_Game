@@ -22,6 +22,7 @@ public:
 protected:
     int dropCols;
     int dropPoints;
+    int size;
 };
 
 #endif

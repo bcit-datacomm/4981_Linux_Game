@@ -17,7 +17,8 @@
 #include "Game.h"
 
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        player(), base(), camera(gameWidth,gameHeight) {}
+        player(), base(), camera(gameWidth,gameHeight), storeX(500), storeY(900), dropZoneX(100),
+        dropZoneY(100), dropZoneSize(4) {}
 
 bool GameStateMatch::load() {
     bool success = true;

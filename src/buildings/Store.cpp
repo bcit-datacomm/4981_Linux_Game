@@ -6,7 +6,7 @@
 
 
 Store::Store(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize):
-        Object(id, dest, dest, pickupSize, 400, 400, 0){
+        Object(id, dest, dest, pickupSize, dest.w, dest.h, 0){
         logv("Created Store\n");
 }
 

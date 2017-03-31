@@ -34,6 +34,11 @@ private:
     Player player;
     Base base;
     Camera camera;
+    float storeX;
+    float storeY;
+    float dropZoneX;
+    float dropZoneY;
+    float dropZoneSize;
 
     virtual void sync() override;
     virtual void handle() override;

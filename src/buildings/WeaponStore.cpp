@@ -40,7 +40,7 @@ int32_t WeaponStore::purchase(const int num){
         const int32_t wDropId = gm->createWeaponDrop(x, y, weaponId);
 
         logv("Purchased From WeaponStore\n");
-        
+
         if(gm->weaponDropExists(wDropId)){
             gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
         }
@@ -58,21 +58,13 @@ int32_t WeaponStore::createWeapon(const int num){
     int32_t id = gm->generateID();
     switch(num){
         case 1:
-        {
-            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(Rifle(id))));
+            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
             break;
-        }
         case 2:
-        {
-            //make shotgun
-            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(ShotGun(id))));
+            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
             break;
-        }
         default:
-        {
-            //does not exist
-            return -1;
-        }
+            return -1;//does not exist
     }
 
     return id;

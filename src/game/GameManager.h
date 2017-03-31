@@ -138,9 +138,9 @@ private:
     GameHashMap<int32_t, DropPoint> dropPointManager;
     std::vector<int32_t> openDropPoints;
 
-    int dropPointSpace = 200;
-    int storeSize = 400;
-    int storePickupSize = 50;
+    int dropPointSpace;
+    int storeSize;
+    int storePickupSize;
 };
 
 
