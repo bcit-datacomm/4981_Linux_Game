@@ -319,24 +319,16 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     return id;
 }
 
-<<<<<<< HEAD
-
 /**
-* Date: Mar. 1, 2017
+* Date: Mar. 3, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
 * Author: Maitiu Morton
-* Function Interface: bool GameManager::createWeaponDrop(const float x, const float y)
+* Function Interface: bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID)
 * Description:
 * Create weapon drop add it to manager, returns success
 */
-bool GameManager::createWeaponDrop(const float x, const float y) {
-    Rifle w;
-    const int32_t wid = w.getId();
-=======
-// Create weapon drop add it to manager, returns success
-//Created By Maitiu 2017-03-12
 bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
->>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
+
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
@@ -364,7 +356,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     return wd.first;
 }
 
-//created by Maitiu 2017-03-12 
+//created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];
@@ -461,11 +453,12 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 
 
 /**
-* Date: Mar. 1, 2017
+* Date: Mar. 14, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
+*           Mar. 16 2017 - Micheal Goll
 * Author: Maitiu Morton
 * Function Interface: int32_t GameManager::createWall(const float x, const float y, const int w,
-*       const int h) 
+*       const int h)
 * Description:
 * Create wall, add it to manager, returns success
 */

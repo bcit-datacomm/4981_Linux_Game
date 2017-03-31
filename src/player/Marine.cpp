@@ -33,22 +33,13 @@ void Marine::fireWeapon() {
     }
 }
 
-<<<<<<< HEAD
-/**
-* Date: Mar. 1, 2017
-* Modified: Mar. 15 2017 - Mark Tattrie
-* Author: Maitiu Morton
-* Function Interface: int32_t Marine::checkForPickUp()
-* Description:
-* Checks for and returns the id of a pickup underneath the marine
-*/
-=======
+
 /*
  * Created By Maitiu
+ * Modified: Mar. 15 2017 - Mark Tattrie
  * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
  * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
  */
->>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
 int32_t Marine::checkForPickUp() {
     int32_t pickId = -1;
     GameManager *gm = GameManager::instance();

@@ -26,29 +26,23 @@
 
 using std::string;
 
-<<<<<<< HEAD
 /**
  * Date: Mar 1, 2017
  * Modified: Mar 13, 2017 - Mark Tattrie
  * Author: Deric Mccadden
  * Function Interface: InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound,
  *       string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
- *       int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
+ *       int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
  *       : Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
- *          penetration, clip, clipMax, ammo, reloadDelay, fireDelay)
+ *          penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id)
  * Description:
  * Ctor for Instant Weapon
  */
-InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
-: Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo,
-        reloadDelay, fireDelay) {
-=======
-InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound, string reloadSound, string emptySound,
-        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
-: Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo,
-        reloadDelay, fireDelay, id) {
->>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
+InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound,
+        string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+        int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
+: Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
+        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 
 }
 
@@ -57,11 +51,8 @@ InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, str
     InstantWeapon::fire
 
     DISCRIPTION:
-        construct a line from the weapons mussle to its
-        range limit, and then gets all the intersecting targets.
-        Tergets are sorted in a priority queue by distance from player, and then
-        they are damaged in order untill something invulnrable is hit, or
-        penertation runs out.
+        Default behaviour for instant weapon is that it fires one projectile in the direction
+        that the movable is facing.
 
         Movable& movable: The thing thats holding the weapon that is firing.
         Its needed for its x and y cords, and for its angle.
@@ -76,9 +67,40 @@ bool InstantWeapon::fire(Movable& movable) {
     }
     logv(3, "InstantWeapon::fire()\n");
 
+    const int gunX = movable.getX() + (MARINE_WIDTH / 2);
+    const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
+    const double angle = movable.getAngle();
+
+    fireSingleProjectile(gunX, gunY, angle);
+
+    return true;
+}
+
+
+
+/**
+    InstantWeapon::fireSingleProjectile
+
+    DISCRIPTION:
+        construct a line from the weapons mussle to its
+        range limit, and then gets all the intersecting targets.
+        Tergets are sorted in a priority queue by distance from player, and then
+        they are damaged in order untill something invulnrable is hit, or
+        penertation runs out.
+
+        int gunX, int gunY
+            The x and y coordinates of the guns muzzle.
+
+        double angle
+            the angle gun is facing.
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const double angle){
     TargetList targetList;
 
-    GameManager::instance()->getCollisionHandler().detectLineCollision(targetList, movable, range);
+    GameManager::instance()->getCollisionHandler().detectLineCollision(targetList, gunX, gunY, angle, range);
 
     int finalX = targetList.getEndX();
     int finalY = targetList.getEndY();
@@ -115,26 +137,7 @@ bool InstantWeapon::fire(Movable& movable) {
         }
         //damage target
         GameManager::instance()->getZombie(id).collidingProjectile(damage);
-
-<<<<<<< HEAD
-    //similar as to what happens in the line collision and is used to show a use of the line effect
-    const double degrees = marine.getAngle() - 90;
-    const double radians = degrees * M_PI / 180;
-    const int playerX = marine.getX() + (MARINE_WIDTH / 2);
-    const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
-    const int deltaX  = playerX + range * cos(radians);
-    const int deltaY  = playerY + range * sin(radians);
-
-    //5 frames to display ie 1/12th of a second at 60fps
-    //0 red, 255 green, 0 blue
-    VisualEffect::instance().addPreLine(5, playerX, playerY, deltaX, deltaY, 0, 255, 0);
-=======
         targetList.removeTop();
     }
-    const int originX = targetList.getOriginX();
-    const int originY = targetList.getOriginY();
-    VisualEffect::instance().addPreLine(5, originX, originY, finalX, finalY, 0, 255, 0);
-
->>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
-    return true;
+    VisualEffect::instance().addPreLine(5, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
 }

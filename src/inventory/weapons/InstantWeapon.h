@@ -14,11 +14,12 @@ using std::string;
 class InstantWeapon: public Weapon  {
 public:
     InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound, string reloadSound, string emptySound,
-	        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
-	        int fireDelay, int32_t id);
+            int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
+            int fireDelay, int32_t id);
     ~InstantWeapon() = default;
 
     virtual bool fire(Movable& movable);
+    void fireSingleProjectile(int gunX, int gunY, double angle);
 
 };
 

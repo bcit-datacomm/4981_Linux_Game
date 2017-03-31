@@ -12,23 +12,18 @@
 
 using std::string;
 
-<<<<<<< HEAD
-
 /**
  * Date: Feb 8, 2017
  * Modified: Mar 13, 2017 - Mark Tattrie
  * Author: Maitiu Morton
- * Function Interface: Weapon::Weapon(const string& type, const string& fireSound, const string& hitSound,
- *      const string& reloadSound, const string& emptySound, const int range, const int damage,
- *      const int AOE, const int penetration, const int clip, const int clipMax, const int ammo,
- *      const int reloadDelay, const int fireDelay)
+ * Function Interface: Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound,
+ *       const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
+ *       const int damage, const int AOE, const int penetration, const int clip, const int clipMax,
+ *       const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
  * Description:
  * Ctor for Weapon
  */
-Weapon::Weapon(const string& type, const string& fireSound, const string& hitSound, const string& reloadSound,
-=======
 Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
->>>>>>> 458c5f50b3a19eda537f89c4613db4a17709ffc0
         const string& emptySound, const int range, const int damage, const int AOE, const int penetration,
         const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
 : type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
