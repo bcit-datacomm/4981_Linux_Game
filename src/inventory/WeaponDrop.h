@@ -22,6 +22,7 @@ public:
     ~WeaponDrop();
     int32_t getId() const;
     int32_t getWeaponId() const;
+    int32_t getDropPoint() const { return Drop::getDropPoint();};
 
 
 private:

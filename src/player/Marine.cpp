@@ -1,4 +1,5 @@
 #include "Marine.h"
+#include <stdlib.h>
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
@@ -65,6 +66,10 @@ int32_t Marine::checkForPickUp() {
 
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
+                int32_t DropPoint = wd.getDropPoint();
+                if(DropPoint != -1){
+                    gm->freeDropPoint(DropPoint);
+                }
                 gm->deleteWeaponDrop(wd.getId());
             }
         } else {
@@ -83,6 +88,8 @@ int32_t Marine::checkForPickUp() {
 void Marine::activateStore(Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
-        gm->getStore(ep->getId())->purchase(2);
+        int r = rand()% 2 + 1;//random number temp for testing
+
+        gm->getStore(ep->getId())->purchase(r);
     }
 }
