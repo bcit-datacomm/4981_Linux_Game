@@ -17,8 +17,9 @@ constexpr int BARRICADE_HEIGHT = 100;
 
 class Barricade : public Object {
 public:
-    Barricade(int32_t nid, const SDL_Rect &dest, const SDL_Rect &movementSize,
-        const SDL_Rect &pickupSize, int health = 100, int state = 0, bool placeable = false, bool placed = false);
+    Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& pickupSize, const int health = 100, const int state = 0, const bool placeable = false,
+        const bool placed = false);
     virtual ~Barricade();
 
     void move(const float, const float, const float, const float, CollisionHandler&); // Moves Zombie

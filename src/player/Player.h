@@ -3,20 +3,22 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include <memory>
 
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
 #include "../game/GameManager.h"
 
-constexpr int PLAYER_PLACE_DISTANCE = 100;
+static constexpr int PLAYER_PLACE_DISTANCE = 100;
 
 class Player {
 public:
-
+    Player();
+    ~Player() = default;
 
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
-    void handleMouseUpdate(Window& w, float camX, float camY);
+    void handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY);
 
     void setControl(Marine& newControl);
 
@@ -28,11 +30,7 @@ public:
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
 
-    Player();
-    ~Player();
-
-    //Stays as pointer cause the player gets a marine object after the ctor is called
-    Marine *marine = NULL;
+    Marine * getMarine() const {return marine;}
 
 private:
     int tempBarricadeID;
@@ -40,6 +38,7 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    Marine *marine;
 };
 
 #endif

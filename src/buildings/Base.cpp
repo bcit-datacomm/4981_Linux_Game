@@ -1,9 +1,10 @@
+#include<random>
+
 #include "Base.h"
 #include "../player/Marine.h"
-#include<random>
 #include "../log/log.h"
 
-Base::Base(int32_t nid, const SDL_Rect dest, int health): Object(nid, dest, BASE_HEIGHT, BASE_WIDTH),
+Base::Base(const int32_t nid, const SDL_Rect& dest, const int health): Object(nid, dest, BASE_HEIGHT, BASE_WIDTH),
         health(health) {
     setX((MAP_WIDTH / 2) - BASE_WIDTH / 2);
     setY((MAP_HEIGHT / 2) - BASE_HEIGHT / 2);

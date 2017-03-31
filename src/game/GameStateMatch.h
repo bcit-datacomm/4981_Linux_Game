@@ -24,17 +24,11 @@ static constexpr float TICK_SEC = 1000;
 
 class GameStateMatch : public GameState {
 public:
-    GameStateMatch(Game& g, int gameWidth, int gameHeight);
+    GameStateMatch(Game& g, const int gameWidth, const int gameHeight);
     virtual ~GameStateMatch() = default;
 
     virtual bool load();
     virtual void loop();
-
-    GameManager* gameManager = nullptr;
-
-    // Frame Display
-    std::stringstream frameTimeText;
-    //TTF_Font* frameFont = nullptr;
 
 private:
     Player player;
@@ -45,7 +39,6 @@ private:
     virtual void handle() override;
     virtual void update(const float delta) override;
     virtual void render() override;
-
 };
 
 #endif

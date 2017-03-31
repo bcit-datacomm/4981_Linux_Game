@@ -1,9 +1,12 @@
 #ifndef WINDOW_H
 #define WINDOW_H
+
 #include <SDL2/SDL.h>
+
 #include "../collision/HitBox.h"
 
-//Screen dimension constexprants
+
+//Screen dimension constants
 constexpr int SCREEN_WIDTH = 1280;
 constexpr int MIN_SCREEN_WIDTH = 960;
 constexpr int SCREEN_HEIGHT = 960;
@@ -15,45 +18,36 @@ class Window {
 public:
     //Intializes internals
     Window();
+    ~Window();
 
     //Creates window
     bool init();
-
     // Gets the scrren surface of the window
-    SDL_Surface* getScreenSurface();
+    SDL_Surface *getScreenSurface();
 
     //Handles window events
     void handleEvent(SDL_Event& e);
 
-    //Deallocates internals
-    void free();
-
-    //Window dimensions
-    int getWidth();
-    int getHeight();
-
-    //Window focii
-    bool hasMouseFocus();
-    bool hasKeyboardFocus();
-    bool isMinimized();
-
-    //gets mWindow
-     SDL_Window* getWindow();
+    int getWidth() const {return width;}
+    int getHeight() const {return height;}
+    bool hasMouseFocus() const {return mouseFocus;}
+    bool hasKeyboardFocus() const {return keyboardFocus;}
+    bool isMinimized() const {return minimized;}
+    auto getWindow() const {return window;};
 
 private:
     //Window data
-    SDL_Window* mWindow;
+    SDL_Window *window;
 
     //Window dimensions
-    int mWidth;
-    int mHeight;
+    int width;
+    int height;
 
     //Window focus
-    bool mMouseFocus;
-    bool mKeyboardFocus;
-    bool mFullScreen;
-    bool mMinimized;
-
+    bool mouseFocus;
+    bool keyboardFocus;
+    bool fullScreen;
+    bool minimized;
 };
 
 
