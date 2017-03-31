@@ -94,7 +94,10 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 
     //Weapon input
     if(state[SDL_SCANCODE_R]){
-        marine->inventory.getCurrent()->reloadClip();
+        Weapon *w = marine->inventory.getCurrent();
+        if(w){
+            w->reloadClip();
+        }
     }
     //pickup button
     if(state[SDL_SCANCODE_E]){

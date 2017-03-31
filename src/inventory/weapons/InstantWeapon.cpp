@@ -101,7 +101,7 @@ bool InstantWeapon::fire(Movable& movable) {
     }
     const int originX = targetList.getOriginX();
     const int originY = targetList.getOriginY();
-    VisualEffect::instance().addPreLine(5, originX, originY, finalX, finalY, 0, 255, 0);
+    VisualEffect::instance().addPreLine(2, originX, originY, finalX, finalY, 0, 255, 0);
 
     return true;
 }
