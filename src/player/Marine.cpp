@@ -72,7 +72,12 @@ int32_t Marine::checkForPickUp() {
     }
     return -1;
 }
-
+/**
+ * Date: Mar 28, 2017
+ * Author: Mark Tattrie
+ * Function Interface:
+ * Description: Return marine's health
+ */
 int Marine::getHealth(){
     return health;
 }
