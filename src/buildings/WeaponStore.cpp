@@ -9,21 +9,22 @@
 /*
 int32_t id of the Store
 SDL_RECT dest the rect of the store
-maitiu March 16*/
+maitiu March 30*/
 WeaponStore::WeaponStore(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize): Store(id, dest, pickupSize){
 
 }
 
 
-/*maitiu March 16*/
+/*maitiu March 30*/
 WeaponStore::~WeaponStore(){
     logv("Destoryed Store");
 }
 
 /*makes the weapon that the user wishes to purchase
 int num what the player wants to purchase
-maitiu March 16*/
+maitiu March 30*/
 int32_t WeaponStore::purchase(int num){
+
     GameManager *gm = GameManager::instance();
     int32_t id = gm->generateID();
     logv("Purchased From WeaponStore\n");

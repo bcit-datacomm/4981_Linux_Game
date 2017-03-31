@@ -287,15 +287,13 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 
 // Create weapon drop add it to manager, returns success
 //Created By Maitiu 2017-03-12
-bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
+int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
-
-    logv("Created WeaponDrop id: %d\n", id);
 
     return id;
 }
@@ -358,14 +356,68 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
  bool GameManager::storeExists(const int32_t id){
      return storeManager.count(id);
  }
+
  //created by Maitiu 2017-03-12
  //returns store in StoreManager
  std::shared_ptr<Store> GameManager::getStore(const int32_t id) {
-     logv("id: %d\n", id);
      const auto& s = storeManager[id];
      assert(s.second);
      return s.first;
  }
+
+ /*
+  * Created by Maitiu March 30
+  */
+ int32_t GameManager::createDropPoint(const float x, const float y){
+     const int32_t id = generateID();
+
+     DropPoint dp(id, x, y);
+     dropPointManager.emplace(id, dp);
+     openDropPoints.push_back(id);
+
+     return id;
+ }
+
+ /*
+  * Created by Maitiu March 30
+  */
+bool GameManager::dropPointExists(const int32_t id){
+    return storeManager.count(id);
+}
+
+/*
+ * Created by Maitiu March 30
+ */
+bool GameManager::checkFreeDropPoints(){
+    return !openDropPoints.empty();
+}
+
+/*
+ * Created by Maitiu March 30
+ * gets a free drop point but also removes it form the vector
+ */
+int32_t GameManager::getFreeDropPointId(){
+     int32_t id = openDropPoints.back();
+     openDropPoints.pop_back();
+     return id;
+}
+
+/*
+ * Created by Maitiu March 30
+ * adds DropPoint id to freeDropPoints vector
+ */
+void GameManager::freeDropPoint(const int32_t id){
+    openDropPoints.push_back(id);
+}
+
+/*
+ * Created by Maitiu March 30
+ */
+DropPoint& GameManager::getDropPoint(const int32_t id){
+    const auto& s = dropPointManager[id];
+    assert(s.second);
+    return s.first;
+}
 
 // Returns Collision Handler
 CollisionHandler& GameManager::getCollisionHandler() {

@@ -10,13 +10,18 @@
 #include "../creeps/Zombie.h"
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
+
 #include "../collision/CollisionHandler.h"
+
 #include "../buildings/Object.h"
 #include "../buildings/Base.h"
 #include "../buildings/Wall.h"
 #include "../buildings/Store.h"
 #include "../buildings/Barricade.h"
+#include "../buildings/DropPoint.h"
+
 #include "../inventory/WeaponDrop.h"
+
 #include "GameHashMap.h"
 #include <memory>
 
@@ -82,7 +87,7 @@ public:
 
     //Weapon Drops
     int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
-    bool createWeaponDrop(const float x, const float y, const int32_t wID);
+    int32_t createWeaponDrop(const float x, const float y, const int32_t wID);
     void deleteWeaponDrop(const int32_t id);
     bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
@@ -104,6 +109,14 @@ public:
     auto& getStoreManager() const {return storeManager;};
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
+
+    int32_t createDropPoint(const float x, const float y);
+    bool dropPointExists(const int32_t id);
+    int32_t getFreeDropPointId();
+    DropPoint& getDropPoint(const int32_t id);
+    void freeDropPoint(const int32_t id);
+    bool checkFreeDropPoints();
+
 private:
     GameManager();
     ~GameManager();
@@ -120,6 +133,8 @@ private:
     GameHashMap<int32_t, Barricade> barricadeManager;
     GameHashMap<int32_t, Wall> wallManager;
     GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
+    GameHashMap<int32_t, DropPoint> dropPointManager;
+    std::vector<int32_t> openDropPoints;
 };
 
 

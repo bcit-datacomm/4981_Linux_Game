@@ -76,6 +76,10 @@ int32_t Marine::checkForPickUp() {
     return -1;
 }
 
+/*
+ *Create by Maitiu March 30
+ * Takes in an Entity that is a store and attempts a purchase
+ */
 void Marine::activateStore(Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
