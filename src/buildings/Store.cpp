@@ -6,11 +6,12 @@
 
 Store::Store(int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize):
         Object(id, dest, dest, pickupSize, 400, 400, 0){
+        logv("Created Store\n");
 }
 
 //maitiu March 16
 Store::~Store(){
-    logv("Destoryed Store");
+    logv("Destoryed Store\n");
 }
 
 //int num what the player wants to purchase

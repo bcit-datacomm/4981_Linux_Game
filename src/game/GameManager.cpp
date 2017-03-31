@@ -75,6 +75,12 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
             Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
         }
     }
+
+    for (const auto& s : storeManager) {
+        if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
+            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::CONCRETE);
+        }
+    }
 }
 
 // Update marine movements. health, and actions
@@ -330,10 +336,9 @@ int32_t GameManager::createWeaponStore(const float x, const float y){
     int32_t id = generateID();
 
     SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), 400, 400};
-    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), 400, 400};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), 1000, 1000};
 
     WeaponStore ws(id, weaponStoreRect, pickRect);
-
     addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(ws)));
 
     return id;
@@ -387,6 +392,10 @@ void GameManager::updateCollider() {
 
     for (auto& w : wallManager) {
         collisionHandler.quadtreeWall.insert(&w.second);
+    }
+
+    for (auto& s : storeManager) {
+        collisionHandler.quadtreeStore.insert(s.second.get());
     }
 }
 

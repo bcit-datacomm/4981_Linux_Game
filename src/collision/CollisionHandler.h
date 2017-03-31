@@ -20,7 +20,7 @@ public:
     bool detectMovementCollision(const std::vector<Entity*> returnObjects, const Entity *entity); // // Check for collisions during movement
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);//check for pick up collision, return object if can pick up
     void detectLineCollision(TargetList& targetList, Movable& movable, const int range);
-    
+
 
     std::vector<Entity *>getQuadTreeEntities(Quadtree& q,const Entity *entity); // General Collision handler, pass in quadtree check
 
@@ -31,6 +31,7 @@ public:
     Quadtree quadtreeWall;
     Quadtree quadtreePickUp;
     Quadtree quadtreeObj;
+    Quadtree quadtreeStore;
 
     CollisionHandler& operator=(const CollisionHandler& handle);
 

@@ -13,7 +13,7 @@ Object::Object(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movement
         width(width), height(height), angle(angle) {
     setHeight(height);
     setWidth(width);
-    updateRectHitBoxes();
+    //updateRectHitBoxes();
 }
 
 Object::~Object() {

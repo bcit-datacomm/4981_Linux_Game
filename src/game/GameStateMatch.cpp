@@ -38,6 +38,10 @@ bool GameStateMatch::load() {
     GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
     GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
+
+    //createStores
+    GameManager::instance()->createWeaponStore(500, 500);
+
     GameManager::instance()->addObject(base);
 
     Point newPoint = base.getSpawnPoint();

@@ -43,8 +43,13 @@ int32_t Marine::checkForPickUp() {
     GameManager *gm = GameManager::instance();
     CollisionHandler& ch = gm->getCollisionHandler();
 
-    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
-    if(ep != nullptr) {
+    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this);
+    if(ep){
+        logv("Store Found\n");
+        return -1;
+    }
+    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
+    if(ep) {
         //get Entity drop Id
         pickId = ep->getId();
         logv("Searching for id:%d in weaponDropManager\n", pickId);
