@@ -14,9 +14,11 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "../../include/Colors.h"
 
 GameStateMatch::GameStateMatch(Game& g,  int gameWidth, int gameHeight) : GameState(g), player(),
-        base(), camera(gameWidth,gameHeight) {
+        base(), camera(gameWidth,gameHeight), hud(),
+        screenRect{0, 0, game.window.getWidth(), game.window.getHeight()} {
 }
 
 bool GameStateMatch::load() {
@@ -112,6 +114,7 @@ void GameStateMatch::handle() {
            switch(event.type) {
         case SDL_WINDOWEVENT:
             camera.setViewSize(game.window.getWidth(), game.window.getHeight());
+            screenRect = {0, 0, game.window.getWidth(), game.window.getHeight()};
             break;
         case SDL_MOUSEWHEEL:
             player.handleMouseWheelInput(&(event));
@@ -190,6 +193,17 @@ void GameStateMatch::render() {
         GameManager::instance()->renderObjects(camera.getViewport());
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
+
+        //**************************************************DISPLAY THE HEALTHBAR********************************************//
+        float HP = player.marine->getCurrentHealth();//
+        hud.renderStaticItems(screenRect, player, camera);
+        if (HP > 0) {
+            hud.setHealthBarColor(HP);
+            hud.getHealthBarForeground()->w = static_cast<size_t>(HP / 100 * hud.getHealthBarBackground()->w) - hud.getHealthBarBackground()->h * 0.2;
+            SDL_SetRenderDrawColor(Renderer::instance().getRenderer(), hud.getHealthRgbElement(0), hud.getHealthRgbElement(1), hud.getHealthRgbElement(2), OPAQUE);
+            SDL_RenderFillRect(Renderer::instance().getRenderer(), hud.getHealthBarForeground());
+        }
+        //**************************************************DISPLAY THE HEALTHBAR********************************************//
 
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());

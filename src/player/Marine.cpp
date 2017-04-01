@@ -65,3 +65,7 @@ int32_t Marine::checkForPickUp() {
     }
     return -1;
 }
+
+int Marine::getCurrentHealth() {
+    return health;
+}

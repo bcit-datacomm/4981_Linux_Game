@@ -25,6 +25,17 @@ const std::string TEXTBOX_ACTIVE_TEXTURE = "assets/texture/textboxActive.png";
 const std::string TEXTBOX_TRANSPARENT_TEXTURE = "assets/texture/textboxTransparent.png";
 //#define LOBBY_SCREEN "assets/texture/Map/" // <-- Will be used at a later date to show lobby bg
 
+
+//--------------------- Hud textures ---------------------
+const std::string WEAPON_CLIP_FULL_TEXTURE = "assets/texture/hud/weaponClipFull.png";
+const std::string WEAPON_CLIP_EMPTY_TEXTURE = "assets/texture/hud/weaponClipEmpty.png";
+const std::string EQUIPPED_SLOT_TEXTURE = "assets/texture/hud/equippedSlot.png";
+const std::string WEAPON_SLOT_INACTIVE_TEXTURE = "assets/texture/hud/inactiveWeaponSot.png";
+const std::string WEAPON_SLOT_ACTIVE_TEXTURE = "assets/texture/hud/activeWeaponSlot.png";
+const std::string CONSUMABLE_SLOT_TEXTURE = "assets/texture/hud/consumableSlot.png";
+const std::string HEALTHBAR_TEXTURE = "assets/texture/hud/healthbar.png";
+
+
 //-------- Map Textures --------
 const std::string MAP_TEXTURE_PATH = "assets/texture/Map/";
 const std::string TEXTURE_DIRT = MAP_TEXTURE_PATH + "dirt_grass.png"; //terraformed terrain
@@ -57,7 +68,7 @@ const std::string REPLACE_ME = "assets/texture/replace_me.png"; //temporary spri
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 22; //number of total sprites
+static constexpr int TOTAL_SPRITES = 29; //number of total sprites
 
 
 class Renderer {

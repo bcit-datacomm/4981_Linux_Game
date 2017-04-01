@@ -47,6 +47,15 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::TERRAFORMED, TEXTURE_DIRT);  //terraformed
     createTexture(TEXTURES::CONCRETE, REPLACE_ME);     //concrete, temporary texture for now
 
+    //--------------------- Hud textures ---------------------
+    createTexture(TEXTURES::WEAPON_CLIP_FULL, WEAPON_CLIP_FULL_TEXTURE);
+    createTexture(TEXTURES::WEAPON_CLIP_EMPTY, WEAPON_CLIP_EMPTY_TEXTURE);
+    createTexture(TEXTURES::EQUIPPED_SLOT, EQUIPPED_SLOT_TEXTURE);
+    createTexture(TEXTURES::WEAPON_SLOT_INACTIVE, WEAPON_SLOT_INACTIVE_TEXTURE);
+    createTexture(TEXTURES::WEAPON_SLOT_ACTIVE, WEAPON_SLOT_ACTIVE_TEXTURE);
+    createTexture(TEXTURES::CONSUMABLE_SLOT, CONSUMABLE_SLOT_TEXTURE);
+    createTexture(TEXTURES::HEALTHBAR, HEALTHBAR_TEXTURE);
+
     //-------- map object textures --------
     //nature
     //comsumables

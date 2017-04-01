@@ -9,9 +9,21 @@
 #include <stdlib.h>
 
 /**
-*   NOTE: If you change any of the sprites (ex. adding a new sprite), you
-*         MUST change the TOTAL_SPRITES value in Renderer.h accordingly
+* NOTE:
+* If you change any of the sprites (ex. adding a new sprite),
+* you MUST change the TOTAL_SPRITES value in Renderer.h accordingly.
 *
+* ADDING A NEW SPRITE STEPS:
+* 1) Add Enum to list below
+* 2) Update the TOTAL_SPRITES value in Renderer.h
+* 3) Add the new texture's path to Renerer.h as a const string above the class
+* 4) Call the createTexture() function inside the loadSprites() function in Render.cpp.
+*
+* Modified by:
+* Jacob Frank (March 29, 2017)
+*
+* Revisions:
+* JF Mar 25/29: Added Enums for Menu and HUD textures
 */
 
 enum class TEXTURES : int {
@@ -27,6 +39,14 @@ enum class TEXTURES : int {
 
     //LOBBY,
 
+    //--------------------- Hud textures ---------------------
+    WEAPON_CLIP_FULL,
+    WEAPON_CLIP_EMPTY,
+    EQUIPPED_SLOT,
+    WEAPON_SLOT_INACTIVE,
+    WEAPON_SLOT_ACTIVE,
+    CONSUMABLE_SLOT,
+    HEALTHBAR,
 
     //--------------------- Map textures ---------------------
     BARREN,

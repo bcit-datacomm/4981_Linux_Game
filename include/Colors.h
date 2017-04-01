@@ -12,6 +12,8 @@ static constexpr size_t BLACK_RGB[3] = {0, 0, 0};
 static constexpr size_t YELLOW_RGB[3] = {148, 139, 77};
 static constexpr size_t LT_GREEN_RGB[3] = {92, 133, 108};
 static constexpr size_t BLUE_RGB[3] = {83, 161, 219};
+static constexpr size_t GREEN_RGB[3] = {0, 255, 0};
+static constexpr size_t RED_RGB[3] = {255, 0, 0};
 static constexpr size_t OPAQUE = 255;
 
 #endif

@@ -29,6 +29,7 @@ public:
     void fireWeapon();
     int32_t checkForPickUp();
     Inventory inventory;
+    int getCurrentHealth();
 
 private:
     int health = 100;

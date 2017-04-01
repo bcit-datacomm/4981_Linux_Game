@@ -18,6 +18,7 @@
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
 #include "../basic/LTimer.h"
+#include "../game/GameHud.h"
 
 // ticks (ms) in 1 second
 static constexpr float TICK_SEC = 1000;
@@ -40,6 +41,9 @@ private:
     Player player;
     Base base;
     Camera camera;
+    GameHud hud;
+
+    SDL_Rect screenRect;
 
     virtual void sync() override;
     virtual void handle() override;
