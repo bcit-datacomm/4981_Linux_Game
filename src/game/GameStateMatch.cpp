@@ -45,7 +45,7 @@ bool GameStateMatch::load() {
     //gives the player control of the marine
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
-    player.getMarine()->setSrcRect(0, 0, 75, 125);
+    player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     
     return success;
 }

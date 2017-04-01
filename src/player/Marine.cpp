@@ -86,36 +86,29 @@ int32_t Marine::checkForPickUp() {
 *       mouse from the center of the screen.
 */
 void Marine::updateImageDirection() {
-    double angle = getAngle();
-    double radians = (angle -90) * M_PI/180;
-    
-    //order: start from ~0 rad, counter clockwise
-    if (radians > -M_PI/8 && radians < M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y*2); //right
-    }
-    else if (radians > -3*M_PI/8 && radians < -M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y*3);  //back & right
-    }
-    else if (radians > -5*M_PI/8 && radians < -3*M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y*4);  //back
-    }
-    else if (radians > -7*M_PI/8 && radians < -5*M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y*5); //back & left
-    }
-    else if (radians > -9*M_PI/8 && radians < -7*M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y*6); //left
-    }
-    else if (radians > -11*M_PI/8 && radians < -9*M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y*7); //front & left
-    }
-    else if (radians < -11*M_PI/8) { 
-        Entity::setSpritePosY(0); //front 
-    }
-    else if (radians > M_PI/8 && radians < 3*M_PI/8) { 
-        Entity::setSpritePosY(SPRITE_SIZE_Y); //front & right
+    const double radians = (getAngle() -90) * M_PI/180;
+    if (radians > -5*M_PI/8 && radians < -3*M_PI/8) { 
+        //logv("hello");
     }
 
-    setSrcRect(Entity::getSpritePosX(), Entity::getSpritePosY(), 75, 125); //update image
+    //order: start from ~0 rad, counter clockwise
+    if (radians > SPRITE_ANGLE2 && radians < SPRITE_ANGLE1) { 
+        setSrcRect(getSrcRect().x, SPRITE_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians > SPRITE_ANGLE3 && radians < SPRITE_ANGLE2) { 
+        setSrcRect(getSrcRect().x, SPRITE_BACK_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+    } else if (radians > SPRITE_ANGLE4 && radians < SPRITE_ANGLE3) { 
+        setSrcRect(getSrcRect().x, SPRITE_BACK, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+    } else if (radians > SPRITE_ANGLE5 && radians < SPRITE_ANGLE4) { 
+        setSrcRect(getSrcRect().x, SPRITE_BACK_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+    } else if (radians > SPRITE_ANGLE6 && radians < SPRITE_ANGLE5) { 
+        setSrcRect(getSrcRect().x, SPRITE_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+    } else if (radians > SPRITE_ANGLE7 && radians < SPRITE_ANGLE6) { 
+        setSrcRect(getSrcRect().x, SPRITE_FRONT_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+    } else if (radians < SPRITE_ANGLE7) { 
+        setSrcRect(getSrcRect().x, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+    } else if (radians > SPRITE_ANGLE1 && radians < SPRITE_ANGLE8) { 
+        setSrcRect(getSrcRect().x, SPRITE_FRONT_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    }    
 }
 
 /**
@@ -132,60 +125,48 @@ void Marine::updateImageDirection() {
 */
 void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
     if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
-        if (getSpritePosX() == 0) {
-            setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
-        }
-        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
-            if (getSpritePosX() < SPRITE_SIZE_X*2) {
-                setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
+        //stops lag when taking first step
+        if (getSrcRect().x == SPRITE_FRONT) {
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+        } else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            //cycle throught the walking images
+            if (getSrcRect().x < SPRITE_NEXT_STEP) {
+                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
-                setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             }
         } 
-    }
-    else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
-        if (getSpritePosX() == 0) {
-            setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
-        }
-        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
-            if (getSpritePosX() < SPRITE_SIZE_X*2) {
-                setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
+    } else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
+        if (getSrcRect().x == SPRITE_FRONT) {
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+        } else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSrcRect().x < SPRITE_NEXT_STEP) {
+                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
-                setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             }
         } 
-    }
-    else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
-        if (getSpritePosX() == 0) {
-            setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
-        }
-        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
-            if (getSpritePosX() < SPRITE_SIZE_X*2) {
-                setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
+    } else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
+        if (getSrcRect().x == SPRITE_FRONT) {
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+        } else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSrcRect().x < SPRITE_NEXT_STEP) {
+                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
-                setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             }
         } 
-    }
-    else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
-        if (getSpritePosX() == 0) {
-            setSpritePosX(SPRITE_SIZE_X);   //stops lag when taking first step
-        }
-        else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
-            if (getSpritePosX() < SPRITE_SIZE_X*2) {
-                setSpritePosX(getSpritePosX() + SPRITE_SIZE_X); //moves to last walking position on sprite
+    } else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
+        if (getSrcRect().x == SPRITE_FRONT) {
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+        } else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+            if (getSrcRect().x < SPRITE_NEXT_STEP) {
+                setSrcRect(getSrcRect().x +SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
-                setSpritePosX(SPRITE_SIZE_X);   //moves to first walking position on sprite
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
             }
         } 
-    }
-    else if (state[SDL_SCANCODE_H]) {  
-        setSpritePosX(SPRITE_SIZE_X*3); //testing hit state (change to when HP delta > 0)
-    }
-    else if (state[SDL_SCANCODE_J]) {
-        setSrcRect(SPRITE_SIZE_X*4, SPRITE_SIZE_Y*7, 110, 100); //testing dead state (change to when HP == 0)
-    }
-    else{
-        Entity::setSpritePosX(0); //reset to normal standing position if there is not keyboard input
+    } else {
+        setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
     }
 }

@@ -59,10 +59,6 @@ public:
     void moveProHitBox(const int x, const int y) { projectileHitBox.move(x,y);};
     void moveDamHitBox(const int x, const int y) { damageHitBox.move(x,y);};
     void movePickUpHitBox(const int x, const int y) { pickupHitBox.move(x,y);};
-    int getSpritePosX();
-    int getSpritePosY();
-    void setSpritePosX(int x);
-    void setSpritePosY(int y);
 
 private:
 
@@ -75,10 +71,6 @@ private:
     HitBox pickupHitBox;
     float x;
     float y;
-
-    //rendering
-    int spritePosX;
-    int spritePosY;
 };
 
 #endif
