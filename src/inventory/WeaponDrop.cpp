@@ -8,7 +8,7 @@ using namespace std;
 
 
 WeaponDrop::WeaponDrop(const int32_t id, const SDL_Rect& dest, const SDL_Rect& pickupSize,
-        const int32_t wId): Entity(id, dest, dest, pickupSize), weaponId(wId) {
+        const int32_t wId): Drop(id, dest, pickupSize), weaponId(wId) {
     logv("Created Weapon Drop\n");
 }
 
