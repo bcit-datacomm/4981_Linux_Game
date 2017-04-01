@@ -139,5 +139,6 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
         GameManager::instance()->getZombie(id).collidingProjectile(damage);
         targetList.removeTop();
     }
-    VisualEffect::instance().addPreLine(5, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
+
+    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
 }

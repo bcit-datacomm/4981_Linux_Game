@@ -17,7 +17,8 @@
  */
 CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
         quadtreeBarricade(0, {0,0,2000,2000}),quadtreeTurret(0, {0,0,2000,2000}),
-        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}) {
+        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}),
+        quadtreeStore(0,{0,0,2000,2000}) {
 
 }
 
@@ -37,6 +38,7 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
     quadtreeWall = handle.quadtreeWall;
     quadtreePickUp = handle.quadtreePickUp;
     quadtreeObj = handle.quadtreeObj;
+    quadtreeStore = handle.quadtreeStore;
     return *this;
 }
 
@@ -135,8 +137,8 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     PARAMS:
         TargetList &targetList,
             This is the priority queue wrapper that will hold the targets that will be determined.
-        
-        const int gunX, const int gunY, 
+
+        const int gunX, const int gunY,
             coordinates of the weapons muzzle.
 
         const double angle
@@ -145,7 +147,7 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
         const int range
             The range of the weapon that is being fired.
 */
-void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY, 
+void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY,
         const double angle, const int range){
 
     const double degrees = angle - 90;
@@ -183,7 +185,7 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, const int gun
     PARAMS:
         const int gunX,
         const int gunY,
-            The x and y where the bullet is fired from. 
+            The x and y where the bullet is fired from.
 
         const int endX,
         const int endY,
@@ -204,7 +206,7 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
 
     for(const auto& possibleTarget : allEntities) {
 
-        /* These values are initialized to the end points of a line spanning from the gun muzzle 
+        /* These values are initialized to the end points of a line spanning from the gun muzzle
         to the point at the end of the guns range. After SDL_IntersectRectAndLine is called
         they are changed to the end points of a line that intersects the hitbox starting with
         the entrance wound and ending with the exit wound as if the bullet were to pass straight

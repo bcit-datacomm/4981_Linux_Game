@@ -1,4 +1,5 @@
 #include "Marine.h"
+#include <cstdlib>
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
@@ -45,8 +46,13 @@ int32_t Marine::checkForPickUp() {
     GameManager *gm = GameManager::instance();
     CollisionHandler& ch = gm->getCollisionHandler();
 
-    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
-    if(ep != nullptr) {
+    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this);
+    if(ep){
+        activateStore(ep);
+        return -1;
+    }
+    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
+    if(ep) {
         //get Entity drop Id
         pickId = ep->getId();
         logv("Searching for id:%d in weaponDropManager\n", pickId);
@@ -59,9 +65,12 @@ int32_t Marine::checkForPickUp() {
             const WeaponDrop& wd = gm->getWeaponDrop(pickId);
             //Get Weaopn id from weapon drop
             pickId = wd.getWeaponId();
-
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
+                int32_t DropPoint = wd.getDropPoint();
+                if(DropPoint != -1){
+                    gm->freeDropPoint(DropPoint);
+                }
                 gm->deleteWeaponDrop(wd.getId());
             }
         } else {
@@ -125,7 +134,7 @@ void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
         //stops lag when taking first step
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-        } else if ((int)frameCount % FRAME_COUNT_WALK == 0) {
+        } else if (static_cast<int>(frameCount) % FRAME_COUNT_WALK == 0) {
             //cycle throught the walking images
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
                 setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
@@ -165,5 +174,18 @@ void Marine::updateImageWalk(const Uint8 *state, double frameCount) {
         } 
     } else {
         setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
+    }
+}
+
+/*
+ *Create by Maitiu March 30
+ * Takes in an Entity that is a store and attempts a purchase
+ */
+void Marine::activateStore(const Entity *ep){
+    GameManager *gm = GameManager::instance();
+    if(gm->storeExists(ep->getId())){
+        int r = rand()% 2 + 1;//random number temp for testing
+
+        gm->getStore(ep->getId())->purchase(r);
     }
 }
