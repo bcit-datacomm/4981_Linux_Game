@@ -1,3 +1,4 @@
+
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
@@ -34,7 +35,9 @@
 static constexpr int INITVAL = 0;
 static constexpr int DEFAULT_SIZE = 100;
 static constexpr int PUSIZE = 120;
-
+static constexpr int DROP_POINT_SPACE = 200;//distance between drop points
+static constexpr int STORE_SIZE = 400; //Store  width  and hieght length
+static constexpr int STORE_PICKUP_SIZE = 50;//How much bigger the Stores PIckup hitbox is
 
 class GameManager {
 public:
@@ -137,10 +140,6 @@ private:
     GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
     GameHashMap<int32_t, DropPoint> dropPointManager;
     std::vector<int32_t> openDropPoints;
-
-    int dropPointSpace;
-    int storeSize;
-    int storePickupSize;
 };
 
 

@@ -16,9 +16,10 @@
 #include "../sprites/VisualEffect.h"
 #include "Game.h"
 
+
+
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        player(), base(), camera(gameWidth,gameHeight), storeX(500), storeY(900), dropZoneX(100),
-        dropZoneY(100), dropZoneSize(4) {}
+        player(), base(), camera(gameWidth,gameHeight){}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -34,10 +35,10 @@ bool GameStateMatch::load() {
 
 
     //createStores
-    GameManager::instance()->createWeaponStore(storeX, storeY);
+    GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
 
     //createDropPoint
-    GameManager::instance()->createDropZone(dropZoneX , dropZoneY, dropZoneSize);
+    GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
 
     GameManager::instance()->addObject(base);
 

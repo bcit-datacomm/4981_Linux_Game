@@ -22,7 +22,7 @@ int32_t GameManager::generateID() {
     return ++counter;
 }
 
-GameManager::GameManager():collisionHandler(), dropPointSpace(200), storeSize(400), storePickupSize(50){
+GameManager::GameManager():collisionHandler(){
     logv("Create GM\n");
 }
 
@@ -378,9 +378,9 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 int32_t GameManager::createWeaponStore(const float x, const float y) {
     const int32_t id = generateID();
 
-    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), storeSize, storeSize};
-    SDL_Rect pickRect = {static_cast<int>(x) - storePickupSize / 2, static_cast<int>(y) - storePickupSize / 2,
-            storeSize + storePickupSize, storeSize + storePickupSize};
+    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE, STORE_SIZE};
+    SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
+            STORE_SIZE + STORE_PICKUP_SIZE, STORE_SIZE + STORE_PICKUP_SIZE};
 
     addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect)));
 
@@ -418,7 +418,7 @@ void GameManager::createDropZone(const float x, const float y, const int num) {
 
     for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
-            createDropPoint(x + (dropPointSpace * i), y + (dropPointSpace * j));
+            createDropPoint(x + (DROP_POINT_SPACE * i), y + (DROP_POINT_SPACE * j));
         }
     }
 }
