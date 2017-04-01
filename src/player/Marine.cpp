@@ -87,9 +87,6 @@ int32_t Marine::checkForPickUp() {
 */
 void Marine::updateImageDirection() {
     const double radians = (getAngle() -90) * M_PI/180;
-    if (radians > -5*M_PI/8 && radians < -3*M_PI/8) { 
-        //logv("hello");
-    }
 
     //order: start from ~0 rad, counter clockwise
     if (radians > SPRITE_ANGLE2 && radians < SPRITE_ANGLE1) { 
