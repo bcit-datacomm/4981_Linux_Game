@@ -27,7 +27,7 @@ static constexpr int BASE_COST   = 10;
 static constexpr int EXTEND_COST = 14;
 
 // The size of a tile/node
-static constexpr int TILE_SIZE   = 50;
+static constexpr int TILE_SIZE   = 150;
 
 // map row & column
 static constexpr int ROW = TILE_SIZE;
