@@ -17,24 +17,24 @@
 #define SPRITE_SIZE_Y 125 //height of any marine image 
 #define FRAME_COUNT_WALK 10 //speed of walking animation
 
-static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y*2;
-static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y*3;
-static constexpr int SPRITE_BACK = SPRITE_SIZE_Y*4;
-static constexpr int SPRITE_BACK_LEFT = SPRITE_SIZE_Y*5;
-static constexpr int SPRITE_LEFT = SPRITE_SIZE_Y*6;
-static constexpr int SPRITE_FRONT_LEFT = SPRITE_SIZE_Y*7;
+static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;
+static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y * 3;
+static constexpr int SPRITE_BACK = SPRITE_SIZE_Y * 4;
+static constexpr int SPRITE_BACK_LEFT = SPRITE_SIZE_Y * 5;
+static constexpr int SPRITE_LEFT = SPRITE_SIZE_Y * 6;
+static constexpr int SPRITE_FRONT_LEFT = SPRITE_SIZE_Y * 7;
 static constexpr int SPRITE_FRONT = 0;
 static constexpr int SPRITE_FRONT_RIGHT = SPRITE_SIZE_Y;
 static constexpr int SPRITE_NEXT_STEP = SPRITE_SIZE_Y;
 
-static constexpr double SPRITE_ANGLE1 = M_PI/8;
-static constexpr double SPRITE_ANGLE2 = -(M_PI/8);
-static constexpr double SPRITE_ANGLE3 = -3*M_PI/8;
-static constexpr double SPRITE_ANGLE4 = -5*M_PI/8;
-static constexpr double SPRITE_ANGLE5 = -7*M_PI/8;
-static constexpr double SPRITE_ANGLE6 = -9*M_PI/8;
-static constexpr double SPRITE_ANGLE7 = -11*M_PI/8;
-static constexpr double SPRITE_ANGLE8 = 3*M_PI/8;
+static constexpr double SPRITE_ANGLE1 = M_PI / 8;
+static constexpr double SPRITE_ANGLE2 = -(M_PI / 8);
+static constexpr double SPRITE_ANGLE3 = -3 * M_PI / 8;
+static constexpr double SPRITE_ANGLE4 = -5 * M_PI / 8;
+static constexpr double SPRITE_ANGLE5 = -7 * M_PI / 8;
+static constexpr double SPRITE_ANGLE6 = -9 * M_PI / 8;
+static constexpr double SPRITE_ANGLE7 = -11 * M_PI / 8;
+static constexpr double SPRITE_ANGLE8 = 3 * M_PI / 8;
 
 
 
