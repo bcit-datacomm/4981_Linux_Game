@@ -19,6 +19,7 @@ public:
     const HitBox *detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity); // Check for projectile collisions, return object if hits
     bool detectMovementCollision(const std::vector<Entity*> returnObjects, const Entity *entity); // // Check for collisions during movement
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);//check for pick up collision, return object if can pick up
+
     void detectLineCollision(TargetList& targetList, const int gunX, const int gunY, const double angle, const int range);
     
 
@@ -31,6 +32,7 @@ public:
     Quadtree quadtreeWall;
     Quadtree quadtreePickUp;
     Quadtree quadtreeObj;
+    Quadtree quadtreeStore;
 
     CollisionHandler& operator=(const CollisionHandler& handle);
 

@@ -17,8 +17,10 @@
 #include "../map/Map.h"
 #include "Game.h"
 
+
+
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        player(), base(), camera(gameWidth,gameHeight) {}
+        player(), base(), camera(gameWidth,gameHeight){}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -35,15 +37,15 @@ bool GameStateMatch::load() {
     m.mapLoadToGame();
 
 
-    //create Weapon for weapon Drop only till sotre is implemented****************
-    Rifle w(GameManager::instance()->generateID());
-    ShotGun w2(GameManager::instance()->generateID());
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);
-    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
-    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
+
+
+    //createStores
+    GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
+
+    //createDropPoint
+    GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
 
     GameManager::instance()->addObject(base);
 

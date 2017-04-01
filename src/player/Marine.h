@@ -28,6 +28,9 @@ public:
     void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
+
+    void activateStore(const Entity *ep);
+
     Inventory inventory;
 
 private:
