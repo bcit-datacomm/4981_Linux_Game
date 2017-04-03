@@ -152,32 +152,26 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
     while (pBuff <= pEnd) {
         switch(static_cast<UDPHeaders>(*pBuff++)) {
             case UDPHeaders::PLAYERH:
-                {
-                    for (int32_t i = 0, pCount = *pBuff++; i < pCount; ++i) {
-                        player = reinterpret_cast<PlayerData *>(pBuff);
-                        GameManager::instance()->updateMarine(*player);
-                        pBuff = reinterpret_cast<int32_t *>(++player);
-                    }
-                    break;
-                } // End of PLAYERH case, must be enclosed in braces.
+                for (int32_t i = 0, pCount = *pBuff++; i < pCount; ++i) {
+                    player = reinterpret_cast<PlayerData *>(pBuff);
+                    GameManager::instance()->updateMarine(*player);
+                    pBuff = reinterpret_cast<int32_t *>(++player);
+                }
+                break;
             case UDPHeaders::ATTACKACTIONH: 
-                {
-                    for (int32_t i = 0, aCount = *pBuff++; i < aCount; ++i) {
-                        attack = reinterpret_cast<AttackAction *>(pBuff);
-                        GameManager::instance()->handleAttackAction(*attack);
-                        pBuff = reinterpret_cast<int32_t *>(++attack);
-                    }
-                    break;
-                } // End of ATTACKACTIONH case, must be enclosed in braces.
+                for (int32_t i = 0, aCount = *pBuff++; i < aCount; ++i) {
+                    attack = reinterpret_cast<AttackAction *>(pBuff);
+                    GameManager::instance()->handleAttackAction(*attack);
+                    pBuff = reinterpret_cast<int32_t *>(++attack);
+                }
+                break;
             case UDPHeaders::ZOMBIEH: 
-                {
-                    for (int32_t i = 0, zCount = *pBuff++; i < zCount; ++i){
-                        zombie = reinterpret_cast<ZombieData *>(pBuff);
-                        GameManager::instance()->updateZombie(*zombie);
-                        pBuff = reinterpret_cast<int32_t *>(++zombie);
-                    }
-                    break;
-                }// End of ZOMBIEH case, must be enclosed in braces.
+                for (int32_t i = 0, zCount = *pBuff++; i < zCount; ++i){
+                    zombie = reinterpret_cast<ZombieData *>(pBuff);
+                    GameManager::instance()->updateZombie(*zombie);
+                    pBuff = reinterpret_cast<int32_t *>(++zombie);
+                }
+                break;
             default:
                 break;
         }
