@@ -36,8 +36,8 @@ using namespace std;
  * Map Object Constructor, creates a map object using the map selected file name.
  */
 Map::Map(string file):fname(file) {
-    memset(AIMap, 0, sizeof(AIMap));
-    memset(mapdata, 0, sizeof(mapdata));
+    memset(AIMap.data(), 0, AIMap.size() * sizeof(AIMap[0]));
+    memset(mapdata.data(), 0,  mapdata.size() * sizeof(mapdata[0]));
 }
 
 /**
@@ -57,7 +57,7 @@ int Map::loadFileData() {
     }
 
     // Array of wallstart positions
-    struct MapPoint wallStart[MAX_WALLS];
+    array<MapPoint, MAX_WALLS> wallStart;
     // Indices
     int j = 0;
     int i = 0;
@@ -76,21 +76,21 @@ int Map::loadFileData() {
                 AIMap[i][j] = 1;
                 break;
             case WALL_START:        //Label start of wall rectangle
-                wallStart[ws].x = j;
-                wallStart[ws].y = i;
-                ws++;
+                wallStart[wallStartCount].x = j;
+                wallStart[wallStartCount].y = i;
+                wallStartCount++;
                 AIMap[i][j] = 1;
                 break;
             // case CONCRETE_START:    //Start of concrete area
             case ZOMBIE_SPAWN:      //Zombie spawn Points
-                zombieSpawn[zs].x = j;
-                zombieSpawn[zs].y = i;
-                zs++;
+                zombieSpawn[zombieSpawnCount].x = j;
+                zombieSpawn[zombieSpawnCount].y = i;
+                zombieSpawnCount++;
                 break;
             case SHOP_SPOT:         // Shop spot points
-                shops[s].x = j;
-                shops[s].y = i;
-                s++;
+                shops[shopCount].x = j;
+                shops[shopCount].y = i;
+                shopCount++;
                 break;
             case BASE_START:        //Start of base area
                 base.x = j;
@@ -100,10 +100,7 @@ int Map::loadFileData() {
         mapdata[i][j] = ch;               //Store map file value
         j++;
     }
-    file.close();
-
     genWalls(wallStart);
-
     // printData();
     return 1;
 }
@@ -117,14 +114,17 @@ int Map::loadFileData() {
  * Description:
  * Read's the Map CSV file map data with the appropriate tile IDs
  */
-void Map::genWalls(const struct MapPoint wstart[MAX_WALLS]) {
-    for (int q = 0; q < ws; q++) {
-        int startx = wstart[q].x;
-        int starty = wstart[q].y;
-        int nextx = startx + 1;
-        int nexty = starty + 1;
-        int endx;
-        int endy;
+void Map::genWalls(const array<MapPoint, MAX_WALLS> wallStart) {
+    int nextx;
+    int nexty;
+    int endx;
+    int endy;
+
+    for (int q = 0; q < wallStartCount; q++) {
+        int startx = wallStart[q].x;
+        int starty = wallStart[q].y;
+        nextx = startx + 1;
+        nexty = starty + 1;
         while (mapdata[starty][nextx] == WALL) {
             nextx ++;
         }
@@ -150,34 +150,10 @@ void Map::genWalls(const struct MapPoint wstart[MAX_WALLS]) {
  * Creates the wall structures using the GameManager createWall function.
  */
 void Map::mapLoadToGame() {
-    for(auto w : walls) {
+    for (const auto& w : walls) {
         logv("Creating wall");
         GameManager::instance()->createWall(w.x, w.y, w.width, w.height);
     }
-}
-
-/**
- * Date: Mar. 23, 2017
- * Author: Jordan Lin
- * Function Interface: string getFile()
- * Parameters:
- * Description:
- * Get the current map file name
- */
-string Map::getFile() {
-    return fname;
-}
-
-/**
- * Date: Mar. 23, 2017
- * Author: Jordan Lin
- * Function Interface: string getFile()
- * Parameters:
- * Description:
- * Set the current map file name
- */
-void Map::setFile(string f) {
-    fname = f;
 }
 
 /**
@@ -207,13 +183,13 @@ void Map::printData() {
     cout << endl;
 
     cout << "SPAWN POINTS" << endl;
-    for(int i = 0; i < zs; i++) {
+    for(int i = 0; i < zombieSpawnCount; i++) {
         printf("Spawn Point: %d; Position: %d, %d\n", i, zombieSpawn[i].x, zombieSpawn[i].y);
     }
     cout << endl;
 
     cout << "SHOP POSITIONS" << endl;
-    for(int i = 0; i < s; i++) {
+    for(int i = 0; i < shopCount; i++) {
         printf("Shop: %d; Position: %d, %d\n", i, shops[i].x, shops[i].y);
     }
 
@@ -227,8 +203,8 @@ void Map::printData() {
     cout << endl;
 
     cout << "WALL DATA" << endl;
-    for (int q = 0; q < ws; q++) {
-    printf("Wall: %d;\t Position: %d, %d;\t\t width = %d, height = %d\n", q, walls[q].x / 250,
-            walls[q].y / 250, walls[q].width / T_SIZE, walls[q].height / T_SIZE);
+    for (int q = 0; q < wallStartCount; q++) {
+    printf("Wall: %d;\t Position: %d, %d;\t\t width = %d, height = %d\n", q, walls[q].x / T_SIZE,
+            walls[q].y / T_SIZE, walls[q].width / T_SIZE, walls[q].height / T_SIZE);
     }
 }

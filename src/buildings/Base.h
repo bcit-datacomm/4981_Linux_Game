@@ -27,7 +27,7 @@ typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
-    Base(const int32_t nid = 0, const SDL_Rect& dest = {7000, 7000, BASE_WIDTH, BASE_HEIGHT}, int health = 100);
+    Base(const int32_t nid = 0, const SDL_Rect& dest = {MAP_WIDTH / 2, MAP_HEIGHT / 2, BASE_WIDTH, BASE_HEIGHT}, int health = 100);
     virtual ~Base();
 
     void onCollision();
