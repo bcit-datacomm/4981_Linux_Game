@@ -5,7 +5,8 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()), tempZombieHand(GameManager::instance()->generateID()) {
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
+        tempZombieHand(GameManager::instance()->generateID()) {
     weaponIds[0] = defaultGun.getID();
     weaponIds[1] = -1;
     weaponIds[2] = -1;
@@ -106,5 +107,6 @@ void Inventory::scrollCurrent(int direction) {
      weaponIds[0] = tempZombieHand.getID();
      weaponIds[1] = -1;
      weaponIds[2] = -1;
-     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ZombieHand>(tempZombieHand)));
+     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>
+            (std::make_shared<ZombieHand>(tempZombieHand)));
  }

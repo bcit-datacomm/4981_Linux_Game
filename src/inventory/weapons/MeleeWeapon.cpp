@@ -21,9 +21,10 @@
  * Description:
  * Ctor for MeleeWeapon
  */
-MeleeWeapon::MeleeWeapon(string type, TEXTURES sprite, string fireSound, string hitSound, string reloadSound,
-        string emptySound, int range, int damage, int AOE, int penetration, int clip,
-        int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
+MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fireSound,
+        const string& hitSound, const string& reloadSound, const string& emptySound, int range,
+        int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
+        int fireDelay, int32_t id)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
         penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 
@@ -60,26 +61,29 @@ bool MeleeWeapon::fire(Movable &mov){
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
 
-    //vector of each entity a zombie needs to check
+    //vector of each marine the melee attack connects with
     std::vector<Entity *> hitMarines;
-    std::vector<Entity *> hitTurrets;
-    std::vector<Entity *> hitBarricades;
-
     hitMarines = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeMarine, &mov),&mov, hitBox);
-    for(auto& x: hitMarines){
+    for(const auto& x: hitMarines){
+        //update hit marine
         x->collidingProjectile(damage);
         logv("hit a marine, marine hp = %d\n", dynamic_cast<Marine *>(x)->getHealth());
     }
 
+    //vector of each turret the melee attack connects with
+    std::vector<Entity *> hitTurrets;
     hitTurrets = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeTurret, &mov),&mov, hitBox);
-    for(auto& y: hitTurrets){//update each zombie's helth
+    for(const auto& y: hitTurrets){
+        //update hit turret
         y->collidingProjectile(damage);
         logv("hit a turret, turret > 0 = %d\n", dynamic_cast<Turret *>(y)->healthCheckTurret());
     }
 
+    //vector of each barricade the melee attack connects with
+    std::vector<Entity *> hitBarricades;
     hitBarricades = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade, &mov),&mov, hitBox);
-    for(auto& z: hitTurrets){//update each zombie's helth
-        //update hitbox attached entity here
+    for(const auto& z: hitTurrets){
+        //update hit barricade
         z->collidingProjectile(damage);
     }
 

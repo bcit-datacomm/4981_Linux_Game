@@ -2,12 +2,10 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
-        const SDL_Rect& damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
+Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
+: Entity(id, dest, movementSize, projectileSize, damageSize),
         Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
-    //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-    //damageHitBox.setFriendly(true); Uncomment for no friendly fire
     logv("Create Marine\n");
 }
 
@@ -21,6 +19,11 @@ void Marine::onCollision() {
 
 void Marine::collidingProjectile(const int damage) {
     health -= damage;
+    /**
+    if (health <= 0){
+        GameManager::instance()->deleteMarine(getId());
+    }
+    */
 }
 
 // Created by DericM 3/8/2017

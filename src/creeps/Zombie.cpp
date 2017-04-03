@@ -88,7 +88,7 @@ void Zombie::generateMove() {
         }
 
         // Changed to attack state once attack code is ready
-        setState(ZombieState::ZOMBIE_IDLE);
+        setState(ZombieState::ZOMBIE_ATTACK);
 
         return;
     }
@@ -290,7 +290,7 @@ string Zombie::generatePath(const float xStart, const float yStart,
  */
 void Zombie::zAttack(){
     Weapon* w = inventory.getCurrent();
-    if( w != nullptr){
+    if (w){
         w->fire(*this);
     } else {
         logv("Zombie Slot Empty\n");
