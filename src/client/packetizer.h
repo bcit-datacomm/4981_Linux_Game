@@ -30,8 +30,8 @@
 
 #include <cstdint>
 
-void parseGameSync(const void * syncBuff, size_t bytesReads);
-void parseControlMsg(const void * msgBuff, size_t bytesReads);
-int packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id = -1, const char type = 'T');
+void parseGameSync(const void *syncBuff, size_t bytesReads);
+void parseControlMsg(const void *msgBuff, size_t bytesReads);
+int packControlMsg(char *buff, size_t bufflen, const char *msg, int32_t id = -1, const char type = 'T');
 
 #endif

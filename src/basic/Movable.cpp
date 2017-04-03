@@ -73,7 +73,7 @@ int Movable::getVelocity() const{
 
 //sets the angle of the player's Movable sprite
 void Movable::setAngle(const double a) {
-    angle = fmod(a, 360);
+    angle = fmod(a, THREE_HUNDRED_SIXTY_DEGREES);
 }
 
 //returns the angle of the player's Movable sprite

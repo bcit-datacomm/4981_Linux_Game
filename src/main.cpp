@@ -116,10 +116,7 @@ int main(int argc, char **argv) {
     } else {
         logv("Failed to start!\n");
     }
-
-    game.close();
     logv("Exit\n");
-
 #endif
     return 0;
 }

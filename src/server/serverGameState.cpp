@@ -162,5 +162,4 @@ std::vector<ZombieData> getZombies() {
 void startGame() {
     Game game;
     game.run();
-    game.close();
 }

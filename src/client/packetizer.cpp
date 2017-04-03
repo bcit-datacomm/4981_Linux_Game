@@ -102,10 +102,10 @@ void parseControlMsg(const void *msgBuff, size_t bytesReads) {
             }
             break;
         case 'T':
-            std::cout << "\nId: " << id << "\tMsg: " << ++pBuff;
+            logv("\nId: %d\tMsg: %s", id, ++pBuff);
             break;
         default:
-            std::cerr << "cannot parse control message.";
+            loge("Cannot parse control message.\n");
             break;
     }
 }

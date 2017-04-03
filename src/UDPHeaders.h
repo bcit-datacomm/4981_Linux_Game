@@ -92,10 +92,10 @@ enum class UDPHeaders : int32_t {
 * float     ypos - yPosition of the item
 --------------------------------------------------------------------------*/
 typedef struct {
-    int32_t   turretid;
+    int32_t turretid;
     UDPHeaders actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
-    float     xpos;
-    float     ypos;
+    float xpos;
+    float ypos;
 } __attribute__((packed, aligned(1))) TurretAction;
 
 /*------------------------------------------------------------------------------
@@ -120,10 +120,10 @@ typedef struct {
 * A barricade should not be able to move after being dropped off
 --------------------------------------------------------------------------*/
 typedef struct {
-    int32_t   barricadeid;
+    int32_t barricadeid;
     UDPHeaders actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
-    float     xpos;
-    float     ypos;
+    float xpos;
+    float ypos;
 } __attribute__((packed, aligned(1))) BarricadeAction;
 
 /*------------------------------------------------------------------------------
@@ -145,10 +145,10 @@ typedef struct {
 * float   cost - total cost of purchase
 --------------------------------------------------------------------------*/
 typedef struct {
-    int32_t   shopid;
-    int32_t   itemid;
-    int32_t   quantity;
-    float     cost;
+    int32_t shopid;
+    int32_t itemid;
+    int32_t quantity;
+    float cost;
 } __attribute__((packed, aligned(1))) ShopPurchase;
 
 /*------------------------------------------------------------------------------
@@ -173,9 +173,9 @@ typedef struct {
 * float direction - And Angle in relation to -----
 --------------------------------------------------------------------------*/
 typedef struct {
-    int32_t   playerid;
-    int32_t   actionid;
-    int32_t   weaponid;
+    int32_t playerid;
+    int32_t actionid;
+    int32_t weaponid;
     float xpos;
     float ypos;
     float direction;
@@ -206,9 +206,8 @@ typedef struct {
 * float vel - the velocity of the player
 * float direction -- the direction the weapon is facing
 --------------------------------------------------------------------------*/
-typedef struct
-{
-    int32_t   id;
+typedef struct {
+    int32_t id;
     float xpos;
     float ypos;
     float xdel;
@@ -241,12 +240,12 @@ typedef struct
 --------------------------------------------------------------------------*/
 
 typedef struct {
-    int32_t   playerid;
-    float     xpos;
-    float     ypos;
-    float     vel;
-    float     direction;
-    int32_t   health;
+    int32_t playerid;
+    float xpos;
+    float ypos;
+    float vel;
+    float direction;
+    int32_t health;
 } __attribute__((packed, aligned(1))) PlayerData;
 /*------------------------------------------------------------------------------
 * Struct: ZombieData
@@ -306,13 +305,13 @@ typedef struct
     int32_t id = static_cast<int32_t>(UDPHeaders::SYNCH); //packet
     int32_t playerheaderid = static_cast<int32_t>(UDPHeaders::PLAYERH);
     int32_t nplayers;
-    PlayerData * players;
+    PlayerData *players;
     int32_t attackheaderid = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
     int32_t nattacks;
-    AttackAction * attacks;
+    AttackAction *attacks;
     int32_t zombieheaderid = static_cast<int32_t>(UDPHeaders::ZOMBIEH);
     int32_t nzombies;
-    ZombieData * zombies;
+    ZombieData *zombies;
 } GameSync;
 
 /*------------------------------------------------------------------------------

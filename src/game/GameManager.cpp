@@ -164,8 +164,7 @@ void GameManager::createMarine(const int32_t id) {
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
 
-    Marine m(id, marineRect, moveRect, projRect, damRect);
-    marineManager.insert({id, m});
+    marineManager.insert({id, Marine(id, marineRect, moveRect, projRect, damRect)});
 }
 
 /**
@@ -269,7 +268,7 @@ void GameManager::createZombie(const int32_t id) {
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
 
-    zombieManager.insert({id, Zombie(id, zombieRect, moveRect, projRect, damRect)});
+    zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
 }
 
 /**

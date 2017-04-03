@@ -37,7 +37,7 @@ sockaddr_in bindSocket(const int sock, const unsigned long ip, const unsigned sh
     servaddrudp.sin_addr.s_addr = htonl(ip);
     servaddrudp.sin_port = htons(port);
 
-    if ((bind(sock, (struct sockaddr *) &servaddrudp, sizeof(servaddrudp))) == -1) {
+    if ((bind(sock, reinterpret_cast<sockaddr *>(&servaddrudp), sizeof(servaddrudp))) == -1) {
         perror("Bind");
         exit(1);
     }
@@ -65,7 +65,7 @@ int createSocket(const bool useUDP, const bool nonblocking) {
 void fillMulticastAddr(sockaddr_in& addr) {
     memset(&addr, 0, sizeof(addr));
 
-    if (inet_pton(AF_INET, MULTICAST_ADDR, &(addr.sin_addr)) != 1) {
+    if (inet_pton(AF_INET, MULTICAST_ADDR, &addr.sin_addr) != 1) {
         perror("inet_pton");
         exit(3);
     }
@@ -100,7 +100,7 @@ void transitionToGameStart() {
  */
 void sendTCPClientMessage(const int32_t id, const bool isConnectMessage, const char *mesg, const size_t mesgSize) {
     char *outBuff;
-    if ((outBuff = (char *) malloc(mesgSize + TCP_HEADER_SIZE + 1)) == nullptr) {
+    if ((outBuff = reinterpret_cast<char *>(malloc(mesgSize + TCP_HEADER_SIZE + 1))) == nullptr) {
         perror("Malloc failure");
         exit(1);
     }
@@ -332,6 +332,7 @@ epoll_event *createEpollEventList() {
  * This method registers the username and updates its entry in the client list.
  * After reading the username, it sends the client back its username with its generated id.
  * Once the client has been updated, it then messages all other clients, informing them of a newly connected player.
+ * yPos is made static to ensure all clients start at different positions instead of being on top of one another
  * John Agapeyev March 19
  */
 void processClientUsername(const int sock, const char *buff, std::pair<const int32_t, PlayerJoin>& client) {
@@ -354,8 +355,9 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     strncpy(outBuff + TCP_HEADER_SIZE + 1, client.second.entry.username, NAMELEN);
 
     gm->createMarine(client.first);
-    gm->getMarine(client.first).first.setPosition(100, yPos);
-    yPos += 150;
+    auto& marine = gm->getMarine(client.first).first;
+    marine.setPosition(100, yPos);
+    yPos += marine.getW() * 10;
 
     //Send client their allocated id and username
     if (!rawClientSend(sock, outBuff, bufferSize)) {

@@ -130,7 +130,7 @@ void listenForPackets(const sockaddr_in servaddr) {
             }
             if (events[i].events & EPOLLIN) {
 #pragma omp task
-                readUDP(events[i].data.fd, (sockaddr *) &servaddr, &servAddrLen);
+                readUDP(events[i].data.fd, reinterpret_cast<sockaddr *>(&servaddr), &servAddrLen);
             }
         }
     }
@@ -231,7 +231,7 @@ void genOutputPacket() {
     pBuff = reinterpret_cast<int32_t *>(pZombie);
 
     //calculate how full the packet is for when its sent
-    outputLength = (pBuff - (int32_t *) outputPacket) * sizeof(int32_t);
+    outputLength = (pBuff - reinterpret_cast<int32_t *>(outputPacket)) * sizeof(int32_t);
 }
 
 /**
@@ -239,7 +239,7 @@ void genOutputPacket() {
  * John Agapeyev March 19
  */
 void sendSyncPacket(const int sock) {
-    sendto(sock, outputPacket, outputLength, 0, (const sockaddr *) &sendAddrUDP, sizeof(sendAddrUDP));
+    sendto(sock, outputPacket, outputLength, 0, reinterpret_cast<const sockaddr *>(&sendAddrUDP), sizeof(sendAddrUDP));
 }
 
 /**
