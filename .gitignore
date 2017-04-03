@@ -39,6 +39,3 @@ bin/
 
 *.h.gch
 
-#vim
-*.swp
-
