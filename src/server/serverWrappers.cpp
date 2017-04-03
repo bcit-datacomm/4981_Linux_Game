@@ -212,7 +212,7 @@ void handleIncomingTCP(const int epollfd) {
 
     sockaddr_in addr;
     socklen_t addrLen = sizeof(addr);
-    int clientSock = accept(listenSocketTCP, (sockaddr *) &addr, &addrLen);
+    int clientSock = accept(listenSocketTCP, reinterpret_cast<sockaddr *>(&addr), &addrLen);
     if (clientSock == -1) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             return;
@@ -223,7 +223,7 @@ void handleIncomingTCP(const int epollfd) {
 
     setSockNonBlock(clientSock);
 
-    if (getpeername(clientSock, (sockaddr *) &addr, &addrLen) == -1) {
+    if (getpeername(clientSock, reinterpret_cast<>(&addr), &addrLen) == -1) {
         perror("GetPeerName");
         close(clientSock);
         return;
@@ -319,7 +319,7 @@ int waitForEpollEvent(const int epollfd, epoll_event *events) {
  */
 epoll_event *createEpollEventList() {
     epoll_event *events;
-    if (!(events = (epoll_event *) calloc(MAXEVENTS, sizeof(epoll_event)))) {
+    if (!(events = reinterpret_cast<epoll_event *>(calloc(MAXEVENTS, sizeof(epoll_event))))) {
         perror("Calloc failure");
         exit(1);
     }
