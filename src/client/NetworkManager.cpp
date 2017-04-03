@@ -97,6 +97,7 @@ void NetworkManager::runUDPClient() {
     for(;;) {
         packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
         parseGameSync(buffer, packetSize);
+        memset(buffer, 0, SYNC_PACKET_MAX);
     }
 }
 

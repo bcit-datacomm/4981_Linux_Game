@@ -89,8 +89,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 
 void Player::fireWeapon() {
     if(marine->inventory.getCurrent() != nullptr){
-        marine->fireWeapon();
-        if (networked) {
+        if (marine->fireWeapon() && networked) {
             sendServAttackAction();
         }
     }

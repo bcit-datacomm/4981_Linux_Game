@@ -28,7 +28,7 @@ public:
     void onCollision();
     int getHealth() const {return health;}
     void collidingProjectile(const int damage);
-    void fireWeapon();
+    bool fireWeapon();
     int32_t checkForPickUp();
     Inventory inventory;
     void setHealth(const int& hlth) {health = hlth;};
