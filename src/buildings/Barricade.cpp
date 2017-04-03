@@ -1,23 +1,18 @@
 /**
  * Date: Feb. 02, 2017
- * Designer: Mark Chen, Terry Kang
+ * Designer: Terry Kang, Mark Tattrie
  * Programmer: Terry Kang, Mark Tattrie
- * Functions: void placementCheckTurret()
- *            bool placementCheckTurret()
- *            bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &)
- *            void activateTurret()
- *            void collidingProjectile(const int damage)
- *            void damageTurret(const int damage)
- *            void shootTurret()
- *            bool ammoCheckTurret()
- *            bool healthCheckTurret()
- *            bool targetScanTurret()
- *            void move(const float playerX, const float playerY,
- *                    const float moveX, const float moveY, CollisionHandler &ch)
- *            void placeTurret()
- *            bool isPlaced() {return placed;}
- *            void pickUpTurret()
- *
+ * Functions: Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
+ *              const SDL_Rect& pickupSize, const int health = 100, const int state = 0, const bool placeable = false,
+ *              const bool placed = false);
+ *            virtual ~Barricade();
+ *            void move(const float, const float, const float, const float, CollisionHandler&); // Moves Zombie
+ *            void onCollision();
+ *            void collidingProjectile(const int damage);
+ *            bool isPlaceable() const;
+ *            bool isPlaced() const;
+ *            bool checkPlaceablePosition(const float, CollisionHandler&);
+ *            void placeBarricade();
  * Description:
  * Source file for the Barricade class. This file defines all the functions associated with a barricade.
  */
@@ -75,8 +70,7 @@ Barricade::~Barricade() {
  * checks the proposed location of the barricade placement to see if it is valid.
  */
 bool Barricade::checkPlaceablePosition(const float distance, CollisionHandler& ch) {
-
-   placeable = (distance <= 200);
+    placeable = (distance <= 200);
 
     if(placeable && (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
@@ -88,6 +82,7 @@ bool Barricade::checkPlaceablePosition(const float distance, CollisionHandler& c
     }
     return placeable;
 }
+
 /**
  * Date: Feb. 02, 2017
  *
