@@ -49,8 +49,7 @@ Map::Map(string file):fname(file) {
  */
 int Map::loadFileData() {
     // Open file stream for selected map file
-    ifstream file;
-    file.open(fname.c_str());
+    ifstream file(fname.c_str());
 
     if (file.fail()) {
         printf("failed to open file\n");
