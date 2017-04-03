@@ -7,16 +7,16 @@
 
 #include "../basic/Entity.h"
 #include "../game/GameState.h"
-#include "../player/Player.h"
+#include "../game/GameManager.h"
 #include "../game/Level.h"
-#include "../view/Camera.h"
+#include "../player/Player.h"
 #include "../buildings/Base.h"
 #include "../creeps/Zombie.h"
-#include "../game/GameManager.h"
 #include "../sprites/SpriteTypes.h"
 #include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
+#include "../view/Camera.h"
 #include "../basic/LTimer.h"
 
 // ticks (ms) in 1 second

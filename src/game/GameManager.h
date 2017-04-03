@@ -7,40 +7,28 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <iostream>
+#include <cassert>
 
 #include "../creeps/Zombie.h"
 #include "../player/Marine.h"
+#include "../player/Player.h"
 #include "../turrets/Turret.h"
-
 #include "../collision/CollisionHandler.h"
-
 #include "../buildings/Object.h"
 #include "../buildings/Base.h"
 #include "../buildings/Wall.h"
 #include "../buildings/Store.h"
 #include "../buildings/Barricade.h"
-#include <map>
-#include <unordered_map>
-#include <vector>
 #include "../UDPHeaders.h"
-#include <memory>
-#include <iostream>
 #include "../inventory/WeaponDrop.h"
-#include <memory>
-#include <cassert>
-#include "../buildings/DropPoint.h"
-
-#include "../inventory/WeaponDrop.h"
-
-#include "GameHashMap.h"
-#include <memory>
-#include "../player/Player.h"
-
-//just for tesing weapon drop
 #include "../inventory/weapons/Weapon.h"
 #include "../inventory/weapons/HandGun.h"
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
+#include "../inventory/WeaponDrop.h"
+#include "../buildings/DropPoint.h"
+#include "GameHashMap.h"
 
 static constexpr int INITVAL = 0;
 static constexpr int DEFAULT_SIZE = 100;

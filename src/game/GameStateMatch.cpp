@@ -1,11 +1,12 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+
 #include "GameStateMatch.h"
 #include "../client/NetworkManager.h"
 #include "../game/GameStateMatch.h"
@@ -18,8 +19,6 @@
 #include "../server/servergamestate.h"
 #include "../sprites/VisualEffect.h"
 #include "Game.h"
-
-
 
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
         base(), camera(gameWidth,gameHeight){}
