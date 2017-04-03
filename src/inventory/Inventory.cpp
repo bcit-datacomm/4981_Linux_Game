@@ -81,15 +81,17 @@ void Inventory::scrollCurrent(int direction) {
  * Checks is current CSLot has Weapon then Checks its ammo and creates a weaponDrop and renders it.
  */
  void Inventory::dropWeapon(const float x, const float y) {
-     Weapon *w = getCurrent();
-     if (w != nullptr) {
-         if (w->getAmmo() > 0) {
-             GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
+     if(current){
+         Weapon *w = getCurrent();
+         if (w != nullptr) {
+             if (w->getAmmo() > 0) {
+                 GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
 
-         } else {
-             //delete weapon From Weapon Manager
-             GameManager::instance()->removeWeapon(weaponIds[current]);
+             } else {
+                 //delete weapon From Weapon Manager
+                 GameManager::instance()->removeWeapon(weaponIds[current]);
+             }
+             weaponIds[current] = -1;
          }
-         weaponIds[current] = -1;
      }
  }
