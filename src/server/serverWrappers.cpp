@@ -62,6 +62,18 @@ int createSocket(const bool useUDP, const bool nonblocking) {
     return sock;
 }
 
+void fillMulticastAddr(sockaddr_in& addr) {
+    memset(&addr, 0, sizeof(addr));
+
+    if (inet_pton(AF_INET, MULTICAST_ADDR, &(addr.sin_addr)) != 1) {
+        perror("inet_pton");
+        exit(3);
+    }
+
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(LISTEN_PORT_UDP);
+}
+
 /**
  * Method called when the game should start.
  * This is called when either a /start command is received over TCP, or all players are ready to play.

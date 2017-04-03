@@ -1,7 +1,10 @@
 #ifndef SERVER_WRAPPERS_H
 #define SERVER_WRAPPERS_H
 
+#include <arpa/inet.h>
 #include <sys/epoll.h>
+
+#include "server.h"
 
 int createSocket(const bool useUDP, const bool nonblocking);
 int32_t getPlayerId();
@@ -12,6 +15,7 @@ sockaddr_in bindSocket(const int sock, const unsigned long ip, const unsigned sh
 int createEpollFD();
 void addEpollSocket(const int epollfd, const int sock, epoll_event *ev);
 void setSockNonBlock(const int sock);
+void fillMulticastAddr(sockaddr_in& addr);
 void handleIncomingTCP(const int epollfd);
 void readTCP(const int sock);
 void readUDP(const int sock, sockaddr *servaddr, socklen_t *servAddrLen);
