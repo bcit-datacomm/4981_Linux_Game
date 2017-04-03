@@ -1,6 +1,85 @@
 #ifndef RENDERER_H
 #define RENDERER_H
+/*
+====================================================================================================
+....................................``````````.:/++``......-/oso+/:-..
+.........`  `......................`````....-:+o+ss+-/osssydhhhhyysssoo+/-
+..........```......................```../+///+yhsoshhhyhhhhdddddddhhhhyyss+-
+........................................:////+++sydddddddddhdddmmmmddddhyyso/:.
+-........................................://++syhhdhdddddmmdddddmmmmmdddhyyyooo:.
+------------------------------------------:/oyhdhddddddddmmmdddmddddddddhyyhsoos+:.
+----::-:::::::::--------------------------/shddddddddddddmdddddddhhhhhhhyyhhysssyo/-
+:::::::::::::::--------------------------ohddddddmmmmmmddddddddhyyyyhhyyyyyyssysyss+:
+:::::::::::::---------------------------+hmmddddmmmmmmmddddddhyyhddddddyydhyyoosysso+-
+:::::::::-------------------...........:hdmmdmmmmmmddhyhhyssssodmmmmmmmddddhyso-+ssoso-`
+-------------..........................+hdmmmmmdhhddmddmmdyshhyhmmmmmmmmddhhhys++ssoyys-
+-------------......------.............-shdmmmmhdddmmmmmmmmhhhyyyhdmmmmmmddhhhyy+ossyyyyo.
+:/--------------------::---..........-+hddmmmhmmmmmmmmmmmmhhysoosyhdmmmmmmmdhys::oyyysyo-
+::...--:://++++:----------------------smmddmhdmmmmmmmmmmmddysooo+++shhhddddhyo/::/hhyyyo-.
+.......--::::///:---------------------ydmmmmydmNmmmmmmNmddhyyyyssyys+syysssoo+/::-/hyyso:-
+......``...................-----------sdmmmmdhmmNNNNNmmdddyhddhyydmdsossoo+++///:-.ossys+:
++++///::---...................--------+hdmmmmmddmmmmmdddhhyhmmhyyyyyysssooo++//::-.:ooyy+:
++++++++++++++///:::-----...--------:--:sdmmmmmdyhhdddhyyyyhhdhyyyysooooooooo++/::-../+hs
+++++++++++++++++++++++++++//++++ooosssoohdmmmmmyyyyyyssssyyyyyysyyyyyssooooo++//:-..-/o+
+++++++++++++++++++++++++++ooooossssysssydddmmmmysssssssssyyyyyhhhhhhhyysyyysso+/:--..--/
++++++++++++++++++++++++++++oooooosssssosyhdmmmmhsssssssyysyyhhhhyyyyyysoooosso+/:-..`-:/
++++++++++++++++++++++++++++++ooooossooooosydmmddyossssyyyyyhhyyyyyhhyyysssoooo+/:-..`//
+//+++++++++++++++/+++++++++++ooooosossssooydmmmdhoossyyyyyyyyyyyyyyysssssoooo++/:-.`.+
+/////////////++++//+++++++++++oooossddyo+oshddmmyoosyyyyyyyyyyyyyssssssoooo+////-.``/
+:::://///////////++//++++++++++oooosmy/+///+ymdmhyoosyyyyyyyyyysssssyyssssso+:---.`:
+---:-------::::::///////++++++++oossmo:+:--:ohdmNdyosyyyhyhyyyyyyyyyyyyyyyso+:--..`:
+::::::::::::-----/:--:://+++++++oosymdo////shhddmmdsssyyhhhhhhhhhhyyyyyyyys+/:-..``-
+/:::::::++////+/+++//////+++++oooossyyysssssssssyddysyyhhhhhhhddhhhyyyyysso+/:-..``-
+  ```...----::////s///+/:+////////+ossooooooooooohhysyhhhhhhhhhhhhhhhyyysso+/:--.``.
+        ``     ``/s`..--::///////+osssoooooooooooydysyyhhhhhhhhhhhhhhhyyyyso+/:-..`.
+        ``     ``os  ```...------:sooooooooooooooyddyyyyhhhhhhhhhhhhhhhyyysso+/-..``/:
+         ```````:/s````......:-.--oooooooooooosyyyhddyyyyyyyhhhhhhhyyyyyyyyso+/-..`.so
+        `````...+:...........-:o-:ooooosyyhdmmNNNmNNNdhhyyyyyyyyyyyyyyyyyyyss+/:-...yyo
+        ````.:::/:::::::::-.....:/oshdmNNNNmNNNNNNNNNNdhhyyyyyyyyyyyyyyyyyysso/:-..-yhyo
+       ```...-/+/::::::::/+/-.:+sdmmNNNNNNNNNNNNNNNNNNNmhhhyyyysssssssssssssso/:--.:yhhyo
+       ``...---:`-----.....oyhdmmmmmNNNNNNNNNNNNNNNNNNNNNdhhhyysssssssssssssoo+::--:/yyyyyys+
+      ``....---:`------/+yddmmmmmmNNNNNNNNNNNNNNNNNNNNNNNNNmdhyysssssssssssooo+/:-:+:+yyyyyddhys+
+      ``...-:::/`:+oyhdmmmmmmmmmmNNNNNNNNNNNNNNNNNNNNNNNNNNNNmhyyysssssssooooo+/::/+::syyyyyddddhhy
+      ``..--:/+syhddmmmmmmmmmmmmmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmyyyyysssoooooo+++/:/+/-+yyyysyddmmddh
+      `-.--:+yhdddmmmmmmmmmmmmmmmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNdssyysssoooooo++++////:/syyyyshddmmmm
+     ``..-/ydddmmmmmmmmmmmNNNNNmmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNhoossssoooo+++oo+/://:/oyyyysyhddmmm
+     ``.:shdddddmmmmmmmmmmmNNNNNmmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNy+ossoo+++++++++/:////ohysyssyddddm
+```....+hdddddmmmmmmmmmmmmNNNNNNNmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNyoooys++/////+///////oddssssshdddd
+ssssssshdddmmmmmmmmmmNNmmmNNNNNNNNmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmsoooydyo///////////+ydmdssssydddd
+---/shdddmdmmmmmmmmmmNNNmmmNNNNNNNmmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNdsooosmmho////////+ohdmmhssssyddd
+-.:yddmmmmmmmmmmmmmmmNNNmmmmNNNNNNNmNNNNNNNmNNNNNNNNNNNNNNNNNNNNNNNNhsossymNNds+////+oyddmmmysssshmm
+oyddmmmmmmmmmmNNmmmmmmmmmmmmmNNNNNNNmNNNNNNNmNNNNNNNNNNNNNNNNNNNNNNNNyssssymNNNmyo++oydddmmmmyssssdm
+hddmmmmdmmmmmmNNNNmmdmmmmmmmmmNNNNNNNNNNNNNNNmNNNNNNNNNNNNNNNNNNNNNNNNyssssymNNNNmhsshddmmmmmdssssym
+ddmmmmmmmmmmmmmNNNNmmmmmmmmmmmNNNNNNNmNNNNNNNmmNNNNNNNNNNNNNNNNNNNNNNNmsssyshmNNNNNmddmmmmmmmmhssssy
+dmmmmmmmmmmmmmmNNNNNmdmmmmmNNNNNNNNNNNmNNNNNNNNmNNNNNNNNNNNNNNmNNNNNNNNdssyyshNNNNNNNNmNmNNmmmmyssos
+mmmmmmmmmmmmmmNNNNNNNmmmmmmmNmmNNNNNNNmNNNNNNNNmmNNNNNNNNNNNNNNmNNNNNNNNhsyyyydNNNNNNNNmmmmmdmmmysso
+mmmmmmmmmmmmmNNNNNNNNNmmmmmNNNNNNNNNNNNmNNNNNNNNmmNNNNNNNNNNNNNNNNNNNNNNNyyyyyymNNNNNNNmmmmmdmmmdsss
+mdmmmmmmmmmmmNNNNNNNNNNmmmmNNNNNNNNNNNNmNNNNNNNNNmNNNNNNNNNNNNNNNNNNNNNNNmyyyyyymNNNNNNNmmmddmmmmyss
+ddmmmmmmmmNNNNNNmmNNNNNNmmmmmmmmNNNNNNNNmNNNNNNNNNmNNNNNNNNNNNNNNmNNNNNNNNdyyyyyhNNNNNNNNmmddmmmmmso
+dmmmmmmmmmNNNNNNmmNNmNNNNmmdmmmmNNNNNNNNmNNNNNNNNNNmNNNNNNNNNNNNNNmNNNNNNNNhyyhyyhNNNNNNNNmdddmmmmds
+ddmmmmmmmmmNNNNNNNNNNNNNNNmmmmmmNNNNNNNNNmNNNNNNNNNNmNNNNNNNNNNNNNNmNNNNNNNmhyyhyydNNNNNNNNmddmmmmmy
+mmmmmmmmmmNNNNNNNNNNNNNNNNmmddmNNNNNNNNNNmmNNNNNNNNNmmNNNNNNNNNNNNNmmNNNNNNNmyyyhyymNNNNNNNNmmmmmmmd
+mmmmmmmmmmNNNNNmNNNNmNNNNNNmmddmNNNNNNNNNNmNNNNNNNNNNmNNNNNNNNNNNNNNmmNNNNNNNdyyhhyhmNNNNNNNNmmmmdmm
+mmmmmmmmmmmNmmNNmNNNNmNNNNNmmmmdmNNNNNNNNNmmNNNNNNNNNNmNNNNNNNNNNNNNNmmNNNNNNmhyyhyyhNNNNNNNNmmmmhdm
+mmmmmmmmmmmmmmmNNNNNNNmNNNNmmmmmmmNNNNNNNNNmNNNNNNNNNNNmNNNNNNNNNNNNNmmNNNNNNNmhyhyyydNNNNNNNmNmmhdm
+====================================================================================================
+                        ____________________/=============\____________________
+                       /[{}]\               [Mike's Prayer]               /[{}]\
+                      /   /                 \=============/                 \   \
+                     [{}]/---------------------------------------------------\[{}]
+                        \| Our Mike who art in linux, hallowed be thy guitar.|/
+                        ][ Your P.R. come.                                   ][
+                        ][      Your Merge be done,                          ][
+                        ][              on Github as it is on local.         ][
+                        ][ Give us this day our daily Salt.                  ][
+                        ][ And forgive us our Merge Conflicts,               ][
+                        ][          as we also have forgiven our pointers.   ][
+                        ][ And do not bring us to the time of bad netcode,   ][
+                        /|      but deliver us from the evil lag.            |\
+                     [{}]\---------------------------------------------------/[{}]
+                       \[{}]/                                             \[{}]/
 
+*/
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -34,6 +113,9 @@ const std::string TEXTURE_MIDDLE = MAP_TEXTURE_PATH + "middle_dirt.png"; //dead 
 //TODO: remove these textures, temporary for now
 const std::string TEMP_MARINE_TEXTURE = "assets/texture/arrow.png";
 const std::string TEMP_ZOMBIE_TEXTURE = "assets/texture/babyz1.png";
+const std::string TEMP_SHOTGUN_TEXTURE = "assets/texture/shotGun.png";
+const std::string TEMP_RIFLE_TEXTURE = "assets/texture/Rifle.png";
+const std::string TEMP_HANDGUN_TEXTURE = "assets/texture/HandGun.png";
 
 //Sprite Sheet folder path
 const std::string SPRITE_PATH = "assets/texture/SpriteSheets/";

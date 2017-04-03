@@ -1,6 +1,7 @@
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by DericM 3/8/2017
+        Edited by MarkT 3/13/2017
 */
 #ifndef HANDGUN_H
 #define HANDGUN_H
@@ -8,7 +9,8 @@
 
 #include "InstantWeapon.h"
 #include "../../audio/AudioManager.h"
-
+#include "../../sprites/Renderer.h"
+#include "../../sprites/SpriteTypes.h"
 
 using std::string;
 
@@ -23,7 +25,7 @@ namespace HandgunVars {
     constexpr int RANGE         = 500;
     constexpr int DAMAGE        = 200;
     constexpr int AOE           = 1;
-    constexpr int PENETRATION   = 3;
+    constexpr int PENETRATION   = 2;
 
     constexpr int CLIP          = 5;
     constexpr int CLIPMAX       = 5;
@@ -37,7 +39,7 @@ namespace HandgunVars {
 class HandGun: public InstantWeapon {
 public:
 
-    HandGun();
+    HandGun(int32_t id);
     ~HandGun() = default;
 };
 

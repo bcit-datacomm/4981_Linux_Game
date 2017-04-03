@@ -37,7 +37,7 @@ void Player::sendServMoveAction() {
 void Player::sendServAttackAction() {
     attackAction.data.aa.playerid = id;
     attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
-    attackAction.data.aa.weaponid = marine->inventory.getCurrent()->getId();
+    attackAction.data.aa.weaponid = marine->inventory.getCurrent()->getID();
     attackAction.data.aa.xpos = marine->getX();
     attackAction.data.aa.ypos = marine->getY();
     attackAction.data.aa.direction = marine->getAngle();
@@ -140,14 +140,18 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 
     //Weapon input
     if(state[SDL_SCANCODE_R]){
-        marine->inventory.getCurrent()->reloadClip();
+        Weapon *w = marine->inventory.getCurrent();
+        if(w){
+            w->reloadClip();
+        }
     }
+    //pickup button
     if(state[SDL_SCANCODE_E]){
-        marine->checkForPickUp();
         const int currentTime = SDL_GetTicks();
 
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
+
             const int checkTurret = marine->checkForPickUp();
             if (checkTurret > -1 && holdingTurret == false)
             {
@@ -157,7 +161,11 @@ void Player::handleKeyboardInput(const Uint8 *state) {
             }
         }
     }
-
+    //Drop button
+    if(state[SDL_SCANCODE_F]){
+        marine->inventory.dropWeapon(marine->getX(), marine->getY());
+    }
+    //use Inventory
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
     }

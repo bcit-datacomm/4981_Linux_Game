@@ -5,47 +5,46 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(){
-    weapons[0] = std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun));
-    weapons[1] = std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(tempRifle));
-    weapons[2] = std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(tempShotGun));
-    weaponIds[0] = defaultGun.getId();
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()) {
+    weaponIds[0] = defaultGun.getID();
     weaponIds[1] = -1;
     weaponIds[2] = -1;
     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
 
 }
 
-Inventory::~Inventory(){
 
-}
-
-void Inventory::switchCurrent(const int slot){
+void Inventory::switchCurrent(const int slot) {
     if (current != slot) {
-        logv("Switched to slot: %d\n", slot);
+        logv(3, "Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
-bool Inventory::pickUp(int32_t weaponId){
-    if(current == 0){
-        logv("Can't Swap default gun \n");
+//Created By Maitiu
+bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
+    if (current == 0) {
+        logv(3, "Can't Swap default gun \n");
         return false;
     }
-    logv("Picked up weapon\n");
-    logv("Swapped from %d ", weaponIds[current]);
 
+    //drop Current Weapon
+
+    dropWeapon(x, y);
+
+    logv(3, "Picked up weapon\n");
+    logv(3, "Swapped from %d ", weaponIds[current]);
     weaponIds[current] = weaponId;
-    logv("to %d\n", weaponIds[current]);
+    logv(3, "to %d\n\n", weaponIds[current]);
     return true;
 }
 
+//Created By Maitiu
 Weapon* Inventory::getCurrent() {
-    if(weaponIds[current] >= 0){
+    if (weaponIds[current] >= 0) {
         return GameManager::instance()->getWeapon(weaponIds[current]).get();
-    } else {
-        return nullptr;
     }
+    return nullptr;
 }
 
 void Inventory::useItem() {
@@ -56,20 +55,41 @@ void Inventory::useItem() {
 
 }
 
-void Inventory::scrollCurrent(int direction){
+//Created By Maitiu
+void Inventory::scrollCurrent(int direction) {
     int currentTime = SDL_GetTicks();
 
-    if(currentTime > (slotScrollTick + scrollDelay)){
+    if (currentTime > (slotScrollTick + scrollDelay)) {
         slotScrollTick = currentTime;
         direction += current;
-        if(direction < 0){
+        if (direction < 0) {
             current = 2;
-        } else if (direction > 2){
+        } else if (direction > 2) {
             current = 0;
         } else {
             current = direction;
         }
-        logv("Switched to slot:%d\n", current);
+        logv(3, "Switched to slot:%d\n", current);
     }
 
 }
+
+/**
+ * DEVELOPER: Maitiu
+ * DESIGNER: Maitiu
+ * DATE:      March 29 2017
+ * Checks is current CSLot has Weapon then Checks its ammo and creates a weaponDrop and renders it.
+ */
+ void Inventory::dropWeapon(const float x, const float y) {
+     Weapon *w = getCurrent();
+     if (w != nullptr) {
+         if (w->getAmmo() > 0) {
+             GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
+
+         } else {
+             //delete weapon From Weapon Manager
+             GameManager::instance()->removeWeapon(weaponIds[current]);
+         }
+         weaponIds[current] = -1;
+     }
+ }

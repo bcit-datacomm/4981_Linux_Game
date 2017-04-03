@@ -30,6 +30,9 @@ public:
     void collidingProjectile(const int damage);
     bool fireWeapon();
     int32_t checkForPickUp();
+
+    void activateStore(const Entity *ep);
+
     Inventory inventory;
     void setHealth(const int& hlth) {health = hlth;};
 private:

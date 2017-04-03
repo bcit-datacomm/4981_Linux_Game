@@ -7,23 +7,22 @@
 #include "../collision/HitBox.h"
 #include "../basic/Entity.h"
 #include "../collision/CollisionHandler.h"
+#include "Drop.h"
 #include "weapons/Weapon.h"
 
-
-class WeaponDrop: public Entity{
+/*
+ * Created by Maitiu
+ * Description: Weapon Drop is an Entity rendeered in that game that the player can "Pick up"
+ * inorder to get a weapon that the Weapon Drop has been assigned
+ */
+class WeaponDrop: public Drop{
 public:
     WeaponDrop(const int32_t id, const SDL_Rect& dest, const SDL_Rect& pickupSize, const int32_t wId);
 
     ~WeaponDrop();
-    void setPosition(const int x, const int y);
-    void onCollision();
     int32_t getId() const;
-
-    void collidingProjectile(const int damage);
-
-    int getX() const;
-    int getY() const;
     int32_t getWeaponId() const;
+    int32_t getDropPoint() const { return Drop::getDropPoint();};
 
 
 private:

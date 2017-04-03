@@ -3,7 +3,7 @@
 
     DISCRIPTION:
         InstantWewapon Weapons construct a line from the weapons mussle to its
-        theoretical range limit, and then get all the intersecting targets.
+        range limit, and then gets all the intersecting targets.
         Tergets are sorted in a priority queue by distance from player, and then
         they are damaged in order untill something invulnrable is hit, or
         penertation runs out.
@@ -26,60 +26,118 @@
 
 using std::string;
 
-InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound, string reloadSound, string emptySound,
-        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay)
-: Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo,
-        reloadDelay, fireDelay) {
+/**
+ * Date: Mar 1, 2017
+ * Modified: Mar 13, 2017 - Mark Tattrie
+ * Author: Deric Mccadden
+ * Function Interface: InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound,
+ *       string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+ *       int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
+ *       : Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
+ *          penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id)
+ * Description:
+ * Ctor for Instant Weapon
+ */
+InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound,
+        string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+        int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
+: Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
+        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 
 }
 
 
-// DericM, 01/03/17
-bool InstantWeapon::fire(Marine& marine) {
-    if (!Weapon::fire(marine)) {
+/**
+    InstantWeapon::fire
+
+    DISCRIPTION:
+        Default behaviour for instant weapon is that it fires one projectile in the direction
+        that the movable is facing.
+
+        Movable& movable: The thing thats holding the weapon that is firing.
+        Its needed for its x and y cords, and for its angle.
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+bool InstantWeapon::fire(Movable& movable) {
+    if (!Weapon::fire(movable)) {
         return false;
     }
-    logv("InstantWeapon::fire()\n");
+    logv(3, "InstantWeapon::fire()\n");
 
-    std::priority_queue<Target> targets;
-    GameManager *gameManager = GameManager::instance();
-    auto& collisionHandler = gameManager->getCollisionHandler();
+    const int gunX = movable.getX() + (MARINE_WIDTH / 2);
+    const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
+    const double angle = movable.getAngle();
 
-    collisionHandler.detectLineCollision(targets, marine, range);
+    fireSingleProjectile(gunX, gunY, angle);
 
-    for(int i = 0; i < penetration; i++) {
-        if (targets.empty()) {
-            logv("targets.empty()\n");
+    return true;
+}
+
+
+
+/**
+    InstantWeapon::fireSingleProjectile
+
+    DISCRIPTION:
+        construct a line from the weapons mussle to its
+        range limit, and then gets all the intersecting targets.
+        Tergets are sorted in a priority queue by distance from player, and then
+        they are damaged in order untill something invulnrable is hit, or
+        penertation runs out.
+
+        int gunX, int gunY
+            The x and y coordinates of the guns muzzle.
+
+        double angle
+            the angle gun is facing.
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const double angle){
+    TargetList targetList;
+
+    GameManager::instance()->getCollisionHandler().detectLineCollision(targetList, gunX, gunY, angle, range);
+
+    int finalX = targetList.getEndX();
+    int finalY = targetList.getEndY();
+
+    for(int i = 0; i <= penetration; i++) {
+        if (targetList.isEmpty()) {
+            logv(3, "targets.empty()\n");
             break;
         }
-        if (targets.top().getType() != TYPE_ZOMBIE) {
-            logv("target is of type: %d\n", targets.top().getType());
+        Target target = targetList.getNextTarget();
+
+        //if we have run out of penatration set the end point to here.
+        if(i == penetration){
+            finalX = target.getHitX();
+            finalY = target.getHitY();
+        }
+
+        //if the target is invincible break because we cant hit anything more.
+        if (!target.isType(TYPE_ZOMBIE)) {
+            finalX = target.getHitX();
+            finalY = target.getHitY();
+            logv(3, "target is of type: %d\n", target.getType());
             break;
         }
 
-        logv("targets.size():%d\n", targets.size());
-        logv("Shot target of type: %d\n", targets.top().getType());
+        logv(3, "targets.size():%d\n", targetList.numTargets());
+        logv(3, "Shot target of type: %d\n", target.getType());
 
-        int32_t id = targets.top().getId();
-        if (!gameManager->zombieExists(id)) {
-            logv("!gameManager.zombieExists(id)\n");
+        int32_t id = target.getId();
+
+        if (!GameManager::instance()->zombieExists(id)) {
+            logv(3, "!gameManager.zombieExists(id)\n");
             break;
         }
-        gameManager->getZombie(id).collidingProjectile(damage);
-        targets.pop();
+        //damage target
+        GameManager::instance()->getZombie(id).collidingProjectile(damage);
+        targetList.removeTop();
     }
 
-
-    //similar as to what happens in the line collision and is used to show a use of the line effect
-    const double degrees = marine.getAngle() - 90;
-    const double radians = degrees * M_PI / 180;
-    const int playerX = marine.getX() + (MARINE_WIDTH / 2);
-    const int playerY = marine.getY() + (MARINE_HEIGHT / 2);
-    const int deltaX  = playerX + range * cos(radians);
-    const int deltaY  = playerY + range * sin(radians);
-
-    //5 frames to display ie 1/12th of a second at 60fps
-    //0 red, 255 green, 0 blue
-    VisualEffect::instance().addPreLine(5, playerX, playerY, deltaX, deltaY, 0, 255, 0);
-    return true;
+    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
 }

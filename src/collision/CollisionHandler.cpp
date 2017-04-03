@@ -7,13 +7,29 @@
 #include <cassert>
 #include "../inventory/weapons/Target.h"
 
-
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Author: Jacob McPhail.
+ * Function Interface: CollisionHandler::CollisionHandler()
+ * Description:
+ * Constructor for Collision Handler
+ */
 CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
         quadtreeBarricade(0, {0,0,2000,2000}),quadtreeTurret(0, {0,0,2000,2000}),
-        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}) {
+        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}),
+        quadtreeStore(0,{0,0,2000,2000}) {
 
 }
 
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author: Jacob McPhail.
+ * Function Interface: CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle)
+ * Description:
+ * Comparison operator for = to set each Quadtree
+ */
 CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
     quadtreeMarine = handle.quadtreeMarine;
     quadtreeZombie = handle.quadtreeZombie;
@@ -22,10 +38,19 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
     quadtreeWall = handle.quadtreeWall;
     quadtreePickUp = handle.quadtreePickUp;
     quadtreeObj = handle.quadtreeObj;
+    quadtreeStore = handle.quadtreeStore;
     return *this;
 }
 
-// Check for projectile collisions, return object it hits
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author: Jacob McPhail.
+ * Function Interface: const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*>
+ *      returnObjects, const Entity *entity) {
+ * Description:
+ * Check for projectile collisions, return hitbox it hits
+ */
 const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
@@ -37,7 +62,15 @@ const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> retur
     return nullptr;
 }
 
-// Check for projectile collisions, return object it hits
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author: Jacob McPhail.
+ * Function Interface: const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*>
+ *      returnObjects, const Entity *entity) {
+ * Description:
+ * Check for projectile collisions, return object it hits
+ */
 const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
@@ -49,7 +82,15 @@ const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> r
     return nullptr;
 }
 
-// Check for collisions during movement
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author: Jacob McPhail.
+ * Function Interface: bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects,
+ *       const Entity *entity)
+ * Description:
+ * Check for collisions during movement
+ */
 bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
@@ -61,7 +102,15 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
     return false;
 }
 
-//check for pickup collision
+/**
+ * Date: Mar. 1, 2017
+ * Modified: Mar. 15 2017 - Mark Tattrie
+ * Author: Maitiu Morton.
+ * Function Interface: Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects,
+ *       const Entity *entity)
+ * Description:
+ * Check for pickup collision
+ */
 Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
@@ -72,9 +121,7 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     }
     logv("nothing to pick up\n");
     return nullptr;
-
 }
-
 
 /**
     detectLineCollision
@@ -88,32 +135,42 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
         Edited: 3/17/2017 walls work now.
 
     PARAMS:
-        std::priority_queue<Target>& targetsInSights,
-            This is the queue that will hold the targets that will be determined.
-        Marine &marine,
-            The marine that fired the weapon, this is needed for its x and y and angle.
+        TargetList &targetList,
+            This is the priority queue wrapper that will hold the targets that will be determined.
+
+        const int gunX, const int gunY,
+            coordinates of the weapons muzzle.
+
+        const double angle
+            angle the weapon is facing.
+
         const int range
             The range of the weapon that is being fired.
 */
-void CollisionHandler::detectLineCollision(
-        std::priority_queue<Target>& targetsInSights, Marine& marine, const int range) {
+void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY,
+        const double angle, const int range){
 
-    const double degrees = marine.getAngle() - 90;
+    const double degrees = angle - 90;
     const double radians = degrees * M_PI / 180;
-    const int originX = marine.getX() + (MARINE_WIDTH / 2);
-    const int originY = marine.getY() + (MARINE_HEIGHT / 2);
-    const int deltaX  = range * cos(radians);
-    const int deltaY  = range * sin(radians);
+    const int deltaX = range * cos(radians);
+    const int deltaY = range * sin(radians);
+    const int endX = gunX + deltaX;
+    const int endY = gunY + deltaY;
+
+    targetList.setOriginX(gunX);
+    targetList.setOriginY(gunY);
+    targetList.setEndX(endX);
+    targetList.setEndY(endY);
 
     auto& zombies = quadtreeZombie.objects;
     auto& turrets = quadtreeTurret.objects;
     auto& walls   = quadtreeWall.objects;
 
-    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, zombies, TYPE_ZOMBIE);
-    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, turrets, TYPE_TURRET);
-    checkTargets(originX, originY, deltaX, deltaY, targetsInSights, walls, TYPE_WALL);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombies, TYPE_ZOMBIE);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, turrets, TYPE_TURRET);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, walls,   TYPE_WALL);
 
-    logv("targetsInSights.size(): %d\n", targetsInSights.size());
+    logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
 
 /**
@@ -126,49 +183,68 @@ void CollisionHandler::detectLineCollision(
     AUTHOR: Deric Mccadden 3/16/2017
 
     PARAMS:
-        const int originX,
-            The starting x.
-        const int originY,
-            The starting y.
-        const int deltaX,
-            The x distance to the end point from the origin.
-        const int deltaY,
-            The y distance to the end point from the origin.
-        std::priority_queue<Target>& targetsInSights,
-            This is the queue that will hold the targets that will be determined.
+        const int gunX,
+        const int gunY,
+            The x and y where the bullet is fired from.
+
+        const int endX,
+        const int endY,
+            The furthest point the bullet can travel.
+
+        TargetList &targetList,
+            This is the priority queue wrapper that will hold the targets that will be determined.
+
         std::vector<Entity*> allEntities,
             The entities that will need to be searched for valid targets.
+
         int type
             the type of entity, see target Target.h for definitions.
             This is needed for identification purposes in InstantWeapon.fire()
 */
-void CollisionHandler::checkTargets(const int originX, const int originY, const int deltaX, const int deltaY,
-        std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type) {
+void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
+        TargetList &targetList, std::vector<Entity*> &allEntities, int type) {
 
-    int tempOriginX = originX;
-    int tempOriginY = originY;
-    int tempEndX = originX + deltaX;
-    int tempEndY = originY + deltaY;
-    int distanceToOrigin;
+    for(const auto& possibleTarget : allEntities) {
 
-    for(auto& possibleTarget : allEntities) {
+        /* These values are initialized to the end points of a line spanning from the gun muzzle
+        to the point at the end of the guns range. After SDL_IntersectRectAndLine is called
+        they are changed to the end points of a line that intersects the hitbox starting with
+        the entrance wound and ending with the exit wound as if the bullet were to pass straight
+        through the hitbox and exit on the other side while maintaing its starting trajectory.
+        This is why they are not const as the function has to be able to change them. */
+        int entranceWoundX = gunX;
+        int entranceWoundY = gunY;
+        int exitWoundX = endX;
+        int exitWoundY = endY;
 
         if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()),
-                &tempOriginX, &tempOriginY , &tempEndX, &tempEndY)) {
+                &entranceWoundX, &entranceWoundY , &exitWoundX, &exitWoundY)) {
 
-            logv("Intersect target at (%d, %d)\n", tempEndX, tempEndY);
+            //the change in x and y from the firing origin to the spot the bullet hits the target.
+            int localDeltaX = entranceWoundX - gunX;
+            int localDeltaY = entranceWoundY - gunY;
+            //the direct distance from the firing origin to the spot the bullet hits each target.
+            int distanceToOrigin = std::hypot(localDeltaX, localDeltaY);
 
-            distanceToOrigin = std::hypot(deltaX, deltaY);
+            Target tar(possibleTarget->getId(), type, entranceWoundX, entranceWoundY, distanceToOrigin);
+            targetList.addTarget(tar);
 
-            Target tar(possibleTarget->getId(), type, tempEndX, tempEndY, distanceToOrigin);
-
-            logv("tar.getType(): %d\n", tar.getType());
-
-            targetsInSights.push(tar);
+            logv(3, "CollisionHandler::checkTargets() Intersect target at (%d, %d)\n", entranceWoundX, entranceWoundY);
+            logv(3, "CollisionHandler::checkTargets() distanceToOrigin %d\n", distanceToOrigin);
+            logv(3, "CollisionHandler::checkTargets() tar.getType(): %d\n", tar.getType());
         }
     }
 }
 
+
+/**
+ * Date: Mar. 15, 2017
+ * Author: Mark Tattrie
+ * Function Interface: std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q,
+ *      const Entity *entity)
+ * Description:
+ * Wrapper to grab a vector of entities from the specified quadtree
+ */
 std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q, const Entity *entity) {
     return q.retrieve(entity);
 }

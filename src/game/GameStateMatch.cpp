@@ -19,8 +19,10 @@
 #include "../sprites/VisualEffect.h"
 #include "Game.h"
 
+
+
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        base(), camera(gameWidth,gameHeight) {}
+        base(), camera(gameWidth,gameHeight){}
 
 bool GameStateMatch::load() {
 #ifndef SERVER
@@ -38,14 +40,23 @@ bool GameStateMatch::load() {
         //GameManager::instance()->createMarine(100, 100);
         GameManager::instance()->createZombie(800, 800);
         GameManager::instance()->createTurret(1000, 500);
-        GameManager::instance()->createWeaponDrop(1800, 1700);
+
+        //set the boundary on the map
+        GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+
+        //createStores
+        GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
+
+        //createDropPoint
+        GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
+
+        GameManager::instance()->addObject(base);
     }
 #else
     GameManager::instance()->createZombieWave(1);
 #endif
     bool success = true;
-    //set the boundary on the map
-    GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+
     return success;
 }
 

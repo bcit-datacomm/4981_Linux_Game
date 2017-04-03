@@ -7,7 +7,7 @@
 #include "../inventory/weapons/Target.h"
 
 
-class Marine;
+class Movable;
 
 class CollisionHandler {
 public:
@@ -19,10 +19,9 @@ public:
     const HitBox *detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity); // Check for projectile collisions, return object if hits
     bool detectMovementCollision(const std::vector<Entity*> returnObjects, const Entity *entity); // // Check for collisions during movement
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);//check for pick up collision, return object if can pick up
-    void detectLineCollision(std::priority_queue<Target>& targetsInSights,
-        Marine& marine, const int range);
-    void checkTargets(const int playerX, const int playerY, const int deltaX, const int deltaY,
-        std::priority_queue<Target>& targetsInSights, std::vector<Entity*>& allEntities, int type);
+
+    void detectLineCollision(TargetList& targetList, const int gunX, const int gunY, const double angle, const int range);
+    
 
     std::vector<Entity *>getQuadTreeEntities(Quadtree& q,const Entity *entity); // General Collision handler, pass in quadtree check
 
@@ -33,10 +32,13 @@ public:
     Quadtree quadtreeWall;
     Quadtree quadtreePickUp;
     Quadtree quadtreeObj;
+    Quadtree quadtreeStore;
 
     CollisionHandler& operator=(const CollisionHandler& handle);
 
 private:
+    void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
+        TargetList& targetList, std::vector<Entity*>& allEntities, int type);
 
 };
 
