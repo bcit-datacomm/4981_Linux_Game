@@ -53,7 +53,7 @@ public:
     void deleteMarine(const int32_t id);
 
     const auto& getAllMarines() const {return marineManager;}
-	const auto& getAllZombies() const {return zombieManager;}
+    const auto& getAllZombies() const {return zombieManager;}
 
     bool addMarine(const int32_t id, const Marine& newMarine);
     auto getMarine(const int32_t id) {return marineManager[id];};

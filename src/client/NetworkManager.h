@@ -12,8 +12,8 @@
 
 #define STDIN           0
 #define STD_BUFFSIZE    1024
-#define MAX_EVENTS 		1
-#define MAX_USERS		23
+#define MAX_EVENTS         1
+#define MAX_USERS        23
 #define UNAME_SIZE      32
 #define SYNC_PACKET_MAX USHRT_MAX
 
