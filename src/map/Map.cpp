@@ -36,12 +36,8 @@ using namespace std;
  * Map Object Constructor, creates a map object using the map selected file name.
  */
 Map::Map(string file):fname(file) {
-    for(int i = 0; i < M_HEIGHT; i++) {
-        for(int j = 0; j < M_WIDTH; j++) {
-            AIMap[i][j] = 0;
-            mapdata[i][j] = 0;
-        }
-    }
+    memset(AIMap, 0, sizeof(AIMap));
+    memset(mapdata, 0, sizeof(mapdata));
 }
 
 /**
