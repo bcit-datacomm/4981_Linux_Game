@@ -54,36 +54,9 @@ for TCP Client and UDP Client.
 -------------------------------------------------------------------------------*/
 void NetworkManager::run(const std::string ip, const std::string username) {
     state = NetworkState::INITIALIZING;
-
-    sockTCP = createSocket(false, false);
-    bindSocket(sockTCP, INADDR_ANY, htons(LISTEN_PORT_TCP));
-
     const in_addr_t serverIP = inet_addr(ip.c_str());
-    connectSocket(sockTCP, createAddress(serverIP, LISTEN_PORT_TCP));
-
-    servUDPAddr = createAddress(serverIP, LISTEN_PORT_UDP);
-    servUDPAddrLen = sizeof(servUDPAddr);
-
-    sockUDP = createSocket(true, false);
-    bindSocket(sockUDP, INADDR_ANY, htons(LISTEN_PORT_UDP));
-
-    ip_mreq mreq;
-    memset(&mreq, 0, sizeof(mreq));
-    mreq.imr_interface.s_addr = INADDR_ANY;
-    if (inet_pton(AF_INET, MULTICAST_ADDR, &mreq.imr_multiaddr) != 1) {
-        perror("inet_pton");
-        exit(1);
-    }
-    if (setsockopt(sockUDP, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) == -1) {
-        perror("setsockopt");
-        exit(1);
-    }
-
-    std::thread TCPThread(&NetworkManager::runTCPClient, this, username);
+    std::thread TCPThread(&NetworkManager::initTCPClient, this, serverIP, username);
     TCPThread.detach();
-
-    std::thread UDPThread(&NetworkManager::runUDPClient, this);
-    UDPThread.detach();
 }
 
 /*------------------------------------------------------------------------------
@@ -103,7 +76,25 @@ void NetworkManager::run(const std::string ip, const std::string username) {
 * Notes:
 * directs the udp thread loop to game sync de packetizer
 -------------------------------------------------------------------------------*/
-void NetworkManager::runUDPClient() {
+void NetworkManager::runUDPClient(const in_addr_t serverIP) {
+    servUDPAddr = createAddress(serverIP, LISTEN_PORT_UDP);
+    servUDPAddrLen = sizeof(servUDPAddr);
+
+    sockUDP = createSocket(true, false);
+    bindSocket(sockUDP, INADDR_ANY, htons(LISTEN_PORT_UDP));
+
+    ip_mreq mreq;
+    memset(&mreq, 0, sizeof(mreq));
+    mreq.imr_interface.s_addr = INADDR_ANY;
+    if (inet_pton(AF_INET, MULTICAST_ADDR, &mreq.imr_multiaddr) != 1) {
+        perror("inet_pton");
+        exit(1);
+    }
+    if (setsockopt(sockUDP, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
+
     char buffer[SYNC_PACKET_MAX];
     state = NetworkState::GAME_STARTED;
     int packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
@@ -130,6 +121,20 @@ void NetworkManager::runUDPClient() {
 * Notes:
 * directs the udp thread loop to game sync de packetizer
 *-------------------------------------------------------------------------------*/
+void NetworkManager::initTCPClient(const in_addr_t serverIP, const std::string username) {
+    sockTCP = createSocket(false, false);
+    bindSocket(sockTCP, INADDR_ANY, htons(LISTEN_PORT_TCP));
+
+    if (!connectSocket(sockTCP, createAddress(serverIP, LISTEN_PORT_TCP))) {
+        state = NetworkState::FAILED_TO_CONNECT;
+    } else {
+        state = NetworkState::CONNECTED;
+        std::thread UDPThread(&NetworkManager::runUDPClient, this, serverIP);
+        UDPThread.detach();
+        runTCPClient(username);
+    }
+}
+
 void NetworkManager::runTCPClient(const std::string username) {
     std::cout << "username in runTCPClient: " << username << "\n";
     handshake(username);
@@ -387,11 +392,12 @@ int NetworkManager::readUDPSocket(char *buf, const int len) const {
 * Notes:
 * This loops the writing to the TCP Socket
   -------------------------------------------------------------------------------*/
-void NetworkManager::connectSocket(const int sock, const sockaddr_in& addr) {
+bool NetworkManager::connectSocket(const int sock, const sockaddr_in& addr) {
     if ((connect(sock, (struct sockaddr *)&addr, sizeof(sockaddr_in))) < 0) {
         perror("connect");
-        exit(1);
+        return false;
     }
+    return true;
 }
 
 /**------------------------------------------------------------------------------

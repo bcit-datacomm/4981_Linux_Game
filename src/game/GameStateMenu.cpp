@@ -137,9 +137,15 @@ bool GameStateMenu::load() {
 void GameStateMenu::loop() {
     // State Loop
     while (play) {
-        if(networked && NetworkManager::instance().getNetworkState() >= NetworkState::GAME_STARTED) {
-            game.setStateID(2);
-            play = false;
+        if(networked) {
+            const NetworkState netState = NetworkManager::instance().getNetworkState();
+            if (netState == NetworkState::FAILED_TO_CONNECT) {
+
+                NetworkManager::instance().reset();
+            } else if (netState >= NetworkState::GAME_STARTED) {
+                game.setStateID(2);
+                play = false;
+            }
         }
 
         handle(0); // Handle user input

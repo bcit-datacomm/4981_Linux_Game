@@ -23,6 +23,8 @@ extern bool networked;
 enum class NetworkState {
     NOT_RUNNING,
     INITIALIZING,
+    FAILED_TO_CONNECT,
+    CONNECTED,
     GAME_STARTED
 };
 
@@ -35,11 +37,12 @@ public:
     void writeUDPSocket(const char *buf, const int len) const;
     int32_t getPlayerId() const {return myid;};
     NetworkState getNetworkState() const {return state;};
-
+    void reset() {state = NetworkState::NOT_RUNNING;};
 private:
     NetworkManager() = default;
 
-    void runUDPClient();
+    void runUDPClient(const in_addr_t serverIP);
+    void initTCPClient(const in_addr_t serverIP, const std::string username);
     void runTCPClient(const std::string username);
     void handshake(const std::string username) const;
     void waitRecvId();
@@ -48,7 +51,7 @@ private:
     int readUDPSocket(char *buf, const int len) const;
 
     static sockaddr_in createAddress(const in_addr_t ip, const int port);
-    static void connectSocket(const int sock, const sockaddr_in& addr);
+    static bool connectSocket(const int sock, const sockaddr_in& addr);
 
     std::atomic<NetworkState> state{NetworkState::NOT_RUNNING};
     int32_t myid;  // EY: March 14 - to be removed for game intergration
