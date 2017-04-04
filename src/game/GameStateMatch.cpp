@@ -30,10 +30,12 @@ bool GameStateMatch::load() {
                 GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
+        GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
                 GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
+        GameManager::instance()->getPlayer().getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 
         // Create Dummy Entitys
         //GameManager::instance()->createMarine(100, 100);
@@ -48,14 +50,11 @@ bool GameStateMatch::load() {
 
         //createDropPoint
         GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
-
-        GameManager::instance()->addObject(base);
     }
 #else
     GameManager::instance()->createZombieWave(1);
 #endif
     bool success = true;
-
     return success;
 }
 
@@ -79,9 +78,9 @@ void GameStateMatch::loop() {
         capTimer.start();
 #ifndef SERVER
         // Process frame
-        handle();    // Handle user input
+        handle(stepTimer.getTicks());    // Handle user input
 #endif
-        update(stepTimer.getTicks() / 1000.f); // Update state values
+        update(stepTimer.getTicks() / TIME_SECOND); // Update state values
         stepTimer.start(); //Restart step timer
 #ifndef SERVER
         sync();    // Sync game to server
@@ -110,12 +109,14 @@ void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::handle() {
+void GameStateMatch::handle(const unsigned long countedFrames) {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     GameManager::instance()->getPlayer().handleKeyboardInput(state);
-    GameManager::instance()->getPlayer().handleMouseUpdate(
-            game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+    GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+    GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
+    GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
+
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);

@@ -26,7 +26,8 @@ protected:
     //Main loop flag
     bool play = true;
 
-    virtual void handle() = 0;
+private:
+    virtual void handle(const unsigned long countedFrames) = 0;
     virtual void update(const float delta) = 0;
     virtual void render() = 0;
     virtual void sync() = 0;

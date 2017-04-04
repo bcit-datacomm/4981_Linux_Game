@@ -142,7 +142,7 @@ void GameStateMenu::loop() {
             play = false;
         }
 
-        handle(); // Handle user input
+        handle(0); // Handle user input
         render(); // Render game state to window
     }
 }
@@ -198,7 +198,7 @@ void GameStateMenu::sync() {
  * Isaac Morneau, March 29, 2017 Fixed highlighting, clicking, and typing to work with the improved renderer that now
  *      makes sense because of the god send that was the great refactoring.
  */
-void GameStateMenu::handle() {
+void GameStateMenu::handle(const unsigned long countedFrames) {
     int x, y;
 
     SDL_Keycode keyCode;

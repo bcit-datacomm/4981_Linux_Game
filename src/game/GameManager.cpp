@@ -34,6 +34,8 @@ GameManager::~GameManager() {
 /**
  * Date: Mar. 1, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Modified: Apr. 02, 2017 - Terry Kang
+ *  Set alpha to the sprite of Brricade if it is not placeable
  * Author: Maitiu Morton
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
  * Description:
@@ -49,7 +51,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : marineManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                m.second.getAngle());
+                m.second.getSrcRect()); 
         }
     }
 
@@ -74,7 +76,13 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& b : barricadeManager) {
         if (b.second.getX() - cam.x < cam.w && b.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            if(!b.second.isPlaceable()) {
+                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
+                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
+            } else {
+                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            }
         }
     }
 
