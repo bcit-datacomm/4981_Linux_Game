@@ -33,7 +33,6 @@ AudioManager::AudioManager(){
 
 
 AudioManager::~AudioManager(){
-    Mix_CloseAudio();
     //clear all loaded files
     for(auto const& music : _music) {
         Mix_FreeMusic(music.second);
@@ -42,14 +41,16 @@ AudioManager::~AudioManager(){
         Mix_FreeChunk(chunk.second);
     }
 
+    // close audio and quit SDL audio mixer
     Mix_CloseAudio();
+    Mix_Quit();
 }
 
 
 
 //This plays a single background music file from the _music map.
 void AudioManager::playMusic(const char * fileName){
-        
+
     Mix_Music * music = _music[fileName];
 
     logv("%s\n", fileName);
@@ -65,7 +66,7 @@ void AudioManager::playMusic(const char * fileName){
 void AudioManager::playEffect(const char * fileName){
 
     Mix_Chunk * chunk = _chunks[fileName];
-    
+
     logv("%s\n", fileName);
 
     if (Mix_PlayChannel(-1, chunk, 0) == -1 ){
@@ -77,7 +78,7 @@ void AudioManager::playEffect(const char * fileName){
 
 
 void AudioManager::loadFiles(){
-    
+
     ////MUSIC
     loadMusic(MUS_DARKNUBULA);
     loadMusic(MUS_TESTMENU01);
@@ -115,7 +116,7 @@ void AudioManager::loadMusic(const char * fileName){
     Mix_Music * music = NULL;
     music = Mix_LoadMUS(fileName);
     if (music == NULL ) {
-        logv( "Failed to load music: %s\n SDL_mixer Error: %s\n", 
+        logv( "Failed to load music: %s\n SDL_mixer Error: %s\n",
             fileName, Mix_GetError() );
     }
 
@@ -129,7 +130,7 @@ void AudioManager::loadEffect(const char * fileName){
     Mix_Chunk * sound = NULL;
     sound = Mix_LoadWAV(fileName);
     if (sound == NULL ) {
-        logv( "Failed to load sound: %s\n SDL_mixer Error: %s\n", 
+        logv( "Failed to load sound: %s\n SDL_mixer Error: %s\n",
             fileName, Mix_GetError() );
     }
 
