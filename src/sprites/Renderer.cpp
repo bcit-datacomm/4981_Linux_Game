@@ -51,6 +51,10 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::CONSUMABLE_SLOT, CONSUMABLE_SLOT_TEXTURE);
     createTexture(TEXTURES::EQUIPPED_WEAPON_SLOT, EQUIPPED_WEAPON_SLOT_TEXTURE);
 
+    // ---------- Consumable Textures ----------
+    createTexture(TEXTURES::HEALTHPACK, HEALTHPACK_TEXTURE);
+
+
     //Enable Transparency for the inventory slots
     SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::ACTIVE_SLOT)), SDL_BLENDMODE_BLEND);
     SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::PASSIVE_SLOT)), SDL_BLENDMODE_BLEND);

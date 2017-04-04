@@ -363,6 +363,8 @@ void GameHud::renderConsumable(const SDL_Rect screenRect, const Player p) {
     consumableSlot.y = screenRect.h - screenRect.w * PADDING_RAT - consumableSlot.h;
 
     Renderer::instance().render(consumableSlot, TEXTURES::CONSUMABLE_SLOT);
+    Renderer::instance().render(consumableSlot, TEXTURES::HEALTHPACK);
+
 }
 
 /**
@@ -436,6 +438,28 @@ void GameHud::renderWeaponSlots(const SDL_Rect screenRect, const Player p) {
         default:
             break;
     }
+}
+
+/**
+ * Function: renderWeapon
+ *
+ * Date:
+ * JF: April 4, 2017:
+ *
+ * Designer:
+ * Jacob Frank
+ *
+ * Programmer:
+ * Jacob Frank
+ *
+ * Interface: renderWeapon(SDL_Rect position, size_t weaponId)
+ *                  SDL_Rect position: The position where to render the weapon
+ *                  size_t weaponId: The ID of the weapon to render
+ *
+ * Notes:
+ */
+void renderInventoryWeapons(SDL_Rect position, size_t weaponId) {
+
 }
 
 

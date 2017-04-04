@@ -32,7 +32,12 @@ bool GameStateMatch::load() {
 
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(1000, 500);
+    Rifle w(GameManager::instance()->generateID());
+    ShotGun w2(GameManager::instance()->generateID());
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
+    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
+    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
 
     //createStores

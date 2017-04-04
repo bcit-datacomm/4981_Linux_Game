@@ -115,8 +115,3 @@ void Inventory::scrollCurrent(int direction) {
          weaponIds[current] = -1;
      }
  }
-
-
-std::shared_ptr<BasicMedkit> Inventory::getMedkit() {
-    return medkit;
- }

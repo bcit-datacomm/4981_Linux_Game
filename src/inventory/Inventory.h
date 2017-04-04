@@ -25,7 +25,8 @@ public:
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
-    std::shared_ptr<BasicMedkit> getMedkit(); //Used to get the inventory's medkit. should be made general for all consumables later
+    //Used to get the inventory's medkit. should be made general for all consumables later
+    std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
     Inventory();
     ~Inventory() = default;
 

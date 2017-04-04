@@ -68,6 +68,7 @@ enum class TEXTURES : int {
     // BARRICADE_HALF_HEALTH,
     // BARRICADE_ALMOST_DESTROYED,
     // TURRET,
+    HEALTHPACK,
 
     //---------- Shops ----------
     // SHOP_GUNS,         //Guns, ammo, etc

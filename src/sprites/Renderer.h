@@ -114,6 +114,9 @@ const std::string HEALTHBAR_TEXTURE = "assets/texture/hud/healthbar.png";
 const std::string CONSUMABLE_SLOT_TEXTURE = "assets/texture/hud/consumableSlot.png";
 const std::string EQUIPPED_WEAPON_SLOT_TEXTURE = "assets/texture/hud/equippedWeaponSlot.png";
 
+// ---------- Consumable Textures ----------
+const std::string HEALTHPACK_TEXTURE = "assets/texture/hud/inventoryItems/firstAid.png";
+
 
 //-------- Map Textures --------
 const std::string MAP_TEXTURE_PATH = "assets/texture/Map/";
@@ -124,9 +127,9 @@ const std::string TEXTURE_MIDDLE = MAP_TEXTURE_PATH + "middle_dirt.png"; //dead 
 //TODO: remove these textures, temporary for now
 const std::string TEMP_MARINE_TEXTURE = "assets/texture/arrow.png";
 const std::string TEMP_ZOMBIE_TEXTURE = "assets/texture/babyz1.png";
-const std::string TEMP_SHOTGUN_TEXTURE = "assets/texture/shotGun.png";
-const std::string TEMP_RIFLE_TEXTURE = "assets/texture/Rifle.png";
-const std::string TEMP_HANDGUN_TEXTURE = "assets/texture/HandGun.png";
+const std::string TEMP_SHOTGUN_TEXTURE = "assets/texture/hud/inventoryItems/shotgun.png";
+const std::string TEMP_RIFLE_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifle.png";
+const std::string TEMP_HANDGUN_TEXTURE = "assets/texture/hud/inventoryItems/pistol.png";
 
 //Sprite Sheet folder path
 const std::string SPRITE_PATH = "assets/texture/SpriteSheets/";
@@ -151,7 +154,7 @@ const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 27; //number of total sprites
+static constexpr int TOTAL_SPRITES = 28; //number of total sprites
 
 
 class Renderer {

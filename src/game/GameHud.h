@@ -38,6 +38,7 @@ public:
     void renderHealthBar(const SDL_Rect screenRect, const Player p, const Camera c);
     void renderConsumable(const SDL_Rect screenRect, const Player p);
     void renderWeaponSlots(const SDL_Rect screenRect, const Player p);
+    void renderInventoryWeapons(SDL_Rect position, size_t weaponId);
 
 private:
     SDL_Rect healthBarBackground;
