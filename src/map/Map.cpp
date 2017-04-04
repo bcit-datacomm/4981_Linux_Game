@@ -84,14 +84,13 @@ int Map::loadFileData() {
                 AIMap[i][j] = 1;
                 break;
             case WALL_START:        //Label start of wall rectangle
-                wallStart.emplace_back( MapPoint{j, i} );
+                wallStart.push_back({j, i});
                 ++wallStartCount;
                 AIMap[i][j] = 1;
                 break;
             // case CONCRETE_START:    //Start of concrete area
             case ZOMBIE_SPAWN:      //Zombie spawn Points
-                zombieSpawn[zombieSpawnCount].x = j;
-                zombieSpawn[zombieSpawnCount].y = i;
+                zombieSpawn.push_back({(j * T_SIZE) + (T_SIZE / 2), (i * T_SIZE) - (T_SIZE * 2)});
                 ++zombieSpawnCount;
                 break;
             case SHOP_SPOT:         // Shop spot points
@@ -151,8 +150,8 @@ void Map::genWalls(const vector<MapPoint>& wallStart) {
             nexty++;
         }
         endy = nexty;
-        walls.emplace_back( MapWall{ startx * T_SIZE, starty * T_SIZE, (endx - startx) * T_SIZE,
-                           (endy - starty) * T_SIZE });
+        walls.push_back({startx * T_SIZE, starty * T_SIZE, (endx - startx) * T_SIZE,
+            (endy - starty) * T_SIZE});
     }
 }
 
