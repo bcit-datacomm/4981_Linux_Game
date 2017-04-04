@@ -136,7 +136,7 @@ void NetworkManager::runTCPClient(const std::string username) {
     waitRecvId();
 
     /***********************************************************************/
-    /*FOLLOWING TO BE REMOVED WHEN GAME TCP MESSAGE IS INTEGRATED INTO GAME */
+    /*FOLLOWING TO BE REMOVED WHEN GAME TCP MESSAGE BOX IS INTEGRATED INTO GAME */
     fd_set initSet;
     fd_set readSet;
     char buffrecv[STD_BUFFSIZE];
@@ -210,7 +210,7 @@ void NetworkManager::handshake(const std::string username) const {
 *
 * Programmer: Eva Yu
 *
-* Interface: int waitRecvId()
+* Interface: void waitRecvId()
 *
 * Notes:
 * gets the id from sending user name and stores id
@@ -230,7 +230,7 @@ void NetworkManager::waitRecvId() {
  * Revisions:
  * Version 1.0 - [EY] - 2016/FEB/01 - Created Function
  *
- * DEsigner: Brody Mccrone
+ * Designer: Brody Mccrone
  *
  * Programmer: Eva Yu
  *
@@ -238,12 +238,8 @@ void NetworkManager::waitRecvId() {
  * const char -- the message to write to the TCP socket
  * int len* the length of the message to write
  *
- * Returns:
- *  0 represents excution success
- * -1 represents failure
- *
  * Notes:
- * This function loops the writing to the TCP Socket
+ * wrapper function writes a message to the TCP Socket
   -------------------------------------------------------------------------------*/
 void NetworkManager::writeTCPSocket(const char *buf, const int len) const {
     int res = send(sockTCP, buf, len, 0);
@@ -251,9 +247,8 @@ void NetworkManager::writeTCPSocket(const char *buf, const int len) const {
         perror("send");
         exit(1);
     }
-
-    /* this assertion is here because there were concerns that our send would exceed an MTU and
-       wouldn't fully send. */
+    /* this assertion is here because there were concerns that our send would
+    exceed an MTU and wouldn't fully send. */
     assert(res == len);
 }
 
@@ -288,7 +283,6 @@ int NetworkManager::readTCPSocket(char *buf, const int len) const {
         perror("read");
         return res;
     }
-
     return res;
 }
 
@@ -318,7 +312,11 @@ Sends buf to servAddr. Reliable even when len exceeds MTU.
 void NetworkManager::writeUDPSocket(const char *buf, const int len) const {
     /* NetworkManager::run should be called before this is writeUDPSocket is called. */
     assert(state != NetworkState::NOT_RUNNING);
-    int res = sendto(sockUDP, buf, len, 0, (const sockaddr *)&servUDPAddr, servUDPAddrLen);
+
+    int res = sendto(sockUDP, buf, len, 0,
+        reinterpret_cast<sockaddr *>(const_cast<sockaddr_in *>(&servUDPAddr)),
+        servUDPAddrLen);
+
     if (res < 0) {
         perror("read");
         exit(1);
@@ -384,7 +382,7 @@ int NetworkManager::readUDPSocket(char *buf, const int len) const {
 * const sockar_in& addr -- address to associate with socket
 *
 * Returns:
-* -1 represents failure
+* exit on failure ( -1 )
 *
 * Notes:
 * This loops the writing to the TCP Socket
@@ -404,7 +402,7 @@ void NetworkManager::connectSocket(const int sock, const sockaddr_in& addr) {
 * Revisions:
 * Version 1.0 - [EY] - 2016/FEB/01 - Created Function
 *
-* DEsigner: EY
+* Designer: EY
 *
 * Programmer: Eva Yu
 *
