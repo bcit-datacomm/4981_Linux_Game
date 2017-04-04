@@ -32,13 +32,14 @@ public:
     size_t getHealthRgbElement(const int index);
     void decrementOpacity(const Uint8 amount);
     void setOpacity(const Uint8 opacity);
-    void setHealthBarColor(float currentHP);
-    void renderEquippedWeaponSlot(const SDL_Rect screenRect);
-    void renderClip(const SDL_Rect screenRect, const Player p);
-    void renderHealthBar(const SDL_Rect screenRect, const Player p, const Camera c);
-    void renderConsumable(const SDL_Rect screenRect, const Player p);
-    void renderWeaponSlots(const SDL_Rect screenRect, const Player p);
-    void renderInventoryWeapons(SDL_Rect position, size_t weaponId);
+    void setHealthBarColor(const float currentHP);
+    void renderEquippedWeaponSlot(const SDL_Rect& screenRect);
+    void renderClip(const SDL_Rect& screenRect, const Player& p);
+    void renderHealthBar(const SDL_Rect& screenRect, const Player& p, const Camera& c);
+    void renderConsumable(const SDL_Rect& screenRect, const Player& p);
+    void renderWeaponSlots(const SDL_Rect& screenRect, const Player& p);
+    void renderInventoryWeapons(SDL_Rect& position, size_t weaponId);
+    void renderEquippedWeapon(SDL_Rect& position, size_t weaponId);
 
 private:
     SDL_Rect healthBarBackground;

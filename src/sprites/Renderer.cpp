@@ -54,6 +54,11 @@ void Renderer::loadSprites() {
     // ---------- Consumable Textures ----------
     createTexture(TEXTURES::HEALTHPACK, HEALTHPACK_TEXTURE);
 
+    // ---------- Inventory Weapon Textures --------------
+    createTexture(TEXTURES::RIFLE_INVENTORY, RIFLE_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::SHOTGUN_INVENTORY, SHOTGUN_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::HANDGUN_INVENTORY, HANDGUN_INVENTORY_TEXTURE);
+
 
     //Enable Transparency for the inventory slots
     SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::ACTIVE_SLOT)), SDL_BLENDMODE_BLEND);
@@ -66,9 +71,9 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
 
     //-------- weapon textures --------
-    createTexture(TEXTURES::RIFLE, TEMP_RIFLE_TEXTURE); //temporary, will be replaced later
-    createTexture(TEXTURES::SHOTGUN, TEMP_SHOTGUN_TEXTURE); //temporary, will be replaced later
-    createTexture(TEXTURES::HANDGUN, TEMP_HANDGUN_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::RIFLE, RIFLE_EQUIPPED_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::SHOTGUN, SHOTGUN_EQUIPPED_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::HANDGUN, HANDGUN_EQUIPPED_TEXTURE); //temporary, will be replaced later
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);

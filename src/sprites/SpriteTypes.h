@@ -81,6 +81,9 @@ enum class TEXTURES : int {
     RIFLE,
     SHOTGUN,
     HANDGUN,
+    RIFLE_INVENTORY,
+    SHOTGUN_INVENTORY,
+    HANDGUN_INVENTORY,
     //Pistol
     // PISTOL_FRONT,
     // PISTOL_FRONT_LEFT,

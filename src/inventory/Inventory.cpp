@@ -47,28 +47,6 @@ Weapon* Inventory::getCurrent() {
     return nullptr;
 }
 
-// * Function: renderWeaponSlots
-// *
-// * Date:
-// * JF: April 1, 2017:
-// *
-// * Designer:
-// * Jacob Frank
-// *
-// * Programmer:
-// * Jacob Frank
-// *
-// * Interface: getCurrentWeaponIndex()
-// *
-// * Returns:  The weapon slot number of the currently equipped weapon
-// *
-// * Notes:
-// * When called, the function returns the index in the inventory of the currently equipped weapon
-// */
-//int Inventory::getCurrentWeaponIndex() {
-//    return current;
-//}
-
 void Inventory::useItem() {
     if (medkit != nullptr) {
         medkit->OnConsume();
