@@ -51,10 +51,10 @@ bool GameStateMatch::load() {
     Point newPoint = base.getSpawnPoint();
 
     //gives the player control of the marine
-    player.setControl(GameManager::instance()->getMarine(playerMarineID));
+    player.setControl(&GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-    
+
     return success;
 }
 
@@ -87,12 +87,13 @@ void GameStateMatch::sync() {
 
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
-    // Handle movement input
-    player.handleKeyboardInput(state);
-    player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
-    player.getMarine()->updateImageDirection(); //Update direction of player
-    player.getMarine()->updateImageWalk(state);  //Update walking animation
-
+    // Handle movement input if the player has a marine
+    if(player.getMarine() != nullptr){
+        player.handleKeyboardInput(state);
+        player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+        player.getMarine()->updateImageDirection(); //Update direction of player
+        player.getMarine()->updateImageWalk(state);  //Update walking animation
+    }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);
@@ -116,6 +117,12 @@ void GameStateMatch::handle() {
                     case SDLK_b:
                         player.handleTempBarricade(Renderer::instance().getRenderer());
                         break;
+                    case SDLK_k:
+                        //k is for kill, sets player marine to a nullptr
+                        GameManager::instance()->deleteMarine(player.getMarine()->getId());
+                        player.setControl(nullptr);
+                        break;
+
                     default:
                         break;
                     }
@@ -144,7 +151,9 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateTurrets();
 
     // Move Camera
-    camera.move(player.getMarine()->getX(), player.getMarine()->getY());
+    if(player.getMarine()){
+        camera.move(player.getMarine()->getX(), player.getMarine()->getY());
+    }
 }
 
 void GameStateMatch::render() {
