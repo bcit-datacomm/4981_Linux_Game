@@ -22,9 +22,9 @@
  * Ctor for MeleeWeapon
  */
 MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fireSound,
-        const string& hitSound, const string& reloadSound, const string& emptySound, int range,
-        int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
-        int fireDelay, int32_t id)
+        const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
+        const int damage, const int AOE, const int penetration, const int clip, const int clipMax,
+        const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
         penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 

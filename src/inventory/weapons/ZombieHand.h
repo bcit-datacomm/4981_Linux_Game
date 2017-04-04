@@ -14,30 +14,30 @@
 
 
 namespace ZombieHandVars {
-    const std::string TYPE          = "ZombieHand";
+    const std::string TYPE = "ZombieHand";
 
-    const std::string FIRESOUND     = "";
-    const std::string HITSOUND      = "";
-    const std::string RELOADSOUND   = EFX_WRELOAD01;
-    const std::string EMPTYSOUND    = EFX_PDROP01;
+    const std::string FIRESOUND = "";
+    const std::string HITSOUND = "";
+    const std::string RELOADSOUND = EFX_WRELOAD01;
+    const std::string EMPTYSOUND = EFX_PDROP01;
 
-    constexpr int RANGE             = 100;
-    constexpr int DAMAGE            = 20;
-    constexpr int AOE               = 1;
-    constexpr int PENETRATION       = 1;
+    constexpr int RANGE = 100;
+    constexpr int DAMAGE = 20;
+    constexpr int AOE = 1;
+    constexpr int PENETRATION = 1;
 
-    constexpr int CLIP              = 10000;
-    constexpr int CLIPMAX           = 10000;
-    constexpr int AMMO              = 10000;
+    constexpr int CLIP = 10000;
+    constexpr int CLIPMAX = 10000;
+    constexpr int AMMO = 10000;
 
-    constexpr int RELOADDELAY       = 0;
-    constexpr int FIREDELAY         = 600;
+    constexpr int RELOADDELAY = 0;
+    constexpr int FIREDELAY = 600;
 }
 
 class ZombieHand: public MeleeWeapon {
 public:
 
-    ZombieHand(int32_t id);
+    ZombieHand(const int32_t id);
     ~ZombieHand() = default;
 };
 

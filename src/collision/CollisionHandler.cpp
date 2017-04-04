@@ -186,8 +186,7 @@ std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*
         const Entity *entity, const HitBox hb){
     std::vector<Entity*> allEntities;
     for (const auto& obj: returnObjects){
-        if (obj != nullptr && entity != obj
-                && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())){
+        if (obj && entity != obj && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())){
             allEntities.push_back(obj);
         }
     }
