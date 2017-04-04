@@ -57,6 +57,7 @@ public:
     void updateImageWalk(const Uint8 *state, const unsigned long frameCount);
     void activateStore(const Entity *ep);
     Inventory inventory;
+    int getCurrentHealth() {return health;}; //returns the current health of the marine
 
 private:
     int health = 100;

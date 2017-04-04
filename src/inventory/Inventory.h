@@ -21,9 +21,12 @@ public:
     void switchCurrent(int slot);//switches currently selected slot based on key input
     bool pickUp(int32_t weaponId, const float x, const float y);//picks up weapon in to current slot
     Weapon *getCurrent();//Returns current weapon
+    int getCurrentWeaponIndex() {return current;}; //returns the index of the currently equipped weapon in the inventory
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
+    //Used to get the inventory's medkit. should be made general for all consumables later
+    std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
     Inventory();
     ~Inventory() = default;
 
@@ -32,6 +35,7 @@ private:
     std::array<int32_t, 3> weaponIds;//array of weapon ids
     HandGun defaultGun;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
+    //when this is updated, update the getMedkit function
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());
     int slotScrollTick = 0;
     int scrollDelay = 200;

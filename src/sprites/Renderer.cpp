@@ -42,6 +42,23 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::TERRAFORMED, TEXTURE_DIRT);  //terraformed
     createTexture(TEXTURES::CONCRETE, REPLACE_ME);     //concrete, temporary texture for now
 
+    //--------------------- Hud textures ---------------------
+    createTexture(TEXTURES::WEAPON_CLIP_FULL, WEAPON_CLIP_FULL_TEXTURE);
+    createTexture(TEXTURES::WEAPON_CLIP_EMPTY, WEAPON_CLIP_EMPTY_TEXTURE);
+    createTexture(TEXTURES::ACTIVE_SLOT, ACTIVE_SLOT_TEXTURE);
+    createTexture(TEXTURES::PASSIVE_SLOT, PASSIVE_SLOT_TEXTURE);
+    createTexture(TEXTURES::HEALTHBAR, HEALTHBAR_TEXTURE);
+    createTexture(TEXTURES::CONSUMABLE_SLOT, CONSUMABLE_SLOT_TEXTURE);
+    createTexture(TEXTURES::EQUIPPED_WEAPON_SLOT, EQUIPPED_WEAPON_SLOT_TEXTURE);
+
+    // ---------- Consumable Textures ----------
+    createTexture(TEXTURES::HEALTHPACK, HEALTHPACK_TEXTURE);
+
+
+    //Enable Transparency for the inventory slots
+    SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::ACTIVE_SLOT)), SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::PASSIVE_SLOT)), SDL_BLENDMODE_BLEND);
+
     //-------- map object textures --------
     //nature
     //comsumables
