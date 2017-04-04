@@ -13,6 +13,7 @@
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "../map/Map.h"
 #include "Game.h"
 
 
@@ -26,7 +27,13 @@ bool GameStateMatch::load() {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     //set the boundary on the map
-    GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    // Load Map
+    Map m("assets/maps/Map4.csv");
+    if(m.loadFileData() == 0) {
+        logv("file not found");
+    }
+    m.mapLoadToGame();
 
 
     // Create Dummy Entitys
