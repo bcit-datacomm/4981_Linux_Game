@@ -35,7 +35,7 @@ using namespace std;
  * Description:
  * Map Object Constructor, creates a map object using the map selected file name.
  */
-Map::Map(string file):fname(file) {
+Map::Map(const string file):fname(file) {
     AIMap = {};
     mapdata = {};
 }
@@ -56,8 +56,8 @@ int Map::loadFileData() {
         return 0;
     }
 
-    // Array of wallstart positions
-    array<MapPoint, MAX_WALLS> wallStart;
+    // Vector of wallstart positions
+    vector<MapPoint> wallStart;
 
     // Indices
     int i = 0;
@@ -82,8 +82,7 @@ int Map::loadFileData() {
                 AIMap[i][j] = 1;
                 break;
             case WALL_START:        //Label start of wall rectangle
-                wallStart[wallStartCount].x = j;
-                wallStart[wallStartCount].y = i;
+                wallStart.push_back({j, i});
                 ++wallStartCount;
                 AIMap[i][j] = 1;
                 break;
@@ -119,31 +118,39 @@ int Map::loadFileData() {
  * Description:
  * Read's the Map CSV file map data with the appropriate tile IDs
  */
-void Map::genWalls(const array<MapPoint, MAX_WALLS> wallStart) {
+void Map::genWalls(const vector<MapPoint> wallStart) {
+    for (const auto& w : wallStart) {
+        logv("Point = %d, %d\n", w.x, w.y);
+    }
+    int startx;
+    int starty;
     int nextx;
     int nexty;
     int endx;
     int endy;
 
-    for (int q = 0; q < wallStartCount; q++) {
-        int startx = wallStart[q].x;
-        int starty = wallStart[q].y;
+    for (const auto& w : wallStart) {
+        startx = w.x;
+        starty = w.y;
         nextx = startx + 1;
         nexty = starty + 1;
+        logv("nextx = %d nexty = %d\n", nextx, nexty);
         while (mapdata[starty][nextx] == WALL) {
+            if(nextx > M_WIDTH) {
+                break;
+            }
             nextx ++;
         }
         endx = nextx;
         while (mapdata[nexty][startx] == WALL) {
+            if(nexty > M_HEIGHT) {
+                break;
+            }
             nexty++;
         }
         endy = nexty;
-        MapWall temp;
-        temp.x = startx * T_SIZE;
-        temp.y = starty * T_SIZE;
-        temp.width = (endx - startx) * T_SIZE;
-        temp.height = (endy - starty) * T_SIZE;
-        walls.push_back(temp);
+        walls.push_back( { startx * T_SIZE, starty * T_SIZE, (endx - startx) * T_SIZE,
+                                        (endy - starty) * T_SIZE } );
     }
 }
 
@@ -174,17 +181,14 @@ void Map::mapLoadToGame() {
  *  - Wall Position/Dimensions
  */
 void Map::printData() {
-    // cout << "MAP DATA" << endl;
-    logv("MAP DATA");
-    for (int q = 0; q < M_HEIGHT; q++) {
-        for (int w = 0; w < M_WIDTH; w++) {
-            // cout << mapdata[q][w];
-            logv("%s", mapdata[q][w]);
+    logv("MAP DATA\n");
+    for (const auto& row : mapdata) {
+        for (const auto& elem : row) {
+            logv("%s", elem);
         }
         logv("\n");
     }
     logv("\n");
-
     logv("BASE POSITION");
     logv("Position: %d, %d\n", base.x, base.y);
 
@@ -200,17 +204,17 @@ void Map::printData() {
     }
 
     logv("AI MAP");
-    for (int q = 0; q < M_HEIGHT; q++) {
-        for (int w = 0; w < M_WIDTH; w++) {
-            logv("%d", AIMap[q][w]);
+    for (const auto& i : AIMap) {
+        for (const auto& j : i) {
+            logv("%d", j);
         }
         logv("\n");
     }
     logv("\n");
 
-    logv("WALL DATA");
-    for (int q = 0; q < wallStartCount; q++) {
-        logv("Wall: %d;\t Position: %d, %d;\t\t width = %d, height = %d\n", q, walls[q].x / T_SIZE,
-                walls[q].y / T_SIZE, walls[q].width / T_SIZE, walls[q].height / T_SIZE);
+    logv("WALL DATA\n");
+    for (const auto& wall : walls) {
+        logv("Position: %d, %d;\t\t width = %d, height = %d\n", wall.x / T_SIZE,
+                wall.y / T_SIZE, wall.width / T_SIZE, wall.height / T_SIZE);
     }
 }

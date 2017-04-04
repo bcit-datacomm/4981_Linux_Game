@@ -51,39 +51,36 @@ public:
 
 class Map {
 public:
-    Map(std::string file);
+    Map(const std::string file);
     int loadFileData();
-    void genWalls(const std::array<MapPoint, MAX_WALLS> wallStart);
+    void genWalls(const std::vector<MapPoint> wallStart);
     void mapLoadToGame();
     void printData();
 
     std::string getFile() { return fname; };
     void setFile(const string f) { fname = f; };
 
+    // Boolean Array for AI Nodes
+    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AIMap;
 
+private:
+    std::string fname;
+    // Vector of walls with pixel position and dimensions.
+    std::vector<MapWall> walls;
     // Data needed from map file
-    // char mapdata[M_HEIGHT][M_WIDTH];
     std::array<std::array<char, M_WIDTH>, M_HEIGHT> mapdata;
     //zombie spawn point count
-    int zombieSpawnCount;
+    int zombieSpawnCount = 0;
     // Wall start point count
-    int wallStartCount;
+    int wallStartCount = 0;
     // Shop count;
-    int shopCount;
+    int shopCount = 0;
     // Base Start Point
     MapPoint base;
     // Array of zombieSpawn points
     MapPoint zombieSpawn[MAX_SPAWNPOINTS];
     // Array of shop points
     MapPoint shops[MAX_SHOPS];
-    // Boolean Array for AI Nodes
-    // bool AIMap[M_HEIGHT][M_WIDTH];
-    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AIMap;
-    // Vector of walls with pixel position and dimensions.
-    std::vector<MapWall> walls;
-
-private:
-    std::string fname;
 };
 
 
