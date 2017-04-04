@@ -62,7 +62,6 @@ public:
     bool addTurret(const int32_t id, const Turret& newTurret);
     int32_t createTurret(const float x, const float y) ;
     Turret& getTurret(const int32_t id);
-    auto& getTurretManager() const {return turretManager;};
 
     // Method for getting collisionHandler
     CollisionHandler& getCollisionHandler();
@@ -74,9 +73,7 @@ public:
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.
-    auto& getZombies() {
-        return zombieManager;
-    }
+    auto& getZombies() {return zombieManager;};
 
     int32_t addObject(const Object&);
     void deleteObject(const int32_t id);
@@ -110,7 +107,6 @@ public:
 
     int32_t createWeaponStore(const float x, const float y);//creates a weapon store
     void addStore(const int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
-    auto& getStoreManager() const {return storeManager;};
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
 
@@ -122,6 +118,16 @@ public:
     void freeDropPoint(const int32_t id);
     bool checkFreeDropPoints();
 
+    //getManagers
+    auto& getStoreManager() const {return storeManager;};
+    auto& getTurretManager() const {return turretManager;};
+    auto& getMarineManager() const {return marineManager;};
+    auto& getZombieManager() const {return zombieManager;};
+    auto& getWeaponDropManager() const {return weaponDropManager;};
+    auto& getWeaponManager() const {return weaponManager;};
+    auto& getBarricadeManager() const {return barricadeManager;};
+    auto& getWallManager() const {return wallManager;};
+    auto& getDropPointManager() const {return dropPointManager;};
 private:
     GameManager();
     ~GameManager();
