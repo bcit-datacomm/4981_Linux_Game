@@ -47,7 +47,8 @@ bool GameStateMatch::load() {
     //gives the player control of the marine
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
-
+    player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    
     return success;
 }
 
@@ -72,8 +73,10 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         // Process frame
-        handle();    // Handle user input
+        handle(stepTimer.getTicks());    // Handle user input
         update(stepTimer.getTicks() / TIME_SECOND); // Update state values
+        
+
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
 
@@ -96,11 +99,14 @@ void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::handle() {
+void GameStateMatch::handle(const unsigned long countedFrames) {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+    player.getMarine()->updateImageDirection(); //Update direction of player
+    player.getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
+
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);
