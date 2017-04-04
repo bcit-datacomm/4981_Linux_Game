@@ -430,6 +430,8 @@ void GameHud::renderWeaponSlots(const SDL_Rect& screenRect, const Player& p) {
  *                  size_t weaponId: The ID of the weapon to render
  *
  * Notes:
+ * The below two methods currently do nothing, but will be used to display the weapons in the
+ * players inventory and equipped item slot.
  */
 void GameHud::renderInventoryWeapons(SDL_Rect& position, size_t weaponId) {
 
