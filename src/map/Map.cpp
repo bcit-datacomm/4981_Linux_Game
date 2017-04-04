@@ -52,7 +52,7 @@ int Map::loadFileData() {
     ifstream file(fname.c_str());
 
     if (file.fail()) {
-        printf("failed to open file\n");
+        logv("failed to open file\n");
         return 0;
     }
 
@@ -169,42 +169,43 @@ void Map::mapLoadToGame() {
  *  - Wall Position/Dimensions
  */
 void Map::printData() {
-    cout << "MAP DATA" << endl;
+    // cout << "MAP DATA" << endl;
+    logv("MAP DATA");
     for (int q = 0; q < M_HEIGHT; q++) {
         for (int w = 0; w < M_WIDTH; w++) {
-            cout << mapdata[q][w];
+            // cout << mapdata[q][w];
+            logv("%s", mapdata[q][w]);
         }
-        std::cout << std::endl;
+        logv("\n");
     }
-    cout << endl;
+    logv("\n");
 
-    cout << "BASE POSITIONS" << endl;
-    printf("Position: %d, %d\n", base.x, base.y);
-    cout << endl;
+    logv("BASE POSITION");
+    logv("Position: %d, %d\n", base.x, base.y);
 
-    cout << "SPAWN POINTS" << endl;
+    logv("SPAWN POINTS");
     for(int i = 0; i < zombieSpawnCount; i++) {
-        printf("Spawn Point: %d; Position: %d, %d\n", i, zombieSpawn[i].x, zombieSpawn[i].y);
+        logv("Spawn Point: %d; Position: %d, %d\n", i, zombieSpawn[i].x, zombieSpawn[i].y);
     }
-    cout << endl;
+    logv("\n");
 
-    cout << "SHOP POSITIONS" << endl;
+    logv("SHOP POINTS");
     for(int i = 0; i < shopCount; i++) {
-        printf("Shop: %d; Position: %d, %d\n", i, shops[i].x, shops[i].y);
+        logv("Shop: %d; Position: %d, %d\n", i, shops[i].x, shops[i].y);
     }
 
-    cout << "AI MAP" << endl;
+    logv("AI MAP");
     for (int q = 0; q < M_HEIGHT; q++) {
         for (int w = 0; w < M_WIDTH; w++) {
-            cout << AIMap[q][w];
+            logv("%d", AIMap[q][w]);
         }
-        std::cout << std::endl;
+        logv("\n");
     }
-    cout << endl;
+    logv("\n");
 
-    cout << "WALL DATA" << endl;
+    logv("WALL DATA");
     for (int q = 0; q < wallStartCount; q++) {
-    printf("Wall: %d;\t Position: %d, %d;\t\t width = %d, height = %d\n", q, walls[q].x / T_SIZE,
-            walls[q].y / T_SIZE, walls[q].width / T_SIZE, walls[q].height / T_SIZE);
+        logv("Wall: %d;\t Position: %d, %d;\t\t width = %d, height = %d\n", q, walls[q].x / T_SIZE,
+                walls[q].y / T_SIZE, walls[q].width / T_SIZE, walls[q].height / T_SIZE);
     }
 }
