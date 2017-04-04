@@ -6,8 +6,8 @@
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {}
 
-void Player::setControl(Marine& newControl) {
-    marine = &newControl;
+void Player::setControl(Marine* newControl) {
+    marine = newControl;
 }
 
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
