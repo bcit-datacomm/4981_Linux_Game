@@ -13,35 +13,30 @@ void MatchManager::checkMatchState() {
     }
 }
 
-void MatchManager::spawnZombies()
-{
-    int currentTime = SDL_GetTicks();
+void MatchManager::spawnZombies() {
+    const int currentTime = SDL_GetTicks();
     if(currentTime < (spawnTick + ZOMBIE_SPAWN_DELAY)){
         return;
     }
     spawnTick = currentTime;
     
+    int32_t id = GameManager::instance()->createZombie(0, 0);
+    Zombie& zombie = GameManager::instance()->getZombie(id);
+    CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
     for (auto& pos : spawnPoints) {
         if (zombiesToSpawn > 0) {
-            int32_t id = GameManager::instance()->createZombie(pos.x, pos.y);
-            Zombie& zombie = GameManager::instance()->getZombie(id);
-            CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
-            if (ch.detectMovementCollision(ch.getQuadTreeEntities(
+            zombie.setPosition(pos.x, pos.y);
+            if (!ch.detectMovementCollision(ch.getQuadTreeEntities(
                     ch.quadtreeMarine,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,&zombie),&zombie)) {
-                GameManager::instance()->deleteZombie(id);   
-            } else {
+                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,&zombie),&zombie)) {
+                GameManager::instance()->createZombie(pos.x, pos.y);
                 --zombiesToSpawn; 
             }
         } else {
            break;
         }
     }
+    GameManager::instance()->deleteZombie(id);
 }
 
 void MatchManager::setSpawnPoints(std::vector<MapPoint> points) {
@@ -49,6 +44,5 @@ void MatchManager::setSpawnPoints(std::vector<MapPoint> points) {
 }
 
 void MatchManager::newRound() {
-    round++;
-    zombiesToSpawn = (spawnPoints.size() * round) * 2;
+    zombiesToSpawn = (spawnPoints.size() * ++round) * 2;
 }

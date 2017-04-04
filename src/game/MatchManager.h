@@ -17,7 +17,7 @@ class MatchManager {
 public:
 
     MatchManager();
-    ~MatchManager() {};
+    ~MatchManager() = default;
     
     void checkMatchState();
     void newRound();

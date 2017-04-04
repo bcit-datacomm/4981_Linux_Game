@@ -632,20 +632,3 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
     createWall(eX, sY + (height / 4 * 3), width, height / 4);
 }
 
-bool GameManager::createZombieWave(const int n) {
-    std::vector<Point> spawnPoints;
-    spawnPoints.emplace_back(100, 100);
-    spawnPoints.emplace_back(500, 100);
-    spawnPoints.emplace_back(1900, 900);
-    spawnPoints.emplace_back(2900, 900);
-    spawnPoints.emplace_back(2900, 2900);
-    spawnPoints.emplace_back(1900, 2900);
-    spawnPoints.emplace_back(900, 2900);
-
-    for (int i = 0; i < n; ++i) {
-        for (const auto& p : spawnPoints) {
-            createZombie(p.first, p.second);
-        }
-    }
-    return true;
-}
