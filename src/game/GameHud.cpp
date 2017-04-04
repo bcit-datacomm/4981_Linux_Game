@@ -405,7 +405,7 @@ void GameHud::renderWeaponSlots(const SDL_Rect& screenRect, const Player& p) {
         inventorySlotOpacity);
 
     for (int i = 0; i < 3; ++i) {
-        if (i == p.getMarine()->inventory.getCurrentWeaponIndex()) {
+        if (i == p.getMarine()->inventory.getCurrentSlot()) {
             Renderer::instance().render(inventorySlot[i], TEXTURES::ACTIVE_SLOT);
         } else {
             Renderer::instance().render(inventorySlot[i], TEXTURES::PASSIVE_SLOT);

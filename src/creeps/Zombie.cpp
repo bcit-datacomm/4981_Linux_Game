@@ -15,6 +15,7 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
         health(health), state(state), step(step), dir(dir), frame(frame) {
     logv("Create Zombie\n");
+    inventory.initZombie();
 }
 
 Zombie::~Zombie() {
@@ -87,7 +88,7 @@ void Zombie::generateMove() {
         }
 
         // Changed to attack state once attack code is ready
-        setState(ZombieState::ZOMBIE_IDLE);
+        setState(ZombieState::ZOMBIE_ATTACK);
 
         return;
     }
@@ -137,7 +138,7 @@ void Zombie::generateMove() {
         case ZombieDirection::DIR_INVALID:  // Shouldn't ever happens, gets rid of warning
             break;
     }
-
+    zAttack();
     // Frames are used to make sure the zombie doesn't move through the path too quickly/slowly
     if (frame > 0) {
         --frame;
@@ -278,4 +279,20 @@ string Zombie::generatePath(const float xStart, const float yStart,
     }
 
     return ""; // no route found
+}
+
+/**
+ * Date: Mar. 28, 2017
+ * Author: Mark Tattrie
+ * Function Interface: void Zombie::zAttack()
+ * Description:
+ * Calls the zombies current weapon "ZombieHands" to fire
+ */
+void Zombie::zAttack(){
+    Weapon* w = inventory.getCurrent();
+    if (w){
+        w->fire(*this);
+    } else {
+        logv("Zombie Slot Empty\n");
+    }
 }
