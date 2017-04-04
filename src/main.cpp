@@ -15,9 +15,6 @@ int main(int argc, char **argv) {
     setenv("OMP_PROC_BIND", "TRUE", 1);
     setenv("OMP_DYNAMIC", "TRUE", 1);
     setenv("OMP_NESTED", "TRUE", 1);
-#ifdef SERVER
-    signal(SIGINT, SIG_IGN);
-#endif
 
     int opt;
     while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
