@@ -17,7 +17,8 @@
  */
 CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
         quadtreeBarricade(0, {0,0,2000,2000}),quadtreeTurret(0, {0,0,2000,2000}),
-        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}) {
+        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}),
+        quadtreeStore(0,{0,0,2000,2000}) {
 
 }
 
@@ -37,6 +38,7 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
     quadtreeWall = handle.quadtreeWall;
     quadtreePickUp = handle.quadtreePickUp;
     quadtreeObj = handle.quadtreeObj;
+    quadtreeStore = handle.quadtreeStore;
     return *this;
 }
 

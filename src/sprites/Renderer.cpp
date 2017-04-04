@@ -276,3 +276,25 @@ SDL_Texture * Renderer::getTexture(int spriteType) {
 
     return nullptr;
 }
+
+/**
+ * DEVELOPER: Terry Kang
+ * DESIGNER:  Terry Kang
+ * DATE:      April 02, 2017
+ * wraps the call using a texture to an int as
+ * texture is a scoped enum and is no longer auto converted
+ */
+void Renderer::setAlpha(const TEXTURES spriteType, const int alpha) {
+    setAlpha(static_cast<int>(spriteType), alpha);
+}
+
+/**
+ * DEVELOPER: Terry Kang
+ * DESIGNER:  Terry Kang
+ * DATE:      April 02, 2017
+ * set alpha of sprite
+ */
+void Renderer::setAlpha(const int spriteType, const int alpha) {
+    SDL_SetTextureAlphaMod(getTexture(spriteType), alpha);
+}
+

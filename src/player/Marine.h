@@ -29,6 +29,7 @@ public:
     void fireWeapon();
     int32_t checkForPickUp();
     int getHealth();
+    void activateStore(const Entity *ep);
 
     Inventory inventory;
 
