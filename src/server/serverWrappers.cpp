@@ -86,6 +86,7 @@ void fillMulticastAddr(sockaddr_in& addr) {
  */
 void transitionToGameStart() {
     logv("Starting the game\n");
+    close(listenSocketTCP);
     std::thread(startGame).detach();
     //Spinlock
     while (!isGameRunning.load());

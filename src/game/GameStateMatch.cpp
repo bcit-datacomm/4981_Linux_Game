@@ -166,9 +166,9 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 #ifndef SERVER
     // Move player
-    if (GameManager::instance()->getPlayer().hasChangedCourse()
-            || GameManager::instance()->getPlayer().hasChangedAngle()) {
-        if (networked) {
+    if (networked) {
+        if (GameManager::instance()->getPlayer().hasChangedCourse()
+                || GameManager::instance()->getPlayer().hasChangedAngle()) {
             GameManager::instance()->getPlayer().sendServMoveAction();
         }
         GameManager::instance()->getPlayer().getMarine()->move(
@@ -176,7 +176,6 @@ void GameStateMatch::update(const float delta) {
                 GameManager::instance()->getPlayer().getMarine()->getDY() * delta,
                 GameManager::instance()->getCollisionHandler());
     }
-
     // Move Camera
     camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
             GameManager::instance()->getPlayer().getMarine()->getY());
