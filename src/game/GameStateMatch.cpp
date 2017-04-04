@@ -10,7 +10,6 @@
 #include "../game/GameStateMatch.h"
 #include "../sprites/Renderer.h"
 #include "../sprites/SpriteTypes.h"
-#include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
@@ -53,42 +52,22 @@ bool GameStateMatch::load() {
 }
 
 void GameStateMatch::loop() {
-    //The frames per second timer
-    LTimer fpsTimer;
-
-    //The frames per second cap timer
-    LTimer capTimer;
-
-    //Keeps track of time between steps
-    LTimer stepTimer;
-
-    //Start counting frames per second
-    int frameTicks;
-    unsigned int second = 0;
-    fpsTimer.start();
-
+    int startTick = 0;
+    int frameTicks = 0;
     // State Loop
     while (play) {
-        //Start cap timer
-        capTimer.start();
+        startTick = SDL_GetTicks();
 
         // Process frame
-        handle(stepTimer.getTicks());    // Handle user input
-        update(stepTimer.getTicks() / TIME_SECOND); // Update state values
-        
-
-        stepTimer.start(); //Restart step timer
-        sync();    // Sync game to server
-
-        render();    // Render game state to window
-
-        if ((stepTimer.getTicks() / TIME_SECOND) > second) {
-            GameManager::instance()->createZombieWave(1);
-            second += 5;
-        }
+        handle(); // Handle user input
+        update(frameTicks / UPDATE_RATIO); // Update state values
+        // Sync game to server
+        sync();
+        // Render game state to window
+        render();
 
         //If frame finished early
-        if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
+        if ((frameTicks = SDL_GetTicks() - startTick) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
             SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
@@ -99,13 +78,13 @@ void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::handle(const unsigned long countedFrames) {
+void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
     player.getMarine()->updateImageDirection(); //Update direction of player
-    player.getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
+    player.getMarine()->updateImageWalk(state);  //Update walking animation
 
     //Handle events on queue
     while (SDL_PollEvent(&event)) {

@@ -129,12 +129,14 @@ void Marine::updateImageDirection() {
 *       walking. It is called from GameStateMatch::handle after every frame and updates
 *       the feet placement of the marine.
 */
-void Marine::updateImageWalk(const Uint8 *state, const unsigned long frameCount) {
+void Marine::updateImageWalk(const Uint8 *state) {
+    static unsigned long frameCount = 0;
+    ++frameCount;
     if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
         //stops lag when taking first step
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-        } else if (static_cast<int>(frameCount) % FRAME_COUNT_WALK == 0) {
+        } else if (frameCount % FRAME_COUNT_WALK == 0) {
             //cycle throught the walking images
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
                 setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
@@ -145,7 +147,7 @@ void Marine::updateImageWalk(const Uint8 *state, const unsigned long frameCount)
     } else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-        } else if (static_cast<int>(frameCount) % FRAME_COUNT_WALK == 0) {
+        } else if (frameCount % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
                 setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
@@ -155,7 +157,7 @@ void Marine::updateImageWalk(const Uint8 *state, const unsigned long frameCount)
     } else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-        } else if (static_cast<int>(frameCount) % FRAME_COUNT_WALK == 0) {
+        } else if (frameCount % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
                 setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
@@ -165,7 +167,7 @@ void Marine::updateImageWalk(const Uint8 *state, const unsigned long frameCount)
     } else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-        } else if (static_cast<int>(frameCount) % FRAME_COUNT_WALK == 0) {
+        } else if (frameCount % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
                 setSrcRect(getSrcRect().x +SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
             } else {
