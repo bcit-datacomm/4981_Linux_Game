@@ -31,7 +31,7 @@ namespace ZombieHandVars {
     constexpr int AMMO = 10000;
 
     constexpr int RELOADDELAY = 0;
-    constexpr int FIREDELAY = 600;
+    constexpr int FIREDELAY = 300;
 }
 
 class ZombieHand: public MeleeWeapon {

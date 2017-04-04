@@ -40,6 +40,10 @@ MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fire
  * objects.
  */
 bool MeleeWeapon::fire(Movable &mov){
+    if (!Weapon::fire(mov)) {
+        return false;
+    }
+
     const double degrees = mov.getAngle() - 90;
     const double radians = degrees * M_PI / 180;
 
@@ -62,8 +66,8 @@ bool MeleeWeapon::fire(Movable &mov){
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
 
     //vector of each marine the melee attack connects with
-    std::vector<Entity *> hitMarines;
-    hitMarines = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeMarine, &mov),&mov, hitBox);
+    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,
+            &mov),&mov, hitBox);
     for(const auto& x: hitMarines){
         //update hit marine
         x->collidingProjectile(damage);
@@ -71,8 +75,8 @@ bool MeleeWeapon::fire(Movable &mov){
     }
 
     //vector of each turret the melee attack connects with
-    std::vector<Entity *> hitTurrets;
-    hitTurrets = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeTurret, &mov),&mov, hitBox);
+    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,
+            &mov),&mov, hitBox);
     for(const auto& y: hitTurrets){
         //update hit turret
         y->collidingProjectile(damage);
@@ -80,8 +84,8 @@ bool MeleeWeapon::fire(Movable &mov){
     }
 
     //vector of each barricade the melee attack connects with
-    std::vector<Entity *> hitBarricades;
-    hitBarricades = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade, &mov),&mov, hitBox);
+    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,
+            &mov),&mov, hitBox);
     for(const auto& z: hitTurrets){
         //update hit barricade
         z->collidingProjectile(damage);
