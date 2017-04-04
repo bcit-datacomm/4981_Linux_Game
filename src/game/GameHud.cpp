@@ -45,11 +45,8 @@ GameHud::GameHud(): inventorySlotOpacity(0){}
  * Obtains the R, G, or B color value dependant upon index specified
  */
 size_t GameHud::getHealthRgbElement(const int index) {
-    if (index >= 0  && index <= 2) {
-        return healthRGB[index];
-    } else {
-        return 0;
-    }
+
+    return (index >=0 && index <=2) ? healthRGB[index] : 0;
 }
 
 /**
@@ -75,8 +72,7 @@ size_t GameHud::getHealthRgbElement(const int index) {
  */
 void GameHud::decrementOpacity(const Uint8 amount) {
 
-    if( inventorySlotOpacity <= MIN_RGB_VALUE )
-    {
+    if ( inventorySlotOpacity <= MIN_RGB_VALUE ) {
        inventorySlotOpacity = MIN_RGB_VALUE;
     } else {
         inventorySlotOpacity -= amount;
@@ -144,18 +140,9 @@ void GameHud::setOpacity(const Uint8 newOpacity) {
  * JF Mar 28: Tweaked formula to use a different shade of red and green to
  * help distinguish it from the background
  */
-void GameHud::setHealthBarColor(float currentHP) {
-    float healthPercent;
+void GameHud::setHealthBarColor(const float currentHP) {
 
-    //Sets the health at the max or min values if current HP
-    //is greater than or less than the maximum or minimum values, respectively.
-    if (currentHP >= MAX_HEALTH) {
-        currentHP = MAX_HEALTH;
-    } else if (currentHP <= MIN_HEALTH) {
-        currentHP = MIN_HEALTH;
-    }
-
-    healthPercent = currentHP / MAX_HEALTH; //Percent of health left of the marine
+    const float healthPercent = currentHP / MAX_HEALTH; //Percent of health left of the marine
     size_t colorAmount = static_cast<size_t>(healthPercent * MAX_RGB_VALUE); //results in a value between 0 and 255
 
     healthRGB[0] = MAX_RGB_VALUE - colorAmount; //set the Red value
@@ -183,7 +170,7 @@ void GameHud::setHealthBarColor(float currentHP) {
  * Function renders the equipped weapon slot to the screen.
  * slot is positions in bottom right of screen next to the ammo clip.
  */
-void GameHud::renderEquippedWeaponSlot(const SDL_Rect screenRect) {
+void GameHud::renderEquippedWeaponSlot(const SDL_Rect& screenRect) {
 
     //Makes the texture properties a squeare regardless of screen size
     if (screenRect.w <= screenRect.h) {
@@ -230,23 +217,21 @@ void GameHud::renderEquippedWeaponSlot(const SDL_Rect screenRect) {
  * Revisions:
  * JF April 1: Fixed Segfault bug resulting from not checking if the current weapon is a nullptr
  */
-void GameHud::renderClip(const SDL_Rect screenRect, const Player p) {
+void GameHud::renderClip(const SDL_Rect& screenRect, const Player& p) {
 
-    float ammoInClip; //Ammo left in the weapons clip
-    float maxClipAmmo ; //Maximum bullets that can be held in the guns clip
     float percentLeftinClip; //bullets in clip / max bullets of clip
-
-    int ammoClipWidth; //pixel width of the ammo clip image used
-    int ammoClipHeight; //pixel height of the ammo clip image used
 
     if (p.getMarine()->inventory.getCurrent() == nullptr) { //ensure that the current weapon is not null
         percentLeftinClip = 0; //if currently equipped weapon is null set clip to empty
     } else {
-        ammoInClip = p.getMarine()->inventory.getCurrent()->getClip();
-        maxClipAmmo = p.getMarine()->inventory.getCurrent()->getClipMax();
+        const float ammoInClip = p.getMarine()->inventory.getCurrent()->getClip();
+        const float maxClipAmmo = p.getMarine()->inventory.getCurrent()->getClipMax();
         percentLeftinClip = ammoInClip / maxClipAmmo;
     }
 
+
+    int ammoClipWidth; //pixel width of the ammo clip image used
+    int ammoClipHeight; //pixel height of the ammo clip image used
     //Find the pixel width and height of the image used for the ammo clip texture
     SDL_QueryTexture(Renderer::instance().getTexture(static_cast<int>(TEXTURES::WEAPON_CLIP_EMPTY)),
                         nullptr, nullptr, &ammoClipWidth, &ammoClipHeight);
@@ -297,7 +282,7 @@ void GameHud::renderClip(const SDL_Rect screenRect, const Player p) {
  * Displays the amount of health the marine has left including dynamic coloring from green to red
  *
  */
-void GameHud::renderHealthBar(const SDL_Rect screenRect, const Player p, const Camera c) {
+void GameHud::renderHealthBar(const SDL_Rect& screenRect, const Player& p, const Camera& c) {
 
     healthBarBackground.w = MARINE_WIDTH * 2;
     healthBarBackground.h = screenRect.h * HEALTHBAR_BACKROUND_H_RAT;
@@ -313,16 +298,16 @@ void GameHud::renderHealthBar(const SDL_Rect screenRect, const Player p, const C
 
     Renderer::instance().render(healthBarBackground, TEXTURES::HEALTHBAR);
 
-    float HP = p.getMarine()->getCurrentHealth();
+    const float HP = p.getMarine()->getCurrentHealth();
 
-    if (HP > MIN_HEALTH) {
+    if (HP > MIN_HEALTH && HP <= MAX_HEALTH) {
         setHealthBarColor(HP); //Sets the RGB values of the healthbar from the marine's current HP
         healthBarForeground.w = static_cast<size_t>(HP / MAX_HEALTH * healthBarBackground.w) -
-                                healthBarBackground.h * HEALTHBAR_FOREGROUND_W_RAT;
+            healthBarBackground.h * HEALTHBAR_FOREGROUND_W_RAT;
 
         //Sets the renderers color based on calculated RGB value
         SDL_SetRenderDrawColor(Renderer::instance().getRenderer(), getHealthRgbElement(0),
-                                getHealthRgbElement(1), getHealthRgbElement(2), OPAQUE);
+            getHealthRgbElement(1), getHealthRgbElement(2), OPAQUE);
 
         //Renders the healthbar foreground
         SDL_RenderFillRect(Renderer::instance().getRenderer(), &healthBarForeground);
@@ -349,7 +334,7 @@ void GameHud::renderHealthBar(const SDL_Rect screenRect, const Player p, const C
  * Function, when called renders the consumable item slot in the bottom left corner of the visible screen
  * Consumable slot is only visible when the player has a consumable item in their inventory.
  */
-void GameHud::renderConsumable(const SDL_Rect screenRect, const Player p) {
+void GameHud::renderConsumable(const SDL_Rect& screenRect, const Player& p) {
 
     if (screenRect.w <= screenRect.h) {
         consumableSlot.w =  screenRect.w * CONSUMABLE_SIZE_RAT;
@@ -387,10 +372,10 @@ void GameHud::renderConsumable(const SDL_Rect screenRect, const Player p) {
  * Function, when called renders the Weapon inventory slots along the bottom center of the visible screen
  * Inventory slots are only visible when the player changes their currently equiped weapon.
  */
-void GameHud::renderWeaponSlots(const SDL_Rect screenRect, const Player p) {
-    int weaponSlotWidth = screenRect.w * WEAPON_SLOT_WIDTH_RAT;
-    int weaponSlotHeight = screenRect.h * WEAPON_SLOT_HEIGHT_RAT;
-    int weaponSlotPosY = screenRect.h - screenRect.w * PADDING_RAT - weaponSlotHeight;
+void GameHud::renderWeaponSlots(const SDL_Rect& screenRect, const Player& p) {
+    const int weaponSlotWidth = screenRect.w * WEAPON_SLOT_WIDTH_RAT;
+    const int weaponSlotHeight = screenRect.h * WEAPON_SLOT_HEIGHT_RAT;
+    const int weaponSlotPosY = screenRect.h - screenRect.w * PADDING_RAT - weaponSlotHeight;
 
 
     inventorySlot[1].w = weaponSlotWidth;
@@ -415,28 +400,16 @@ void GameHud::renderWeaponSlots(const SDL_Rect screenRect, const Player p) {
     decrementOpacity(1);
 
     SDL_SetTextureAlphaMod(Renderer::instance().getTexture(static_cast<int>(TEXTURES::ACTIVE_SLOT)),
-                            inventorySlotOpacity);
+        inventorySlotOpacity);
     SDL_SetTextureAlphaMod(Renderer::instance().getTexture(static_cast<int>(TEXTURES::PASSIVE_SLOT)),
-                            inventorySlotOpacity);
+        inventorySlotOpacity);
 
-    switch(p.getMarine()->inventory.getCurrentWeaponIndex()) {
-        case 0:
-            Renderer::instance().render(inventorySlot[0], TEXTURES::ACTIVE_SLOT);
-            Renderer::instance().render(inventorySlot[1], TEXTURES::PASSIVE_SLOT);
-            Renderer::instance().render(inventorySlot[2], TEXTURES::PASSIVE_SLOT);
-            break;
-        case 1:
-            Renderer::instance().render(inventorySlot[0], TEXTURES::PASSIVE_SLOT);
-            Renderer::instance().render(inventorySlot[1], TEXTURES::ACTIVE_SLOT);
-            Renderer::instance().render(inventorySlot[2], TEXTURES::PASSIVE_SLOT);
-            break;
-        case 2:
-            Renderer::instance().render(inventorySlot[0], TEXTURES::PASSIVE_SLOT);
-            Renderer::instance().render(inventorySlot[1], TEXTURES::PASSIVE_SLOT);
-            Renderer::instance().render(inventorySlot[2], TEXTURES::ACTIVE_SLOT);
-            break;
-        default:
-            break;
+    for (int i = 0; i < 3; ++i) {
+        if (i == p.getMarine()->inventory.getCurrentSlot()) {
+            Renderer::instance().render(inventorySlot[i], TEXTURES::ACTIVE_SLOT);
+        } else {
+            Renderer::instance().render(inventorySlot[i], TEXTURES::PASSIVE_SLOT);
+        }
     }
 }
 
@@ -457,10 +430,17 @@ void GameHud::renderWeaponSlots(const SDL_Rect screenRect, const Player p) {
  *                  size_t weaponId: The ID of the weapon to render
  *
  * Notes:
+ * The below two methods currently do nothing, but will be used to display the weapons in the
+ * players inventory and equipped item slot.
  */
-void renderInventoryWeapons(SDL_Rect position, size_t weaponId) {
+void GameHud::renderInventoryWeapons(SDL_Rect& position, size_t weaponId) {
 
 }
+
+void GameHud::renderEquippedWeapon(SDL_Rect& position, size_t weaponId) {
+
+}
+
 
 
 

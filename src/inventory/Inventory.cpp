@@ -5,7 +5,8 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()) {
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
+        tempZombieHand(GameManager::instance()->generateID()) {
     weaponIds[0] = defaultGun.getID();
     weaponIds[1] = -1;
     weaponIds[2] = -1;
@@ -47,28 +48,6 @@ Weapon* Inventory::getCurrent() {
     return nullptr;
 }
 
-// * Function: renderWeaponSlots
-// *
-// * Date:
-// * JF: April 1, 2017:
-// *
-// * Designer:
-// * Jacob Frank
-// *
-// * Programmer:
-// * Jacob Frank
-// *
-// * Interface: getCurrentWeaponIndex()
-// *
-// * Returns:  The weapon slot number of the currently equipped weapon
-// *
-// * Notes:
-// * When called, the function returns the index in the inventory of the currently equipped weapon
-// */
-//int Inventory::getCurrentWeaponIndex() {
-//    return current;
-//}
-
 void Inventory::useItem() {
     if (medkit != nullptr) {
         medkit->OnConsume();
@@ -103,15 +82,33 @@ void Inventory::scrollCurrent(int direction) {
  * Checks is current CSLot has Weapon then Checks its ammo and creates a weaponDrop and renders it.
  */
  void Inventory::dropWeapon(const float x, const float y) {
-     Weapon *w = getCurrent();
-     if (w != nullptr) {
-         if (w->getAmmo() > 0) {
-             GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
+     if(current){
+         Weapon *w = getCurrent();
+         if (w) {
+             if (w->getAmmo() > 0) {
+                 GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
 
-         } else {
-             //delete weapon From Weapon Manager
-             GameManager::instance()->removeWeapon(weaponIds[current]);
+             } else {
+                 //delete weapon From Weapon Manager
+                 GameManager::instance()->removeWeapon(weaponIds[current]);
+             }
+             weaponIds[current] = -1;
          }
-         weaponIds[current] = -1;
      }
+ }
+
+
+ /**
+  * Date: Mar. 31, 2017
+  * Author: Mark Tattrie
+  * Function Interface:  void Inventory::initZombie()
+  * Description:
+  * function to initialize a zombies inventory
+  */
+ void Inventory::initZombie(){
+     weaponIds[0] = tempZombieHand.getID();
+     weaponIds[1] = -1;
+     weaponIds[2] = -1;
+     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>
+            (std::make_shared<ZombieHand>(tempZombieHand)));
  }

@@ -10,6 +10,7 @@
 #include "weapons/HandGun.h"
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
+#include "weapons/ZombieHand.h"
 
 /*
  * Created By Maitiu Morton
@@ -21,19 +22,21 @@ public:
     void switchCurrent(int slot);//switches currently selected slot based on key input
     bool pickUp(int32_t weaponId, const float x, const float y);//picks up weapon in to current slot
     Weapon *getCurrent();//Returns current weapon
-    int getCurrentWeaponIndex() {return current;}; //returns the index of the currently equipped weapon in the inventory
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
     //Used to get the inventory's medkit. should be made general for all consumables later
     std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
+    int getCurrentSlot() const {return current;}; //returns the current sloted selected int the inventory
     Inventory();
     ~Inventory() = default;
+    void initZombie();
 
 private:
     int current = 0;//current weapon
     std::array<int32_t, 3> weaponIds;//array of weapon ids
     HandGun defaultGun;
+    ZombieHand tempZombieHand;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     //when this is updated, update the getMedkit function
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());

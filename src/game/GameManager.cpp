@@ -128,7 +128,7 @@ void GameManager::updateTurrets() {
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, MARINE_WIDTH, MARINE_HEIGHT};
 
     SDL_Rect marineRect = temp;
     SDL_Rect moveRect = temp;
@@ -149,7 +149,7 @@ int32_t GameManager::createMarine() {
  */
 bool GameManager::createMarine(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, MARINE_WIDTH, MARINE_HEIGHT};
 
     SDL_Rect marineRect = temp;
     SDL_Rect moveRect = temp;

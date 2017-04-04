@@ -10,7 +10,6 @@
 
 #include "GameStateMenu.h"
 #include "Game.h"
-#include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
@@ -134,7 +133,7 @@ void GameStateMenu::loop() {
 
     // State Loop
     while (play) {
-        handle(0); // Handle user input
+        handle(); // Handle user input
         render(); // Render game state to window
     }
 }
@@ -190,7 +189,7 @@ void GameStateMenu::sync() {
  * Isaac Morneau, March 29, 2017 Fixed highlighting, clicking, and typing to work with the improved renderer that now
  *      makes sense because of the god send that was the great refactoring.
  */
-void GameStateMenu::handle(const unsigned long countedFrames) {
+void GameStateMenu::handle() {
     int x, y;
 
     SDL_Keycode keyCode;
