@@ -1,18 +1,21 @@
-/*------------------------------------------------------------------------------------------------------------------
--- HEADER FILE: Node.h
---
--- FUNCTIONS:
-
---
--- DATE:        February 1, 2017
---
--- DESIGNER:    Fred Yang, Robert Arendac
---
--- PROGRAMMER:  Fred Yang, Robert Arendac
---
--- NOTES:
--- Used for the A* algorithm in navigating the map
-----------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+* Header: Zombie.h
+*
+* Functions:
+*    
+*
+* Date:         February 1, 2017     
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: Fred Yang, Robert Arendac
+*
+* Author: Fred Yang, Robert Arendac
+*
+* Notes:
+* Used for the A* algorithm in navigating the map 
+------------------------------------------------------------------------------*/
 
 #ifndef NODE_H
 #define NODE_H
