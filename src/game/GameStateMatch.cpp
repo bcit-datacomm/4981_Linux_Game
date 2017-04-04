@@ -27,13 +27,13 @@ bool GameStateMatch::load() {
 #ifndef SERVER
     if (networked) {
         GameManager::instance()->getPlayer().setControl(
-                GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
+                &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
-                GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
+                &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
         GameManager::instance()->getPlayer().getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 
@@ -63,6 +63,7 @@ bool GameStateMatch::load() {
         logv("file not found");
     }
     m.mapLoadToGame();
+
     return success;
 }
 
@@ -109,12 +110,13 @@ void GameStateMatch::sync() {
 
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
-    // Handle movement input
-    GameManager::instance()->getPlayer().handleKeyboardInput(state);
-    GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
-    GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-    GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
-
+    // Handle movement input if the player has a marine
+    if(GameManager::instance()->getPlayer().getMarine()){
+        GameManager::instance()->getPlayer().handleKeyboardInput(state);
+        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+        GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
+        GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
+    }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);
@@ -141,6 +143,12 @@ void GameStateMatch::handle() {
                         GameManager::instance()->getPlayer().handleTempBarricade(
                                 Renderer::instance().getRenderer());
                         break;
+                    case SDLK_k:
+                        //k is for kill, sets player marine to a nullptr
+                        GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
+                        GameManager::instance()->getPlayer().setControl(nullptr);
+                        break;
+
                     default:
                         break;
                     }
@@ -183,6 +191,13 @@ void GameStateMatch::update(const float delta) {
     }
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
+
+#ifndef SERVER
+    // Move Camera
+    if(GameManager::instance()->getPlayer().getMarine()){
+        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
+    }
+#endif
 }
 
 void GameStateMatch::render() {
