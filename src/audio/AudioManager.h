@@ -75,8 +75,8 @@ public:
 private:
     static AudioManager sInstance;
 
-    musicMap  mapMusic;
-    chunkMap  mapChunk;
+    musicMap  mus;
+    chunkMap  chun;
 
     AudioManager();
     ~AudioManager();

@@ -54,10 +54,10 @@ AudioManager::AudioManager(){
 
 AudioManager::~AudioManager(){
     //clear all loaded files
-    for(auto const& music : mapMusic) {
+    for(auto const& music : mus) {
         Mix_FreeMusic(music.second);
     }
-    for(auto const& chunk : mapChunk) {
+    for(auto const& chunk : chun) {
         Mix_FreeChunk(chunk.second);
     }
 
@@ -71,7 +71,7 @@ AudioManager::~AudioManager(){
 //This plays a single background music file from the _music map.
 void AudioManager::playMusic(const char *fileName){
 
-    Mix_Music *music = mapMusic[fileName];
+    Mix_Music *music = mus[fileName];
 
     logv("%s\n", fileName);
 
@@ -85,7 +85,7 @@ void AudioManager::playMusic(const char *fileName){
 //This plays a single sound effect from the _chunks map.
 void AudioManager::playEffect(const char *fileName){
 
-    Mix_Chunk *chunk = mapChunk[fileName];
+    Mix_Chunk *chunk = chun[fileName];
 
     logv("%s\n", fileName);
 
@@ -140,7 +140,7 @@ void AudioManager::loadMusic(const char *fileName){
             fileName, Mix_GetError() );
     }
 
-    mapMusic[fileName] = music;
+    mus[fileName] = music;
 }
 
 
@@ -154,5 +154,5 @@ void AudioManager::loadEffect(const char *fileName){
             fileName, Mix_GetError() );
     }
 
-    mapChunk[fileName] = sound;
+    chun[fileName] = sound;
 }
