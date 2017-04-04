@@ -20,7 +20,9 @@
 #include "../basic/LTimer.h"
 
 // ticks (ms) in 1 second
-static constexpr float TICK_SEC = 1000;
+static constexpr float TICK_SEC = 1000.0;
+//percentage of the duration of a regular frame
+static constexpr float UPDATE_RATIO = TICK_SEC / SCREEN_FPS;
 static constexpr int STORE_X = 500;
 static constexpr int STORE_Y = 900;
 static constexpr int DROPZONE_X = 100;
@@ -46,7 +48,7 @@ private:
     float dropZoneSize;
 
     virtual void sync() override;
-    virtual void handle(const unsigned long countedFrames) override;
+    virtual void handle() override;
     virtual void update(const float delta) override;
     virtual void render() override;
 };

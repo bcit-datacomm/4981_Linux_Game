@@ -39,3 +39,7 @@ bin/
 
 *.h.gch
 
+#vim
+*.swp
+
+*.txt

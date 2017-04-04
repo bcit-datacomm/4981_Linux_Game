@@ -12,12 +12,12 @@
 #include "../game/GameStateMatch.h"
 #include "../sprites/Renderer.h"
 #include "../sprites/SpriteTypes.h"
-#include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../server/server.h"
 #include "../server/servergamestate.h"
 #include "../sprites/VisualEffect.h"
+#include "../map/Map.h"
 #include "Game.h"
 
 GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
@@ -55,36 +55,33 @@ bool GameStateMatch::load() {
     GameManager::instance()->createZombieWave(1);
 #endif
     bool success = true;
+    //set the boundary on the map
+    // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    // Load Map
+    Map m("assets/maps/Map4.csv");
+    if(m.loadFileData() == 0) {
+        logv("file not found");
+    }
+    m.mapLoadToGame();
     return success;
 }
 
 void GameStateMatch::loop() {
-    //The frames per second timer
-    LTimer fpsTimer;
-
-    //The frames per second cap timer
-    LTimer capTimer;
-
-    //Keeps track of time between steps
-    LTimer stepTimer;
-
-    //Start counting frames per second
-    int frameTicks;
-    fpsTimer.start();
-
+    int startTick = 0;
+    int frameTicks = 0;
     // State Loop
     while (play) {
-        //Start cap timer
-        capTimer.start();
+        startTick = SDL_GetTicks();
 #ifndef SERVER
         // Process frame
-        handle(stepTimer.getTicks());    // Handle user input
+        handle(); // Handle user input
 #endif
-        update(stepTimer.getTicks() / TIME_SECOND); // Update state values
-        stepTimer.start(); //Restart step timer
+        update(frameTicks / UPDATE_RATIO); // Update state values
 #ifndef SERVER
-        sync();    // Sync game to server
-        render();    // Render game state to window
+        // Sync game to server
+        sync();
+        // Render game state to window
+        render();
 #else
         //Server side sync packet sending
         //This will send update packets every frame
@@ -93,8 +90,9 @@ void GameStateMatch::loop() {
         sendSyncPacket(sendSocketUDP);
         clearAttackActions();
 #endif
+
         //If frame finished early
-        if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
+        if ((frameTicks = SDL_GetTicks() - startTick) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
             SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
@@ -109,13 +107,13 @@ void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::handle(const unsigned long countedFrames) {
+void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     GameManager::instance()->getPlayer().handleKeyboardInput(state);
     GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
     GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-    GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
+    GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
 
     //Handle events on queue
     while (SDL_PollEvent(&event)) {

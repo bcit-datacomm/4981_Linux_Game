@@ -194,6 +194,9 @@ private:
     int step;           // Number of steps zombie has taken in path
     ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
+    Inventory inventory;//inventory holds a weapon used to attack
+
+    void zAttack();
 };
 
 #endif

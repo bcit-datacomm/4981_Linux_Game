@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "../game/GameManager.h"
-
+#include "../log/EntityDump.h"
 
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {
@@ -166,6 +166,11 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     //use Inventory
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
+    }
+
+    //added by Maitiu Debug print 4/3/2017
+    if(state[SDL_SCANCODE_PERIOD]){
+        dumpEntityPositions(this);
     }
     marine->setDY(y);
     marine->setDX(x);

@@ -15,31 +15,31 @@
 using std::string;
 
 namespace HandgunVars {
-    const string TYPE           = "HandGun";
+    const string TYPE = "HandGun";
 
-    const string FIRESOUND      = EFX_WLPISTOL;
-    const string HITSOUND       = "";
-    const string RELOADSOUND    = EFX_WRELOAD01;
-    const string EMPTYSOUND     = EFX_PDROP01;
+    const string FIRESOUND = EFX_WLPISTOL;
+    const string HITSOUND = "";
+    const string RELOADSOUND = EFX_WRELOAD01;
+    const string EMPTYSOUND = EFX_PDROP01;
 
-    constexpr int RANGE         = 500;
-    constexpr int DAMAGE        = 200;
-    constexpr int AOE           = 1;
-    constexpr int PENETRATION   = 2;
+    constexpr int RANGE = 500;
+    constexpr int DAMAGE = 200;
+    constexpr int AOE = 1;
+    constexpr int PENETRATION = 2;
 
-    constexpr int CLIP          = 5;
-    constexpr int CLIPMAX       = 5;
-    constexpr int AMMO          = 100;
+    constexpr int CLIP = 5;
+    constexpr int CLIPMAX = 5;
+    constexpr int AMMO = 100;
 
-    constexpr int RELOADDELAY   = 2000;
-    constexpr int FIREDELAY     = 500;
+    constexpr int RELOADDELAY = 2000;
+    constexpr int FIREDELAY = 500;
 }
 
 
 class HandGun: public InstantWeapon {
 public:
 
-    HandGun(int32_t id);
+    HandGun(const int32_t id);
     ~HandGun() = default;
 };
 

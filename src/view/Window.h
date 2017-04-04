@@ -12,7 +12,7 @@ constexpr int MIN_SCREEN_WIDTH = 960;
 constexpr int SCREEN_HEIGHT = 960;
 constexpr int MIN_SCREEN_HEIGHT = 720;
 constexpr int SCREEN_FPS = 60;
-constexpr int SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;
+constexpr float SCREEN_TICK_PER_FRAME = 1000.0 / SCREEN_FPS;
 
 class Window {
 public:
