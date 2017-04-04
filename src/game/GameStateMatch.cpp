@@ -55,6 +55,8 @@ bool GameStateMatch::load() {
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 
+    matchManager.setSpawnPoints(m.getZombieSpawn());
+        
     return success;
 }
 
@@ -154,6 +156,7 @@ void GameStateMatch::update(const float delta) {
     if(player.getMarine()){
         camera.move(player.getMarine()->getX(), player.getMarine()->getY());
     }
+    matchManager.checkMatchState();
 }
 
 void GameStateMatch::render() {

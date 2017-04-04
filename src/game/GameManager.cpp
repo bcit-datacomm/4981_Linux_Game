@@ -262,7 +262,7 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 * Description:
 * Create zombie add it to manager, returns success
 */
-bool GameManager::createZombie(const float x, const float y) {
+int32_t GameManager::createZombie(const float x, const float y) {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
@@ -275,7 +275,7 @@ bool GameManager::createZombie(const float x, const float y) {
     elem->second.setPosition(x,y);
     elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
     elem->second.setState(ZombieState::ZOMBIE_MOVE);
-    return true;
+    return id;
 }
 
 // Deletes zombie from level

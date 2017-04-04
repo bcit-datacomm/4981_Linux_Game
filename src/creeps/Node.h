@@ -52,7 +52,7 @@ public:
             const int pri = 0) : xPos(xPos), yPos(yPos), lv(lv), pri(pri) {}
 
     virtual ~Node() {
-        logv("destroy Node\n");
+       
     } // default dtor
 
     // X coordinate of current node
