@@ -86,15 +86,6 @@ int32_t Marine::checkForPickUp() {
 }
 
 /**
- * Date: Mar 28, 2017
- * Author: Mark Tattrie
- * Function Interface:
- * Description: Return marine's health
- */
-int Marine::getHealth(){
-    return health;
-}
-/**
 * Date: Mar 27
 * Author: Aing Ragunathan
 *
@@ -179,7 +170,7 @@ void Marine::updateImageWalk(const Uint8 *state, const unsigned long frameCount)
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (static_cast<int>(frameCount) % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
-                setSrcRect(getSrcRect().x +SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(getSrcRect().x +SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             } else {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }

@@ -52,7 +52,7 @@ public:
     void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
-    int getHealth();
+    int getHealth() {return health;};
     void updateImageDirection();
     void updateImageWalk(const Uint8 *state, const unsigned long frameCount);
     void activateStore(const Entity *ep);
