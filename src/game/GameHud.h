@@ -52,7 +52,7 @@ private:
     SDL_Rect ammoClipClipper;
 
     Uint8 inventorySlotOpacity;
-    size_t healthRGB[3];
+    std::array<size_t, 3> healthRGB;
 
 };
 

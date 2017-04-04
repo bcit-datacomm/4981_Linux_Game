@@ -265,7 +265,7 @@ void GameStateMatch::render() {
 
         //Render the consumable slot if the player has any available
         //Currently only a single consumable item exits (the Medkit)
-        if (player.getMarine()->inventory.getMedkit() != nullptr) {
+        if (player.getMarine()->inventory.getMedkit()) {
             hud.renderConsumable(screenRect, player);
         }
 

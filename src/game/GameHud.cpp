@@ -288,9 +288,9 @@ void GameHud::renderHealthBar(const SDL_Rect& screenRect, const Player& p, const
     healthBarBackground.h = screenRect.h * HEALTHBAR_BACKROUND_H_RAT;
 
     healthBarBackground.x = p.getMarine()->getX() - c.getX() -
-                            healthBarBackground.w / 2 + MARINE_WIDTH / 2;
+        healthBarBackground.w / 2 + MARINE_WIDTH / 2;
     healthBarBackground.y = p.getMarine()->getY() - c.getY() -
-                            healthBarBackground.h - screenRect.h * HEALTHBAR_BACKROUND_Y_RAT;
+        healthBarBackground.h - screenRect.h * HEALTHBAR_BACKROUND_Y_RAT;
 
     healthBarForeground.h = healthBarBackground.h * HEALTHBAR_FOREGROUND_H_RAT;
     healthBarForeground.x = healthBarBackground.x + healthBarBackground.h * HEALTHBAR_FOREGROUND_XY_RAT;
