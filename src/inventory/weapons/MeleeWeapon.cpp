@@ -90,6 +90,7 @@ bool MeleeWeapon::fire(Movable &mov){
         //update hit barricade
         z->collidingProjectile(damage);
     }
+    clip++;
 
     return true;
 }
