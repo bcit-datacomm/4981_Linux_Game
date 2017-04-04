@@ -63,11 +63,11 @@ void GameStateMatch::loop() {
     int frameTicks = 0;
     // State Loop
     while (play) {
-        startTick = SDL_GetTicks();
-
         // Process frame
         handle(); // Handle user input
-        update(frameTicks / UPDATE_RATIO); // Update state values
+        update((SDL_GetTicks() - startTick) / TICK_SEC); // Update state values
+
+        startTick = SDL_GetTicks();
         // Sync game to server
         sync();
         // Render game state to window
