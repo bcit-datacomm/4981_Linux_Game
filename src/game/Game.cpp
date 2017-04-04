@@ -21,7 +21,6 @@ Game::~Game() {
     state.reset();
 
     //Quit SDL subsystems
-    Mix_Quit();
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
