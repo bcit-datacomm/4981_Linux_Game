@@ -53,7 +53,7 @@ void LTimer::stop() {
 
 void LTimer::pause() {
     //If the timer is running and isn't already paused
-    if ( mStarted && !mPaused ) {
+    if (mStarted && !mPaused) {
         //Pause the timer
         mPaused = true;
 
@@ -65,7 +65,7 @@ void LTimer::pause() {
 
 void LTimer::unpause() {
     //If the timer is running and paused
-    if ( mStarted && mPaused ) {
+    if (mStarted && mPaused) {
         //Unpause the timer
         mPaused = false;
 
@@ -82,9 +82,9 @@ Uint32 LTimer::getTicks() {
     Uint32 time = 0;
 
     //If the timer is running
-    if ( mStarted ) {
+    if (mStarted) {
         //If the timer is paused
-        if ( mPaused ) {
+        if (mPaused) {
             //Return the number of ticks when the timer was paused
             time = mPausedTicks;
         } else {
