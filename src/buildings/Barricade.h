@@ -25,9 +25,9 @@ public:
     void move(const float, const float, const float, const float, CollisionHandler&); // Moves Zombie
     void onCollision();
     void collidingProjectile(const int damage);
-    bool isPlaceable();
-    bool isPlaced();
-    bool checkPlaceablePosition(const float,const float,const float,const float, CollisionHandler&);
+    bool isPlaceable() const;
+    bool isPlaced() const;
+    bool checkPlaceablePosition(const float, CollisionHandler&);
     void placeBarricade();
 
 private:

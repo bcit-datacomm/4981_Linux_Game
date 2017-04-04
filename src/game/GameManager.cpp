@@ -7,6 +7,7 @@
 #include "../log/log.h"
 #include "../game/GameManager.h"
 #include "../sprites/Renderer.h"
+#include "../buildings/WeaponStore.h"
 
 Weapon w;
 GameManager GameManager::sInstance;
@@ -21,7 +22,7 @@ int32_t GameManager::generateID() {
     return ++counter;
 }
 
-GameManager::GameManager():collisionHandler() {
+GameManager::GameManager():collisionHandler(){
     logv("Create GM\n");
 }
 
@@ -33,6 +34,8 @@ GameManager::~GameManager() {
 /**
  * Date: Mar. 1, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Modified: Apr. 02, 2017 - Terry Kang
+ *  Set alpha to the sprite of Brricade if it is not placeable
  * Author: Maitiu Morton
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
  * Description:
@@ -48,7 +51,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : marineManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                m.second.getAngle());
+                m.second.getSrcRect()); 
         }
     }
 
@@ -73,13 +76,25 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& b : barricadeManager) {
         if (b.second.getX() - cam.x < cam.w && b.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            if(!b.second.isPlaceable()) {
+                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
+                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
+            } else {
+                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            }
         }
     }
 
     for (const auto& w : wallManager) {
         if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+        }
+    }
+
+    for (const auto& s : storeManager) {
+        if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
+            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::CONCRETE);
         }
     }
 }
@@ -298,17 +313,14 @@ void GameManager::deleteObject(const int32_t id) {
 
 //Created By Maitiu
 //Adds Weapon to Weapon Manager
-int32_t GameManager::addWeapon(std::shared_ptr<Weapon> weapon){
-    const int32_t id = weapon->getID();
-    const auto& elem = weaponManager.emplace(id, weapon);
-    elem->second->setId(id);
-    return id;
+void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
+    weaponManager.emplace(weapon->getID(), weapon);
 }
 
 /*
  *Created By Maitiu March 30 2017
  */
-void GameManager::removeWeapon(const int32_t id){
+void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
 }
 
@@ -322,12 +334,12 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 /**
 * Date: Mar. 3, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
-* Author: Maitiu Morton
+* Author: Maitiu Morton 2017-03-12
 * Function Interface: bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID)
 * Description:
 * Create weapon drop add it to manager, returns success
 */
-bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
+int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
 
     const int32_t id = generateID();
 
@@ -336,15 +348,13 @@ bool GameManager::createWeaponDrop(const float x, const float y, const int32_t w
 
     weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
 
-    logv("Created WeaponDrop id: %d\n", id);
-
     return id;
 }
 
 /*create by maitiu March 21
  * Checks if id can be found in weaponDropManager
  */
-bool GameManager::weaponDropExists(const int32_t id){
+bool GameManager::weaponDropExists(const int32_t id) {
     return weaponDropManager.count(id);
 }
 //created by Maitiu 2017-03-12
@@ -358,7 +368,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
 
 //created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
-std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
+std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
     const auto& w = weaponManager[id];
     assert(w.second);
     return w.first;
@@ -367,6 +377,111 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
+}
+
+/*
+ * Created By Maitiu March 30 2017
+ * Creates a Weapon store object and then calls addStore to add it to the manager.
+ */
+int32_t GameManager::createWeaponStore(const float x, const float y) {
+    const int32_t id = generateID();
+
+    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE, STORE_SIZE};
+    SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
+            STORE_SIZE + STORE_PICKUP_SIZE, STORE_SIZE + STORE_PICKUP_SIZE};
+
+    addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect)));
+
+    return id;
+}
+
+/*
+ * Created By Maitiu March 30 2017
+ * adds Store to store manager
+ */
+ void GameManager::addStore(const int32_t id ,std::shared_ptr<Store> store) {
+     storeManager.emplace(id, store);
+ }
+
+ /*create by maitiu March 30
+  * Checks if id can be found in storeManager
+  */
+ bool GameManager::storeExists(const int32_t id) {
+     return storeManager.count(id);
+ }
+
+ //created by Maitiu 2017-03-12
+ //returns store in StoreManager
+ std::shared_ptr<Store> GameManager::getStore(const int32_t id) {
+     const auto& s = storeManager[id];
+     assert(s.second);
+     return s.first;
+ }
+
+/*
+ * created by Maitiu March 31
+ * creates a square area of DropPoints
+ */
+void GameManager::createDropZone(const float x, const float y, const int num) {
+
+    for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
+            createDropPoint(x + (DROP_POINT_SPACE * i), y + (DROP_POINT_SPACE * j));
+        }
+    }
+}
+
+ /*
+  * Created by Maitiu March 30
+  */
+ int32_t GameManager::createDropPoint(const float x, const float y) {
+     const int32_t id = generateID();
+
+     dropPointManager.emplace(id, DropPoint(id, x, y));
+     openDropPoints.push_back(id);
+
+     return id;
+ }
+
+ /*
+  * Created by Maitiu March 30
+  */
+bool GameManager::dropPointExists(const int32_t id) {
+    return storeManager.count(id);
+}
+
+/*
+ * Created by Maitiu March 30
+ */
+bool GameManager::checkFreeDropPoints() {
+    return !openDropPoints.empty();
+}
+
+/*
+ * Created by Maitiu March 30
+ * gets a free drop point but also removes it form the vector
+ */
+int32_t GameManager::getFreeDropPointId() {
+     const int32_t id = openDropPoints.back();
+     openDropPoints.pop_back();
+     return id;
+}
+
+/*
+ * Created by Maitiu March 30
+ * adds DropPoint id to freeDropPoints vector
+ */
+void GameManager::freeDropPoint(const int32_t id) {
+    openDropPoints.push_back(id);
+}
+
+/*
+ * Created by Maitiu March 30
+ */
+DropPoint& GameManager::getDropPoint(const int32_t id) {
+    const auto& s = dropPointManager[id];
+    assert(s.second);
+    return s.first;
 }
 
 // Returns Collision Handler
@@ -416,6 +531,10 @@ void GameManager::updateCollider() {
 
     for (auto& w : wallManager) {
         collisionHandler.quadtreeWall.insert(&w.second);
+    }
+
+    for (auto& s : storeManager) {
+        collisionHandler.quadtreeStore.insert(s.second.get());
     }
 }
 

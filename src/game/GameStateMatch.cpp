@@ -17,10 +17,10 @@
 #include "Game.h"
 #include "../../include/Colors.h"
 
+
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
         player(), base(), camera(gameWidth,gameHeight), hud(),
-        screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()} {
-}
+        screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -31,15 +31,15 @@ bool GameStateMatch::load() {
     GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
 
-    //create Weapon for weapon Drop only till sotre is implemented****************
-    Rifle w(GameManager::instance()->generateID());
-    ShotGun w2(GameManager::instance()->generateID());
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);
-    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
-    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
+
+
+    //createStores
+    GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
+
+    //createDropPoint
+    GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
 
     GameManager::instance()->addObject(base);
 
@@ -48,6 +48,7 @@ bool GameStateMatch::load() {
     //gives the player control of the marine
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
+    player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 
     return success;
 }
@@ -73,8 +74,10 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         // Process frame
-        handle();    // Handle user input
+        handle(stepTimer.getTicks());    // Handle user input
         update(stepTimer.getTicks() / TIME_SECOND); // Update state values
+
+
         stepTimer.start(); //Restart step timer
         sync();    // Sync game to server
 
@@ -123,11 +126,14 @@ void GameStateMatch::sync() {
  * JF Mar 25: Added a ScreenRect size adjustment whenever screen size changes (ensures proper hud placement)
  * JF Apr 1: Added set Weapon Inventory slot opacity function to mousewheel scroll and number key events
  */
-void GameStateMatch::handle() {
+void GameStateMatch::handle(const unsigned long countedFrames) {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
     player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+    player.getMarine()->updateImageDirection(); //Update direction of player
+    player.getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
+
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);

@@ -215,6 +215,10 @@ public:
                 const double angle = 0.0, const SDL_Point *center = nullptr,
                 const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
+        void setAlpha(const TEXTURES spriteType, const int alpha);
+        void setAlpha(const int spriteType, const int alpha);
+
+
 private:
         Renderer(): tempIndex(1000) {}
         ~Renderer();
