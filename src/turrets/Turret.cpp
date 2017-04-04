@@ -2,7 +2,11 @@
  * Date: Feb. 02, 2017
  * Designer: Mark Chen, Jaime Lee, Terry Kang
  * Programmer: Mark Chen, Micheal Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
- * Functions: void placementCheckTurret()
+ * Functions: Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
+ *                    const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
+ *                    const int ammo, const bool placed, const float range)
+ *            ~Turret()
+ *            void placementCheckTurret()
  *            bool placementCheckTurret()
  *            bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &)
  *            void activateTurret()
@@ -44,13 +48,14 @@
 
 Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
-        const int ammo, const bool placed, const float range): Entity(id, dest, movementSize,
-        projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize,
+        const int ammo, const bool placed, const float range, const int32_t dropzone): Entity(id, dest,
+        movementSize, projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize,
         damageSize, pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), placed(placed),
         range(range) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
+    inventory.makeTurretInv();
     logv("Turret created\n");
 }
 
@@ -123,19 +128,6 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
  * Date: Feb. 02, 2017
  * Designer: Mark Chen
  * Programmer: Mark Chen
- * Function Interface: void activateTurret()
- * Description:
- * Changes the private member of the turret to true. This 'activates' the turret, allowing the turret to shoot
- * at zombies.
- */
-void Turret::activateTurret() {
-    activated = true;
-}
-
-/**
- * Date: Feb. 02, 2017
- * Designer: Mark Chen
- * Programmer: Mark Chen
  * Function Interface: void collidingProjectile(const int damage)
  * Description:
  * Damages the turret by the amount of 'damage' parameter passed in.
@@ -146,6 +138,7 @@ void Turret::collidingProjectile(const int damage) {
 
 /**
  * Date: Feb. 02, 2017
+ * Modified: Mar. 30, 2017 - Mark Chen
  * Designer: Mark Chen
  * Programmer: Mark Chen
  * Function Interface: void shootTurret()
@@ -153,21 +146,10 @@ void Turret::collidingProjectile(const int damage) {
  * Makes the turret shoot in a direction.
  */
 void Turret::shootTurret() {
-
-}
-
-/**
- * Date: Feb. 02, 2017
- * Designer: Mark Chen
- * Programmer: Mark Chen
- * Function Interface: bool ammoCheckTurret()
- * Description:
- * Checks the current amount of ammo for the turret's gun. If the current amount of
- * ammo is greater than 0, the function returns true and false otherwise.
- */
-bool Turret::ammoCheckTurret() {
-    // This is going to be changed soon so it is no longer a simple getter.
-    return (ammo > 0);
+    Weapon *w = inventory.getCurrent();
+    if (w != nullptr) {
+        w->fire(*this);
+    }
 }
 
 /**
@@ -209,6 +191,8 @@ void Turret::move(const float playerX, const float playerY,
  */
 void Turret::placeTurret() {
     placed = true;
+    activated = true;
+    updateHitBoxes();
 }
 
 /**
@@ -223,6 +207,7 @@ void Turret::placeTurret() {
  */
 void Turret::pickUpTurret() {
     placed = false;
+    activated = false;
 }
 
 /**

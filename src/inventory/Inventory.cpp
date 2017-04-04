@@ -93,3 +93,25 @@ void Inventory::scrollCurrent(int direction) {
          weaponIds[current] = -1;
      }
  }
+
+/**
+* Date: Mar. 30, 2017
+* Designer: Mark Chen
+* Programmer: Mark Chen
+* Function Interface: void makeTurretInv()
+* Description:
+* Switches the defaultGun to a turretGun.
+*/
+void Inventory::makeTurretInv() {
+    //Weapon *w = getCurrent();
+    GameManager::instance()->removeWeapon(weaponIds[current]);
+    TurretGun tGun(GameManager::instance()->generateID());
+    weaponIds[0] = tGun.getID();
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
+}
+
+void Inventory::setEmpty() {
+    GameManager::instance()->removeWeapon(weaponIds[current]);
+    weaponIds[0] = -1;
+    logv("weaponID changed to: %d\n", getCurrent()->getID());
+}

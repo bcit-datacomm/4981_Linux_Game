@@ -23,15 +23,14 @@ public:
 
     Turret(const int32_t id, const SDL_Rect& dest,const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated = false,
-        const int health = 200, const int ammo = 100, const bool placed = false, const float range = 400.0f);
-
+        const int health = 200, const int ammo = 100, const bool placed = false, const float range = 400.0f,
+        const int32_t dropzone = -1);
     virtual ~Turret();
 
     void spawnTurret(); // spawns a DEACTIVATED turret
     bool placementCheckTurret(); // checks if turret placement is within bounds
     // checks if the turret placement overlaps with any currently existing objects
     bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler&);
-    void activateTurret(); // activates the turret
     void collidingProjectile(const int damage);
     void damageTurret(const int damage); // decrements the turrets health by damage parameter
     void shootTurret(); // turret shoots, this is not yet defined
@@ -44,11 +43,14 @@ public:
     void placeTurret();
     bool isPlaced() {return placed;};
     void pickUpTurret();
+    bool isActivated() {return activated;};
     void removeTurret(); // removes the turret
     // Jamie Lee, 2017-03-01.
     float getRange() const {
         return range;
     }
+
+    Inventory inventory;
 
 private:
     bool activated; // turret activated state
@@ -56,6 +58,7 @@ private:
     int ammo; // turret ammo pool
     bool placed;
     float range; // turret's range.
+    int32_t dropzone;
 };
 
 #endif

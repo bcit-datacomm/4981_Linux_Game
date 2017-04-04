@@ -122,6 +122,9 @@ void GameStateMatch::handle() {
                     case SDLK_b:
                         player.handleTempBarricade(Renderer::instance().getRenderer());
                         break;
+                    case SDLK_p:
+                        player.handleTempTurret(Renderer::instance().getRenderer());
+                        break;
                     default:
                         break;
                     }

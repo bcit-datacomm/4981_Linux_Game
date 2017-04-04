@@ -93,11 +93,39 @@ void GameManager::updateZombies(const float delta) {
     }
 }
 
-// Update turret actions.
-// Jamie, 2017-03-01.
+/**
+ * Date: Mar. 03, 2017
+ * Modified: Mar. 30, 2017 - Mark Chen
+ * Designer: Jamie Lee
+ * Programmer: Jamie Lee, Mark Chen
+ * Function Interface: void updateTurrets()
+ * Description:
+ * Updates the turrets actions.
+ */
 void GameManager::updateTurrets() {
-    for (auto& t : turretManager) {
-        t.second.targetScanTurret();
+
+    if (!turretManager.empty()) {
+        //logv("Turret Manager Size 1: %d\n", turretManager.size());
+        for (auto& t : turretManager) {
+            //logv("Ammo: %d\n", t.second.inventory.getCurrent()->getAmmo());
+            //logv("Clip: %d\n", t.second.inventory.getCurrent()->getClip());
+            //logv("Turret Manager Size 1: %d\n", turretManager.size());
+            //logv("Turret ID 1: %d\n", t.second.getId());
+                if (t.second.inventory.getCurrent() != nullptr) {
+                    if (t.second.inventory.getCurrent()->getID() > 0) {
+                        if (t.second.inventory.getCurrent()->getClip() == 0) {
+                            //logv("Turret Manager Size 2: %d\n", turretManager.size());
+                            //logv("weapon ID: %d\n", t.second.inventory.getCurrent()->getID());
+                            //removeWeapon(t.second.inventory.getCurrent()->getID());
+                            //logv("Turret ID 2: %d\n", t.second.getId());
+                            //deleteTurret(t.second.getId());
+                            //t.second.inventory.setEmpty();
+                        } else if (t.second.targetScanTurret() && t.second.isActivated() && t.second.inventory.getCurrent()->getClip() > 0) {
+                            t.second.shootTurret();
+                        }
+                    }
+                }
+            }
     }
 }
 
@@ -311,11 +339,11 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     return wd.first;
 }
 
-//created by Maitiu 2017-03-12 
+//created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id){
     const auto& w = weaponManager[id];
-    assert(w.second);
+    //assert(w.second);
     return w.first;
 }
 

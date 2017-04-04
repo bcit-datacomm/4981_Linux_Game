@@ -10,6 +10,7 @@
 #include "weapons/HandGun.h"
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
+#include "weapons/TurretGun.h"
 
 /*
  * Created By Maitiu Morton
@@ -24,6 +25,8 @@ public:
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
+    void makeTurretInv();//swaps the default gun to a turretGun
+    void setEmpty();
     Inventory();
     ~Inventory() = default;
 
