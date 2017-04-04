@@ -19,19 +19,20 @@ static constexpr int M_HEIGHT = 100;
 // Base width/height
 static constexpr int BASE_SIZE = 7;
 
-// Max number of walls and spawn points
+// Max number of walls, spawn points and shops
 static constexpr int MAX_WALLS = 60;
 static constexpr int MAX_SPAWNPOINTS = 16;
+static constexpr int MAX_SHOPS = 6;
 
-static constexpr char CONCRETE_START    = '0';
-static constexpr char CONCRETE_M        = '1';
-static constexpr char WALL              = '2';
-static constexpr char ZOMBIE_SPAWN      = '3';
-static constexpr char SHOP_SPOT         = '4';
-static constexpr char BASE_START        = '5';
-static constexpr char BASE              = '6';
-static constexpr char FLOOR             = '7';
-static constexpr char WALL_START        = '8';
+static constexpr char CONCRETE_START = '0';
+static constexpr char CONCRETE_M = '1';
+static constexpr char WALL = '2';
+static constexpr char ZOMBIE_SPAWN = '3';
+static constexpr char SHOP_SPOT = '4';
+static constexpr char BASE_START = '5';
+static constexpr char BASE = '6';
+static constexpr char FLOOR = '7';
+static constexpr char WALL_START = '8';
 
 
 struct MapPoint {
@@ -70,11 +71,11 @@ public:
     // Shop count;
     int shopCount;
     // Base Start Point
-    struct MapPoint base;
+    MapPoint base;
     // Array of zombieSpawn points
-    struct MapPoint zombieSpawn[MAX_SPAWNPOINTS];
+    MapPoint zombieSpawn[MAX_SPAWNPOINTS];
     // Array of shop points
-    struct MapPoint shops[6];
+    MapPoint shops[MAX_SHOPS];
     // Boolean Array for AI Nodes
     // bool AIMap[M_HEIGHT][M_WIDTH];
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AIMap;

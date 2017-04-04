@@ -36,8 +36,8 @@ using namespace std;
  * Map Object Constructor, creates a map object using the map selected file name.
  */
 Map::Map(string file):fname(file) {
-    memset(AIMap.data(), 0, AIMap.size() * sizeof(AIMap[0]));
-    memset(mapdata.data(), 0,  mapdata.size() * sizeof(mapdata[0]));
+    AIMap = {};
+    mapdata = {};
 }
 
 /**
@@ -58,19 +58,25 @@ int Map::loadFileData() {
 
     // Array of wallstart positions
     array<MapPoint, MAX_WALLS> wallStart;
-    // Indices
-    int j = 0;
-    int i = 0;
 
-    // Character Variable
-    char ch;
-    while (file >> noskipws >> ch) {
+    // Indices
+    int i = 0;
+    int j = 0;
+
+    // Reading in the filestream into a buffer.
+    file.seekg(0, std::ios::end);
+    size_t size = file.tellg();
+    std::string buffer(size, ' ');
+    file.seekg(0);
+    file.read(&buffer[0], size);
+
+    for (const char& ch : buffer) {
         switch (ch) {
             case ',':
                 continue;
             case '\n':
                 j = 0;
-                i++;
+                ++i;
                 continue;
             case WALL:              //Wall piece found, update AI Map
                 AIMap[i][j] = 1;
@@ -78,19 +84,19 @@ int Map::loadFileData() {
             case WALL_START:        //Label start of wall rectangle
                 wallStart[wallStartCount].x = j;
                 wallStart[wallStartCount].y = i;
-                wallStartCount++;
+                ++wallStartCount;
                 AIMap[i][j] = 1;
                 break;
             // case CONCRETE_START:    //Start of concrete area
             case ZOMBIE_SPAWN:      //Zombie spawn Points
                 zombieSpawn[zombieSpawnCount].x = j;
                 zombieSpawn[zombieSpawnCount].y = i;
-                zombieSpawnCount++;
+                ++zombieSpawnCount;
                 break;
             case SHOP_SPOT:         // Shop spot points
                 shops[shopCount].x = j;
                 shops[shopCount].y = i;
-                shopCount++;
+                ++shopCount;
                 break;
             case BASE_START:        //Start of base area
                 base.x = j;
@@ -98,10 +104,9 @@ int Map::loadFileData() {
                 break;
         }
         mapdata[i][j] = ch;               //Store map file value
-        j++;
+        ++j;
     }
     genWalls(wallStart);
-    // printData();
     return 1;
 }
 
