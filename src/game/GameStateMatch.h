@@ -46,7 +46,7 @@ private:
     float dropZoneSize;
 
     virtual void sync() override;
-    virtual void handle(unsigned long countedFrames) override;
+    virtual void handle(const unsigned long countedFrames) override;
     virtual void update(const float delta) override;
     virtual void render() override;
 };

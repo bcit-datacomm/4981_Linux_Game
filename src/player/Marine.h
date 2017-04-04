@@ -54,7 +54,7 @@ public:
     int32_t checkForPickUp();
 
     void updateImageDirection(); 
-    void updateImageWalk(const Uint8 *state, double frameCount);
+    void updateImageWalk(const Uint8 *state, const unsigned long frameCount);
     void activateStore(const Entity *ep);
     Inventory inventory;
 

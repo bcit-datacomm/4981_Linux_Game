@@ -53,8 +53,6 @@ bool GameStateMatch::load() {
 }
 
 void GameStateMatch::loop() {
-    double countedFrames = 0;
-
     //The frames per second timer
     LTimer fpsTimer;
 
@@ -75,7 +73,7 @@ void GameStateMatch::loop() {
         capTimer.start();
 
         // Process frame
-        handle(countedFrames++);    // Handle user input
+        handle(stepTimer.getTicks());    // Handle user input
         update(stepTimer.getTicks() / TIME_SECOND); // Update state values
         
 
@@ -101,7 +99,7 @@ void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::handle(unsigned long countedFrames) {
+void GameStateMatch::handle(const unsigned long countedFrames) {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input
     player.handleKeyboardInput(state);
