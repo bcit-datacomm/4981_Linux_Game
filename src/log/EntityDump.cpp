@@ -1,3 +1,26 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: EntityDump.cpp - Gets all the Entitys in the game and writes their coordinates
+--                               to a EntityDumpLog.txt
+
+--
+-- FUNCTIONS:
+-- void daemonize (void)
+-- int initialize_inotify_watch (int fd, char pathname[MAXPATHLEN])
+-- int ProcessFiles (char pathname[MAXPATHLEN])
+-- unsigned int GetProcessID (char *process)
+--
+--
+-- DATE: March 16, 2008
+--
+-- REVISIONS: 4/3/2017
+--
+-- DESIGNER: Maitiu Morton
+--
+-- PROGRAMMER: Maitiu Morton
+--
+-- NOTES:
+--
+----------------------------------------------------------------------------------------------------------------------*/
 #include "EntityDump.h"
 #include <iostream>
 #include "../buildings/DropPoint.h"
@@ -8,19 +31,14 @@
  *the EntityDumpLog.txt
  */
 void dumpEntityPositions(const Player* p){
-    #ifndef NDEBUG
-    std::ofstream entityDump;
-    std::pair<float, float> coord;
+#ifndef NDEBUG
+    std::ofstream entityDump("EntityDumpLog.txt", std::ofstream::out);
     GameManager *gm = GameManager::instance();
-
-
-    entityDump.open("EntityDumpLog.txt");
-
+    std::pair<float, float> coord = getCoordinates(dynamic_cast<Entity*>(p->getMarine()));
     entityDump << "ENTITY POSITION DUMP\n\n";
 
-    coord  = getCoordinates(dynamic_cast<Entity*>(p->getMarine()));
     entityDump << "PLAYER MARINE'S POSITION X:" << coord.first << " Y:" << coord.second
-     << std::endl << std::endl;
+     << "\n\n";
 
     entityDump << "All MARINE POSITIONS:\n";
     //print Marine Positions
@@ -62,7 +80,7 @@ void dumpEntityPositions(const Player* p){
     for (const auto& s : gm->getStoreManager()) {
         std::pair<float, float> coord = getCoordinates(s.second.get());
         entityDump << "Store id:" << s.first << " Position: " << "X:" << coord.first
-            << " Y:" << coord.second << std::endl;
+            << " Y:" << coord.second << "\n";
     }
 
     entityDump << "\nAll Drop POINT POSITIONS:\n";
@@ -70,22 +88,16 @@ void dumpEntityPositions(const Player* p){
     for (const auto& dp : gm->getDropPointManager()) {
         std::pair<float, float> coord = dp.second.getCoord();
         entityDump << "Drop Point id:" << dp.first << " Position: " << "X:" << coord.first
-            << " Y:" << coord.second << std::endl;
+            << " Y:" << coord.second << "\n";
     }
-
-    entityDump.close();
-
-    #endif
+#endif
 }
 
 /*created by Maitiu Morton 4/3/2017
  * Gets the Coordinates of an Entity and returns them as a pair
  */
 std::pair<float, float> getCoordinates(const Entity* e){
-    std::pair<float, float> coord;
-    coord.first = e->getX();
-    coord.second = e->getY();
-    return coord;
+    return {e->getX(), e->getY()};
 }
 
 /*Created by Maitiu Morton 4/3/1017
@@ -95,5 +107,5 @@ std::pair<float, float> getCoordinates(const Entity* e){
 void printEntityPositions(std::string entityName, int32_t id, const Entity &e, std::ofstream& entityDump){
         std::pair<float, float> coord = getCoordinates(&e);
         entityDump << entityName << " id:" << id << " Position: " << "X:" << coord.first
-            << " Y:" << coord.second << std::endl;
+            << " Y:" << coord.second << "\n";
 }

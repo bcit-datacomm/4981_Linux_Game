@@ -83,7 +83,7 @@ void Inventory::scrollCurrent(int direction) {
  void Inventory::dropWeapon(const float x, const float y) {
      if(current){
          Weapon *w = getCurrent();
-         if (w != nullptr) {
+         if (w) {
              if (w->getAmmo() > 0) {
                  GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
 
