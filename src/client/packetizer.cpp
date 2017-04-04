@@ -32,6 +32,7 @@
 #include "packetizer.h"
 #include "../UDPHeaders.h"
 #include "../game/GameManager.h"
+#include "../server/servergamestate.h"
 
 /*------------------------------------------------------------------------------
  * FUNCTION: packControlMsg
@@ -148,6 +149,7 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
     PlayerData *player;
     AttackAction *attack;
     ZombieData *zombie;
+    DeleteAction *deletion;
 
     while (pBuff <= pEnd) {
         switch(static_cast<UDPHeaders>(*pBuff++)) {
@@ -170,6 +172,13 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
                     zombie = reinterpret_cast<ZombieData *>(pBuff);
                     GameManager::instance()->updateZombie(*zombie);
                     pBuff = reinterpret_cast<int32_t *>(++zombie);
+                }
+                break;
+            case UDPHeaders::DELETE:
+                for (int32_t i = 0, dCount = *pBuff++; i < dCount; ++i){
+                    deletion = reinterpret_cast<DeleteAction *>(pBuff);
+                    deleteEntity(*deletion);
+                    pBuff = reinterpret_cast<int32_t *>(++deletion);
                 }
                 break;
             default:

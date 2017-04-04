@@ -50,7 +50,6 @@ struct PlayerJoin {
     bool isPlayerReady;
 };
 
-extern char outputPacket[OUT_PACKET_SIZE];
 extern int listenSocketUDP;
 extern int listenSocketTCP;
 extern int sendSocketUDP;
@@ -60,7 +59,6 @@ extern std::atomic_bool isGameRunning;
 extern int listen_port_udp;
 extern int listen_port_tcp;
 extern size_t client_count;
-extern int outputLength;
 extern char readBuffers[MAX_UDP_PACKET_COUNT][IN_PACKET_SIZE];
 extern iovec iovecs[MAX_UDP_PACKET_COUNT];
 extern mmsghdr udpMesgs[MAX_UDP_PACKET_COUNT];
@@ -68,9 +66,9 @@ extern std::mutex mut;
 
 void initSync(const int sock);
 void processPacket(const char *data);
-void genOutputPacket();
+std::string genOutputPacket();
 void sendSyncPacket(const int sock);
-void listenForPackets(const sockaddr_in servaddr);
+void listenForPackets(sockaddr_in& servaddr);
 void listenTCP(const int socket, const unsigned long ip, const unsigned short port);
 void listenUDP(const int socket, const unsigned long ip, const unsigned short port);
 #endif

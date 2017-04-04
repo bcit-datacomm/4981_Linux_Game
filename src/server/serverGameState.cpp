@@ -11,6 +11,7 @@
 
 GameManager *gm = GameManager::GameManager::instance();
 std::vector<AttackAction> attackList;
+std::vector<DeleteAction> deleteList;
 
 /**
  * Saves a attack action in the vector.
@@ -27,6 +28,10 @@ void saveAttack(const AttackAction& aa) {
  */
 void clearAttackActions() {
     attackList.clear();
+}
+
+void clearDeleteActions() {
+    deleteList.clear();
 }
 
 /**
@@ -153,6 +158,43 @@ std::vector<ZombieData> getZombies() {
         rtn.push_back(tempZombie);
     }
     return rtn;
+}
+
+std::vector<DeleteAction> getDeletions() {
+    return deleteList;
+}
+
+void deleteEntity(const DeleteAction& da) {
+    switch(da.entitytype) {
+        case UDPHeaders::MARINE:
+            gm->deleteMarine(da.entityid);
+            break;
+        case UDPHeaders::ZOMBIE:
+            gm->deleteZombie(da.entityid);
+            break;
+        case UDPHeaders::TURRET:
+            gm->deleteTurret(da.entityid);
+            break;
+        case UDPHeaders::BARRICADE:
+            gm->deleteBarricade(da.entityid);
+            break;
+        case UDPHeaders::OBJECT:
+            gm->deleteObject(da.entityid);
+            break;
+        case UDPHeaders::WEAPON:
+            gm->removeWeapon(da.entityid);
+            break;
+        case UDPHeaders::WEAPONDROP:
+            gm->deleteWeaponDrop(da.entityid);
+            break;
+        default:
+            logv("Deletion packet with unknown type received\n");
+            break;
+    }
+}
+
+void saveDeletion(const DeleteAction& da) {
+    deleteList.push_back(da);
 }
 
 /**

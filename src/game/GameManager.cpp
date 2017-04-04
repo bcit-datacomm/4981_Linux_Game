@@ -8,6 +8,7 @@
 #include "../game/GameManager.h"
 #include "../sprites/Renderer.h"
 #include "../buildings/WeaponStore.h"
+#include "../server/servergamestate.h"
 
 Weapon w;
 GameManager GameManager::sInstance;
@@ -29,7 +30,6 @@ GameManager::GameManager():collisionHandler(){
 GameManager::~GameManager() {
     logv("Destroy GM\n");
 }
-
 
 /**
  * Date: Mar. 1, 2017
@@ -177,6 +177,9 @@ void GameManager::createMarine(const int32_t id) {
  */
 void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::MARINE, id});
+#endif
 }
 
 // Adds marine to level
@@ -213,6 +216,9 @@ int32_t GameManager::createTurret() {
 // Deletes tower from level
 void GameManager::deleteTurret(const int32_t id) {
     turretManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::TURRET, id});
+#endif
 }
 
 // Adds tower to level
@@ -298,6 +304,9 @@ bool GameManager::createZombie(const float x, const float y) {
 // Deletes zombie from level
 void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::ZOMBIE, id});
+#endif
 }
 
 /*
@@ -326,6 +335,9 @@ int32_t GameManager::addObject(const Object& newObject) {
 // Deletes Object from level
 void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::OBJECT, id});
+#endif
 }
 
 //Created By Maitiu
@@ -339,6 +351,9 @@ void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
  */
 void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::WEAPON, id});
+#endif
 }
 
 //Created By Maitiu 2017-03-12
@@ -357,14 +372,12 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 * Create weapon drop add it to manager, returns success
 */
 int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
-
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
-
     return id;
 }
 
@@ -374,6 +387,7 @@ int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_
 bool GameManager::weaponDropExists(const int32_t id) {
     return weaponDropManager.count(id);
 }
+
 //created by Maitiu 2017-03-12
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
@@ -394,6 +408,9 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::WEAPONDROP, id});
+#endif
 }
 
 /*
@@ -408,7 +425,6 @@ int32_t GameManager::createWeaponStore(const float x, const float y) {
             STORE_SIZE + STORE_PICKUP_SIZE, STORE_SIZE + STORE_PICKUP_SIZE};
 
     addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect)));
-
     return id;
 }
 
@@ -440,7 +456,6 @@ int32_t GameManager::createWeaponStore(const float x, const float y) {
  * creates a square area of DropPoints
  */
 void GameManager::createDropZone(const float x, const float y, const int num) {
-
     for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
             createDropPoint(x + (DROP_POINT_SPACE * i), y + (DROP_POINT_SPACE * j));
@@ -453,10 +468,8 @@ void GameManager::createDropZone(const float x, const float y, const int num) {
   */
  int32_t GameManager::createDropPoint(const float x, const float y) {
      const int32_t id = generateID();
-
      dropPointManager.emplace(id, DropPoint(id, x, y));
      openDropPoints.push_back(id);
-
      return id;
  }
 
@@ -645,6 +658,9 @@ int32_t GameManager::createBarricade(const float x, const float y) {
 
 void GameManager::deleteBarricade(const int32_t id) {
     barricadeManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::BARRICADE, id});
+#endif
 }
 
 // Get a barricade by its id
@@ -665,7 +681,6 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 * Create wall, add it to manager, returns success
 */
 int32_t GameManager::createWall(const float x, const float y, const int w, const int h) {
-
     const int32_t id = generateID();
 
     SDL_Rect wallRect = {static_cast<int>(x), static_cast<int>(y), w, h};

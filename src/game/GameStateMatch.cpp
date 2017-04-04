@@ -91,7 +91,6 @@ void GameStateMatch::loop() {
         //This will send update packets every frame
         //Currently at 60, so this is fine
         //If frame rate changes, this may need limiting
-        genOutputPacket();
         sendSyncPacket(sendSocketUDP);
         clearAttackActions();
 #endif

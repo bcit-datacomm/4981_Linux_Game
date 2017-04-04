@@ -15,9 +15,7 @@
 int listen_port_udp = LISTEN_PORT_UDP;
 int listen_port_tcp = LISTEN_PORT_TCP;
 size_t client_count = CLIENT_COUNT;
-int outputLength = 0;
 
-char outputPacket[OUT_PACKET_SIZE];
 int listenSocketUDP;
 int listenSocketTCP;
 sockaddr_in sendAddrUDP;
@@ -99,7 +97,7 @@ void initSync(const int sock) {
  * This method takes the address to use when reading from the socket.
  * John Agapeyev March 19
  */
-void listenForPackets(const sockaddr_in servaddr) {
+void listenForPackets(sockaddr_in& servaddr) {
     socklen_t servAddrLen = sizeof(servaddr);
 
     epoll_event *events = createEpollEventList();
@@ -177,6 +175,11 @@ void processPacket(const char *data) {
                 //const BarricadeAction& ba = mesg->data.ba;
             }
             break;
+        case UDPHeaders::DELETE:
+            {
+                const DeleteAction& da = mesg->data.da;
+                deleteEntity(da);
+            }
         default:
             logv("Received packet with unknown id\n");
             break;
@@ -192,8 +195,9 @@ void processPacket(const char *data) {
  * size is not always predefined.
  * Isaac Morneau Feb 28th, 2017
  */
-void genOutputPacket() {
-    int32_t *pBuff = (int32_t *) outputPacket;
+std::string genOutputPacket() {
+    char outputPacket[OUT_PACKET_SIZE];
+    int32_t *pBuff = reinterpret_cast<int32_t *>(outputPacket);
 
     //start of every sync is the packet header
     *pBuff++ = static_cast<int32_t>(UDPHeaders::SYNCH);
@@ -223,23 +227,42 @@ void genOutputPacket() {
     //get all the zombies
     const auto& zombies = getZombies();
     *pBuff++ = zombies.size();
-    ZombieData* pZombie = reinterpret_cast<ZombieData *>(pBuff);
+    ZombieData *pZombie = reinterpret_cast<ZombieData *>(pBuff);
     //write all the zombies to the buffer
     for(const auto& z : zombies) {
         memcpy(pZombie++, &z, sizeof(ZombieData));
     }
     pBuff = reinterpret_cast<int32_t *>(pZombie);
 
+    *pBuff++ = static_cast<int32_t>(UDPHeaders::DELETE);
+
+    const auto& deletions = getDeletions();
+    *pBuff++ = deletions.size();
+    DeleteAction *pDelete = reinterpret_cast<DeleteAction *>(pBuff);
+    for(const auto& d : deletions) {
+        memcpy(pDelete++, &d, sizeof(DeleteAction));
+    }
+    pBuff = reinterpret_cast<int32_t *>(pDelete);
+
     //calculate how full the packet is for when its sent
-    outputLength = (pBuff - reinterpret_cast<int32_t *>(outputPacket)) * sizeof(int32_t);
+    const size_t outputLength = (pBuff - reinterpret_cast<int32_t *>(outputPacket)) * sizeof(int32_t);
+    return std::string(outputPacket, outputLength);
 }
 
 /**
  * Loops through every client and sends them a copy of the output sync packet.
+ * Only clears deletion actions every 3 packets to ensure no issues of packet loss
+ * resulting in 'zombie' entities
  * John Agapeyev March 19
  */
 void sendSyncPacket(const int sock) {
-    sendto(sock, outputPacket, outputLength, 0, reinterpret_cast<const sockaddr *>(&sendAddrUDP), sizeof(sendAddrUDP));
+    static std::atomic<int> counter{0};
+    if (++counter >= 2) {
+        clearDeleteActions();
+        counter.store(0);
+    }
+    const auto& packet = genOutputPacket();
+    sendto(sock, packet.c_str(), packet.size(), 0, reinterpret_cast<const sockaddr *>(&sendAddrUDP), sizeof(sendAddrUDP));
 }
 
 /**
@@ -263,7 +286,7 @@ void listenTCP(const int socket, const unsigned long ip, const unsigned short po
  * John Agapeyev March 19
  */
 void listenUDP(const int socket, const unsigned long ip, const unsigned short port) {
-    const auto& servaddrudp = bindSocket(socket, ip, port);
+    auto servaddrudp = bindSocket(socket, ip, port);
     logv("UDP server started\n");
     listenForPackets(servaddrudp);
 }

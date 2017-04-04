@@ -223,7 +223,7 @@ void handleIncomingTCP(const int epollfd) {
 
     setSockNonBlock(clientSock);
 
-    if (getpeername(clientSock, reinterpret_cast<>(&addr), &addrLen) == -1) {
+    if (getpeername(clientSock, reinterpret_cast<sockaddr *>(&addr), &addrLen) == -1) {
         perror("GetPeerName");
         close(clientSock);
         return;

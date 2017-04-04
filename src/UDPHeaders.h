@@ -56,6 +56,16 @@ enum class UDPHeaders : int32_t {
     SHOPPURCHASEH, // shop purchase
     BARRICADEACTIONH, // action on barricade
     TURRETACTIONH, // action on turret
+
+    DELETE, //Delete action
+    MARINE, //Used for deletion
+    ZOMBIE, //Used for deletion
+    TURRET, //Used for deletion
+    BARRICADE, //Used for deletion
+    OBJECT, //Used for deletion
+    WEAPON, //Used for deletion
+    WEAPONDROP, //Used for deletion
+
     // movement headers
     WALK,
     DROPOFF,
@@ -279,6 +289,26 @@ typedef struct {
 }  __attribute__((packed, aligned(1))) ZombieData;
 
 /*------------------------------------------------------------------------------
+* Struct: DeleteAction
+*
+* DATE: Apr. 03, 2017
+*
+* DESIGNER: John Agaeyev
+*
+* PROGRAMMER: John Agapeyev
+*
+* Data Members:
+* UDPHeaders entitytype -- The type of entity that was deleted
+* int32_t entityid -- The id of the deleted entity
+*
+--------------------------------------------------------------------------*/
+
+typedef struct {
+    UDPHeaders entitytype;
+    int32_t entityid;
+}  __attribute__((packed, aligned(1))) DeleteAction;
+
+/*------------------------------------------------------------------------------
 * Struct: GameSync
 *
 * DATE: Feb. 07, 2017
@@ -312,6 +342,9 @@ typedef struct
     int32_t zombieheaderid = static_cast<int32_t>(UDPHeaders::ZOMBIEH);
     int32_t nzombies;
     ZombieData *zombies;
+    int32_t deleteheaderid = static_cast<int32_t>(UDPHeaders::DELETE);
+    int32_t ndeletes;
+    DeleteAction *deletions;
 } GameSync;
 
 /*------------------------------------------------------------------------------
@@ -340,6 +373,7 @@ union PacketData {
     ShopPurchase sp;
     TurretAction ta;
     BarricadeAction ba;
+    DeleteAction da;
 };
 
 /*------------------------------------------------------------------------------
