@@ -33,22 +33,22 @@ NetworkManager::~NetworkManager() {
 }
 
 /**------------------------------------------------------------------------------
-METHOD: run
+Method: run
 
-DATE: February. 1, 2017
+Date: February. 1, 2017
 
-DESIGNER: Brody McCrone
+Designer: Brody McCrone
 
-PROGRAMMER: Brody McCrone
+Programmer: Brody McCrone
 
-INTERFACE: void run(std::string ip, std::string username)
+Interface: void run(std::string ip, std::string username)
 ip: IP of the server.
 username: Client's username.
 
-RETURNS:
+Returns:
 void
 
-NOTES:
+Notes:
 Creates TCP, and UDP sockets, bind sockets, connects TCP socket, and starts threads
 for TCP Client and UDP Client.
 -------------------------------------------------------------------------------*/
@@ -86,8 +86,23 @@ void NetworkManager::run(const std::string ip, const std::string username) {
     UDPThread.detach();
 }
 
-/**------------------------------------------------------------------------------
-  -------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+* Function: runUDPClient
+*
+* Date: February. 1, 2017
+*
+* Designer: Eva YU
+*
+* Programmer: Eva Yu
+*
+* Interface: void runUDPClient()
+*
+* Returns:
+* void
+*
+* Notes:
+* directs the udp thread loop to game sync de packetizer
+-------------------------------------------------------------------------------*/
 void NetworkManager::runUDPClient() {
     char buffer[SYNC_PACKET_MAX];
     state = NetworkState::GAME_STARTED;
@@ -102,14 +117,26 @@ void NetworkManager::runUDPClient() {
 }
 
 /**------------------------------------------------------------------------------
-  -------------------------------------------------------------------------------*/
+* Method: runTCPClient
+*
+* Date: February. 1, 2017
+*
+* Designer: BM
+*
+* Programmer: Eva Yu
+*
+* Interface: void runTCPClient(const std::string username)
+*
+* Notes:
+* directs the udp thread loop to game sync de packetizer
+*-------------------------------------------------------------------------------*/
 void NetworkManager::runTCPClient(const std::string username) {
     std::cout << "username in runTCPClient: " << username << "\n";
     handshake(username);
     waitRecvId();
 
-    /***************************************************/
-    /*FOLLOWING TO BE REMOVED WHEN GAME IS INTEGRATED*/
+    /***********************************************************************/
+    /*FOLLOWING TO BE REMOVED WHEN GAME TCP MESSAGE IS INTEGRATED INTO GAME */
     fd_set initSet;
     fd_set readSet;
     char buffrecv[STD_BUFFSIZE];
@@ -143,14 +170,28 @@ void NetworkManager::runTCPClient(const std::string username) {
             parseControlMsg(buffrecv, bytesRead);
         }
     }
-    /***************************************************/
-
+    /***********************************************************************/
     close(sockTCP);
 }
 
 /**------------------------------------------------------------------------------
+* Function: handshake
+*
+* Date: FEB. 01, 2017
+*
+* Revisions:
+* Version 1.0 - [EY] - 2016/FEB/01 - Created Function
+*
+* DEsigner: Brody Mccrone & Eva Yu
+*
+* Programmer: Eva Yu
+*
+* Interface: int handshake(const std::string username)
+* const std::string username -- username associated with the user
+*
+* Notes:
+* sends usernae server without a user id
   -------------------------------------------------------------------------------*/
-
 void NetworkManager::handshake(const std::string username) const {
     char sendline[STD_BUFFSIZE]{0};
     //send the username to server.
@@ -158,38 +199,51 @@ void NetworkManager::handshake(const std::string username) const {
 }
 
 /**------------------------------------------------------------------------------
+* Function: waitRecvId
+*
+* Date: FEB. 01, 2017
+*
+* Revisions:
+* Version 1.0 - [EY] - 2016/FEB/01 - Created Function
+*
+* Designer: Brody Mccrone & Eva Yu
+*
+* Programmer: Eva Yu
+*
+* Interface: int waitRecvId()
+*
+* Notes:
+* gets the id from sending user name and stores id
   -------------------------------------------------------------------------------*/
-
 void NetworkManager::waitRecvId() {
     char buffrecv[STD_BUFFSIZE];
     parseControlMsg(buffrecv, readTCPSocket(buffrecv, STD_BUFFSIZE));
-    // !!!!replace with parseControlMsg
     const int32_t *idp = reinterpret_cast<const int32_t *>(buffrecv);
-    myid = *idp;
+    myid = *idp; // storing ID
 }
 
 /**------------------------------------------------------------------------------
-  -- FUNCTION: writeTCPSocket
-  --
-  -- DATE: FEB. 01, 2017
-  --
-  -- REVISIONS:
-  -- Version 1.0 - [EY] - 2016/FEB/01 - Created Function
-  --
-  -- DESIGNER: Brody Mccrone
-  --
-  -- PROGRAMMER: Eva Yu
-  --
-  -- INTERFACE: int writeTCPSocket(const char * msg, int len)
-  -- const char * -- the message to write to the TCP socket
-  -- int len -- the length of the message to write
-  --
-  -- RETURNS:
-  --  0 represents excution success
-  -- -1 represents failure
-  --
-  -- NOTES:
-  -- This function loops the writing to the TCP Socket
+ * Function: writeTCPSocket
+ *
+ * Date: FEB. 01, 2017
+ *
+ * Revisions:
+ * Version 1.0 - [EY] - 2016/FEB/01 - Created Function
+ *
+ * DEsigner: Brody Mccrone
+ *
+ * Programmer: Eva Yu
+ *
+ * Interface: int writeTCPSocket(const char * msg, int len)
+ * const char -- the message to write to the TCP socket
+ * int len* the length of the message to write
+ *
+ * Returns:
+ *  0 represents excution success
+ * -1 represents failure
+ *
+ * Notes:
+ * This function loops the writing to the TCP Socket
   -------------------------------------------------------------------------------*/
 void NetworkManager::writeTCPSocket(const char *buf, const int len) const {
     int res = send(sockTCP, buf, len, 0);
@@ -204,27 +258,27 @@ void NetworkManager::writeTCPSocket(const char *buf, const int len) const {
 }
 
 /**------------------------------------------------------------------------------
-METHOD: readTCPSocket
+Method: readTCPSocket
 
-DATE: February. 1, 2017
+Date: February. 1, 2017
 
-REVISIONS:
+Revisions:
 Version, Date and Description
 
-DESIGNER: Eva Yu
+Designer: Eva Yu
 
-PROGRAMMER: Brody McCrone
+Programmer: Brody McCrone
 
-INTERFACE: int readTCPSocket (char * buf, int len)
+Interface: int readTCPSocket (char * buf, int len)
 buf: Buffer to store read result in.
 len: Amount of characters to read, can be no more than buffer size.
 
-RETURNS:
+Returns:
 -1: error (check errno for further info)
 0: connection was closed.
 len: read was successful.
 
-NOTES:
+Notes:
 This read method reads the amount specified by the param len from the TCP
 socket stored as a private member of the Client object.
 -------------------------------------------------------------------------------*/
@@ -239,27 +293,26 @@ int NetworkManager::readTCPSocket(char *buf, const int len) const {
 }
 
 /**------------------------------------------------------------------------------
-  _servAddr---
-METHOD: sendTo
+ Method: sendTo
 
-DATE: Feb. 7, 2017
+Date: Feb. 7, 2017
 
-REVISIONS:
+Revisions:
 Version, Date and Description
 
-DESIGNER: Brody McCrone
+Designer: Brody McCrone
 
-PROGRAMMER: Brody McCrone
+Programmer: Brody McCrone
 
-PARAMS:
+Params:
 buf: Data to be sent.
 len: Amount of data. Must be equal to or less than buf size.
 servAddr: Address of receiver.
 
-RETURNS:
+Returns:
 void
 
-NOTES:
+Notes:
 Sends buf to servAddr. Reliable even when len exceeds MTU.
 -------------------------------------------------------------------------------*/
 void NetworkManager::writeUDPSocket(const char *buf, const int len) const {
@@ -278,26 +331,26 @@ void NetworkManager::writeUDPSocket(const char *buf, const int len) const {
 
 
 /**------------------------------------------------------------------------------
-METHOD: readUDPSocket
+Method: readUDPSocket
 
-DATE: Feb. 7, 2017
+Date: Feb. 7, 2017
 
-REVISIONS:
+Revisions:
 Version, Date and Description
 
-DESIGNER: Brody McCrone
+Designer: Brody McCrone
 
-PROGRAMMER: Brody McCrone
+Programmer: Brody McCrone
 
-PARAMS:
+Params:
 buf: Buffer to store data received in.
 len: Amount of data to receive. Must be less than or equal to buf size.
 servAddr: Address of sender.
 
-RETURNS:
+Returns:
 void
 
-NOTES:
+Notes:
 Receives data from servAddr and stores it in buf. Reliable even when data
 being received exceeds MTU.
 -------------------------------------------------------------------------------*/
@@ -315,6 +368,26 @@ int NetworkManager::readUDPSocket(char *buf, const int len) const {
 }
 
 /**------------------------------------------------------------------------------
+* Function: connectSocket
+*
+* Date: FEB. 01, 2017
+*
+* Revisions:
+* Version 1.0 - [EY] - 2016/FEB/01 - Created Function
+*
+* DEsigner: EY
+*
+* Programmer: Eva Yu
+*
+* Interface: int connectSocket(const int sock, const sockaddr_in& addr)
+* const int sock -- socket
+* const sockar_in& addr -- address to associate with socket
+*
+* Returns:
+* -1 represents failure
+*
+* Notes:
+* This loops the writing to the TCP Socket
   -------------------------------------------------------------------------------*/
 void NetworkManager::connectSocket(const int sock, const sockaddr_in& addr) {
     if ((connect(sock, (struct sockaddr *)&addr, sizeof(sockaddr_in))) < 0) {
@@ -324,15 +397,32 @@ void NetworkManager::connectSocket(const int sock, const sockaddr_in& addr) {
 }
 
 /**------------------------------------------------------------------------------
+* Function: createAddress
+*
+* Date: FEB. 01, 2017
+*
+* Revisions:
+* Version 1.0 - [EY] - 2016/FEB/01 - Created Function
+*
+* DEsigner: EY
+*
+* Programmer: Eva Yu
+*
+* Interface: sockaddr_in createAddress(const int sock, const sockaddr_in& addr)
+* const int sock -- socket
+* const sockar_in& addr -- address to associate with socket
+*
+* Returns:
+* the addr structure
+*
+* Notes:
+* Create Address Wrapper.
   -------------------------------------------------------------------------------*/
 sockaddr_in NetworkManager::createAddress(const in_addr_t ip, const int port) {
     sockaddr_in addr;
-    //set server addr struct
     memset(&addr, '0', sizeof(sockaddr_in));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = ip;
-
     return addr;
 }
-
