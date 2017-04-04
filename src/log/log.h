@@ -3,6 +3,7 @@
 
 extern int log_verbose;
 
+
 //isaac morneau march 14, 2017
 //only on when -v is enabled
 void logv(const char *msg, ...);

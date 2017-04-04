@@ -5,27 +5,39 @@
 #include "../view/Camera.h"
 #include "../../include/Colors.h"
 
+static constexpr int MAX_HEALTH = 100;
+static constexpr int MIN_HEALTH = 0;
+
+static constexpr float EQUIPPED_SLOT_RAT = 0.15;
+static constexpr float PADDING_RAT = 0.02;
+static constexpr float AMMO_CLIP_BACKROUND_W_RAT = 0.06;
+static constexpr float AMMO_CLIP_BACKROUND_H_RAT = 0.20;
+static constexpr float HEALTHBAR_BACKROUND_H_RAT = 0.04;
+static constexpr float HEALTHBAR_BACKROUND_Y_RAT = 0.01;
+static constexpr float HEALTHBAR_FOREGROUND_XY_RAT = 0.1;
+static constexpr float HEALTHBAR_FOREGROUND_H_RAT = 0.8;
+static constexpr float HEALTHBAR_FOREGROUND_W_RAT = 0.2;
+static constexpr float CONSUMABLE_SIZE_RAT = 0.1;
+static constexpr float WEAPON_SLOT_WIDTH_RAT = 0.15;
+static constexpr float WEAPON_SLOT_HEIGHT_RAT = 0.07;
+static constexpr float HALF = 0.5;
+
 class GameHud {
 
 public:
 
     GameHud();
-    virtual ~GameHud();
-    void setRectPosition(SDL_Rect *rect, size_t x, size_t y);
-    void setRectSize(SDL_Rect rect, size_t w, size_t h);
-    SDL_Rect *getHealthBarBackground();
-    SDL_Rect *getHealthBarForeground();
-    SDL_Rect *getConsumableSlot();
-    SDL_Rect *getEquippedSlot();
-    SDL_Rect *getAmmoClipBackground();
-    //Need to add funct for weapon slots
-    size_t getHealthRgbElement(int index);
+    virtual ~GameHud() = default;
 
-    int getOpacity();
-    void decrementOpacity(Uint8 amount);
-    void setOpacity(Uint8 opacity);
+    size_t getHealthRgbElement(const int index);
+    void decrementOpacity(const Uint8 amount);
+    void setOpacity(const Uint8 opacity);
     void setHealthBarColor(float currentHP);
-    void renderStaticItems(SDL_Rect screenRect, Player p, Camera c);
+    void renderEquippedWeaponSlot(const SDL_Rect screenRect);
+    void renderClip(const SDL_Rect screenRect, const Player p);
+    void renderHealthBar(const SDL_Rect screenRect, const Player p, const Camera c);
+    void renderConsumable(const SDL_Rect screenRect, const Player p);
+    void renderWeaponSlots(const SDL_Rect screenRect, const Player p);
 
 private:
     SDL_Rect healthBarBackground;
@@ -35,7 +47,7 @@ private:
     SDL_Rect equippedSlot;
     SDL_Rect ammoClipBackground;
     SDL_Rect ammoClipForeground;
-    SDL_Rect clipper;
+    SDL_Rect ammoClipClipper;
 
     Uint8 inventorySlotOpacity;
     size_t healthRGB[3];

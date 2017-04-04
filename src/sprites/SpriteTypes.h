@@ -6,7 +6,7 @@
 ** DATE:      March 14, 2017
 */
 
-#include <stdlib.h>
+#include <cstdlib>
 
 /**
 * NOTE:
@@ -42,11 +42,11 @@ enum class TEXTURES : int {
     //--------------------- Hud textures ---------------------
     WEAPON_CLIP_FULL,
     WEAPON_CLIP_EMPTY,
-    EQUIPPED_SLOT,
-    WEAPON_SLOT_INACTIVE,
-    WEAPON_SLOT_ACTIVE,
-    CONSUMABLE_SLOT,
+    ACTIVE_SLOT,
+    PASSIVE_SLOT,
     HEALTHBAR,
+    CONSUMABLE_SLOT,
+    EQUIPPED_WEAPON_SLOT,
 
     //--------------------- Map textures ---------------------
     BARREN,
@@ -77,6 +77,9 @@ enum class TEXTURES : int {
     //--------------------- Weapons ---------------------
 
     WEAPONS,
+    RIFLE,
+    SHOTGUN,
+    HANDGUN,
     //Pistol
     // PISTOL_FRONT,
     // PISTOL_FRONT_LEFT,

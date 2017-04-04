@@ -16,8 +16,9 @@
 
 #ifndef NODE_H
 #define NODE_H
-#include <math.h>
+#include <cmath>
 #include <queue>
+
 #include "Zombie.h"
 #include "../log/log.h"
 

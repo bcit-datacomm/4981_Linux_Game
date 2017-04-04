@@ -15,5 +15,7 @@ static constexpr size_t BLUE_RGB[3] = {83, 161, 219};
 static constexpr size_t GREEN_RGB[3] = {0, 255, 0};
 static constexpr size_t RED_RGB[3] = {255, 0, 0};
 static constexpr size_t OPAQUE = 255;
+static constexpr size_t MAX_RGB_VALUE = 255;
+static constexpr size_t MIN_RGB_VALUE = 0;
 
 #endif
