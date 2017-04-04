@@ -21,7 +21,7 @@ public:
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);//check for pick up collision, return object if can pick up
 
     void detectLineCollision(TargetList& targetList, const int gunX, const int gunY, const double angle, const int range);
-    
+    std::vector<Entity *> detectMeleeCollision(std::vector<Entity*> returnObjects, const Entity *entity, const HitBox hb);
 
     std::vector<Entity *>getQuadTreeEntities(Quadtree& q,const Entity *entity); // General Collision handler, pass in quadtree check
 

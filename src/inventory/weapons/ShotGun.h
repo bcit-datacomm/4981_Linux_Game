@@ -15,33 +15,33 @@
 using std::string;
 
 namespace ShotgunVars {
-    const string TYPE           = "Shotgun";
+    const string TYPE = "Shotgun";
 
-    const string FIRESOUND      = EFX_WLRIFLE;
-    const string HITSOUND       = "";
-    const string RELOADSOUND    = EFX_WRELOAD01;
-    const string EMPTYSOUND     = EFX_PDROP01;
+    const string FIRESOUND = EFX_WLRIFLE;
+    const string HITSOUND = "";
+    const string RELOADSOUND = EFX_WRELOAD01;
+    const string EMPTYSOUND = EFX_PDROP01;
 
-    constexpr int RANGE         = 700;
-    constexpr int DAMAGE        = 50;
-    constexpr int AOE           = 1;
-    constexpr int PENETRATION   = 0;
+    constexpr int RANGE = 700;
+    constexpr int DAMAGE = 50;
+    constexpr int AOE = 1;
+    constexpr int PENETRATION = 0;
 
-    constexpr int SPREAD_ANGLE  = 30;
-    constexpr int SPREAD_SHOTS  = 5;
+    constexpr int SPREAD_ANGLE = 30;
+    constexpr int SPREAD_SHOTS = 5;
 
-    constexpr int CLIP          = 5;
-    constexpr int CLIPMAX       = 5;
-    constexpr int AMMO          = 1000;
+    constexpr int CLIP = 5;
+    constexpr int CLIPMAX = 5;
+    constexpr int AMMO = 1000;
 
-    constexpr int RELOADDELAY   = 3000;
-    constexpr int FIREDELAY     = 1000;
+    constexpr int RELOADDELAY = 3000;
+    constexpr int FIREDELAY = 1000;
 }
 
 class ShotGun: public InstantWeapon {
 public:
 
-    ShotGun(int32_t id);
+    ShotGun(const int32_t id);
     ~ShotGun() = default;
 
     bool fire(Movable& movable);

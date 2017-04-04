@@ -12,12 +12,13 @@
 #include "../inventory/Inventory.h"
 #include "../view/Window.h"
 
+
 //speed of marine in relation to current frame duration / desired frame duration
 static constexpr int MARINE_VELOCITY = 50;
 //width of any marine image
 static constexpr int SPRITE_SIZE_X = 75;
-//height of any marine image 
-static constexpr int SPRITE_SIZE_Y = 125; 
+//height of any marine image
+static constexpr int SPRITE_SIZE_Y = 125;
 //speed of walking animation ie frames till next animation
 static constexpr int FRAME_COUNT_WALK = 7;
 
@@ -56,8 +57,8 @@ public:
     void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
-
-    void updateImageDirection(); 
+    int getHealth() {return health;};
+    void updateImageDirection();
     void updateImageWalk(const Uint8 *state);
     void activateStore(const Entity *ep);
     Inventory inventory;
