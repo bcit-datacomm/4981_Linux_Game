@@ -13,7 +13,7 @@
 #include "../view/Window.h"
 
 //speed of marine in relation to current frame duration / desired frame duration
-static constexpr int MARINE_VELOCITY = 50;
+static constexpr int MARINE_VELOCITY = 400;
 //width of any marine image
 static constexpr int SPRITE_SIZE_X = 75;
 //height of any marine image
