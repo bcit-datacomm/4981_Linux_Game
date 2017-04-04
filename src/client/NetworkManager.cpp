@@ -81,7 +81,7 @@ void NetworkManager::runUDPClient(const in_addr_t serverIP) {
     servUDPAddrLen = sizeof(servUDPAddr);
 
     sockUDP = createSocket(true, false);
-    bindSocket(sockUDP, INADDR_ANY, htons(LISTEN_PORT_UDP));
+    bindSocket(sockUDP, INADDR_ANY, LISTEN_PORT_UDP);
 
     ip_mreq mreq;
     memset(&mreq, 0, sizeof(mreq));
