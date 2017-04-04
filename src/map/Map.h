@@ -58,9 +58,9 @@ public:
     void printData();
 
     void setFile(const string f) { fname = f; };
-    const std::string getFile() { return fname; };
-    const std::vector<MapPoint> getZombieSpawn() { return zombieSpawn; };
-    const std::array<std::array<bool, M_WIDTH>, M_HEIGHT> getAIMap() { return AIMap; };
+    const std::string getFile() const { return fname; };
+    const std::vector<MapPoint> getZombieSpawn() const { return zombieSpawn; };
+    const std::array<std::array<bool, M_WIDTH>, M_HEIGHT> getAIMap() const { return AIMap; };
 
 
 private:
