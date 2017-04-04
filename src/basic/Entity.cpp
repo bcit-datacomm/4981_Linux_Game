@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Source: Entity.cpp    
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #include "Entity.h"
 #include <atomic>
 #include <cstdint>

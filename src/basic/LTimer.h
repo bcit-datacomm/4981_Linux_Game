@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: LTimer.h   
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #ifndef LTIMER_H
 #define LTIMER_H
 #include <SDL2/SDL.h>

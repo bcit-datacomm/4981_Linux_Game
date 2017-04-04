@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Entity.h   
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #ifndef ENTITY_H
 #define ENTITY_H
 
