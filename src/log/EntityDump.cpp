@@ -4,11 +4,9 @@
 
 --
 -- FUNCTIONS:
--- void daemonize (void)
--- int initialize_inotify_watch (int fd, char pathname[MAXPATHLEN])
--- int ProcessFiles (char pathname[MAXPATHLEN])
--- unsigned int GetProcessID (char *process)
---
+-- void dumpEntityPositions(const Player* p);
+-- std::pair<float, float> getCoordinates(const Entity* e);
+-- void printEntityPositions(std::string entityName, int32_t id, const Entity &e, std::ofstream &entitydump);
 --
 -- DATE: March 16, 2008
 --
@@ -21,6 +19,7 @@
 -- NOTES:
 --
 ----------------------------------------------------------------------------------------------------------------------*/
+
 #include "EntityDump.h"
 #include <iostream>
 #include "../buildings/DropPoint.h"
