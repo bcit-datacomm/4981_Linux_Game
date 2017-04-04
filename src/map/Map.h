@@ -51,9 +51,9 @@ public:
 
 class Map {
 public:
-    Map(const std::string file);
+    Map(const std::string& file);
     int loadFileData();
-    void genWalls(const std::vector<MapPoint> wallStart);
+    void genWalls(const std::vector<MapPoint>& wallStart);
     void mapLoadToGame();
     void printData();
 

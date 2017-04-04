@@ -22,6 +22,8 @@
 * Notes:
 * Map Class functions used for reading in a map file and loading the map into the game.
 ------------------------------------------------------------------------------*/
+#include <initializer_list>
+#include <type_traits>
 #include "Map.h"
 
 using namespace std;
@@ -35,7 +37,7 @@ using namespace std;
  * Description:
  * Map Object Constructor, creates a map object using the map selected file name.
  */
-Map::Map(const string file):fname(file) {
+Map::Map(const string& file):fname(file) {
     AIMap = {};
     mapdata = {};
 }
@@ -82,7 +84,7 @@ int Map::loadFileData() {
                 AIMap[i][j] = 1;
                 break;
             case WALL_START:        //Label start of wall rectangle
-                wallStart.push_back({j, i});
+                wallStart.push_back( {j, i} );
                 ++wallStartCount;
                 AIMap[i][j] = 1;
                 break;
@@ -118,7 +120,7 @@ int Map::loadFileData() {
  * Description:
  * Read's the Map CSV file map data with the appropriate tile IDs
  */
-void Map::genWalls(const vector<MapPoint> wallStart) {
+void Map::genWalls(const vector<MapPoint>& wallStart) {
     for (const auto& w : wallStart) {
         logv("Point = %d, %d\n", w.x, w.y);
     }
@@ -183,8 +185,8 @@ void Map::mapLoadToGame() {
 void Map::printData() {
     logv("MAP DATA\n");
     for (const auto& row : mapdata) {
-        for (const auto& elem : row) {
-            logv("%s", elem);
+        for (const char& elem : row) {
+            logv("%c", elem);
         }
         logv("\n");
     }
