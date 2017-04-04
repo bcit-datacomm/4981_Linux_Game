@@ -84,7 +84,7 @@ int Map::loadFileData() {
                 AIMap[i][j] = 1;
                 break;
             case WALL_START:        //Label start of wall rectangle
-                wallStart.push_back( {j, i} );
+                wallStart.emplace_back( MapPoint{j, i} );
                 ++wallStartCount;
                 AIMap[i][j] = 1;
                 break;
@@ -151,8 +151,8 @@ void Map::genWalls(const vector<MapPoint>& wallStart) {
             nexty++;
         }
         endy = nexty;
-        walls.push_back( { startx * T_SIZE, starty * T_SIZE, (endx - startx) * T_SIZE,
-                                        (endy - starty) * T_SIZE } );
+        walls.emplace_back( MapWall{ startx * T_SIZE, starty * T_SIZE, (endx - startx) * T_SIZE,
+                           (endy - starty) * T_SIZE });
     }
 }
 
