@@ -10,7 +10,7 @@
 #include "../game/GameManager.h"
 #include "../game/GameHashMap.h"
 
-void dumpEntityPosistions(const Player* p);
+void dumpEntityPositions(const Player* p);
 
 
 std::pair<float, float> getCoordinates(const Entity* e);

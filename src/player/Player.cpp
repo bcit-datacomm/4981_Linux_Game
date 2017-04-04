@@ -127,7 +127,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 
     //added by Maitiu Debug print 4/3/2017
     if(state[SDL_SCANCODE_PERIOD]){
-        dumpEntityPosistions(this);
+        dumpEntityPositions(this);
     }
     marine->setDY(y);
     marine->setDX(x);

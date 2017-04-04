@@ -7,7 +7,7 @@
  *Loops through each manager and writes there information to
  *the EntityDumpLog.txt
  */
-void dumpEntityPosistions(const Player* p){
+void dumpEntityPositions(const Player* p){
     #ifndef NDEBUG
     std::ofstream entityDump;
     std::pair<float, float> coord;
