@@ -57,11 +57,11 @@ public:
     void mapLoadToGame();
     void printData();
 
-    std::string getFile() { return fname; };
     void setFile(const string f) { fname = f; };
+    const std::string getFile() { return fname; };
+    const std::vector<MapPoint> getZombieSpawn() { return zombieSpawn; };
+    const std::array<std::array<bool, M_WIDTH>, M_HEIGHT> getAIMap() { return AIMap; };
 
-    // Boolean Array for AI Nodes
-    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AIMap;
 
 private:
     std::string fname;
@@ -77,10 +77,12 @@ private:
     int shopCount = 0;
     // Base Start Point
     MapPoint base;
-    // Array of zombieSpawn points
-    MapPoint zombieSpawn[MAX_SPAWNPOINTS];
     // Array of shop points
     MapPoint shops[MAX_SHOPS];
+    // Boolean Array for AI Nodes
+    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AIMap;
+    // Array of zombieSpawn points
+    std::vector<MapPoint> zombieSpawn;
 };
 
 

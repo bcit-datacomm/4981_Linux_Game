@@ -90,8 +90,8 @@ int Map::loadFileData() {
                 break;
             // case CONCRETE_START:    //Start of concrete area
             case ZOMBIE_SPAWN:      //Zombie spawn Points
-                zombieSpawn[zombieSpawnCount].x = j;
-                zombieSpawn[zombieSpawnCount].y = i;
+                zombieSpawn.emplace_back( MapPoint { (j * T_SIZE) + (T_SIZE / 2),
+                                          (i * T_SIZE) - (T_SIZE * 2) } );
                 ++zombieSpawnCount;
                 break;
             case SHOP_SPOT:         // Shop spot points
