@@ -37,6 +37,7 @@ static constexpr int INITVAL = 0;
 static constexpr int DEFAULT_SIZE = 100;
 static constexpr int PUSIZE = 120;
 static constexpr int DROP_POINT_SPACE = 200;//distance between drop points
+
 static constexpr int STORE_SIZE_W = 200; //Store width
 static constexpr int STORE_SIZE_H = 330; //Store height
 static constexpr int STORE_PICKUP_SIZE = 50;//How much bigger the Stores PIckup hitbox is
@@ -44,6 +45,13 @@ static constexpr int WEAPON_STORE_SRC_X = 183;
 static constexpr int WEAPON_STORE_SRC_Y = 582;
 static constexpr int WEAPON_STORE_SRC_W = 158;
 static constexpr int WEAPON_STORE_SRC_H = 254;
+
+static constexpr int WALL_SRC_X = 15;
+static constexpr int WALL_SRC_Y = 478;
+static constexpr int WALL_SRC_W = 122;
+static constexpr int WALL_SRC_H = 83;
+static constexpr int WALL_WIDTH = 250;
+static constexpr int WALL_HEIGHT = 250;
 
 class GameManager {
 public:

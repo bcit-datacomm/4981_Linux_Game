@@ -139,5 +139,5 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
         targetList.removeTop();
     }
 
-    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
+    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 25, 70, 193);
 }
