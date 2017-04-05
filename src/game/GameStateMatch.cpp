@@ -35,7 +35,6 @@ bool GameStateMatch::load() {
     m.mapLoadToGame();
 
     GameManager::instance()->setAiMap(m.getAIMap());
-    GameManager::instance()->printAiMap();
 
     // Create Dummy Entitys
     Rifle w(GameManager::instance()->generateID());
