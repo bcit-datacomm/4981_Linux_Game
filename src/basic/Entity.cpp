@@ -4,14 +4,14 @@
 * Functions:
 *    
 *
-* Date: 
+* Date: Feb. 4, 2017
 *
 * Revisions: 
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer: Isaac Morneau + Jacob McPhail 
 *
-* Author: 
+* Author: Isaac Morneau + Jacob McPhail 
 *
 * Notes:
 *  
@@ -21,6 +21,17 @@
 #include <cstdint>
 #include "../log/log.h"
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: Jacob McPhail (Init Creation)
+ * Author:  ----
+ * Function Interface: Entity(const int32_t nid, const SDL_Rect& dest)
+ *      nid : 
+ *      dest: 
+ *
+ * Description:
+ *      ctor for entity
+ */
 Entity::Entity(const int32_t nid, const SDL_Rect& dest):id(nid), destRect(dest), srcRect({0,0, dest.w, dest.h}),
         movementHitBox(dest), projectileHitBox(dest), damageHitBox(dest), pickupHitBox(dest),
         x(dest.x), y(dest.y) {
@@ -62,21 +73,49 @@ const SDL_Rect Entity::getRelativeDestRect(const SDL_Rect& view) const {
     return {destRect.x - view.x , destRect.y - view.y, static_cast<int>(destRect.w), static_cast<int>(destRect.h)};
 }
 
-// Set x coordinate
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail.
+ * Function Interface: 
+ * Description: setX(const float px)
+ *      px : new x position
+ *
+ *      Set x coordinate
+ */
 void Entity::setX(const float px) {
     x = px;
     destRect.x = px;
     updateHitBoxes();
 }
 
-// Set y coordinate
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail.
+ * Function Interface: setY(const float py)
+ *      py : new y position
+ *
+ * Description:
+ *      Set y coordinate
+ */
 void Entity::setY(const float py) {
     y = py;
     destRect.y = py;
     updateHitBoxes();
 }
 
-// Set Entity by x and y amount
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail.
+ * Function Interface: setPosition(float px, float py)
+ *      px : new x position
+ *      py : new y position
+ *
+ * Description:
+ *      Set Entity by x and y amount
+ */
 void Entity::setPosition(float px, float py) {
     x = px;
     y = py;
@@ -85,7 +124,14 @@ void Entity::setPosition(float px, float py) {
     updateHitBoxes();
 }
 
-//updates the hit boxes
+/**
+ * Date: Feb. 9, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: updateHitBoxes() 
+ * Description:
+ *     Updates the hit boxes
+ */
 void Entity::updateHitBoxes() {
     movementHitBox.move(x, y);
     projectileHitBox.move(x, y);
@@ -93,7 +139,14 @@ void Entity::updateHitBoxes() {
     pickupHitBox.move(x - 10, y - 10);
 }
 
-//updates the rectangle for the hitbox
+/**
+ * Date: Feb. 9, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: updateRectHitBoxes() 
+ * Description:
+ *     Updates the rectangle for the hitbox
+ */
 void Entity::updateRectHitBoxes() {
     movementHitBox.setRect(destRect);
     projectileHitBox.setRect(destRect);
@@ -101,10 +154,22 @@ void Entity::updateRectHitBoxes() {
     pickupHitBox.setRect(destRect);
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: onCollision()
+ */
 void Entity::onCollision() {
     //do nothing
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: collidingProjectile(const int damage) 
+ */
 void Entity::collidingProjectile(const int damage) {
     //do nothing
 }

@@ -26,7 +26,7 @@
 #include "../inventory/weapons/Target.h"
 
 /**
- * Date: Mar. 1, 2017
+ * Date: Feb. 4, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
  * Author: Jacob McPhail.
  * Function Interface: CollisionHandler::CollisionHandler()
@@ -61,7 +61,7 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
 }
 
 /**
- * Date: Mar. 1, 2017
+ * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
  * Function Interface: const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*>
@@ -82,7 +82,7 @@ const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> retur
 }
 
 /**
- * Date: Mar. 1, 2017
+ * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
  * Function Interface: const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*>
@@ -103,7 +103,7 @@ const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> r
 }
 
 /**
- * Date: Mar. 1, 2017
+ * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
  * Function Interface: bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects,
