@@ -60,6 +60,9 @@ public:
     void moveDamHitBox(const int x, const int y) { damageHitBox.move(x,y);};
     void movePickUpHitBox(const int x, const int y) { pickupHitBox.move(x,y);};
 
+    const std::pair<float, float> getMoveCoord() const {return {movementHitBox.getRect().x, movementHitBox.getRect().y};};
+    const std::pair<float, float> getDestCoord() const {return {destRect.x, destRect.y};};
+    const std::pair<float, float> getSrcCoord() const {return {srcRect.x, srcRect.y};};
 private:
 
     int32_t id; //is the index num of the entity in its respective manager

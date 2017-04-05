@@ -20,7 +20,7 @@ public:
     void handleKeyboardInput(const Uint8 *state); // Handles player input with keyboard state
     void handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY);
 
-    void setControl(Marine& newControl);
+    void setControl(Marine* newControl);
 
     void handleMouseWheelInput(const SDL_Event *e);
 
