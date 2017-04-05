@@ -167,10 +167,9 @@ void Map::mapLoadToGame() {
         GameManager::instance()->createWall(w.x, w.y, w.width, w.height);
     }
     srand ( time(NULL) );
-    int sp = rand() % MAX_SHOPS;
-    MapPoint shopPosition = shops[sp];
-    logv("Loading Shop as position from index: %d\n", sp);
+    MapPoint shopPosition = shops[rand() % MAX_SHOPS];
     GameManager::instance()->createWeaponStore(shopPosition.x, shopPosition.y);
+    // Only using one drop zone position.
     GameManager::instance()->createDropZone(dropPoints[0].x, dropPoints[0].y, DROPZONE_SIZE);
 }
 
