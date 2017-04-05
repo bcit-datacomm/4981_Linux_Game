@@ -32,15 +32,68 @@ void Player::setControl(Marine* newControl) {
     marine = newControl;
 }
 
+/**------------------------------------------------------------------------------
+Method: hasChangedAngle
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool hasChangedAngle()
+
+Returns:
+true: The players angle has changed since the last frame.
+false: The players angle has NOT changed since the last frame.
+
+Notes:
+Checks if the players angle has changed since the last frame.
+-------------------------------------------------------------------------------*/
 bool Player::hasChangedAngle() const {
     return fabs(moveAction.data.ma.direction - marine->getAngle()) > DOUBLE_COMPARISON_PRECISION;
 }
 
+/**------------------------------------------------------------------------------
+Method: hasChangedCourse
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool hasChangedCourse()
+
+Returns:
+true: The player's course has changed since the last frame.
+false: The player's course has NOT changed since the last frame.
+
+Notes:
+Checks if the player's course has changed since the last frame.
+-------------------------------------------------------------------------------*/
 bool Player::hasChangedCourse() const {
     return moveAction.data.ma.xdel - marine->getDX()
             || moveAction.data.ma.ydel - marine->getDY();
 }
 
+/**------------------------------------------------------------------------------
+Method: sendServMoveAction
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool sendServMoveAction
+
+Returns:
+void
+
+Notes:
+Updates the player's moveAction struct and send it to the server via UDP.
+-------------------------------------------------------------------------------*/
 void Player::sendServMoveAction() {
     moveAction.data.ma.id = id;
     moveAction.data.ma.xpos = marine->getX();
@@ -52,6 +105,23 @@ void Player::sendServMoveAction() {
     NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
 }
 
+/**------------------------------------------------------------------------------
+Method: sendServAttackAction
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool sendServMoveAction
+
+Returns:
+void
+
+Notes:
+Updates the player's attack action and send it to the server via UDP.
+-------------------------------------------------------------------------------*/
 void Player::sendServAttackAction() {
     attackAction.data.aa.playerid = id;
     attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
@@ -119,6 +189,23 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 */
 }
 
+/**------------------------------------------------------------------------------
+Method: fireWeapon
+
+Date: April 4, 2017
+
+Designer: Deric Mccadden
+
+Programmer: Deric Mccadden, Brody McCrone
+
+Interface: void fireWeapon()
+
+Returns:
+void
+
+Notes:
+Fires player's marine's weapon amd sends the Attack Action to the server.
+-------------------------------------------------------------------------------*/
 void Player::fireWeapon() {
     if (marine->inventory.getCurrent() && marine->fireWeapon() && networked) {
         sendServAttackAction();

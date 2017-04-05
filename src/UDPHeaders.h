@@ -253,6 +253,8 @@ typedef struct {
     int32_t playerid;
     float xpos;
     float ypos;
+    float xdel;
+    float ydel;
     float vel;
     float direction;
     int32_t health;

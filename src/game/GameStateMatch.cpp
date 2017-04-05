@@ -56,6 +56,7 @@ bool GameStateMatch::load() {
         base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
+        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
 
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
@@ -262,9 +263,7 @@ void GameStateMatch::update(const float delta) {
     }
 
 #endif
-    if (!networked) {
-        GameManager::instance()->updateMarines(delta);
-    }
+    GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
     GameManager::instance()->getPlayer().checkMarineState();

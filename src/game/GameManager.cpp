@@ -132,7 +132,13 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  */
 void GameManager::updateMarines(const float delta) {
     for (auto& m : marineManager) {
-        m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
+        if (!networked) {
+            m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
+        }
+#ifndef SERVER
+        m.second.updateImageDirection();
+        m.second.updateImageWalk();
+#endif
     }
 }
 
@@ -696,6 +702,8 @@ void GameManager::updateCollider() {
         }
     }
 
+
+
     for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
             collisionHandler.quadtreeBarricade.insert(&b.second);
@@ -724,6 +732,8 @@ void GameManager::updateMarine(const PlayerData &playerData) {
     }
     Marine& marine = marineManager[playerData.playerid].first;
     marine.setPosition(playerData.xpos, playerData.ypos);
+    marine.setDX(playerData.xdel);
+    marine.setDY(playerData.ydel);
     marine.setAngle(playerData.direction);
     marine.setHealth(playerData.health);
 }
