@@ -15,11 +15,12 @@
 #include "../sprites/VisualEffect.h"
 #include "../map/Map.h"
 #include "Game.h"
+#include "../../include/Colors.h"
 
 
-
-GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        player(), base(), camera(gameWidth,gameHeight){}
+GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
+        player(), base(), camera(gameWidth,gameHeight), hud(),
+        screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
 bool GameStateMatch::load() {
     bool success = true;
@@ -37,7 +38,12 @@ bool GameStateMatch::load() {
     GameManager::instance()->printAiMap();
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(1000, 500);
+    Rifle w(GameManager::instance()->generateID());
+    ShotGun w2(GameManager::instance()->generateID());
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
+    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
+    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
     GameManager::instance()->addObject(base);
 
@@ -56,7 +62,6 @@ void GameStateMatch::loop() {
     int frameTicks = 0;
     // State Loop
     while (play) {
-        // Process frame
         handle(); // Handle user input
         update((SDL_GetTicks() - startTick) / TICK_SEC); // Update state values
 
@@ -78,6 +83,32 @@ void GameStateMatch::sync() {
 
 }
 
+/**
+ * Function: handle
+ *
+ * Date:
+ *
+ *
+ * Designer:
+ *
+ *
+ * Programmer:
+ *
+ *
+ * Modified by:
+ * Jacob Frank (March 25, 2017)
+ * Jacob Frank (April, 2017)
+ *
+ * Interface: handle()
+ *
+ * Returns: void
+ *
+ * Notes:
+ *
+ * Revisions:
+ * JF Mar 25: Added a ScreenRect size adjustment whenever screen size changes (ensures proper hud placement)
+ * JF Apr 1: Added set Weapon Inventory slot opacity function to mousewheel scroll and number key events
+ */
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
@@ -93,9 +124,11 @@ void GameStateMatch::handle() {
         switch(event.type) {
             case SDL_WINDOWEVENT:
                 camera.setViewSize(game.getWindow().getWidth(), game.getWindow().getHeight());
+                screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
                 break;
             case SDL_MOUSEWHEEL:
                 player.handleMouseWheelInput(&(event));
+                hud.setOpacity(OPAQUE);
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -110,12 +143,16 @@ void GameStateMatch::handle() {
                     case SDLK_b:
                         player.handleTempBarricade(Renderer::instance().getRenderer());
                         break;
+                    case SDLK_1: //Purposeful flow through
+                    case SDLK_2:
+                    case SDLK_3:
+                        hud.setOpacity(OPAQUE);
+                        break;
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
                         GameManager::instance()->deleteMarine(player.getMarine()->getId());
                         player.setControl(nullptr);
                         break;
-
                     default:
                         break;
                     }
@@ -149,6 +186,30 @@ void GameStateMatch::update(const float delta) {
     }
 }
 
+/**
+ * Function: render
+ *
+ * Date:
+ *
+ *
+ * Designer:
+ *
+ *
+ * Programmer:
+ *
+ *
+ * Modified by:
+ * Jacob Frank (March 28 - April 1, 2017)
+ *
+ * Interface: render()
+ *
+ * Returns: void
+ *
+ * Notes:
+ *
+ * Revisions:
+ * JF Mar 25 - April 1: Added rendering functions to render the HUD overtop of the game
+ */
 void GameStateMatch::render() {
     //Only draw when not minimized
     if (!game.getWindow().isMinimized()) {
@@ -180,6 +241,26 @@ void GameStateMatch::render() {
         GameManager::instance()->renderObjects(camera.getViewport());
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
+
+        //Render the healthbar's foreground to the screen
+        //(displays how much player health is left)
+        hud.renderHealthBar(screenRect, player, camera);
+
+        //Reder the ammo clip foreground to the screen
+        //(displays how much ammo is left in the players weapon clip)
+        hud.renderClip(screenRect, player);
+
+        //Render the equipped weapon slot
+        hud.renderEquippedWeaponSlot(screenRect);
+
+        //Reder the Weapon slots to the screen
+        hud.renderWeaponSlots(screenRect, player);
+
+        //Render the consumable slot if the player has any available
+        //Currently only a single consumable item exits (the Medkit)
+        if (player.getMarine()->inventory.getMedkit()) {
+            hud.renderConsumable(screenRect, player);
+        }
 
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
