@@ -67,6 +67,7 @@ private:
     std::string username;
     int health = 100;
     int state; //used to select sprite to display
+    static int frameCount;
 };
 
 #endif

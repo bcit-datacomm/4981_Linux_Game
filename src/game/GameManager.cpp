@@ -63,7 +63,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& z : zombieManager) {
         if (z.second.getX() - cam.x < cam.w && z.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE);
+            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE, z.second.getSrcRect());
         }
     }
 
@@ -295,7 +295,7 @@ void GameManager::createZombie(const int32_t id) {
 */
 int32_t GameManager::createZombie(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, ZOMBIE_WIDTH, ZOMBIE_HEIGHT};
 
     SDL_Rect zombieRect = temp;
     SDL_Rect moveRect = temp;
