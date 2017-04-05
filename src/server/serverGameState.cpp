@@ -130,7 +130,6 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.direction = marine.getAngle();
         tempPlayer.health = marine.getHealth();
 
-        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.direction);
         rtn.push_back(tempPlayer);
     }
     return rtn;

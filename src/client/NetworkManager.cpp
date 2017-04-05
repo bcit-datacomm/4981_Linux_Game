@@ -163,7 +163,7 @@ void NetworkManager::initTCPClient(const in_addr_t serverIP, const std::string u
 }
 
 void NetworkManager::runTCPClient(const std::string username) {
-    std::cout << "username in runTCPClient: " << username << "\n";
+    logv("Username in runTCPClient: %s\n", username);
     handshake(username);
     waitRecvId();
 
@@ -195,7 +195,7 @@ void NetworkManager::runTCPClient(const std::string username) {
 
         if (FD_ISSET(sockTCP, &readSet)) {
             if ((bytesRead = readTCPSocket(buffrecv, STD_BUFFSIZE)) == 0) {
-                std::cout << "TCP Connection closed by server. (Bytes read == 0)\n";
+                logv("TCP Copnnection closed by server. (Bytes read == 0)\n");
                 break;
             }
 

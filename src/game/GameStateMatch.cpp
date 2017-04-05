@@ -145,7 +145,8 @@ void GameStateMatch::handle() {
     // Handle movement input if the player has a marine
     if(GameManager::instance()->getPlayer().getMarine()){
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
-        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), 
+                game.getWindow().getHeight(), camera.getX(), camera.getY());
         GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
         GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
     }
