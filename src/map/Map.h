@@ -9,11 +9,11 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 // Tile Size
-static constexpr int T_SIZE = 150;
+static constexpr int T_SIZE = 250;
 
 // Map width/height
-static constexpr int M_WIDTH = 100;
-static constexpr int M_HEIGHT = 100;
+static constexpr int M_WIDTH = 50;
+static constexpr int M_HEIGHT = 50;
 
 // Base width/height
 static constexpr int BASE_SIZE = 7;

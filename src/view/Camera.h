@@ -9,7 +9,7 @@ public:
     void move(const int x, const int y); // moves the camera based on player
 
     Camera(const int w, const int h);
-    ~Camera();
+    ~Camera() = default;
 
     int getX() const {return viewport.x;}
     int getY() const {return viewport.y;}

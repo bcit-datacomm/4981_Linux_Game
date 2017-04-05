@@ -32,6 +32,7 @@
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank (March 26, 2017)
  *
@@ -88,6 +89,7 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank (March 26. 2017)
  *
@@ -123,6 +125,9 @@ bool GameStateMenu::load() {
  * Programmer:
  * Jacob Frank
  *
+ * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
+ *
  * Interface: loop()
  *
  * Returns: void
@@ -153,11 +158,11 @@ void GameStateMenu::loop() {
 /**
  * Function: sync
  *
- * Date:
+ * Date: Feb 2, 2017
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  * Interface: sync()
  *
@@ -184,6 +189,7 @@ void GameStateMenu::sync() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (March 28, 2017)
  *
  * Interface: handle()
@@ -365,6 +371,7 @@ void GameStateMenu::handle() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (Febuary 8, 2017)
  *
  * Interface: update(const float& delta)
@@ -449,6 +456,7 @@ void GameStateMenu::positionElements() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank   (March 28, 2017)
  *

@@ -1,3 +1,10 @@
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Description: 
+*   Parant class for game states.
+*/
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 #include <SDL2/SDL.h>

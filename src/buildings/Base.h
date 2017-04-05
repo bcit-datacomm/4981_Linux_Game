@@ -8,8 +8,8 @@ static constexpr int BASE_WIDTH = 750;
 static constexpr int BASE_HEIGHT = 750;
 
 // map width/height
-static constexpr int MAP_WIDTH = 100 * 150;
-static constexpr int MAP_HEIGHT = 100 * 150;
+static constexpr int MAP_WIDTH = 50 * 250;
+static constexpr int MAP_HEIGHT = 50 * 250;
 
 //The gab between the spawn point and base.
 static constexpr int GAP = 150;
