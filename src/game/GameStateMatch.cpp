@@ -156,6 +156,7 @@ void GameStateMatch::update(const float delta) {
     if(player.getMarine()){
         camera.move(player.getMarine()->getX(), player.getMarine()->getY());
     }
+    player.checkMarineState();
     matchManager.checkMatchState();
 }
 
