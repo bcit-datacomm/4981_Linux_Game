@@ -165,14 +165,14 @@ bool GameManager::createMarine(const float x, const float y) {
 }
 
 void GameManager::createMarine(const int32_t id) {
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, MARINE_WIDTH, MARINE_HEIGHT};
 
     SDL_Rect marineRect = temp;
     SDL_Rect moveRect = temp;
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
 
-    marineManager.insert({id, Marine(id, marineRect, moveRect, projRect, damRect)});
+    marineManager.emplace(id, Marine(id, marineRect, moveRect, projRect, damRect));
 }
 
 /**

@@ -10,8 +10,8 @@ Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), 
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
 
-void Player::setControl(Marine& newControl) {
-    marine = &newControl;
+void Player::setControl(Marine* newControl) {
+    marine = newControl;
 }
 
 bool Player::hasChangedAngle() const {
