@@ -7,16 +7,16 @@
 
 #include "../basic/Entity.h"
 #include "../game/GameState.h"
-#include "../player/Player.h"
+#include "../game/GameManager.h"
 #include "../game/Level.h"
-#include "../view/Camera.h"
+#include "../player/Player.h"
 #include "../buildings/Base.h"
 #include "../creeps/Zombie.h"
-#include "../game/GameManager.h"
 #include "../sprites/SpriteTypes.h"
 #include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
+#include "../view/Camera.h"
 #include "MatchManager.h"
 #include "../game/GameHud.h"
 
@@ -33,19 +33,16 @@ static constexpr int BASE_SRC_Y = 44;
 static constexpr int BASE_SRC_W = 1012;
 static constexpr int BASE_SRC_H = 1050;
 
-
-
-
 class GameStateMatch : public GameState {
 public:
     GameStateMatch(Game& g, const int gameWidth, const int gameHeight);
     virtual ~GameStateMatch() = default;
 
+    void updateServ();
     virtual bool load();
     virtual void loop();
 
 private:
-    Player player;
     Base base;
     Camera camera;
     MatchManager matchManager;

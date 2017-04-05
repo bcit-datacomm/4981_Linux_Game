@@ -23,12 +23,13 @@ void Marine::collidingProjectile(const int damage) {
 }
 
 // Created by DericM 3/8/2017
-void Marine::fireWeapon() {
+bool Marine::fireWeapon() {
     Weapon *w = inventory.getCurrent();
     if(w) {
-        w->fire(*this);
+        return w->fire(*this);
     } else {
         logv("Slot Empty\n");
+        return false;
     }
 }
 

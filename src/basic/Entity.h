@@ -57,7 +57,7 @@ public:
     int getH() const{return destRect.h;} // Get height
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
-
+    
     int32_t getId()const{return id;}; //returns the id of the entity
 
 
@@ -82,7 +82,6 @@ public:
     const std::pair<float, float> getDestCoord() const {return {destRect.x, destRect.y};};
     const std::pair<float, float> getSrcCoord() const {return {srcRect.x, srcRect.y};};
 private:
-
     int32_t id; //is the index num of the entity in its respective manager
     SDL_Rect destRect;
     SDL_Rect srcRect;

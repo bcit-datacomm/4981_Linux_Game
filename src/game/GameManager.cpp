@@ -8,6 +8,7 @@
 #include "../game/GameManager.h"
 #include "../sprites/Renderer.h"
 #include "../buildings/WeaponStore.h"
+#include "../server/servergamestate.h"
 
 Weapon w;
 GameManager GameManager::sInstance;
@@ -29,7 +30,6 @@ GameManager::GameManager():collisionHandler(){
 GameManager::~GameManager() {
     logv("Destroy GM\n");
 }
-
 
 /**
  * Date: Mar. 1, 2017
@@ -117,6 +117,10 @@ void GameManager::updateZombies(const float delta) {
     }
 }
 
+bool GameManager::hasMarine(const int32_t id) const {
+    return marineManager.count(id);
+}
+
 // Update turret actions.
 // Jamie, 2017-03-01.
 void GameManager::updateTurrets() {
@@ -124,7 +128,6 @@ void GameManager::updateTurrets() {
         t.second.targetScanTurret();
     }
 }
-
 
 // Create marine add it to manager, returns marine id
 int32_t GameManager::createMarine() {
@@ -162,6 +165,17 @@ bool GameManager::createMarine(const float x, const float y) {
     return true;
 }
 
+void GameManager::createMarine(const int32_t id) {
+    SDL_Rect temp = {INITVAL, INITVAL, MARINE_WIDTH, MARINE_HEIGHT};
+
+    SDL_Rect marineRect = temp;
+    SDL_Rect moveRect = temp;
+    SDL_Rect projRect = temp;
+    SDL_Rect damRect = temp;
+
+    marineManager.emplace(id, Marine(id, marineRect, moveRect, projRect, damRect));
+}
+
 /**
  * Date: Mar. 1, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
@@ -172,6 +186,9 @@ bool GameManager::createMarine(const float x, const float y) {
  */
 void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::MARINE, id});
+#endif
 }
 
 // Adds marine to level
@@ -182,14 +199,14 @@ bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
     marineManager.emplace(id, newMarine);
     return true;
 }
-
+/*
 // Get a marine by its id
 Marine& GameManager::getMarine(const int32_t id) {
     const auto& mar = marineManager[id];
     assert(mar.second);
     return mar.first;
 }
-
+*/
  //Create Turret add it to manager, returns tower id
 int32_t GameManager::createTurret() {
     const int32_t id = generateID();
@@ -208,6 +225,9 @@ int32_t GameManager::createTurret() {
 // Deletes tower from level
 void GameManager::deleteTurret(const int32_t id) {
     turretManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::TURRET, id});
+#endif
 }
 
 // Adds tower to level
@@ -255,6 +275,17 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
     return id;
 }
 
+void GameManager::createZombie(const int32_t id) {
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+
+    SDL_Rect zombieRect = temp;
+    SDL_Rect moveRect = temp;
+    SDL_Rect projRect = temp;
+    SDL_Rect damRect = temp;
+
+    zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
+}
+
 /**
 * Date: Mar. 1, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
@@ -282,6 +313,9 @@ int32_t GameManager::createZombie(const float x, const float y) {
 // Deletes zombie from level
 void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::ZOMBIE, id});
+#endif
 }
 
 /*
@@ -310,6 +344,9 @@ int32_t GameManager::addObject(const Object& newObject) {
 // Deletes Object from level
 void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::OBJECT, id});
+#endif
 }
 
 //Created By Maitiu
@@ -323,6 +360,9 @@ void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
  */
 void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::WEAPON, id});
+#endif
 }
 
 //Created By Maitiu 2017-03-12
@@ -341,14 +381,12 @@ int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
 * Create weapon drop add it to manager, returns success
 */
 int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
-
     const int32_t id = generateID();
 
     SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
-
     return id;
 }
 
@@ -358,6 +396,7 @@ int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_
 bool GameManager::weaponDropExists(const int32_t id) {
     return weaponDropManager.count(id);
 }
+
 //created by Maitiu 2017-03-12
 //returns weapon drop in  weaponDropManager
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
@@ -378,6 +417,9 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::WEAPONDROP, id});
+#endif
 }
 
 /*
@@ -394,7 +436,6 @@ int32_t GameManager::createWeaponStore(const float x, const float y) {
     std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect);
     addStore(id, std::dynamic_pointer_cast<Store>(ws));
     ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
-
     return id;
 }
 
@@ -426,7 +467,6 @@ int32_t GameManager::createWeaponStore(const float x, const float y) {
  * creates a square area of DropPoints
  */
 void GameManager::createDropZone(const float x, const float y, const int num) {
-
     for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
             createDropPoint(x + (DROP_POINT_SPACE * i), y + (DROP_POINT_SPACE * j));
@@ -439,10 +479,8 @@ void GameManager::createDropZone(const float x, const float y, const int num) {
   */
  int32_t GameManager::createDropPoint(const float x, const float y) {
      const int32_t id = generateID();
-
      dropPointManager.emplace(id, DropPoint(id, x, y));
      openDropPoints.push_back(id);
-
      return id;
  }
 
@@ -515,6 +553,10 @@ void GameManager::updateCollider() {
         collisionHandler.quadtreeObj.insert(&o.second);
     }
 
+    for (auto& o : wallManager) {
+        collisionHandler.quadtreeWall.insert(&o.second);
+    }
+
     for (auto& m : turretManager) {
         if (m.second.isPlaced()) {
             collisionHandler.quadtreeTurret.insert(&m.second);
@@ -531,9 +573,76 @@ void GameManager::updateCollider() {
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(&m.second);
     }
+}
 
-    for (auto& w : wallManager) {
-        collisionHandler.quadtreeWall.insert(&w.second);
+/**
+Date: 30. 17, 2017
+Programmer: Brody McCrone
+Interface: void GameManager::updateMarine(const PlayerData &playerData)
+    playerData: Player data struct received from the server containing
+        updated player info.
+Description:
+Checks if there is a marine in the marineManager with the id in the
+playData struct, if not it creates a marine with that id. Whether it
+created it or not it updates it's positition angle and health.
+*/
+void GameManager::updateMarine(const PlayerData &playerData) {
+    if(marineManager.count(playerData.playerid) == 0) {
+        createMarine(playerData.playerid);
+    }
+    Marine& marine = marineManager[playerData.playerid].first;
+    marine.setPosition(playerData.xpos, playerData.ypos);
+    marine.setAngle(playerData.direction);
+    marine.setHealth(playerData.health);
+}
+
+/**
+Date: 30. 17, 2017
+Programmer: Brody McCrone
+Interface: void GameManager::updateZombie(const ZombieData &zombieData)
+    zobmieData: Zombie data struct received from the server containing
+        updated zombie info.
+Description:
+Checks if there is a zombie in the zombieManager with the id in the
+playData struct, if not it creates that zombie with that id. Whether
+it created it or not it updates it's positition angle and health.
+*/
+void GameManager::updateZombie(const ZombieData &zombieData) {
+    if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
+        createZombie(zombieData.zombieid);
+    }
+    Zombie& zombie = zombieManager[zombieData.zombieid].first;
+    zombie.setPosition(zombieData.xpos, zombieData.ypos);
+    zombie.setAngle(zombieData.direction);
+    zombie.setHealth(zombieData.health);
+}
+
+/**
+Date: 30. 17, 2017
+Programmer: Brody McCrone and Deric Mccadden
+Interface: void GameManager::handleAttackAction(const AttackAction& attackAction)
+    attackAction: Information about an attack a marine performed received from
+        the server.
+Description:
+-Doesn't update the players marine, because the player performs actions before
+sending information to them about the server.
+-If the marine exits, it fires its current weapon. Weapon id is in the attack
+action but support for weapon ids hasn't been implemented so ignores it and
+fires current weapon.
+*/
+void GameManager::handleAttackAction(const AttackAction& attackAction) {
+    if (!(attackAction.playerid == player.getId())) {
+        auto marine = marineManager[attackAction.playerid];
+        if (marine.second) {
+            int curX = marine.first.getX();
+            int curY = marine.first.getY();
+            double curAngle = marine.first.getAngle();
+            marine.first.setPosition(attackAction.xpos, attackAction.ypos);
+            marine.first.setAngle(attackAction.direction);
+            marine.first.fireWeapon();
+            marine.first.setPosition(curX, curY);
+            marine.first.setAngle(curAngle);
+        }
     }
 
     for (auto& s : storeManager) {
@@ -564,6 +673,9 @@ int32_t GameManager::createBarricade(const float x, const float y) {
 
 void GameManager::deleteBarricade(const int32_t id) {
     barricadeManager.erase(id);
+#ifdef SERVER
+    saveDeletion({UDPHeaders::BARRICADE, id});
+#endif
 }
 
 // Get a barricade by its id
@@ -572,7 +684,6 @@ Barricade& GameManager::getBarricade(const int32_t id) {
     assert(bar.second);
     return bar.first;
 }
-
 
 /**
 * Date: Mar. 14, 2017
@@ -585,7 +696,6 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 * Create wall, add it to manager, returns success
 */
 int32_t GameManager::createWall(const float x, const float y, const int w, const int h) {
-
     const int32_t id = generateID();
 
     SDL_Rect wallRect = {static_cast<int>(x), static_cast<int>(y), w, h};
@@ -597,7 +707,6 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
 }
 
 void GameManager::setBoundary(const float startX, const float startY, const float endX, const float endY) {
-
     int width = endX - startX + 200;
     int height = DEFAULT_SIZE;
 
