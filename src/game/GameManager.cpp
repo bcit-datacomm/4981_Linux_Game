@@ -88,7 +88,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& w : wallManager) {
         if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, {15, 478, 122, 83},
+            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H},
                 WALL_WIDTH, WALL_HEIGHT);
         }
     }
