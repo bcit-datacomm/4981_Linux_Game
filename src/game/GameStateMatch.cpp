@@ -114,8 +114,10 @@ void GameStateMatch::handle() {
     if(GameManager::instance()->getPlayer().getMarine()){
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
-        GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-        GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
+
+        //moving these calls to work for every marine
+        //GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
+        //GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -186,9 +188,7 @@ void GameStateMatch::update(const float delta) {
     camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
             GameManager::instance()->getPlayer().getMarine()->getY());
 #endif
-    if (!networked) {
-        GameManager::instance()->updateMarines(delta);
-    }
+    GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
 

@@ -126,6 +126,8 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.playerid = idPlayerPair.first;
         tempPlayer.xpos = marine.getX();
         tempPlayer.ypos = marine.getY();
+        tempPlayer.xdel = marine.getDX();
+        tempPlayer.ydel = marine.getDX();
         tempPlayer.vel = marine.getVelocity();
         tempPlayer.direction = marine.getAngle();
         tempPlayer.health = marine.getHealth();
