@@ -17,6 +17,8 @@
 #include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
+#include "MatchManager.h"
+#include "../game/GameHud.h"
 
 // ticks (ms) in 1 second
 static constexpr float TICK_SEC = 1000.0;
@@ -25,7 +27,6 @@ static constexpr int STORE_Y = 700;
 
 static constexpr int DROPZONE_X = 100;
 static constexpr int DROPZONE_Y = 100;
-static constexpr int DROPZONE_SIZE = 4;
 
 static constexpr int BASE_SRC_X = 82;
 static constexpr int BASE_SRC_Y = 44;
@@ -47,6 +48,10 @@ private:
     Player player;
     Base base;
     Camera camera;
+    MatchManager matchManager;
+    GameHud hud;
+    SDL_Rect screenRect;
+
     float storeX;
     float storeY;
     float dropZoneX;

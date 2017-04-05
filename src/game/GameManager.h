@@ -20,6 +20,7 @@
 #include "../buildings/Store.h"
 #include "../buildings/Barricade.h"
 #include "../buildings/DropPoint.h"
+#include "../map/Map.h"
 
 #include "../inventory/WeaponDrop.h"
 
@@ -84,9 +85,8 @@ public:
     void deleteObject(const int32_t id);
 
     int32_t addZombie(const Zombie&);
-    bool createZombie(const float x, const float y);
+    int32_t createZombie(const float x, const float y);
     void deleteZombie(const int32_t id);
-    bool createZombieWave(const int n);
     bool zombieExists(const int32_t id);
     Zombie& getZombie(const int32_t id);
 
@@ -123,6 +123,12 @@ public:
     void freeDropPoint(const int32_t id);
     bool checkFreeDropPoints();
 
+    // Ai Map setters and getters
+    auto& getAiMap() const { return AiMap; };
+    void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
+        AiMap = a;
+    }
+
     //getManagers
     auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
@@ -139,6 +145,7 @@ private:
     static GameManager sInstance;
 
     CollisionHandler collisionHandler;
+    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
     GameHashMap<int32_t, Object> objectManager;
