@@ -81,7 +81,7 @@ void Renderer::loadSprites() {
     //-------- zombie textures --------
     //baby
     //createTexture(ZOMBIE_BABYZ);
-    createTexture(TEXTURES::BABY_ZOMBIE, TEMP_ZOMBIE_TEXTURE);
+    createTexture(TEXTURES::BABY_ZOMBIE, ZOMBIE_BABYZ);
     //digger
     createTexture(TEXTURES::DIGGER_ZOMBIE, ZOMBIE_DIGGER);
     //boss
@@ -319,4 +319,3 @@ void Renderer::setAlpha(const TEXTURES spriteType, const int alpha) {
 void Renderer::setAlpha(const int spriteType, const int alpha) {
     SDL_SetTextureAlphaMod(getTexture(spriteType), alpha);
 }
-

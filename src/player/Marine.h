@@ -12,6 +12,7 @@
 #include "../inventory/Inventory.h"
 #include "../view/Window.h"
 
+#define FRAME_COUNT_WALK 10 //speed of walking animation
 
 //speed of marine in relation to current frame duration / desired frame duration
 static constexpr int MARINE_VELOCITY = 400;
@@ -67,6 +68,7 @@ public:
 private:
     int health = 100;
     int state; //used to select sprite to display
+    static int frameCount;
 };
 
 #endif

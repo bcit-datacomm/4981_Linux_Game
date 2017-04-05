@@ -38,8 +38,22 @@
 static constexpr int ZOMBIE_VELOCITY = 50;
 static constexpr int ZOMBIE_INIT_HP = 100;
 static constexpr int ZOMBIE_FRAMES = 50;
-static constexpr int ZOMBIE_HEIGHT = 125;
-static constexpr int ZOMBIE_WIDTH = 75;
+static constexpr int ZOMBIE_HEIGHT = 125; // y value
+static constexpr int ZOMBIE_WIDTH = 75; // x value
+static constexpr int ZOMBIE_DEAD_WIDTH = 122; // dead zombie x value
+static constexpr int FRAME_COUNT_ZOMBIE = 10; // speed of walking animation
+
+static constexpr int ZOMBIE_RIGHT = ZOMBIE_HEIGHT * 2;
+static constexpr int ZOMBIE_BACK_RIGHT = ZOMBIE_HEIGHT * 3;
+static constexpr int ZOMBIE_BACK = ZOMBIE_HEIGHT * 4;
+static constexpr int ZOMBIE_BACK_LEFT = ZOMBIE_HEIGHT * 5;
+static constexpr int ZOMBIE_LEFT = ZOMBIE_HEIGHT * 6;
+static constexpr int ZOMBIE_FRONT_LEFT = ZOMBIE_HEIGHT * 7;
+static constexpr int ZOMBIE_FRONT = 0;
+static constexpr int ZOMBIE_FRONT_RIGHT = ZOMBIE_HEIGHT;
+static constexpr int ZOMBIE_NEXT_STEP = ZOMBIE_HEIGHT;
+static constexpr int ZOMBIE_DEAD = ZOMBIE_HEIGHT * 8;
+
 
 /* 8 possible directions combining left, right, up, down.
  * Fred Yang
@@ -98,6 +112,8 @@ public:
     void onCollision();
 
     void collidingProjectile(int damage);
+
+    void updateZombieWalk(const ZombieDirection direction);
 
     void generateMove();                    // A* movement
 
@@ -208,6 +224,7 @@ private:
     int step;           // Number of steps zombie has taken in path
     ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
+    int frameCountZombie = 0;
     Inventory inventory;//inventory holds a weapon used to attack
 
     void zAttack();
