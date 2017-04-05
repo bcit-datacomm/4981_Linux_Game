@@ -2,13 +2,12 @@
 #define MAP_H
 
 #include <iostream>
+#include <array>
 #include <fstream>
 #include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "../game/GameManager.h"
-
 // Tile Size
 static constexpr int T_SIZE = 150;
 
@@ -18,13 +17,15 @@ static constexpr int M_HEIGHT = 100;
 
 // Base width/height
 static constexpr int BASE_SIZE = 7;
+static constexpr int DROPZONE_SIZE = 4;
 
 // Max number of walls, spawn points and shops
 static constexpr int MAX_WALLS = 60;
 static constexpr int MAX_SPAWNPOINTS = 16;
 static constexpr int MAX_SHOPS = 6;
+static constexpr int NUM_DROP_ZONES = 2;
 
-static constexpr char CONCRETE_START = '0';
+static constexpr char DROP_ZONE_START = '0';
 static constexpr char CONCRETE_M = '1';
 static constexpr char WALL = '2';
 static constexpr char ZOMBIE_SPAWN = '3';
@@ -57,11 +58,10 @@ public:
     void mapLoadToGame();
     void printData();
 
-    void setFile(const string f) { fname = f; };
+    void setFile(const std::string& f) { fname = f; };
     const std::string getFile() const { return fname; };
     const std::vector<MapPoint> getZombieSpawn() const { return zombieSpawn; };
     const std::array<std::array<bool, M_WIDTH>, M_HEIGHT> getAIMap() const { return AIMap; };
-
 
 private:
     std::string fname;
@@ -72,17 +72,19 @@ private:
     //zombie spawn point count
     int zombieSpawnCount = 0;
     // Wall start point count
-    int wallStartCount = 0;
+    int dropPointCount = 0;
     // Shop count;
     int shopCount = 0;
     // Base Start Point
     MapPoint base;
     // Array of shop points
-    MapPoint shops[MAX_SHOPS];
+    std::array<MapPoint,MAX_SHOPS> shops;
     // Boolean Array for AI Nodes
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AIMap;
     // Array of zombieSpawn points
     std::vector<MapPoint> zombieSpawn;
+    // Drop Zone Start Points
+    std::array<MapPoint, NUM_DROP_ZONES> dropPoints;
 };
 
 
