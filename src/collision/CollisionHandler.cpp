@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: CollisionHandler.cpp
+*
+* Functions:
+*
+*
+* Date:
+*
+* Revisions:
+* Edited By : Justen DePourcq- Style guide
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+*
+------------------------------------------------------------------------------*/
 #include "Quadtree.h"
 #include "CollisionHandler.h"
 #include "../player/Marine.h"
@@ -51,7 +69,8 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
  * Description:
  * Check for projectile collisions, return hitbox it hits
  */
-const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
+const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects,
+        const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getDamHitBox().getRect(), &obj->getDamHitBox().getRect())
@@ -71,7 +90,8 @@ const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> retur
  * Description:
  * Check for projectile collisions, return object it hits
  */
-const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
+const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects,
+        const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj != nullptr && entity != obj
             && SDL_HasIntersection(&entity->getProHitBox().getRect(), &obj->getProHitBox().getRect())
@@ -147,8 +167,8 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
         const int range
             The range of the weapon that is being fired.
 */
-void CollisionHandler::detectLineCollision(TargetList &targetList, const int gunX, const int gunY,
-        const double angle, const int range){
+void CollisionHandler::detectLineCollision(TargetList& targetList, const int gunX, const int gunY,
+        const double angle, const int range) {
 
     const double degrees = angle - 90;
     const double radians = degrees * M_PI / 180;
@@ -183,10 +203,10 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, const int gun
  * and the entity you pass in
  */
 std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*> returnObjects,
-        const Entity *entity, const HitBox hb){
-    std::vector<Entity*> allEntities;
-    for (const auto& obj: returnObjects){
-        if (obj && entity != obj && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())){
+        const Entity *entity, const HitBox hb) {
+    std::vector<Entity *> allEntities;
+    for (const auto& obj: returnObjects) {
+        if (obj && entity != obj && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())) {
             allEntities.push_back(obj);
         }
     }
@@ -222,7 +242,7 @@ std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*
             This is needed for identification purposes in InstantWeapon.fire()
 */
 void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
-        TargetList &targetList, std::vector<Entity*> &allEntities, int type) {
+        TargetList& targetList, std::vector<Entity *>& allEntities, int type) {
 
     for(const auto& possibleTarget : allEntities) {
 
@@ -249,7 +269,8 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
             Target tar(possibleTarget->getId(), type, entranceWoundX, entranceWoundY, distanceToOrigin);
             targetList.addTarget(tar);
 
-            logv(3, "CollisionHandler::checkTargets() Intersect target at (%d, %d)\n", entranceWoundX, entranceWoundY);
+            logv(3, "CollisionHandler::checkTargets() Intersect target at (%d, %d)\n",
+                entranceWoundX, entranceWoundY);
             logv(3, "CollisionHandler::checkTargets() distanceToOrigin %d\n", distanceToOrigin);
             logv(3, "CollisionHandler::checkTargets() tar.getType(): %d\n", tar.getType());
         }

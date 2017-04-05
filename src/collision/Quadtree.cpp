@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Quadtree.cpp
+*
+* Functions:
+*
+*
+* Date:
+*
+* Revisions:
+* Edited By : Justen DePourcq- Style guide
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+*
+------------------------------------------------------------------------------*/
 #include <array>
 #include <memory>
 #include "Quadtree.h"

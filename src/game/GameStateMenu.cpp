@@ -11,6 +11,8 @@
 #include "GameStateMenu.h"
 #include "Game.h"
 #include "../view/Window.h"
+#include <unistd.h>
+#include "../client/NetworkManager.h"
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
 #include "../sprites/SpriteTypes.h"
@@ -135,9 +137,19 @@ bool GameStateMenu::load() {
  * Listens for events and renders all assets to the screen
  */
 void GameStateMenu::loop() {
-
     // State Loop
     while (play) {
+        if(networked) {
+            const NetworkState netState = NetworkManager::instance().getNetworkState();
+            if (netState == NetworkState::FAILED_TO_CONNECT) {
+
+                NetworkManager::instance().reset();
+            } else if (netState >= NetworkState::GAME_STARTED) {
+                game.setStateID(2);
+                play = false;
+            }
+        }
+
         handle(); // Handle user input
         render(); // Render game state to window
     }
@@ -211,8 +223,12 @@ void GameStateMenu::handle() {
             y = event.button.y;
 
             if (joinSelected) {
-                game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
-                play = false;
+                if (networked) {
+                    NetworkManager::instance().run(hostInput, userInput);
+                } else {
+                    game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
+                    play = false;
+                }
                 break;
             }
 
@@ -508,4 +524,3 @@ void GameStateMenu::render() {
     //Update screen
     SDL_RenderPresent(Renderer::instance().getRenderer());
 }
-

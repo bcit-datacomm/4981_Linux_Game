@@ -56,12 +56,13 @@ AudioManager& AudioManager::instance() {
 *       Constructor of AudioManager
 */
 AudioManager::AudioManager(){
-
+#ifndef SERVER
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         logv("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
     }
 
     loadFiles();
+#endif
 }
 
 /**
@@ -78,6 +79,7 @@ AudioManager::AudioManager(){
 *       Desctructor of AudioManager. Frees memory and quits SLD mixer
 */
 AudioManager::~AudioManager(){
+#ifndef SERVER
     //clear all loaded files
     for(auto const& music : mus) {
         Mix_FreeMusic(music.second);
@@ -89,6 +91,7 @@ AudioManager::~AudioManager(){
     // close audio and quit SDL audio mixer
     Mix_CloseAudio();
     Mix_Quit();
+#endif
 }
 
 
@@ -104,7 +107,7 @@ AudioManager::~AudioManager(){
 *       Plays a single background music file from the _music map.
 */
 void AudioManager::playMusic(const char *fileName){
-
+#ifndef SERVER
     Mix_Music *music = mus[fileName];
 
     logv("%s\n", fileName);
@@ -112,6 +115,7 @@ void AudioManager::playMusic(const char *fileName){
     if(Mix_PlayMusic(music, -1) == -1) {
         logv("Mix_PlayMusic: %s\n", Mix_GetError());
     }
+#endif
 }
 
 
@@ -126,7 +130,7 @@ void AudioManager::playMusic(const char *fileName){
 *       Plays a single sound effect from the _chunks map.
 */
 void AudioManager::playEffect(const char *fileName){
-
+#ifndef SERVER
     Mix_Chunk *chunk = chun[fileName];
 
     logv("%s\n", fileName);
@@ -134,6 +138,7 @@ void AudioManager::playEffect(const char *fileName){
     if (Mix_PlayChannel(-1, chunk, 0) == -1 ){
         logv("Mix_PlayChannel: %s\n", Mix_GetError());
     }
+#endif
 }
 
 
@@ -152,7 +157,7 @@ void AudioManager::playEffect(const char *fileName){
 *       Loads all audio asset files
 */
 void AudioManager::loadFiles(){
-
+#ifndef SERVER
     ////MUSIC
     loadMusic(MUS_DARKNUBULA);
     loadMusic(MUS_TESTMENU01);
@@ -183,7 +188,7 @@ void AudioManager::loadFiles(){
 
     //baracade
     loadEffect(EFX_BINSTALL);
-
+#endif
 }
 
 
@@ -199,15 +204,16 @@ void AudioManager::loadFiles(){
 *       Loads a single background music file into the _music map.
 */
 void AudioManager::loadMusic(const char *fileName){
-
-    Mix_Music *music = NULL;
+#ifndef SERVER
+    Mix_Music *music = nullptr;
     music = Mix_LoadMUS(fileName);
-    if (music == NULL ) {
-        logv( "Failed to load music: %s\n SDL_mixer Error: %s\n",
-            fileName, Mix_GetError() );
+    if (music == nullptr) {
+        logv("Failed to load music: %s\n SDL_mixer Error: %s\n",
+            fileName, Mix_GetError());
     }
 
     mus[fileName] = music;
+#endif
 }
 
 /**
@@ -221,13 +227,14 @@ void AudioManager::loadMusic(const char *fileName){
 *       Loads a single sound effect file into the _chunks map.
 */
 void AudioManager::loadEffect(const char *fileName){
-
-    Mix_Chunk *sound = NULL;
+#ifndef SERVER
+    Mix_Chunk *sound = nullptr;
     sound = Mix_LoadWAV(fileName);
-    if (sound == NULL ) {
-        logv( "Failed to load sound: %s\n SDL_mixer Error: %s\n",
-            fileName, Mix_GetError() );
+    if (sound == nullptr) {
+        logv("Failed to load sound: %s\n SDL_mixer Error: %s\n",
+            fileName, Mix_GetError());
     }
 
     chun[fileName] = sound;
+#endif
 }

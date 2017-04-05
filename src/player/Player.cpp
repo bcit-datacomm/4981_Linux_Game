@@ -1,8 +1,10 @@
-#include <math.h>
+#include <cmath>
 
 #include "Player.h"
+#include "../game/GameManager.h"
 #include "../log/EntityDump.h"
 
+<<<<<<< HEAD
 /**
 * Date: Jan. 28, 2017
 * Author: Jacob McPhail
@@ -25,10 +27,19 @@ Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
 * Description: 
 *   Set what marine the player controls.
 */
+=======
+Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
+        marine(nullptr) {
+    moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
+    attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
+}
+
+>>>>>>> dba7456fbc3a529833f3742777c84c5594ec9f2f
 void Player::setControl(Marine* newControl) {
     marine = newControl;
 }
 
+<<<<<<< HEAD
 /**
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
@@ -43,6 +54,39 @@ void Player::setControl(Marine* newControl) {
 * Description: 
 *   Handle user mouse input.
 */
+=======
+bool Player::hasChangedAngle() const {
+    return fabs(moveAction.data.ma.direction - marine->getAngle()) > DOUBLE_COMPARISON_PRECISION;
+}
+
+bool Player::hasChangedCourse() const {
+    return moveAction.data.ma.xdel - marine->getDX()
+            || moveAction.data.ma.ydel - marine->getDY();
+}
+
+void Player::sendServMoveAction() {
+    moveAction.data.ma.id = id;
+    moveAction.data.ma.xpos = marine->getX();
+    moveAction.data.ma.ypos = marine->getY();
+    moveAction.data.ma.xdel = marine->getDX();
+    moveAction.data.ma.ydel = marine->getDY();
+    moveAction.data.ma.vel = marine->getVelocity();
+    moveAction.data.ma.direction = marine->getAngle();
+    NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
+}
+
+void Player::sendServAttackAction() {
+    attackAction.data.aa.playerid = id;
+    attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
+    attackAction.data.aa.weaponid = marine->inventory.getCurrent()->getID();
+    attackAction.data.aa.xpos = marine->getX();
+    attackAction.data.aa.ypos = marine->getY();
+    attackAction.data.aa.direction = marine->getAngle();
+
+    NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
+}
+
+>>>>>>> dba7456fbc3a529833f3742777c84c5594ec9f2f
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
@@ -63,7 +107,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
 
-        if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
@@ -72,14 +116,23 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
             }
         }
     }
-
+/*
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if(marine->inventory.getCurrent() != nullptr){
             marine->fireWeapon();
+            if (networked) {
+                sendServAttackAction();
+            }
         }
     }
+*/
+}
 
+void Player::fireWeapon() {
+    if (marine->inventory.getCurrent() && marine->fireWeapon() && networked) {
+        sendServAttackAction();
+    }
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e){
@@ -88,7 +141,6 @@ void Player::handleMouseWheelInput(const SDL_Event *e){
 
 // function to handle mouse-click events
 void Player::handlePlacementClick(SDL_Renderer *renderer) {
-
     if (tempBarricadeID > -1) {
         Barricade& tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
         if (tempBarricade.isPlaceable()) {

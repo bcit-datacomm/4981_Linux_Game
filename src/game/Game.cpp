@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "../server/server.h"
 #include "../game/Game.h"
 #include "../game/GameStateMatch.h"
 #include "../game/GameStateMenu.h"
@@ -48,6 +49,9 @@ void Game::run() {
         logv("State ID: %d\n", stateID);
         loadState();
         if (state->load()) {
+#ifdef SERVER
+            isGameRunning.store(true, std::memory_order_relaxed);
+#endif
             state->loop();
         }
     }
@@ -62,6 +66,10 @@ void Game::run() {
 *   Loads a state to be used.
 */
 void Game::loadState() {
+#ifdef SERVER
+    state = std::make_unique<GameStateMatch>(*this, window.getWidth(), window.getHeight());
+    stateID = 0;
+#else
     logv("Starting ");
     state.reset();
     // Sets the state by the state ID
@@ -79,6 +87,7 @@ void Game::loadState() {
     }
      // Reset stateID back to zero to allow states to end program or incase of load failure
     stateID = 0;
+#endif
 }
 
 /**
@@ -133,11 +142,13 @@ bool Game::init() {
                     success = false;
                 }
 
+#ifndef SERVER
                 //Initialize SDL_mixer
                 if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
                     logv("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
                     success = false;
                 }
+#endif
             }
         }
     }
@@ -167,7 +178,9 @@ bool Game::loadMedia() {
 */
 void Game::close() {
     //Quit SDL subsystems
+#ifndef SERVER
     Mix_Quit();
+#endif
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();

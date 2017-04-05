@@ -6,7 +6,7 @@ CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
-EXCLUDEFOLDERS := server UnitTests
+EXCLUDEFOLDERS := UnitTests
 
 #The following variable generates a pattern to create these "not" flag chains for the find command based on the exclude list
 #find . -not \( -path *server -prune \) -not \( -path *gamefolder -prune \) -name *\.cpp
@@ -25,18 +25,23 @@ CONVERT := $(patsubst $(SRCOBJS), $(OBJS), $(shell basename -a $(EXCLUDEDSRCWILD
 EXEC := $(ODIR)/$(APPNAME)
 DEPS := $(EXEC).d
 
-release: all
-debug: all
-
-all: $(CONVERT)
-# Command takes all bin .o files and creates an executable called chess in the bin folder
+dclient client: $(CONVERT)
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(EXEC)
+
+all release debug: $(CONVERT)
+# Command takes all bin .o files and creates an executable in the bin folder
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(EXEC)
+	@$(RM) $(wildcard $(ODIR)/tests*) $(wildcard $(ODIR)/*.o)
+	$(if $(filter $@, debug), $(MAKE) dserver, $(MAKE) server)
+
+dserver server: $(CONVERT)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
 
 $(ODIR):
 	@mkdir -p $(ODIR)
 
 # Create dependency file for make and manually adjust it silently to work with other directories
-$(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR) 
+$(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR)
 # Compile the non-system dependencies and store it in outputdir/execname.d
 	@$(CXX) -MM $(CFLAGS) $(CXXFLAGS) $(SRCWILD) > $(DEPS)
 # Take the temp file contents, do a regex text replace to change all .o strings into
@@ -52,7 +57,7 @@ ifeq (,$(filter clean, $(MAKECMDGOALS)))
 endif
 
 #Check if in debug mode and set the appropriate compile flags
-ifeq (,$(filter debug dserver tests, $(MAKECMDGOALS)))
+ifeq (,$(filter debug dserver tests dclient, $(MAKECMDGOALS)))
 $(eval CXXFLAGS := $(BASEFLAGS) $(RELEASEFLAGS))
 else
 $(eval CXXFLAGS := $(BASEFLAGS) $(DEBUGFLAGS))
@@ -70,11 +75,6 @@ $(OBJS): $(filter .+$$@, $(SRCWILD))
 # Command compiles the src .cpp file with the listed flags and turns it into a bin .o file
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $@
 
-dserver: server
-
-server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
-
 tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTests/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/tests 
 
@@ -83,5 +83,5 @@ tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTe
 
 # Deletes the executable and all .o and .d files in the bin folder
 clean: | $(ODIR)
-	$(RM) $(EXEC) $(wildcard $(ODIR)/tests*) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
+	$(RM) $(EXEC) $(wildcard $(ODIR)/tests*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
 
