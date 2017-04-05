@@ -12,7 +12,6 @@
 #include "../inventory/Inventory.h"
 #include "../view/Window.h"
 
-
 //speed of marine in relation to current frame duration / desired frame duration
 static constexpr int MARINE_VELOCITY = 400;
 //width of any marine image
@@ -41,8 +40,6 @@ static constexpr double SPRITE_ANGLE6 = -9 * M_PI / 8;
 static constexpr double SPRITE_ANGLE7 = -11 * M_PI / 8;
 static constexpr double SPRITE_ANGLE8 = 3 * M_PI / 8;
 
-
-
 const int MARINE_HEIGHT = 125;
 const int MARINE_WIDTH = 75;
 
@@ -54,17 +51,20 @@ public:
 
     void create(); //function displays character
     void onCollision();
+    int getHealth() const {return health;}
     void collidingProjectile(const int damage);
-    void fireWeapon();
+    bool fireWeapon();
     int32_t checkForPickUp();
     int getHealth() {return health;};
     void updateImageDirection();
     void updateImageWalk(const Uint8 *state);
     void activateStore(const Entity *ep);
     Inventory inventory;
+    void setHealth(const int hlth) {health = hlth;};
     int getCurrentHealth() {return health;}; //returns the current health of the marine
 
 private:
+    std::string username;
     int health = 100;
     int state; //used to select sprite to display
 };
