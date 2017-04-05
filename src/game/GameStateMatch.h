@@ -18,6 +18,7 @@
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
 #include "MatchManager.h"
+#include "../game/GameHud.h"
 
 // ticks (ms) in 1 second
 static constexpr float TICK_SEC = 1000.0;
@@ -40,6 +41,9 @@ private:
     Base base;
     Camera camera;
     MatchManager matchManager;
+    GameHud hud;
+    SDL_Rect screenRect;
+
     float storeX;
     float storeY;
     float dropZoneX;

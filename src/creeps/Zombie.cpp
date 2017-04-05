@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Source: Zombie.cpp    
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #include <math.h>
 #include <random>
 #include <cassert>
@@ -44,7 +62,7 @@ void Zombie::onCollision() {
 
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
-    if(health <= 0) {
+    if (health <= 0) {
         GameManager::instance()->deleteZombie(getId());
     }
 }
@@ -94,7 +112,7 @@ void Zombie::generateMove() {
     }
 
     // Each case will set direction and angle based on the next step in the path
-    switch(direction) {
+    switch (direction) {
         case ZombieDirection::DIR_R:
             setDX(ZOMBIE_VELOCITY);
             setDY(0);
