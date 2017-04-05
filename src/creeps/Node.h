@@ -1,18 +1,21 @@
-/*------------------------------------------------------------------------------------------------------------------
--- HEADER FILE: Node.h
---
--- FUNCTIONS:
-
---
--- DATE:        February 1, 2017
---
--- DESIGNER:    Fred Yang, Robert Arendac
---
--- PROGRAMMER:  Fred Yang, Robert Arendac
---
--- NOTES:
--- Used for the A* algorithm in navigating the map
-----------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+* Header: Zombie.h
+*
+* Functions:
+*    
+*
+* Date:         February 1, 2017     
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: Fred Yang, Robert Arendac
+*
+* Author: Fred Yang, Robert Arendac
+*
+* Notes:
+* Used for the A* algorithm in navigating the map 
+------------------------------------------------------------------------------*/
 
 #ifndef NODE_H
 #define NODE_H
@@ -27,7 +30,7 @@ static constexpr int BASE_COST   = 10;
 static constexpr int EXTEND_COST = 14;
 
 // The size of a tile/node
-static constexpr int TILE_SIZE   = 50;
+static constexpr int TILE_SIZE = 150;
 
 // map row & column
 static constexpr int ROW = TILE_SIZE;
@@ -51,9 +54,7 @@ public:
     explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
             const int pri = 0) : xPos(xPos), yPos(yPos), lv(lv), pri(pri) {}
 
-    virtual ~Node() {
-        logv("destroy Node\n");
-    } // default dtor
+    virtual ~Node() = default;
 
     // X coordinate of current node
     int getXPos() const {

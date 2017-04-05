@@ -1,3 +1,22 @@
+/*------------------------------------------------------------------------------
+* Header: AudioManage.h      
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
+
 #ifndef AUDIO_MANAGER_H
 #define AUDIO_MANAGER_H
 
@@ -50,21 +69,21 @@ public:
 
     static AudioManager& instance();
 
-    void playMusic(const char * fileName);
-    void playEffect(const char * fileName);
+    void playMusic(const char *fileName);
+    void playEffect(const char *fileName);
 
 private:
     static AudioManager sInstance;
 
-    musicMap  _music;
-    chunkMap  _chunks;
+    musicMap  mus;
+    chunkMap  chun;
 
     AudioManager();
     ~AudioManager();
 
     void loadFiles();
-    void loadMusic(const char * fileName);
-    void loadEffect(const char * fileName);
+    void loadMusic(const char *fileName);
+    void loadEffect(const char *fileName);
 };
 
 #endif

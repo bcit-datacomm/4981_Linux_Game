@@ -16,9 +16,9 @@ using std::string;
 namespace TurretGunVars {
     const string TYPE           = "TurretGun";
 
-    const string FIRESOUND      = EFX_WLRIFLE;
+    const string FIRESOUND      = EFX_WTURRET01;
     const string HITSOUND       = "";
-    const string RELOADSOUND    = EFX_WRELOAD01; //TODO turret reload SFX
+    const string RELOADSOUND    = "";
     const string EMPTYSOUND     = "";
 
     constexpr int RANGE         = 400;
@@ -26,12 +26,12 @@ namespace TurretGunVars {
     constexpr int AOE           = 1;
     constexpr int PENETRATION   = 3;
 
-    constexpr int CLIP          = 10;
-    constexpr int CLIPMAX       = 10;
-    constexpr int AMMO          = 10;
+    constexpr int CLIP          = 250;
+    constexpr int CLIPMAX       = 250;
+    constexpr int AMMO          = 250;
 
     constexpr int RELOADDELAY   = 100;
-    constexpr int FIREDELAY     = 250;
+    constexpr int FIREDELAY     = 1500;
 }
 
 

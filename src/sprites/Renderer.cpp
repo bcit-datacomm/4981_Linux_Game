@@ -42,16 +42,34 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::TERRAFORMED, TEXTURE_DIRT);  //terraformed
     createTexture(TEXTURES::CONCRETE, REPLACE_ME);     //concrete, temporary texture for now
 
+    //--------------------- Hud textures ---------------------
+    createTexture(TEXTURES::WEAPON_CLIP_FULL, WEAPON_CLIP_FULL_TEXTURE);
+    createTexture(TEXTURES::WEAPON_CLIP_EMPTY, WEAPON_CLIP_EMPTY_TEXTURE);
+    createTexture(TEXTURES::ACTIVE_SLOT, ACTIVE_SLOT_TEXTURE);
+    createTexture(TEXTURES::PASSIVE_SLOT, PASSIVE_SLOT_TEXTURE);
+    createTexture(TEXTURES::HEALTHBAR, HEALTHBAR_TEXTURE);
+    createTexture(TEXTURES::CONSUMABLE_SLOT, CONSUMABLE_SLOT_TEXTURE);
+    createTexture(TEXTURES::EQUIPPED_WEAPON_SLOT, EQUIPPED_WEAPON_SLOT_TEXTURE);
+
+    // ---------- Consumable Textures ----------
+    createTexture(TEXTURES::HEALTHPACK, HEALTHPACK_TEXTURE);
+
+    // ---------- Inventory Weapon Textures --------------
+    createTexture(TEXTURES::RIFLE_INVENTORY, RIFLE_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::SHOTGUN_INVENTORY, SHOTGUN_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::HANDGUN_INVENTORY, HANDGUN_INVENTORY_TEXTURE);
+
     //-------- map object textures --------
     //nature
     //comsumables
     //shops
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
+    createTexture(TEXTURES::BASE, MAP_OBJECT_BASE);
 
     //-------- weapon textures --------
-    createTexture(TEXTURES::RIFLE, TEMP_RIFLE_TEXTURE); //temporary, will be replaced later
-    createTexture(TEXTURES::SHOTGUN, TEMP_SHOTGUN_TEXTURE); //temporary, will be replaced later
-    createTexture(TEXTURES::HANDGUN, TEMP_HANDGUN_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::RIFLE, RIFLE_EQUIPPED_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::SHOTGUN, SHOTGUN_EQUIPPED_TEXTURE); //temporary, will be replaced later
+    createTexture(TEXTURES::HANDGUN, HANDGUN_EQUIPPED_TEXTURE); //temporary, will be replaced later
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);
@@ -297,4 +315,3 @@ void Renderer::setAlpha(const TEXTURES spriteType, const int alpha) {
 void Renderer::setAlpha(const int spriteType, const int alpha) {
     SDL_SetTextureAlphaMod(getTexture(spriteType), alpha);
 }
-

@@ -6,7 +6,6 @@
  *                    const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
  *                    const int ammo, const bool placed, const float range)
  *            ~Turret()
- *            void placementCheckTurret()
  *            bool placementCheckTurret()
  *            bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &)
  *            void activateTurret()
@@ -22,10 +21,18 @@
  *            bool isPlaced() {return placed;}
  *            void pickUpTurret()
  *
- * Description:
+ * Date: Feb. 02, 2017
+ *
+ * Designer: Mark Chen, Jaime Lee, Terry Kang
+ *
+ * Author: Mark Chen, Micheal Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
+ *
+ * Revisions:
+ * Edited By : Yiaoping Shu- Style guide
+ *
+ * Notes:
  * Source file for the turret class. This file defines all the functions associated with a turret.
  */
-
 #include <cassert>
 
 #include "Turret.h"
@@ -126,14 +133,19 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
 
 /**
  * Date: Feb. 02, 2017
+ * Modified: March 31, 2017 - Mark Tattrie
  * Designer: Mark Chen
- * Programmer: Mark Chen
+ * Programmer: Mark Chen, Mark Tattrie
  * Function Interface: void collidingProjectile(const int damage)
  * Description:
  * Damages the turret by the amount of 'damage' parameter passed in.
  */
 void Turret::collidingProjectile(const int damage) {
     health -= damage;
+    //turret health is less then or equal to 0
+    if(!healthCheckTurret()){
+        GameManager::instance()->deleteTurret(getId());
+    }
 }
 
 /**
@@ -150,7 +162,6 @@ void Turret::shootTurret() {
 
     Weapon *w = inventory.getCurrent();
     if (w != nullptr) {
-
         w->fire(*this);
     }
 }
@@ -196,8 +207,6 @@ void Turret::move(const float playerX, const float playerY,
 void Turret::placeTurret(const float moveX, const float moveY) {
     placed = true;
     activated = true;
-    setX(moveX);
-    setY(moveY);
 }
 
 /**

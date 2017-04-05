@@ -46,24 +46,23 @@
  * JF Mar 26: Re-added non-excessive initializations
  * Isaac Morneau, March 29, 2017 Re-removed the initializations that were in fact excessive
  *      then refactored the menu system to operate more logically and cleanly
-
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g),
         screenRect{0, 0, g.getWindow().getWidth(), g.getWindow().getHeight()},
         hostRect{
-            static_cast<int>(screenRect.w * HOST_X_RAT), 
-            static_cast<int>(screenRect.h * HOST_Y_RAT), 
-            static_cast<int>(screenRect.w * HOST_W_RAT), 
+            static_cast<int>(screenRect.w * HOST_X_RAT),
+            static_cast<int>(screenRect.h * HOST_Y_RAT),
+            static_cast<int>(screenRect.w * HOST_W_RAT),
             static_cast<int>(screenRect.h * HOST_H_RAT)},
         userRect{
-            static_cast<int>(screenRect.w * USER_X_RAT), 
-            static_cast<int>(hostRect.y + hostRect.h + USER_Y_PAD), 
-            static_cast<int>(screenRect.w * USER_W_RAT), 
+            static_cast<int>(screenRect.w * USER_X_RAT),
+            static_cast<int>(hostRect.y + hostRect.h + USER_Y_PAD),
+            static_cast<int>(screenRect.w * USER_W_RAT),
             static_cast<int>(screenRect.h * USER_H_RAT)},
         joinRect{
-            static_cast<int>(screenRect.w * JOIN_X_RAT), 
-            static_cast<int>(userRect.y + userRect.h + JOIN_Y_PAD), 
-            static_cast<int>(screenRect.w * JOIN_W_RAT), 
+            static_cast<int>(screenRect.w * JOIN_X_RAT),
+            static_cast<int>(userRect.y + userRect.h + JOIN_Y_PAD),
+            static_cast<int>(screenRect.w * JOIN_W_RAT),
             static_cast<int>(screenRect.h * JOIN_H_RAT)},
         joinSelected(false), hostIPSelected(false), usernameSelected(false),
         hostInput(HOST_DEFAULT), userInput(USER_DEFAULT),
@@ -105,7 +104,6 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
  * Isaac Morneau:
  *      off loaded loading into constructor and Textomagic objects
  */
-
 bool GameStateMenu::load() {
     return true;
 }
@@ -400,20 +398,20 @@ void GameStateMenu::update(const float delta) {
  */
 void GameStateMenu::positionElements() {
     screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
-    
-    hostRect = {static_cast<int>(screenRect.w * HOST_X_RAT), 
-        static_cast<int>(screenRect.h * HOST_Y_RAT), 
-        static_cast<int>(screenRect.w * HOST_W_RAT), 
+
+    hostRect = {static_cast<int>(screenRect.w * HOST_X_RAT),
+        static_cast<int>(screenRect.h * HOST_Y_RAT),
+        static_cast<int>(screenRect.w * HOST_W_RAT),
         static_cast<int>(screenRect.h * HOST_H_RAT)};
 
-    userRect = {static_cast<int>(screenRect.w * USER_X_RAT), 
-        static_cast<int>(hostRect.h + hostRect.y + USER_Y_PAD), 
-        static_cast<int>(screenRect.w * USER_W_RAT), 
+    userRect = {static_cast<int>(screenRect.w * USER_X_RAT),
+        static_cast<int>(hostRect.h + hostRect.y + USER_Y_PAD),
+        static_cast<int>(screenRect.w * USER_W_RAT),
         static_cast<int>(screenRect.h * USER_H_RAT)};
-    
-    joinRect = { static_cast<int>(screenRect.w * JOIN_X_RAT), 
-        static_cast<int>(userRect.h + userRect.y + JOIN_Y_PAD), 
-        static_cast<int>(screenRect.w * JOIN_W_RAT), 
+
+    joinRect = { static_cast<int>(screenRect.w * JOIN_X_RAT),
+        static_cast<int>(userRect.h + userRect.y + JOIN_Y_PAD),
+        static_cast<int>(screenRect.w * JOIN_W_RAT),
         static_cast<int>(screenRect.h * JOIN_H_RAT) };
 
     hostMagic.setRect(hostRect);

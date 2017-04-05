@@ -1,4 +1,21 @@
-// Created 05/02/2017 Mark C.
+/*------------------------------------------------------------------------------
+* Header: Turret.h   
+*
+* Functions:
+*    
+*
+* Date: 05/02/2017 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: Mark C.
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #ifndef TURRET_H
 #define TURRET_H
 

@@ -3,12 +3,10 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
-        const SDL_Rect& damageSize): Entity(id, dest, movementSize, projectileSize, damageSize),
+Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
+: Entity(id, dest, movementSize, projectileSize, damageSize),
         Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
-    //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
-    //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
-    //damageHitBox.setFriendly(true); Uncomment for no friendly fire
     logv("Create Marine\n");
 }
 
@@ -83,7 +81,7 @@ int32_t Marine::checkForPickUp() {
 }
 
 /**
-* Date: Mar 27 
+* Date: Mar 27
 * Author: Aing Ragunathan
 *
 * Interface: void Marine::updateImageDirection()
@@ -98,34 +96,34 @@ void Marine::updateImageDirection() {
     const double radians = (getAngle() -90) * M_PI/180;
 
     //order: start from ~0 rad, counter clockwise
-    if (radians > SPRITE_ANGLE2 && radians < SPRITE_ANGLE1) { 
+    if (radians > SPRITE_ANGLE2 && radians < SPRITE_ANGLE1) {
         setSrcRect(getSrcRect().x, SPRITE_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-    } else if (radians > SPRITE_ANGLE3 && radians < SPRITE_ANGLE2) { 
-        setSrcRect(getSrcRect().x, SPRITE_BACK_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-    } else if (radians > SPRITE_ANGLE4 && radians < SPRITE_ANGLE3) { 
-        setSrcRect(getSrcRect().x, SPRITE_BACK, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-    } else if (radians > SPRITE_ANGLE5 && radians < SPRITE_ANGLE4) { 
-        setSrcRect(getSrcRect().x, SPRITE_BACK_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-    } else if (radians > SPRITE_ANGLE6 && radians < SPRITE_ANGLE5) { 
-        setSrcRect(getSrcRect().x, SPRITE_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-    } else if (radians > SPRITE_ANGLE7 && radians < SPRITE_ANGLE6) { 
-        setSrcRect(getSrcRect().x, SPRITE_FRONT_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-    } else if (radians < SPRITE_ANGLE7) { 
-        setSrcRect(getSrcRect().x, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
-    } else if (radians > SPRITE_ANGLE1 && radians < SPRITE_ANGLE8) { 
+    } else if (radians > SPRITE_ANGLE3 && radians < SPRITE_ANGLE2) {
+        setSrcRect(getSrcRect().x, SPRITE_BACK_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians > SPRITE_ANGLE4 && radians < SPRITE_ANGLE3) {
+        setSrcRect(getSrcRect().x, SPRITE_BACK, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians > SPRITE_ANGLE5 && radians < SPRITE_ANGLE4) {
+        setSrcRect(getSrcRect().x, SPRITE_BACK_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians > SPRITE_ANGLE6 && radians < SPRITE_ANGLE5) {
+        setSrcRect(getSrcRect().x, SPRITE_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians > SPRITE_ANGLE7 && radians < SPRITE_ANGLE6) {
+        setSrcRect(getSrcRect().x, SPRITE_FRONT_LEFT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians < SPRITE_ANGLE7) {
+        setSrcRect(getSrcRect().x, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (radians > SPRITE_ANGLE1 && radians < SPRITE_ANGLE8) {
         setSrcRect(getSrcRect().x, SPRITE_FRONT_RIGHT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-    }    
+    }
 }
 
 /**
-* Date: Mar 30 
+* Date: Mar 30
 * Author: Aing Ragunathan
 *
 * Function Interface: void Marine::updateImageWalk(double frameCount)
 *       double frameCount - counted frames while walking
 *
 * Description:
-*       This function repeatedly updates the image of the marine in order to animate 
+*       This function repeatedly updates the image of the marine in order to animate
 *       walking. It is called from GameStateMatch::handle after every frame and updates
 *       the feet placement of the marine.
 */
@@ -135,47 +133,47 @@ void Marine::updateImageWalk(const Uint8 *state) {
     if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
         //stops lag when taking first step
         if (getSrcRect().x == SPRITE_FRONT) {
-            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {
             //cycle throught the walking images
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
-                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             } else {
-                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
-        } 
+        }
     } else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
         if (getSrcRect().x == SPRITE_FRONT) {
-            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
-                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             } else {
-                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
-        } 
+        }
     } else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
         if (getSrcRect().x == SPRITE_FRONT) {
-            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
-                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(getSrcRect().x + SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             } else {
-                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
-        } 
+        }
     } else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
         if (getSrcRect().x == SPRITE_FRONT) {
-            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+            setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {
             if (getSrcRect().x < SPRITE_NEXT_STEP) {
-                setSrcRect(getSrcRect().x +SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y); 
+                setSrcRect(getSrcRect().x +SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             } else {
-                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
+                setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
-        } 
+        }
     } else {
-        setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
+        setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     }
 }
 
@@ -191,3 +189,4 @@ void Marine::activateStore(const Entity *ep){
         gm->getStore(ep->getId())->purchase(r);
     }
 }
+

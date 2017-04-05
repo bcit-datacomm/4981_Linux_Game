@@ -5,7 +5,8 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()) {
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
+        tempZombieHand(GameManager::instance()->generateID()) {
     weaponIds[0] = defaultGun.getID();
     weaponIds[1] = -1;
     weaponIds[2] = -1;
@@ -43,6 +44,33 @@ bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
 Weapon* Inventory::getCurrent() {
     if (weaponIds[current] >= 0) {
         return GameManager::instance()->getWeapon(weaponIds[current]).get();
+    }
+    return nullptr;
+}
+
+/**
+ * Function: getWeaponFromInventory
+ *
+ * Date:
+ * JF: April 4, 2017:
+ *
+ * Designer:
+ * Jacob Frank
+ *
+ * Programmer:
+ * Jacob Frank
+ *
+ * Interface: getWeaponFromInventory(int inventorySlot)
+ *                  int inventorySlot: The inventory slot to retrieve the weapon from
+ *
+ * Returns: A Weapon from the inventory if one is available
+ *
+ * Notes:
+ * Function, when called, retrieves the weapon from the inventory slot requested
+ */
+Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
+    if (weaponIds[inventorySlot] >= 0) {
+        return GameManager::instance()->getWeapon(weaponIds[inventorySlot]).get();
     }
     return nullptr;
 }
@@ -96,24 +124,38 @@ void Inventory::scrollCurrent(int direction) {
      }
  }
 
-/**
-* Date: Mar. 30, 2017
-* Designer: Mark Chen
-* Programmer: Mark Chen
-* Function Interface: void makeTurretInv()
-* Description:
-* Switches the defaultGun to a turretGun.
-*/
-void Inventory::makeTurretInv() {
-    //Weapon *w = getCurrent();
-    GameManager::instance()->removeWeapon(weaponIds[current]);
-    TurretGun tGun(GameManager::instance()->generateID());
-    weaponIds[0] = tGun.getID();
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
-}
+ /**
+  * Date: Mar. 31, 2017
+  * Author: Mark Tattrie
+  * Function Interface:  void Inventory::initZombie()
+  * Description:
+  * function to initialize a zombies inventory
+  */
+ void Inventory::initZombie(){
+     weaponIds[0] = tempZombieHand.getID();
+     weaponIds[1] = -1;
+     weaponIds[2] = -1;
+     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>
+            (std::make_shared<ZombieHand>(tempZombieHand)));
+ }
+ /**
+ * Date: Mar. 30, 2017
+ * Designer: Mark Chen
+ * Programmer: Mark Chen
+ * Function Interface: void makeTurretInv()
+ * Description:
+ * Switches the defaultGun to a turretGun.
+ */
+ void Inventory::makeTurretInv() {
+     //Weapon *w = getCurrent();
+     GameManager::instance()->removeWeapon(weaponIds[current]);
+     TurretGun tGun(GameManager::instance()->generateID());
+     weaponIds[0] = tGun.getID();
+     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
+ }
 
-void Inventory::setEmpty() {
-    GameManager::instance()->removeWeapon(weaponIds[current]);
-    weaponIds[0] = -1;
-    logv("weaponID changed to: %d\n", getCurrent()->getID());
-}
+ void Inventory::setEmpty() {
+     GameManager::instance()->removeWeapon(weaponIds[current]);
+     weaponIds[0] = -1;
+     logv("weaponID changed to: %d\n", getCurrent()->getID());
+ }
