@@ -5,7 +5,8 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()) {
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
+        tempZombieHand(GameManager::instance()->generateID()) {
     weaponIds[0] = defaultGun.getID();
     weaponIds[1] = -1;
     weaponIds[2] = -1;
@@ -47,6 +48,33 @@ Weapon* Inventory::getCurrent() {
     return nullptr;
 }
 
+/**
+ * Function: getWeaponFromInventory
+ *
+ * Date:
+ * JF: April 4, 2017:
+ *
+ * Designer:
+ * Jacob Frank
+ *
+ * Programmer:
+ * Jacob Frank
+ *
+ * Interface: getWeaponFromInventory(int inventorySlot)
+ *                  int inventorySlot: The inventory slot to retrieve the weapon from
+ *
+ * Returns: A Weapon from the inventory if one is available
+ *
+ * Notes:
+ * Function, when called, retrieves the weapon from the inventory slot requested
+ */
+Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
+    if (weaponIds[inventorySlot] >= 0) {
+        return GameManager::instance()->getWeapon(weaponIds[inventorySlot]).get();
+    }
+    return nullptr;
+}
+
 void Inventory::useItem() {
     if (medkit != nullptr) {
         medkit->OnConsume();
@@ -83,7 +111,7 @@ void Inventory::scrollCurrent(int direction) {
  void Inventory::dropWeapon(const float x, const float y) {
      if(current){
          Weapon *w = getCurrent();
-         if (w != nullptr) {
+         if (w) {
              if (w->getAmmo() > 0) {
                  GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
 
@@ -94,4 +122,20 @@ void Inventory::scrollCurrent(int direction) {
              weaponIds[current] = -1;
          }
      }
+ }
+
+
+ /**
+  * Date: Mar. 31, 2017
+  * Author: Mark Tattrie
+  * Function Interface:  void Inventory::initZombie()
+  * Description:
+  * function to initialize a zombies inventory
+  */
+ void Inventory::initZombie(){
+     weaponIds[0] = tempZombieHand.getID();
+     weaponIds[1] = -1;
+     weaponIds[2] = -1;
+     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>
+            (std::make_shared<ZombieHand>(tempZombieHand)));
  }

@@ -1,12 +1,13 @@
 #include <math.h>
 
 #include "Player.h"
+#include "../log/EntityDump.h"
 
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {}
 
-void Player::setControl(Marine& newControl) {
-    marine = &newControl;
+void Player::setControl(Marine* newControl) {
+    marine = newControl;
 }
 
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
@@ -123,12 +124,20 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
     }
+
+    //added by Maitiu Debug print 4/3/2017
+    if(state[SDL_SCANCODE_PERIOD]){
+        dumpEntityPositions(this);
+    }
     marine->setDY(y);
     marine->setDX(x);
 }
 
 void Player::handleTempBarricade(SDL_Renderer *renderer) {
     if(tempBarricadeID < 0) {
+        if (!marine) {
+            return;
+        }
         const double angle = marine->getAngle();
         tempBarricadeID = GameManager::instance()->createBarricade(
             marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
@@ -150,3 +159,11 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
        tempTurretID = -1;
    }
 }
+
+void Player::checkMarineState() {
+    if (marine && marine->getHealth() <= 0){
+        GameManager::instance()->deleteMarine(marine->getId());
+        setControl(nullptr);
+    }
+}
+

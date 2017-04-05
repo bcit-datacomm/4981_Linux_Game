@@ -8,6 +8,7 @@
 #include "../game/Level.h"
 #include "../view/Camera.h"
 #include "../sprites/Textomagic.h"
+#include "../audio/AudioManager.h"
 
 static constexpr size_t maxLength = 15;
 static constexpr int FONT_SIZE = 256;
@@ -49,7 +50,7 @@ public:
 
 private:
     virtual void sync() override;
-    virtual void handle(const unsigned long countedFrames) override;
+    virtual void handle() override;
     virtual void update(const float delta) override;
     void positionElements();
     virtual void render() override;
@@ -66,7 +67,7 @@ private:
 
     std::string hostInput;
     std::string userInput;
-    
+
     Textomagic hostMagic;
     Textomagic userMagic;
     Textomagic joinMagic;

@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Zombie.h
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
 
@@ -190,6 +208,9 @@ private:
     int step;           // Number of steps zombie has taken in path
     ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
+    Inventory inventory;//inventory holds a weapon used to attack
+
+    void zAttack();
 };
 
 #endif

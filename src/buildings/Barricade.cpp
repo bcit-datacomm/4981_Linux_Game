@@ -32,7 +32,7 @@
  *
  * Designer: Terry Kang
  * Programmer: Terry Kang
- * Function Interface: Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize, 
+ * Function Interface: Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& movementSize,
  *      const SDL_Rect& pickupSize, const int health, const int state, const bool placeable, const bool placed)
  * Description:
  * Constructor for a barricade, creates a barricade on the map.
@@ -114,7 +114,7 @@ bool Barricade::isPlaced() const {
  *
  * Designer: Terry Kang
  * Programmer: Terry Kang
- * Function Interface: void move(const float playerX, const float playerY, 
+ * Function Interface: void move(const float playerX, const float playerY,
  *          const float moveX, const float moveY, CollisionHandler& ch)
  * Description:
  * Move Zombie by x and y amount
@@ -144,7 +144,7 @@ void Barricade::onCollision() {
 
 /**
  * Date: Feb. 02, 2017
- *
+ * Modified: March 30, 2017 - Mark Tattrie
  * Designer: Terry Kang
  * Programmer: Terry Kang
  * Function Interface: void collidingProjectile(const int damage)
@@ -153,6 +153,9 @@ void Barricade::onCollision() {
  */
 void Barricade::collidingProjectile(const int damage) {
     health -= damage;
+    if(health <= 0){
+        GameManager::instance()->deleteBarricade(getId());
+    }
 }
 
 /**

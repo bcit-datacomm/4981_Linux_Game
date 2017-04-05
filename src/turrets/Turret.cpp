@@ -1,7 +1,6 @@
 /**
- * Date: Feb. 02, 2017
- * Designer: Mark Chen, Jaime Lee, Terry Kang
- * Programmer: Mark Chen, Micheal Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
+ * Source: Turret.cpp  
+ *
  * Functions: void placementCheckTurret()
  *            bool placementCheckTurret()
  *            bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &)
@@ -18,10 +17,18 @@
  *            bool isPlaced() {return placed;}
  *            void pickUpTurret()
  *
- * Description:
+ * Date: Feb. 02, 2017
+ *
+ * Designer: Mark Chen, Jaime Lee, Terry Kang
+ *
+ * Author: Mark Chen, Micheal Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
+ *
+ * Revisions: 
+ * Edited By : Yiaoping Shu- Style guide
+ *
+ * Notes:
  * Source file for the turret class. This file defines all the functions associated with a turret.
  */
-
 #include <cassert>
 
 #include "Turret.h"
@@ -134,14 +141,19 @@ void Turret::activateTurret() {
 
 /**
  * Date: Feb. 02, 2017
+ * Modified: March 31, 2017 - Mark Tattrie
  * Designer: Mark Chen
- * Programmer: Mark Chen
+ * Programmer: Mark Chen, Mark Tattrie
  * Function Interface: void collidingProjectile(const int damage)
  * Description:
  * Damages the turret by the amount of 'damage' parameter passed in.
  */
 void Turret::collidingProjectile(const int damage) {
     health -= damage;
+    //turret health is less then or equal to 0
+    if(!healthCheckTurret()){
+        GameManager::instance()->deleteTurret(getId());
+    }
 }
 
 /**
