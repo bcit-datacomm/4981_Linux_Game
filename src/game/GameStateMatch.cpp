@@ -120,7 +120,7 @@ void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
     if(player.getMarine() != nullptr){
-        player.handleKeyboardInput(state);
+        player.handleKeyboardInput(game.getWindow().getWidth(), game.getWindow().getHeight(), state);
         player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
         player.getMarine()->updateImageDirection(); //Update direction of player
         player.getMarine()->updateImageWalk(state);  //Update walking animation

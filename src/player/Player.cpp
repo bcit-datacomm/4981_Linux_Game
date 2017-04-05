@@ -2,6 +2,9 @@
 
 #include "Player.h"
 #include "../log/EntityDump.h"
+#include "../sprites/VisualEffect.h"
+#include "../sprites/SpriteTypes.h"
+#include "../game/GameHashMap.h"
 
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {}
@@ -65,7 +68,7 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
     }
 }
 
-void Player::handleKeyboardInput(const Uint8 *state) {
+void Player::handleKeyboardInput(const int winWidth, const int winHeight, const Uint8 *state) {
     float x = 0;
     float y = 0;
     float velocity = marine->getVelocity();
@@ -125,7 +128,13 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         marine->inventory.useItem();
     }
 
-    //added by Maitiu Debug print 4/3/2017
+    //added by Maitiu Debug print 5/3 / 2017
+    if(state[SDL_SCANCODE_SPACE]){
+        //render guide arrows
+        spawnArrowGuides(winWidth, winHeight);
+    }
+
+    //added by Maitiu Debug print 4/3 / 2017
     if(state[SDL_SCANCODE_PERIOD]){
         dumpEntityPositions(this);
     }
@@ -167,3 +176,81 @@ void Player::checkMarineState() {
     }
 }
 
+void Player::spawnArrowGuides(const int winWidth, const int winHeight){
+    VisualEffect &ve = VisualEffect::instance();
+    GameManager *gm = GameManager::instance();
+    auto &om = gm->getObjectManager();
+
+    std::pair<float, float> bCoord = om[0].first.getDestCoord();
+    double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, bCoord);
+
+    std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
+    SDL_Rect baseGuide = {gCoord.first, gCoord.second, 100, 100};
+    SDL_Rect baseSrc = {82, 44, 1012, 1050};
+    ve.addPostTex(2, baseSrc, baseGuide, TEXTURES::BASE);
+
+}
+
+double Player::getAngleBetweenPoints(const std::pair<float, float> p1, const std::pair<float, float> p2){
+    return atan2(p1.second - p2.second, p1.first - p2.first);
+}
+
+std::pair<float, float> Player::getGuideCoord(const double radian, const int winWidth, const int winHeight){
+    double angle = 90 - (radian * 180/3.14159265);
+    printf("Angle: %f\n", angle + 90);
+    if(angle == 90 || angle == -90){
+        return{marine->getX(), marine->getY() - (winHeight / 2)};
+    }
+    if(angle + 90 >= 30 && angle + 90 <= 180){
+        //going up
+        double h = (tan(angle * 3.14159265/180) * ((double)winHeight / 2));
+        double x;
+        printf("H:%f\n", h);
+        printf("Marine: %f\n", marine->getX());
+        printf("Bounds: %f\n", marine->getX() + winWidth / 2);
+        printf("tests: %f\n", marine->getX() + h);
+        if((h > 0 && marine->getX() + winWidth / 2 > marine->getX() + h) || (h < 0 && marine->getX() + winWidth / 2 > marine->getX() - h)){
+            x = marine->getX() - h;
+        } else {
+
+            if(angle + 90 > 90){
+                printf("Hit\n");
+                x = marine->getX() - winWidth / 2;//marine->getY() + 620;
+            } else {
+                printf("Miss\n");
+                x = marine->getX() + winWidth / 2;//marine->getX() - 620;
+            }
+
+        }
+
+        printf("X:%f\n", x);
+        return{x, marine->getY() - (winHeight / 2)};
+        //printf("1: %f\n",cos(angle * 3.14/180) * (winHeight / 2));
+    } else if((angle + 90 <= 360 && angle + 90 >= 180)){
+        double h = (tan(angle * 3.14159265/180) * ((double)winHeight / 2));
+        double x;
+        printf("H:%f\n", h);
+        printf("Marine: %f\n", marine->getX());
+        printf("Bounds: %f\n", marine->getX() + winWidth / 2);
+        printf("tests: %f\n", marine->getX() + h);
+        if((h > 0 && marine->getX() + winWidth / 2 > marine->getX() + h) || (h < 0 && marine->getX() + winWidth / 2 > marine->getX() - h)){
+            x = marine->getX() + h;
+        } else {
+
+            if(angle + 90 > 270){
+                printf("Hit\n");
+                x = marine->getX() + winWidth / 2;//marine->getY() + 620;
+            } else {
+                printf("Miss\n");
+                x = marine->getX() - winWidth / 2;//marine->getX() - 620;
+            }
+
+        }
+
+        printf("X:%f\n", x);
+        return{x, marine->getY() + (winHeight / 2) - 50};
+    }
+
+    //printf("2: %d\n",cos(angle) * 50);
+    //return {1, 2};
+}

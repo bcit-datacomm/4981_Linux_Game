@@ -56,7 +56,7 @@ public:
         }
         return p.first;
     }
-    
+
     /*
      * Merely an overload of the above insert method to match the unordered_map prototypes.
      * ~John Agapeyev March 21 2017
@@ -98,7 +98,7 @@ public:
     auto erase(typename HashMap::const_iterator first, typename HashMap::const_iterator second) {
         return internalMap.erase(first, second);
     }
-    
+
     auto erase(const T& key) {
         return internalMap.erase(key);
     }
@@ -152,4 +152,3 @@ private:
 };
 
 #endif
-

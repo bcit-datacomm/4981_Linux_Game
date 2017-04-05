@@ -129,6 +129,8 @@ public:
         AiMap = a;
     }
 
+
+
     //getManagers
     auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
@@ -139,6 +141,8 @@ public:
     auto& getBarricadeManager() const {return barricadeManager;};
     auto& getWallManager() const {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
+    auto& getObjectManager() {return objectManager;};
+
 private:
     GameManager();
     ~GameManager();
