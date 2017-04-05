@@ -41,55 +41,64 @@ Zombie::~Zombie() {
 }
 
 void Zombie::update(){
+    //Movement updates
     GameManager *gm = GameManager::instance();
     const auto& base = gm->getBase();
     const auto& marines = gm->getMarineManager();
 
-    float dx;
-    float dy;
+    //the difference in zombie to target distance
+    float movX;
+    float movY;
     
-    const float midMeX = (getX() + (getW() / 2));
-    const float midMeY = (getY() + (getH() / 2));
+    //middle of me
+    const int midMeX = getX() + (getW() / 2);
+    const int midMeY = getY() + (getH() / 2);
     
-    const int midBaseX = (base.getX() + (base.getW() / 2));
-    const int midBaseY = (base.getY() + (base.getH() / 2));
+    //middle of the base
+    const int midBaseX = base.getX() + (base.getW() / 2);
+    const int midBaseY = base.getY() + (base.getH() / 2);
 
-    float hyp = -1.0;
-    
-    float hx, hy;
+    //temp x and y for calculating the hypot
+    int hypX;
+    int hypY;
+
+    //hypo variables
+    float hyp = 0.0;
     float temp;
 
+    //who is closest?
     for (const auto& m : marines){
-        hx = (m.second.getX() + m.second.getW() / 2);
-        hy = (m.second.getY() + m.second.getH() / 2);
+        hypX = m.second.getX() + (m.second.getW() / 2);
+        hypY = m.second.getY() + (m.second.getH() / 2);
 
-        if((temp = hypot(hx - midMeX, hy - midMeY)) < hyp || hyp == -1){
+        //we only want the closest one
+        if(!hyp || (temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
             hyp = temp;
-            dx = hx - midMeX;
-            dy = hy - midMeY;
+            movX = hypX - midMeX;
+            movY = hypY - midMeY;
         }
     }
 
-
-    if (ignore == 0 && !(++frameCount % 15)) {
-        if (hyp > 500){
-            dx = midBaseX - midMeX;
-            dy = midBaseY - midMeY;
+    //only change the angle a max of 4 times a second and its not being ignored
+    if (!ignore) {
+        if (hyp > ZOMBIE_SIGHT) {
+            movX = midBaseX - midMeX;
+            movY = midBaseY - midMeY;
         }
-        moveAngle = atan2(dx, dy);
+        moveAngle = atan2(movX, movY);
     } else if (ignore > 0){
         --ignore;
     }
 
-    dx = ZOMBIE_VELOCITY * sin(moveAngle);
-    dy = ZOMBIE_VELOCITY * cos(moveAngle);
+    //get the distance of 
+    setDX(ZOMBIE_VELOCITY * sin(moveAngle));
+    setDY(ZOMBIE_VELOCITY * cos(moveAngle));
 
-    setDX(dx);
-    setDY(dy);
+    VisualEffect::instance().addPreLine(2, midMeX, midMeY, midMeX + ZOMBIE_SIGHT * sin(moveAngle),
+        midMeY + ZOMBIE_SIGHT * cos(moveAngle), 0, 0, 0);
 
-
-    //attack check 4 times a second
-    if (!(frameCount % 15)){
+    //Attack updates
+    if (!(frameCount % CHECK_RATE)){
         zAttack();
     }
 }

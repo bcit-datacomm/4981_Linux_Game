@@ -36,12 +36,14 @@
 #include "../basic/Movable.h"
 
 static constexpr int ZOMBIE_VELOCITY = 400;
+static constexpr int ZOMBIE_SIGHT = 500;
 static constexpr int ZOMBIE_INIT_HP = 100;
 static constexpr int ZOMBIE_FRAMES = 50;
 static constexpr int ZOMBIE_HEIGHT = 125; // y value
 static constexpr int ZOMBIE_WIDTH = 75; // x value
 static constexpr int ZOMBIE_DEAD_WIDTH = 122; // dead zombie x value
 static constexpr int FRAME_COUNT_ZOMBIE = 10; // speed of walking animation
+static constexpr int CHECK_RATE = 15; // 60 / 4 times 
 
 static constexpr int ZOMBIE_RIGHT = ZOMBIE_HEIGHT * 2;
 static constexpr int ZOMBIE_BACK_RIGHT = ZOMBIE_HEIGHT * 3;
