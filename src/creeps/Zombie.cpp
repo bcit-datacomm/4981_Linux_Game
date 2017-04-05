@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
-* Source: Zombie.cpp    
+* Source: Zombie.cpp
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #include <math.h>
 #include <random>
@@ -31,7 +31,7 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
         const SDL_Rect& damageSize, const int health, const ZombieState state, const int step,
         const ZombieDirection dir, const int frame) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
-        health(health), state(state), step(step), dir(dir), frame(frame) {
+        health(health), state(state), step(step), dir(dir), frame(frame), frameCountZombie(0) {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -102,9 +102,7 @@ void Zombie::generateMove() {
     const ZombieDirection direction = getMoveDir();   //Direction zombie is moving
     //cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
 
-    // Used to reset zombies back to non-moving sprite
-    int pathLength = getPath().length();
-    int stepsLeft = getStep();
+    int directionVal;
 
     // Path is empty, shouldn't move
     if (direction == ZombieDirection::DIR_INVALID || checkTarget()) {
@@ -124,86 +122,56 @@ void Zombie::generateMove() {
             setDX(ZOMBIE_VELOCITY);
             setDY(0);
             setAngle(static_cast<double>(ZombieAngles::EAST));
-            setSrcRect(getSrcRect().x, ZOMBIE_RIGHT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            // Resets zombie sprite to original non-moving sprite
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_RIGHT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_RIGHT;
             break;
         case ZombieDirection::DIR_RD:
             setDX(ZOMBIE_VELOCITY);
             setDY(ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::SOUTHEAST));
-            setSrcRect(getSrcRect().x, ZOMBIE_FRONT_RIGHT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_FRONT_RIGHT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_FRONT_RIGHT;
             break;
         case ZombieDirection::DIR_D:
             setDX(0);
             setDY(ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::SOUTH));
-            setSrcRect(getSrcRect().x, ZOMBIE_FRONT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_FRONT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_FRONT;
             break;
         case ZombieDirection::DIR_LD:
             setDX(-ZOMBIE_VELOCITY);
             setDY(ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::SOUTHWEST));
-            setSrcRect(getSrcRect().x, ZOMBIE_FRONT_LEFT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_FRONT_LEFT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_FRONT_LEFT;
             break;
         case ZombieDirection::DIR_L:
             setDX(-ZOMBIE_VELOCITY);
             setDY(0);
             setAngle(static_cast<double>(ZombieAngles::WEST));
-            setSrcRect(getSrcRect().x, ZOMBIE_LEFT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_LEFT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_LEFT;
             break;
         case ZombieDirection::DIR_LU:
             setDX(-ZOMBIE_VELOCITY);
             setDY(-ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::NORTHWEST));
-            setSrcRect(getSrcRect().x, ZOMBIE_BACK_LEFT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_BACK_LEFT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_BACK_LEFT;
             break;
         case ZombieDirection::DIR_U:
             setDX(0);
             setDY(-ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::NORTH));
-            setSrcRect(getSrcRect().x, ZOMBIE_BACK, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_BACK, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_BACK;
             break;
         case ZombieDirection::DIR_RU:
             setDX(ZOMBIE_VELOCITY);
             setDY(-ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::NORTHEAST));
-            setSrcRect(getSrcRect().x, ZOMBIE_BACK_RIGHT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            updateZombieWalk(direction);
-            if(pathLength == stepsLeft) {
-                setSrcRect(0, ZOMBIE_BACK_RIGHT, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            }
+            directionVal = ZOMBIE_BACK_RIGHT;
             break;
         case ZombieDirection::DIR_INVALID:  // Shouldn't ever happens, gets rid of warning
             break;
     }
+
+    updateZombieWalk(directionVal);
+
     zAttack();
     // Frames are used to make sure the zombie doesn't move through the path too quickly/slowly
     if (frame > 0) {
@@ -220,109 +188,36 @@ void Zombie::generateMove() {
 /**
  * Date: Apr 4, 2017
  * Author: Trista Huang
- * Function Interface: void Zombie::updateZombieWalk(const ZombieDirection direction)
+ * Function Interface: void Zombie::updateZombieWalk(const int directionVal)
  * Description:
  * Changes the zombie sprite in order to simulate walking animation.
  * It's called by Zombie::generateMove every time the zombie moves.
  */
-void Zombie::updateZombieWalk(const ZombieDirection direction) {
-    frameCountZombie++;
+void Zombie::updateZombieWalk(const int directionVal) {
+    ++frameCountZombie;
 
-    switch(direction) {
-        case ZombieDirection::DIR_R:
-            if (getSrcRect().x == ZOMBIE_RIGHT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                //cycle throught the walking images
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_RD:
-            if (getSrcRect().x == ZOMBIE_FRONT_RIGHT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_D:
-            if (getSrcRect().x == ZOMBIE_FRONT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_LD:
-            if (getSrcRect().x == ZOMBIE_FRONT_LEFT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_L:
-            if (getSrcRect().x == ZOMBIE_LEFT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_LU:
-            if (getSrcRect().x == ZOMBIE_BACK_LEFT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_U:
-            if (getSrcRect().x == ZOMBIE_BACK) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_RU:
-            if (getSrcRect().x == ZOMBIE_BACK_RIGHT) {
-                setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-            } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-                if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-                    setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                } else {
-                    setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-                }
-            }
-            break;
-        case ZombieDirection::DIR_INVALID:  // Shouldn't ever happens, gets rid of warning
-            break;
+    // Used to reset zombies back to non-moving sprite
+    const int pathLength = getPath().length();
+    const int stepsLeft = getStep();
+
+    setSrcRect(getSrcRect().x, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+
+    if (getSrcRect().x == directionVal) {
+        setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+    } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
+        //cycle throught the walking images
+        if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
+            setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        } else {
+            setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        }
+    }
+
+    // Resets zombie sprite to original non-moving sprite
+    if(pathLength == stepsLeft) {
+        setSrcRect(0, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
     }
 }
-
 
 /**
  * A* algo generates a string of direction digits.

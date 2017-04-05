@@ -2,19 +2,19 @@
 * Header: Zombie.h
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
@@ -113,7 +113,7 @@ public:
 
     void collidingProjectile(int damage);
 
-    void updateZombieWalk(const ZombieDirection direction);
+    void updateZombieWalk(int directionVal);
 
     void generateMove();                    // A* movement
 
@@ -224,7 +224,7 @@ private:
     int step;           // Number of steps zombie has taken in path
     ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
-    int frameCountZombie = 0;
+    int frameCountZombie;
     Inventory inventory;//inventory holds a weapon used to attack
 
     void zAttack();
