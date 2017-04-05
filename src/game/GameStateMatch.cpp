@@ -157,8 +157,10 @@ void GameStateMatch::handle() {
                         break;
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
-                        GameManager::instance()->deleteMarine(player.getMarine()->getId());
-                        player.setControl(nullptr);
+                        if (player.getMarine()) {
+                            GameManager::instance()->deleteMarine(player.getMarine()->getId());
+                            player.setControl(nullptr);
+                        }
                         break;
                     default:
                         break;
