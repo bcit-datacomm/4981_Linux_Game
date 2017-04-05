@@ -27,13 +27,14 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <random>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <map>
+#include <stdlib.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -258,7 +259,7 @@ void AudioManager::loadEffect(const char *fileName){
 *       the music out is specified by the paramater int ms (in milliseconds)
 */
 void AudioManager::fadeMusicOut(int ms){
-    
+
     Mix_FadeOutMusic(ms);
 }
 
@@ -279,16 +280,16 @@ void AudioManager::fadeMusicOut(int ms){
 */
 void AudioManager::playMenuMusic(const char *fileName1, const char *fileName2){   // generates either 1 or 2
 
-    srand (time(NULL)); // random seed generator
-    int random = rand() % 2 + 1; // randomly select 1 or 2
+    srand (time(nullptr)); // random seed generator
+    int random = rand() % 2; // randomly select 1 or 2
 
     // check what number was selected
     switch(random)
     {
-        case 1:
+        case 0:
             playMusic(fileName1);
             break;
-        case 2:
+        case 1:
             playMusic(fileName2);
             break;
     }

@@ -131,6 +131,7 @@ bool GameStateMenu::load() {
  */
 void GameStateMenu::loop() {
 
+    AudioManager::instance().playMenuMusic(MUS_MENUBKG_1, MUS_MENUBKG_2);
     // State Loop
     while (play) {
         handle(); // Handle user input
@@ -205,6 +206,7 @@ void GameStateMenu::handle() {
             y = event.button.y;
 
             if (joinSelected) {
+                AudioManager::instance().fadeMusicOut(MUSICFADE);
                 game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
                 play = false;
                 break;

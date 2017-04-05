@@ -34,6 +34,8 @@
 #include <cstring>
 #include <map>
 
+// audio fade out in ms
+#define MUSICFADE 1000
 
 #define AUDIO_PATH "assets/sounds/"
 
