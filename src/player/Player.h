@@ -29,6 +29,8 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
+    
+    void checkMarineState();
 
     Marine * getMarine() const {return marine;}
 

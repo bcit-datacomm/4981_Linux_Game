@@ -51,13 +51,13 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : marineManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                m.second.getSrcRect()); 
+                m.second.getSrcRect());
         }
     }
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE, o.second.getSrcRect());
         }
     }
 
@@ -94,7 +94,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& s : storeManager) {
         if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
-            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, s.second->getSrcRect());
         }
     }
 }
@@ -262,7 +262,7 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 * Description:
 * Create zombie add it to manager, returns success
 */
-bool GameManager::createZombie(const float x, const float y) {
+int32_t GameManager::createZombie(const float x, const float y) {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
 
@@ -275,7 +275,7 @@ bool GameManager::createZombie(const float x, const float y) {
     elem->second.setPosition(x,y);
     elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
     elem->second.setState(ZombieState::ZOMBIE_MOVE);
-    return true;
+    return id;
 }
 
 // Deletes zombie from level
@@ -386,11 +386,13 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 int32_t GameManager::createWeaponStore(const float x, const float y) {
     const int32_t id = generateID();
 
-    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE, STORE_SIZE};
+    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
     SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
-            STORE_SIZE + STORE_PICKUP_SIZE, STORE_SIZE + STORE_PICKUP_SIZE};
+            STORE_SIZE_W + STORE_PICKUP_SIZE, STORE_SIZE_H + STORE_PICKUP_SIZE};
 
-    addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect)));
+    std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect);
+    addStore(id, std::dynamic_pointer_cast<Store>(ws));
+    ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
 
     return id;
 }
@@ -632,20 +634,3 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
     createWall(eX, sY + (height / 4 * 3), width, height / 4);
 }
 
-bool GameManager::createZombieWave(const int n) {
-    std::vector<Point> spawnPoints;
-    spawnPoints.emplace_back(100, 100);
-    spawnPoints.emplace_back(500, 100);
-    spawnPoints.emplace_back(1900, 900);
-    spawnPoints.emplace_back(2900, 900);
-    spawnPoints.emplace_back(2900, 2900);
-    spawnPoints.emplace_back(1900, 2900);
-    spawnPoints.emplace_back(900, 2900);
-
-    for (int i = 0; i < n; ++i) {
-        for (const auto& p : spawnPoints) {
-            createZombie(p.first, p.second);
-        }
-    }
-    return true;
-}
