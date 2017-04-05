@@ -1,6 +1,7 @@
 /*
     Created by Maitiu Morton 2/1/2017
         Edited by DericM 3/8/2017
+        Edited by MarkT 3/13/2017
 */
 #ifndef WEAPON_H
 #define WEAPON_H
@@ -43,8 +44,7 @@ public:
     bool reloadClip();
     bool chamberRound();
 
-    int32_t getID()const{return wID;};
-    void setId(const int32_t num){wID = num;};
+    int32_t getID() const {return wID;};
 
     virtual bool fire(Movable& movable);
 

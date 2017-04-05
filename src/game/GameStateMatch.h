@@ -17,10 +17,16 @@
 #include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
-#include "../basic/LTimer.h"
 
 // ticks (ms) in 1 second
-static constexpr float TICK_SEC = 1000;
+static constexpr float TICK_SEC = 1000.0;
+//percentage of the duration of a regular frame
+static constexpr float UPDATE_RATIO = TICK_SEC / SCREEN_FPS;
+static constexpr int STORE_X = 500;
+static constexpr int STORE_Y = 900;
+static constexpr int DROPZONE_X = 100;
+static constexpr int DROPZONE_Y = 100;
+static constexpr int DROPZONE_SIZE = 4;
 
 class GameStateMatch : public GameState {
 public:
@@ -34,6 +40,11 @@ private:
     Player player;
     Base base;
     Camera camera;
+    float storeX;
+    float storeY;
+    float dropZoneX;
+    float dropZoneY;
+    float dropZoneSize;
 
     virtual void sync() override;
     virtual void handle() override;

@@ -1,6 +1,7 @@
 /*
     Created by Maitiu Morton 2/1/2017
         Edited by DericM 3/8/2017
+        Edited by Mark Tattrie
 */
 #include "Weapon.h"
 #include <iostream>
@@ -11,6 +12,17 @@
 
 using std::string;
 
+/**
+ * Date: Feb 8, 2017
+ * Modified: Mar 13, 2017 - Mark Tattrie
+ * Author: Maitiu Morton
+ * Function Interface: Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound,
+ *       const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
+ *       const int damage, const int AOE, const int penetration, const int clip, const int clipMax,
+ *       const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
+ * Description:
+ * Ctor for Weapon
+ */
 Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
         const string& emptySound, const int range, const int damage, const int AOE, const int penetration,
         const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
@@ -47,7 +59,8 @@ bool Weapon::reloadClip(){
         return false;
     }
     reloadTick = currentTime;
-    fireTick += reloadDelay; //must wait extra time to fire from reloading
+    //must wait extra time to fire from reloading
+    fireTick += reloadDelay;
     if(ammo <= 0){
         AudioManager::instance().playEffect(emptySound.c_str());
         return false;
@@ -87,7 +100,7 @@ bool Weapon::fire(Movable& movable){
     if(!chamberRound()){
         return false;
     }
-    AudioManager::instance().playEffect(fireSound.c_str());
 
+    AudioManager::instance().playEffect(fireSound.c_str());
     return true;
 }

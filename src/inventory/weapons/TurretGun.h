@@ -31,7 +31,7 @@ namespace TurretGunVars {
     constexpr int AMMO          = 10;
 
     constexpr int RELOADDELAY   = 100;
-    constexpr int FIREDELAY     = 120;
+    constexpr int FIREDELAY     = 250;
 }
 
 

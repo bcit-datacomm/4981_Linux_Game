@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include "Player.h"
+#include "../log/EntityDump.h"
 
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
         marine(nullptr) {}
@@ -9,6 +10,7 @@ void Player::setControl(Marine& newControl) {
     marine = &newControl;
 }
 
+// Modified: Apr. 04, 2017 - Mark Chen
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
@@ -32,7 +34,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
-                tempTurret.placeTurret();
+                tempTurret.placeTurret(mouseX + camX, mouseY + camY);
                 tempTurretID = -1;
                 holdingTurret = false;
             }
@@ -94,7 +96,10 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 
     //Weapon input
     if(state[SDL_SCANCODE_R]){
-        marine->inventory.getCurrent()->reloadClip();
+        Weapon *w = marine->inventory.getCurrent();
+        if(w){
+            w->reloadClip();
+        }
     }
     //pickup button
     if(state[SDL_SCANCODE_E]){
@@ -103,7 +108,6 @@ void Player::handleKeyboardInput(const Uint8 *state) {
         if(currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
 
-            marine->checkForPickUp();
             const int checkTurret = marine->checkForPickUp();
             if (checkTurret > -1 && holdingTurret == false)
             {
@@ -120,6 +124,11 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     //use Inventory
     if(state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
+    }
+
+    //added by Maitiu Debug print 4/3/2017
+    if(state[SDL_SCANCODE_PERIOD]){
+        dumpEntityPositions(this);
     }
     marine->setDY(y);
     marine->setDX(x);

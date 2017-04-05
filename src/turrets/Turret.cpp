@@ -139,6 +139,7 @@ void Turret::collidingProjectile(const int damage) {
 /**
  * Date: Feb. 02, 2017
  * Modified: Mar. 30, 2017 - Mark Chen
+ *           Apr. 04, 2017 - Mark Chen
  * Designer: Mark Chen
  * Programmer: Mark Chen
  * Function Interface: void shootTurret()
@@ -146,8 +147,10 @@ void Turret::collidingProjectile(const int damage) {
  * Makes the turret shoot in a direction.
  */
 void Turret::shootTurret() {
+
     Weapon *w = inventory.getCurrent();
     if (w != nullptr) {
+
         w->fire(*this);
     }
 }
@@ -182,6 +185,7 @@ void Turret::move(const float playerX, const float playerY,
 /**
  * Date: Feb. 02, 2017
  * Modified: Mar. 15, 2017 - Mark Chen
+ *           Apr. 04, 2017 - Mark Chen
  * Designer: Mark Chen
  * Programmer: Mark Chen
  * Function Interface: void placeTurret()
@@ -189,10 +193,11 @@ void Turret::move(const float playerX, const float playerY,
  * Sets the turret onto the map by changing the transparency of the object and changes the private
  * member 'placed' of the turret to 'true'.
  */
-void Turret::placeTurret() {
+void Turret::placeTurret(const float moveX, const float moveY) {
     placed = true;
     activated = true;
-    updateHitBoxes();
+    setX(moveX);
+    setY(moveY);
 }
 
 /**

@@ -26,10 +26,23 @@
 
 using std::string;
 
-InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound, string reloadSound, string emptySound,
-        int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
-: Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE, penetration, clip, clipMax, ammo,
-        reloadDelay, fireDelay, id) {
+/**
+ * Date: Mar 1, 2017
+ * Modified: Mar 13, 2017 - Mark Tattrie
+ * Author: Deric Mccadden
+ * Function Interface: InstantWeapon::InstantWeapon(string type, string fireSound, string hitSound,
+ *       string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+ *       int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
+ *       : Weapon(type, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
+ *          penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id)
+ * Description:
+ * Ctor for Instant Weapon
+ */
+InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound,
+        string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+        int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
+: Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
+        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 
 }
 
@@ -57,7 +70,7 @@ bool InstantWeapon::fire(Movable& movable) {
     const int gunX = movable.getX() + (MARINE_WIDTH / 2);
     const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
     const double angle = movable.getAngle();
-    
+
     fireSingleProjectile(gunX, gunY, angle);
 
     return true;
@@ -78,7 +91,7 @@ bool InstantWeapon::fire(Movable& movable) {
         int gunX, int gunY
             The x and y coordinates of the guns muzzle.
 
-        double angle 
+        double angle
             the angle gun is facing.
 
     AUTHOR: Deric Mccadden 01/03/17
@@ -124,9 +137,8 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
         }
         //damage target
         GameManager::instance()->getZombie(id).collidingProjectile(damage);
-
         targetList.removeTop();
     }
 
-    VisualEffect::instance().addPreLine(5, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
+    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 0, 255, 0);
 }

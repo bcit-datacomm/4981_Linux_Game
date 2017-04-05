@@ -1,16 +1,30 @@
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by DericM 3/8/2017
+        Edited by Mark Tattrie 3/13/2017
 */
 #include "ShotGun.h"
 #include "../../basic/Movable.h"
 #include "../../player/Marine.h"
 #include "../../log/log.h"
 
-ShotGun::ShotGun(int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::SHOTGUN, ShotgunVars::FIRESOUND, ShotgunVars::HITSOUND,
-        ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, ShotgunVars::RANGE, ShotgunVars::DAMAGE,
-        ShotgunVars::AOE, ShotgunVars::PENETRATION, ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO,
-        ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY, id) {
+/**
+ * Date: Feb 8, 2017
+ * Modified: Mar 13, 2017 - Mark Tattrie
+ * Author: Maitiu Morton
+ * Function Interface: ShotGun::ShotGun(int32_t id) : InstantWeapon(ShotgunVars::TYPE, ShotgunVars::FIRESOUND,
+ *       ShotgunVars::HITSOUND, ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND,
+ *       ShotgunVars::RANGE, ShotgunVars::DAMAGE, ShotgunVars::AOE, ShotgunVars::PENETRATION,
+ *       ShotgunVars::CLIP, ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::RELOADDELAY,
+ *       ShotgunVars::FIREDELAY, id)
+ * Description:
+ * Ctor for Shotgun
+ */
+ShotGun::ShotGun(int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::SHOTGUN, ShotgunVars::FIRESOUND,
+        ShotgunVars::HITSOUND, ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, ShotgunVars::RANGE,
+        ShotgunVars::DAMAGE, ShotgunVars::AOE, ShotgunVars::PENETRATION, ShotgunVars::CLIP,
+        ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY, id) {
+
 }
 
 
@@ -18,7 +32,7 @@ ShotGun::ShotGun(int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::SHOTGU
     ShotGun::fire
 
     DISCRIPTION:
-        Modified version of instant fire. THis will fire multiple projectiles in a cone infront 
+        Modified version of instant fire. THis will fire multiple projectiles in a cone infront
         of the movable.
 
         Movable& movable: The thing thats holding the weapon that is firing.

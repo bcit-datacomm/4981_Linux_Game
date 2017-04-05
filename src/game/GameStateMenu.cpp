@@ -10,7 +10,6 @@
 
 #include "GameStateMenu.h"
 #include "Game.h"
-#include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../sprites/Renderer.h"
 #include "../log/log.h"

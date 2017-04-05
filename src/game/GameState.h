@@ -26,6 +26,7 @@ protected:
     //Main loop flag
     bool play = true;
 
+private:
     virtual void handle() = 0;
     virtual void update(const float delta) = 0;
     virtual void render() = 0;
