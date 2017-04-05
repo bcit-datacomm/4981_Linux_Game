@@ -47,6 +47,7 @@ void Renderer::loadSprites() {
     //comsumables
     //shops
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
+    createTexture(TEXTURES::BASE, MAP_OBJECT_BASE);
 
     //-------- weapon textures --------
     createTexture(TEXTURES::RIFLE, TEMP_RIFLE_TEXTURE); //temporary, will be replaced later
@@ -297,4 +298,3 @@ void Renderer::setAlpha(const TEXTURES spriteType, const int alpha) {
 void Renderer::setAlpha(const int spriteType, const int alpha) {
     SDL_SetTextureAlphaMod(getTexture(spriteType), alpha);
 }
-

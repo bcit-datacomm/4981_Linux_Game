@@ -37,7 +37,7 @@ bool GameStateMatch::load() {
 
 
     // Create Dummy Entitys
-    GameManager::instance()->createMarine(1000, 500);
+    GameManager::instance()->createMarine(850, 500);
 
 
     //createStores
@@ -46,6 +46,7 @@ bool GameStateMatch::load() {
     //createDropPoint
     GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
 
+    base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
     GameManager::instance()->addObject(base);
 
     Point newPoint = base.getSpawnPoint();
@@ -54,6 +55,7 @@ bool GameStateMatch::load() {
     player.setControl(&GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+
 
     return success;
 }
