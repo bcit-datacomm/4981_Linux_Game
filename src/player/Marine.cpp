@@ -20,9 +20,6 @@ void Marine::onCollision() {
 
 void Marine::collidingProjectile(const int damage) {
     health -= damage;
-    if (health <= 0){
-        GameManager::instance()->deleteMarine(getId());
-    }
 }
 
 // Created by DericM 3/8/2017
@@ -192,3 +189,4 @@ void Marine::activateStore(const Entity *ep){
         gm->getStore(ep->getId())->purchase(r);
     }
 }
+

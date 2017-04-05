@@ -95,7 +95,7 @@ int Map::loadFileData() {
                 ++dropPointCount;
                 break;
             case ZOMBIE_SPAWN:      //Zombie spawn Points
-                zombieSpawn.push_back({(j * T_SIZE) + (T_SIZE / 2), (i * T_SIZE) + (T_SIZE / 2)});
+                zombieSpawn.push_back({(j * T_SIZE), (i * T_SIZE)});
                 ++zombieSpawnCount;
                 break;
             case SHOP_SPOT:         // Shop spot points
