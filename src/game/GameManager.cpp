@@ -57,7 +57,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE, o.second.getSrcRect());
         }
     }
 
@@ -94,7 +94,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& s : storeManager) {
         if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
-            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, s.second->getSrcRect());
         }
     }
 }
@@ -428,11 +428,13 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 int32_t GameManager::createWeaponStore(const float x, const float y) {
     const int32_t id = generateID();
 
-    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE, STORE_SIZE};
+    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
     SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
-            STORE_SIZE + STORE_PICKUP_SIZE, STORE_SIZE + STORE_PICKUP_SIZE};
+            STORE_SIZE_W + STORE_PICKUP_SIZE, STORE_SIZE_H + STORE_PICKUP_SIZE};
 
-    addStore(id, std::dynamic_pointer_cast<Store>(std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect)));
+    std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect);
+    addStore(id, std::dynamic_pointer_cast<Store>(ws));
+    ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
     return id;
 }
 

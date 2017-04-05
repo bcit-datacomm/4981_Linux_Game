@@ -34,6 +34,8 @@ bool GameStateMatch::load() {
     } else {
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
+        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
+      
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
@@ -67,7 +69,6 @@ bool GameStateMatch::load() {
         logv("file not found");
     }
     m.mapLoadToGame();
-
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
     return success;
@@ -184,8 +185,10 @@ void GameStateMatch::handle() {
                         break;
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
-                        GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
-                        GameManager::instance()->getPlayer().setControl(nullptr);
+                        if (player.getMarine()) {
+                            GameManager::instance()->deleteMarine(player.getMarine()->getId());
+                            player.setControl(nullptr);
+                        }
                         break;
                     default:
                         break;
@@ -295,27 +298,32 @@ void GameStateMatch::render() {
         GameManager::instance()->renderObjects(camera.getViewport());
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
-
         if (GameManager::instance()->getPlayer().getMarine()) {
+            //Render the healthbar's foreground to the screen
+            //(displays how much player health is left)
+            hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
+            //Reder the ammo clip foreground to the screen
+            //(displays how much ammo is left in the players weapon clip)
+            hud.renderClip(screenRect, GameManager::instance()->getPlayer());
            //Render the healthbar's foreground to the screen
            //(displays how much player health is left)
-           hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
-
+           //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
           //Reder the ammo clip foreground to the screen
            //(displays how much ammo is left in the players weapon clip)
-           hud.renderClip(screenRect, GameManager::instance()->getPlayer());
+           //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
 
-          //Render the equipped weapon slot
-          hud.renderEquippedWeaponSlot(screenRect);
+
+            //Render the equipped weapon slot
+            hud.renderEquippedWeaponSlot(screenRect, player);
 
             //Reder the Weapon slots to the screen
             hud.renderWeaponSlots(screenRect, GameManager::instance()->getPlayer());
 
             //Render the consumable slot if the player has any available
-             //Currently only a single consumable item exits (the Medkit)
-             if (GameManager::instance()->getPlayer().getMarine()->inventory.getMedkit()) {
-                 hud.renderConsumable(screenRect, GameManager::instance()->getPlayer());
-              }
+            //Currently only a single consumable item exits (the Medkit)
+            if (GameManager::instance()->getPlayer().getMarine()->inventory.getMedkit()) {
+                hud.renderConsumable(screenRect, GameManager::instance()->getPlayer());
+            }
         }
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
