@@ -77,7 +77,7 @@ void Renderer::loadSprites() {
     //-------- zombie textures --------
     //baby
     //createTexture(ZOMBIE_BABYZ);
-    createTexture(TEXTURES::BABY_ZOMBIE, TEMP_ZOMBIE_TEXTURE);
+    createTexture(TEXTURES::BABY_ZOMBIE, ZOMBIE_BABYZ);
     //digger
     createTexture(TEXTURES::DIGGER_ZOMBIE, ZOMBIE_DIGGER);
     //boss
