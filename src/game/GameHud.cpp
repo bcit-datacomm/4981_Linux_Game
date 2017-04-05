@@ -170,7 +170,7 @@ void GameHud::setHealthBarColor(const float currentHP) {
  * Function renders the equipped weapon slot to the screen.
  * slot is positions in bottom right of screen next to the ammo clip.
  */
-void GameHud::renderEquippedWeaponSlot(const SDL_Rect& screenRect) {
+void GameHud::renderEquippedWeaponSlot(const SDL_Rect& screenRect, const Player& p) {
 
     //Makes the texture properties a squeare regardless of screen size
     if (screenRect.w <= screenRect.h) {
@@ -188,6 +188,7 @@ void GameHud::renderEquippedWeaponSlot(const SDL_Rect& screenRect) {
     equippedSlot.y = screenRect.h - screenRect.w * PADDING_RAT - equippedSlot.h;
 
     Renderer::instance().render(equippedSlot, TEXTURES::EQUIPPED_WEAPON_SLOT);
+    renderEquippedWeapon(equippedSlot, p);
 }
 
 /**
@@ -364,6 +365,9 @@ void GameHud::renderConsumable(const SDL_Rect& screenRect, const Player& p) {
  * Programmer:
  * Jacob Frank
  *
+ * Modified By:
+ * Jacob Frank (April 4, 2017)
+ *
  * Interface: renderWeaponSlots(SDL_Rect screenRect, Player p)
  *                  SDL_Rect screenRect: The Current screen properties (height, width)
  *                  Player p: The player in the game. used to find current equipped weapon
@@ -371,6 +375,9 @@ void GameHud::renderConsumable(const SDL_Rect& screenRect, const Player& p) {
  * Notes:
  * Function, when called renders the Weapon inventory slots along the bottom center of the visible screen
  * Inventory slots are only visible when the player changes their currently equiped weapon.
+ *
+ * Revisions:
+ * JF April 4: Now makes use of rendering alpha modulation wrapper functions created by Terry
  */
 void GameHud::renderWeaponSlots(const SDL_Rect& screenRect, const Player& p) {
     const int weaponSlotWidth = screenRect.w * WEAPON_SLOT_WIDTH_RAT;
@@ -399,16 +406,15 @@ void GameHud::renderWeaponSlots(const SDL_Rect& screenRect, const Player& p) {
     //This gets called on every loop resulting in the inventory items fading away
     decrementOpacity(1);
 
-    SDL_SetTextureAlphaMod(Renderer::instance().getTexture(static_cast<int>(TEXTURES::ACTIVE_SLOT)),
-        inventorySlotOpacity);
-    SDL_SetTextureAlphaMod(Renderer::instance().getTexture(static_cast<int>(TEXTURES::PASSIVE_SLOT)),
-        inventorySlotOpacity);
-
     for (int i = 0; i < 3; ++i) {
         if (i == p.getMarine()->inventory.getCurrentSlot()) {
+            Renderer::instance().setAlpha(TEXTURES::ACTIVE_SLOT, inventorySlotOpacity);
             Renderer::instance().render(inventorySlot[i], TEXTURES::ACTIVE_SLOT);
+            renderInventoryWeapons(inventorySlot[i], p, i);
         } else {
+            Renderer::instance().setAlpha(TEXTURES::PASSIVE_SLOT, inventorySlotOpacity);
             Renderer::instance().render(inventorySlot[i], TEXTURES::PASSIVE_SLOT);
+            renderInventoryWeapons(inventorySlot[i], p, i);
         }
     }
 }
@@ -433,14 +439,55 @@ void GameHud::renderWeaponSlots(const SDL_Rect& screenRect, const Player& p) {
  * The below two methods currently do nothing, but will be used to display the weapons in the
  * players inventory and equipped item slot.
  */
-void GameHud::renderInventoryWeapons(SDL_Rect& position, size_t weaponId) {
+void GameHud::renderInventoryWeapons(SDL_Rect& position, const Player& p, int inventorySlotPosition) {
+    if (p.getMarine()->inventory.getWeaponFromInventory(inventorySlotPosition) != nullptr) {
+        std::string weaponType = p.getMarine()->inventory.getWeaponFromInventory(inventorySlotPosition)->getType();
 
+        if (weaponType.compare("Handgun") == 0) {
+            Renderer::instance().setAlpha(TEXTURES::HANDGUN_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::HANDGUN_INVENTORY);
+        } else if (weaponType.compare("Rifle") == 0){
+            Renderer::instance().setAlpha(TEXTURES::RIFLE_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::RIFLE_INVENTORY);
+        } else if (weaponType.compare("Shotgun") == 0){
+            Renderer::instance().setAlpha(TEXTURES::SHOTGUN_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::SHOTGUN_INVENTORY);
+        }
+    }
 }
 
-void GameHud::renderEquippedWeapon(SDL_Rect& position, size_t weaponId) {
+/**
+ * Function: renderEquippedWeapon
+ *
+ * Date:
+ * JF: April 4, 2017:
+ *
+ * Designer:
+ * Jacob Frank
+ *
+ * Programmer:
+ * Jacob Frank
+ *
+ * Interface: renderEquippedWeapon(SDL_Rect& position, const Player& p)
+ *                  SDL_Rect position: The position where to render the weapon
+ *                  Player& p: The player holding the weapon
+ *
+ * Notes:
+ * Function, when called renders the "Equipped" version of the weapon texture to
+ * the desired location on screen.
+ * Function is called from the render Equippedweapon slot method
+ */
+void GameHud::renderEquippedWeapon(SDL_Rect& position, const Player& p) {
+    if (p.getMarine()->inventory.getCurrent() != nullptr) {
+        std::string weaponType = p.getMarine()->inventory.getCurrent()->getType();
 
+        if (weaponType.compare("Handgun") == 0) {
+            Renderer::instance().render(position, TEXTURES::HANDGUN);
+        } else if (weaponType.compare("Rifle") == 0){
+            Renderer::instance().render(position, TEXTURES::RIFLE);
+        } else if (weaponType.compare("Shotgun") == 0){
+            Renderer::instance().render(position, TEXTURES::SHOTGUN);
+        }
+    }
 }
-
-
-
 

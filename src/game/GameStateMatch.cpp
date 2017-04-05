@@ -36,16 +36,6 @@ bool GameStateMatch::load() {
     }
     m.mapLoadToGame();
 
-
-    // Create Dummy Entitys
-    Rifle w(GameManager::instance()->generateID());
-    ShotGun w2(GameManager::instance()->generateID());
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
-    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
-    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
-
-
     //createStores
     GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
 
@@ -258,7 +248,7 @@ void GameStateMatch::render() {
         hud.renderClip(screenRect, player);
 
         //Render the equipped weapon slot
-        hud.renderEquippedWeaponSlot(screenRect);
+        hud.renderEquippedWeaponSlot(screenRect, player);
 
         //Reder the Weapon slots to the screen
         hud.renderWeaponSlots(screenRect, player);
