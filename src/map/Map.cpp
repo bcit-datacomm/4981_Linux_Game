@@ -24,6 +24,7 @@
 ------------------------------------------------------------------------------*/
 #include <initializer_list>
 #include <type_traits>
+#include <stdlib.h>
 #include "Map.h"
 
 using namespace std;
@@ -85,17 +86,20 @@ int Map::loadFileData() {
                 break;
             case WALL_START:        //Label start of wall rectangle
                 wallStart.push_back({j, i});
-                ++wallStartCount;
                 AIMap[i][j] = 1;
                 break;
-            // case CONCRETE_START:    //Start of concrete area
+            case DROP_ZONE_START:    //Start of Drop Zone area
+                dropPoints[dropPointCount].x = j * T_SIZE;
+                dropPoints[dropPointCount].y = i * T_SIZE;
+                ++dropPointCount;
+                break;
             case ZOMBIE_SPAWN:      //Zombie spawn Points
-                zombieSpawn.push_back({(j * T_SIZE) + (T_SIZE / 2), (i * T_SIZE) - (T_SIZE * 2)});
+                zombieSpawn.push_back({(j * T_SIZE) + (T_SIZE / 2), (i * T_SIZE) + (T_SIZE / 2)});
                 ++zombieSpawnCount;
                 break;
             case SHOP_SPOT:         // Shop spot points
-                shops[shopCount].x = j;
-                shops[shopCount].y = i;
+                shops[shopCount].x = j * T_SIZE;
+                shops[shopCount].y = i * T_SIZE;
                 ++shopCount;
                 break;
             case BASE_START:        //Start of base area
@@ -120,9 +124,6 @@ int Map::loadFileData() {
  * Read's the Map CSV file map data with the appropriate tile IDs
  */
 void Map::genWalls(const vector<MapPoint>& wallStart) {
-    for (const auto& w : wallStart) {
-        logv("Point = %d, %d\n", w.x, w.y);
-    }
     int startx;
     int starty;
     int nextx;
@@ -135,7 +136,6 @@ void Map::genWalls(const vector<MapPoint>& wallStart) {
         starty = w.y;
         nextx = startx + 1;
         nexty = starty + 1;
-        logv("nextx = %d nexty = %d\n", nextx, nexty);
         while (mapdata[starty][nextx] == WALL) {
             if(nextx > M_WIDTH) {
                 break;
@@ -164,9 +164,14 @@ void Map::genWalls(const vector<MapPoint>& wallStart) {
  */
 void Map::mapLoadToGame() {
     for (const auto& w : walls) {
-        logv("Creating wall");
         GameManager::instance()->createWall(w.x, w.y, w.width, w.height);
     }
+    srand ( time(NULL) );
+    int sp = rand() % MAX_SHOPS;
+    MapPoint shopPosition = shops[sp];
+    logv("Loading Shop as position from index: %d\n", sp);
+    GameManager::instance()->createWeaponStore(shopPosition.x, shopPosition.y);
+    GameManager::instance()->createDropZone(dropPoints[0].x, dropPoints[0].y, DROPZONE_SIZE);
 }
 
 /**
@@ -190,21 +195,26 @@ void Map::printData() {
         logv("\n");
     }
     logv("\n");
-    logv("BASE POSITION");
+    logv("BASE POSITION\n");
     logv("Position: %d, %d\n", base.x, base.y);
 
-    logv("SPAWN POINTS");
+    logv("SPAWN POINTS\n");
     for(int i = 0; i < zombieSpawnCount; i++) {
         logv("Spawn Point: %d; Position: %d, %d\n", i, zombieSpawn[i].x, zombieSpawn[i].y);
     }
     logv("\n");
 
-    logv("SHOP POINTS");
+    logv("SHOP POINTS\n");
     for(int i = 0; i < shopCount; i++) {
         logv("Shop: %d; Position: %d, %d\n", i, shops[i].x, shops[i].y);
     }
 
-    logv("AI MAP");
+    logv("DROP POINTS\n");
+    for(int i = 0; i < dropPointCount; i++) {
+        logv("Drop Point: %d; Position: %d, %d\n", i, dropPoints[i].x, dropPoints[i].y);
+    }
+
+    logv("AI MAP\n");
     for (const auto& i : AIMap) {
         for (const auto& j : i) {
             logv("%d", j);

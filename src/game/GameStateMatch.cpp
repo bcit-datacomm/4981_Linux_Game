@@ -26,8 +26,6 @@ bool GameStateMatch::load() {
 
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
-    //set the boundary on the map
-    // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
     // Load Map
     Map m("assets/maps/Map4.csv");
     if(m.loadFileData() == 0) {
@@ -39,13 +37,6 @@ bool GameStateMatch::load() {
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);
 
-
-    //createStores
-    GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
-
-    //createDropPoint
-    GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
-
     GameManager::instance()->addObject(base);
 
     Point newPoint = base.getSpawnPoint();
@@ -54,7 +45,7 @@ bool GameStateMatch::load() {
     player.setControl(GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-    
+
     return success;
 }
 
