@@ -13,8 +13,8 @@
 //#include <SDL2/SDL.h>
 
 // base width/height
-static constexpr int BASE_WIDTH = 1050;
-static constexpr int BASE_HEIGHT = 1050;
+static constexpr int BASE_WIDTH = 750;
+static constexpr int BASE_HEIGHT = 750;
 
 // map width/height
 static constexpr int MAP_WIDTH = 100 * 150;
