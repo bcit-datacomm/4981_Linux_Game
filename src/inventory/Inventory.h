@@ -32,7 +32,6 @@ public:
     Weapon *getWeaponFromInventory(int inventorySlot); //returns the weapon in the inventory slot specified
     int getCurretSlot() const {return current;}; //returns the current sloted selected int the inventory
     void makeTurretInv();//swaps the default gun to a turretGun
-    void setEmpty();
     Inventory();
     ~Inventory() = default;
     void initZombie();

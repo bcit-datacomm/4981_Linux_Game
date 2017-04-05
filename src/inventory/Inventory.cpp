@@ -153,9 +153,4 @@ void Inventory::scrollCurrent(int direction) {
      weaponIds[0] = tGun.getID();
      GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
  }
-
- void Inventory::setEmpty() {
-     GameManager::instance()->removeWeapon(weaponIds[current]);
-     weaponIds[0] = -1;
-     logv("weaponID changed to: %d\n", getCurrent()->getID());
- }
+ 

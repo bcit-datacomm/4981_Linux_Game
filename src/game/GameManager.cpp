@@ -446,7 +446,7 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
     const auto& w = weaponManager[id];
-    //assert(w.second);
+    assert(w.second);
     return w.first;
 }
 
