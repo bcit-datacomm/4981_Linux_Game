@@ -1,14 +1,32 @@
+/*------------------------------------------------------------------------------
+* Header: HitBox.cpp
+*
+* Functions:
+*
+*
+* Date:
+*
+* Revisions:
+* Edited By : Justen DePourcq- Style guide
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+*
+------------------------------------------------------------------------------*/
 #include "HitBox.h"
 
 
-HitBox::HitBox(SDL_Rect nrect):rect(nrect){
+HitBox::HitBox(SDL_Rect nrect):rect(nrect) {
 }
 
-const SDL_Rect& HitBox::getRect() const{
+const SDL_Rect& HitBox::getRect() const {
     return rect;
 }
 
-void HitBox::move(const float x, const float y){
+void HitBox::move(const float x, const float y) {
     rect.x = x;
     rect.y = y;
 }

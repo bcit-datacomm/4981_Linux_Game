@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Quadtree.cpp
+*
+* Functions:
+*
+*
+* Date:
+*
+* Revisions:
+* Edited By : Justen DePourcq- Style guide
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+*
+------------------------------------------------------------------------------*/
 #include <array>
 #include <memory>
 #include "Quadtree.h"
@@ -42,7 +60,7 @@ void Quadtree::split() {
     nodes[3] = std::make_shared<Quadtree>(level+1, SDL_Rect{x + subWidth, y + subHeight, subWidth, subHeight});
 }
 
-int Quadtree::getIndex(const HitBox *pRect) const{
+int Quadtree::getIndex(const HitBox *pRect) const {
     int index = -1;
     double verticalMidpoint = bounds.x + (bounds.w / 2);
     double horizontalMidpoint = bounds.y + (bounds.h / 2);

@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: HitBox.h
+*
+* Functions:
+*
+*
+* Date:
+*
+* Revisions:
+* Reviewed By : Justen DePourcq- Style guide
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+*
+------------------------------------------------------------------------------*/
 #ifndef HITBOX_H
 #define HITBOX_H
 #include <SDL2/SDL.h>
