@@ -1,20 +1,21 @@
 /*------------------------------------------------------------------------------
-* Header: AudioManage.h      
+* Header: AudioManage.h
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu
+* Edited By : Alex Zielinski added a few more sounds (April 4, 2017)
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 
 #ifndef AUDIO_MANAGER_H
@@ -35,6 +36,8 @@
 #define AUDIO_PATH "assets/sounds/"
 
 //music
+#define MUS_MENUBKG_1   AUDIO_PATH "MenuBKGMusic1.ogg"
+#define MUS_MENUBKG_2   AUDIO_PATH "MenuBKGMusic2.ogg"
 #define MUS_DARKNUBULA  AUDIO_PATH "Dark Nebula.ogg"
 #define MUS_TESTMENU01  AUDIO_PATH "~testsound_menuv01.ogg"
 
@@ -53,6 +56,9 @@
 
 #define EFX_WRELOAD01   AUDIO_PATH "Reload 1.ogg"
 #define EFX_WTURRET01   AUDIO_PATH "Turret 1.ogg"
+
+//baracade sounds
+#define EFX_BINSTALL    AUDIO_PATH "BaracadeEffect.ogg"
 
 //zombie sounds
 #define EFX_ZGROAN01    AUDIO_PATH "Zombie Groan 1.ogg"
