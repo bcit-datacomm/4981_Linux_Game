@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Source: Movable.cpp    
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #include <cmath>
 #include "Movable.h"
 

@@ -20,6 +20,7 @@
 #include "../buildings/Store.h"
 #include "../buildings/Barricade.h"
 #include "../buildings/DropPoint.h"
+#include "../map/Map.h"
 
 #include "../inventory/WeaponDrop.h"
 
@@ -118,6 +119,12 @@ public:
     void freeDropPoint(const int32_t id);
     bool checkFreeDropPoints();
 
+    // Ai Map setters and getters
+    auto& getAiMap() const { return AiMap; };
+    void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
+        AiMap = a;
+    }
+
     //getManagers
     auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
@@ -134,6 +141,7 @@ private:
     static GameManager sInstance;
 
     CollisionHandler collisionHandler;
+    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
     GameHashMap<int32_t, Object> objectManager;

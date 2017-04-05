@@ -1,7 +1,27 @@
-/** AudioManager.cpp
-*   This class loads the audio files and plays them.
-    Author: DericM
-*/
+/*------------------------------------------------------------------------------
+* Source: AudioManage.cpp        
+*
+* Functions:
+*    AudioManager& AudioManager::instance()
+*    AudioManager::AudioManager()
+*    void AudioManager::playMusic(const char *fileName)
+*    void AudioManager::playEffect(const char *fileName)
+*    void AudioManager::loadFiles()
+*    void AudioManager::loadMusic(const char *fileName)
+*    void AudioManager::loadEffect(const char *fileName)
+*    
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: DericM
+*
+* Notes:
+* This class loads the audio files and plays them.
+------------------------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <iostream>
@@ -34,10 +54,10 @@ AudioManager::AudioManager(){
 
 AudioManager::~AudioManager(){
     //clear all loaded files
-    for(auto const& music : _music) {
+    for(auto const& music : mus) {
         Mix_FreeMusic(music.second);
     }
-    for(auto const& chunk : _chunks) {
+    for(auto const& chunk : chun) {
         Mix_FreeChunk(chunk.second);
     }
 
@@ -49,9 +69,9 @@ AudioManager::~AudioManager(){
 
 
 //This plays a single background music file from the _music map.
-void AudioManager::playMusic(const char * fileName){
+void AudioManager::playMusic(const char *fileName){
 
-    Mix_Music * music = _music[fileName];
+    Mix_Music *music = mus[fileName];
 
     logv("%s\n", fileName);
 
@@ -63,9 +83,9 @@ void AudioManager::playMusic(const char * fileName){
 
 
 //This plays a single sound effect from the _chunks map.
-void AudioManager::playEffect(const char * fileName){
+void AudioManager::playEffect(const char *fileName){
 
-    Mix_Chunk * chunk = _chunks[fileName];
+    Mix_Chunk *chunk = chun[fileName];
 
     logv("%s\n", fileName);
 
@@ -111,28 +131,28 @@ void AudioManager::loadFiles(){
 
 
 //This loads a single background music file into the _music map.
-void AudioManager::loadMusic(const char * fileName){
+void AudioManager::loadMusic(const char *fileName){
 
-    Mix_Music * music = NULL;
+    Mix_Music *music = NULL;
     music = Mix_LoadMUS(fileName);
     if (music == NULL ) {
         logv( "Failed to load music: %s\n SDL_mixer Error: %s\n",
             fileName, Mix_GetError() );
     }
 
-    _music[fileName] = music;
+    mus[fileName] = music;
 }
 
 
 //This loads a single sound effect file into the _chunks map.
-void AudioManager::loadEffect(const char * fileName){
+void AudioManager::loadEffect(const char *fileName){
 
-    Mix_Chunk * sound = NULL;
+    Mix_Chunk *sound = NULL;
     sound = Mix_LoadWAV(fileName);
     if (sound == NULL ) {
         logv( "Failed to load sound: %s\n SDL_mixer Error: %s\n",
             fileName, Mix_GetError() );
     }
 
-    _chunks[fileName] = sound;
+    chun[fileName] = sound;
 }

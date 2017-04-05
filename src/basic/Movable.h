@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Movable.h   
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #ifndef MOVABLE_H
 #define MOVABLE_H
 #include "Entity.h"
