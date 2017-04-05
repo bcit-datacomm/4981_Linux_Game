@@ -110,11 +110,13 @@ bool Game::init() {
                     success = false;
                 }
 
+#ifndef SERVER
                 //Initialize SDL_mixer
                 if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
                     logv("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
                     success = false;
                 }
+#endif
             }
         }
     }
@@ -128,7 +130,9 @@ bool Game::loadMedia() {
 
 void Game::close() {
     //Quit SDL subsystems
+#ifndef SERVER
     Mix_Quit();
+#endif
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();

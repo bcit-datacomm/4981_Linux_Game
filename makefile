@@ -25,9 +25,17 @@ CONVERT := $(patsubst $(SRCOBJS), $(OBJS), $(shell basename -a $(EXCLUDEDSRCWILD
 EXEC := $(ODIR)/$(APPNAME)
 DEPS := $(EXEC).d
 
-all release debug: $(CONVERT)
-# Command takes all bin .o files and creates an executable called chess in the bin folder
+dclient client: $(CONVERT)
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(EXEC)
+
+all release debug: $(CONVERT)
+# Command takes all bin .o files and creates an executable in the bin folder
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(EXEC)
+	@$(RM) $(wildcard $(ODIR)/tests*) $(wildcard $(ODIR)/*.o)
+	$(if $(filter $@, debug), $(MAKE) dserver, $(MAKE) server)
+
+dserver server: $(CONVERT)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
 
 $(ODIR):
 	@mkdir -p $(ODIR)
@@ -49,7 +57,7 @@ ifeq (,$(filter clean, $(MAKECMDGOALS)))
 endif
 
 #Check if in debug mode and set the appropriate compile flags
-ifeq (,$(filter debug dserver tests, $(MAKECMDGOALS)))
+ifeq (,$(filter debug dserver tests dclient, $(MAKECMDGOALS)))
 $(eval CXXFLAGS := $(BASEFLAGS) $(RELEASEFLAGS))
 else
 $(eval CXXFLAGS := $(BASEFLAGS) $(DEBUGFLAGS))
@@ -67,9 +75,6 @@ $(OBJS): $(filter .+$$@, $(SRCWILD))
 # Command compiles the src .cpp file with the listed flags and turns it into a bin .o file
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $@
 
-dserver server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(CONVERT)
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
-
 tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTests/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/tests 
 
@@ -78,5 +83,5 @@ tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTe
 
 # Deletes the executable and all .o and .d files in the bin folder
 clean: | $(ODIR)
-	$(RM) $(EXEC) $(wildcard $(ODIR)/tests*) $(wildcard $(ODIR)/server*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
+	$(RM) $(EXEC) $(wildcard $(ODIR)/tests*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
 
