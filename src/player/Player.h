@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "../player/Marine.h"
+#include "../buildings/Base.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
 #include "../client/NetworkManager.h"
@@ -54,13 +55,10 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
-<<<<<<< HEAD
     int respawnTick;
-=======
     int32_t id;
     ClientMessage moveAction;
     ClientMessage attackAction;
->>>>>>> dba7456fbc3a529833f3742777c84c5594ec9f2f
     Marine *marine;
 };
 

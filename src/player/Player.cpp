@@ -4,7 +4,6 @@
 #include "../game/GameManager.h"
 #include "../log/EntityDump.h"
 
-<<<<<<< HEAD
 /**
 * Date: Jan. 28, 2017
 * Author: Jacob McPhail
@@ -13,9 +12,11 @@
 * Description: 
 *   ctor for a player.
 */
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), respawnTick(0), marine(nullptr) {}
-
+Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), 
+        pickupTick(0), pickupDelay(200), respawnTick(0), marine(nullptr) {
+    moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
+    attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
+}
 
 /**
 * Date: Jan. 28, 2017
@@ -27,34 +28,10 @@ Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
 * Description: 
 *   Set what marine the player controls.
 */
-=======
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
-        marine(nullptr) {
-    moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
-    attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
-}
-
->>>>>>> dba7456fbc3a529833f3742777c84c5594ec9f2f
 void Player::setControl(Marine* newControl) {
     marine = newControl;
 }
 
-<<<<<<< HEAD
-/**
-* Date: Feb. 6, 2017
-* Author: Jacob McPhail
-* Modified: ---
-* Function Interface: handleMouseUpdate(const int winWidth, const int winHeight, 
-*                const float camX, const float camY) 
-*       winWidth : Window width
-*       winHeight : Window height
-*       camX : Camera x position
-*       camY : Camera y position
-*
-* Description: 
-*   Handle user mouse input.
-*/
-=======
 bool Player::hasChangedAngle() const {
     return fabs(moveAction.data.ma.direction - marine->getAngle()) > DOUBLE_COMPARISON_PRECISION;
 }
@@ -86,7 +63,20 @@ void Player::sendServAttackAction() {
     NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
 }
 
->>>>>>> dba7456fbc3a529833f3742777c84c5594ec9f2f
+/**
+* Date: Feb. 6, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: handleMouseUpdate(const int winWidth, const int winHeight, 
+*                const float camX, const float camY) 
+*       winWidth : Window width
+*       winHeight : Window height
+*       camX : Camera x position
+*       camY : Camera y position
+*
+* Description: 
+*   Handle user mouse input.
+*/
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
@@ -289,7 +279,7 @@ bool Player::checkMarineState() {
 void Player::respawn(Point newPoint) {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
     //gives the player control of the marine
-    setControl(&GameManager::instance()->getMarine(playerMarineID));
+    setControl(&GameManager::instance()->getMarine(playerMarineID).first);
     getMarine()->setPosition(newPoint.first, newPoint.second);
     getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
 }

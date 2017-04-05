@@ -128,6 +128,10 @@ void GameStateMatch::loop() {
 * Description: 
 *       Sync game to server.
 */
+void GameStateMatch::sync() {
+
+}
+
 void GameStateMatch::updateServ() {
 
 }
@@ -177,14 +181,18 @@ void GameStateMatch::handle() {
                 screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
                 break;
             case SDL_MOUSEWHEEL:
-                GameManager::instance()->getPlayer().handleMouseWheelInput(&event);
+                if(GameManager::instance()->getPlayer().getMarine()) {
+                  GameManager::instance()->getPlayer().handleMouseWheelInput(&event);
+                }
                 hud.setOpacity(OPAQUE);
                 break;
             case SDL_MOUSEBUTTONDOWN:
+                if(GameManager::instance()->getPlayer().getMarine()) {
                 if (event.button.button == SDL_BUTTON_RIGHT) {
                     GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
                 } else if (event.button.button == SDL_BUTTON_LEFT) {
                     GameManager::instance()->getPlayer().fireWeapon();
+                }
                 }
                 break;
             case SDL_KEYDOWN:
@@ -193,8 +201,10 @@ void GameStateMatch::handle() {
                         play = false;
                         break;
                     case SDLK_b:
-                        GameManager::instance()->getPlayer().handleTempBarricade(
+                        if(GameManager::instance()->getPlayer().getMarine()) {
+                                GameManager::instance()->getPlayer().handleTempBarricade(
                                 Renderer::instance().getRenderer());
+                        }
                         break;
                     case SDLK_1: //Purposeful flow through
                     case SDLK_2:
@@ -204,8 +214,7 @@ void GameStateMatch::handle() {
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
                         if (GameManager::instance()->getPlayer().getMarine()) {
-                            GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
-                            GameManager::instance()->getPlayer().setControl(nullptr);
+                            GameManager::instance()->getPlayer().getMarine()->setHealth(0);
                         }
                         break;
                     default:
@@ -251,9 +260,7 @@ void GameStateMatch::update(const float delta) {
                 GameManager::instance()->getPlayer().getMarine()->getDY() * delta,
                 GameManager::instance()->getCollisionHandler());
     }
-    // Move Camera
-    camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
-            GameManager::instance()->getPlayer().getMarine()->getY());
+
 #endif
     if (!networked) {
         GameManager::instance()->updateMarines(delta);
@@ -268,9 +275,10 @@ void GameStateMatch::update(const float delta) {
     if(GameManager::instance()->getPlayer().getMarine()){
         camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
     }
-    if (player.checkMarineState()) {
-        player.respawn(base.getSpawnPoint());
+    if (GameManager::instance()->getPlayer().checkMarineState()) {
+        GameManager::instance()->getPlayer().respawn(base.getSpawnPoint());
     }
+#endif
 }
 
 /**

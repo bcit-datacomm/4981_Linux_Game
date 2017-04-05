@@ -40,11 +40,6 @@ HitBox::HitBox(SDL_Rect nrect) : rect(nrect) {
  * Description:
  *     Getter for the hit box rect.
  */
-HitBox::HitBox(SDL_Rect nrect):rect(nrect) {
-
-}
-
-
 const SDL_Rect& HitBox::getRect() const {
     return rect;
 }

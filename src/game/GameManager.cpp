@@ -251,11 +251,12 @@ bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
  * Description:
  *     Get a marine by its id
  */
+/*
 Marine& GameManager::getMarine(const int32_t id) {
     const auto& mar = marineManager[id];
     assert(mar.second);
     return mar.first;
-}
+}*/
 
 /**
  * Date: Feb. 9, 2017
