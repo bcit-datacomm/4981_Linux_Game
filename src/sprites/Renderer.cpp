@@ -59,16 +59,12 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::SHOTGUN_INVENTORY, SHOTGUN_INVENTORY_TEXTURE);
     createTexture(TEXTURES::HANDGUN_INVENTORY, HANDGUN_INVENTORY_TEXTURE);
 
-
-    //Enable Transparency for the inventory slots
-    SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::ACTIVE_SLOT)), SDL_BLENDMODE_BLEND);
-    SDL_SetTextureBlendMode(getTexture(static_cast<int>(TEXTURES::PASSIVE_SLOT)), SDL_BLENDMODE_BLEND);
-
     //-------- map object textures --------
     //nature
     //comsumables
     //shops
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
+    createTexture(TEXTURES::BASE, MAP_OBJECT_BASE);
 
     //-------- weapon textures --------
     createTexture(TEXTURES::RIFLE, RIFLE_EQUIPPED_TEXTURE); //temporary, will be replaced later
