@@ -27,7 +27,8 @@ public:
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
     //Used to get the inventory's medkit. should be made general for all consumables later
     std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
-    int getCurrentSlot() const {return current;}; //returns the current sloted selected int the inventory
+    int getCurrentSlot() const {return current;}; //returns the current slot selected in the inventory
+    Weapon *getWeaponFromInventory(int inventorySlot); //returns the weapon in the inventory slot specified
     Inventory();
     ~Inventory() = default;
     void initZombie();
