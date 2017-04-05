@@ -76,8 +76,8 @@ void dumpEntityPositions(const Player* p){
     entityDump << "\nAll STORE POSITIONS:\n";
     //print Store Positions to File
     for (const auto& s : gm->getStoreManager()) {
-        std::pair<float, float> coord = getDestCoordinates(s.second.get());
-        std::pair<float, float> mCoord = getMoveCoordinates(s.second.get());
+        const std::pair<float, float> coord = getDestCoordinates(s.second.get());
+        const std::pair<float, float> mCoord = getMoveCoordinates(s.second.get());
         entityDump << "Store id:" << s.first << "\n\tDest Position: " << "X:" << coord.first
             << " Y:" << coord.second << "\n\tMove Position: " << "X:" << mCoord.first
                 << " Y:" << mCoord.second << "\n";

@@ -288,8 +288,8 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, const double a
  */
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, int w,
         int h) {
-    int tileNumX = dest.w / w;
-    int tileNumY = dest.h / h;
+    const int tileNumX = dest.w / w;
+    const int tileNumY = dest.h / h;
     SDL_Rect tempRect;
     int y = 0;
 
