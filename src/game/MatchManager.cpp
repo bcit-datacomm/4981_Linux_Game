@@ -15,7 +15,7 @@ void MatchManager::checkMatchState() {
 
 void MatchManager::spawnZombies() {
     const int currentTime = SDL_GetTicks();
-    if(currentTime < (spawnTick + ZOMBIE_SPAWN_DELAY)){
+    if (currentTime < (spawnTick + ZOMBIE_SPAWN_DELAY)) {
         return;
     }
     spawnTick = currentTime;
@@ -40,7 +40,7 @@ void MatchManager::spawnZombies() {
 }
 
 void MatchManager::setSpawnPoints(std::vector<MapPoint> points) {
-       spawnPoints.swap(points);
+    spawnPoints = points;
 }
 
 void MatchManager::newRound() {
