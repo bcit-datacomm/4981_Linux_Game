@@ -121,7 +121,7 @@ public:
 
     // Ai Map setters and getters
     auto& getAiMap() const { return AiMap; };
-    void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT> a) {
+    void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
         AiMap = a;
     }
 

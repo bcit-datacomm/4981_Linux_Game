@@ -177,7 +177,6 @@ void Map::mapLoadToGame() {
     }
 
     // Random number generation.
-    ran.seed(1);
     pos = ran() % MAX_SHOPS;
 
     // Shop position being used.
