@@ -32,7 +32,7 @@ void dumpEntityPositions(const Player* p){
 #ifndef NDEBUG
     std::ofstream entityDump("EntityDumpLog.txt", std::ofstream::out);
     GameManager *gm = GameManager::instance();
-    std::pair<float, float> coord = getDestCoordinates(dynamic_cast<Entity*>(p->getMarine()));
+    const std::pair<float, float> coord = getDestCoordinates(dynamic_cast<Entity*>(p->getMarine()));
     entityDump << "ENTITY POSITION DUMP\n\n";
 
     entityDump << "PLAYER MARINE'S POSITION X:" << coord.first << " Y:" << coord.second
@@ -117,9 +117,9 @@ std::pair<float, float> getMoveCoordinates(const Entity* e){
  * an Entity's reference
  */
 void printEntityPositions(std::string entityName, int32_t id, const Entity &e, std::ofstream& entityDump){
-        std::pair<float, float> destCoord = getDestCoordinates(&e);
-        std::pair<float, float> srcCoord = getSrcCoordinates(&e);
-        std::pair<float, float> moveCoord = getMoveCoordinates(&e);
+        const std::pair<float, float> destCoord = getDestCoordinates(&e);
+        const std::pair<float, float> srcCoord = getSrcCoordinates(&e);
+        const std::pair<float, float> moveCoord = getMoveCoordinates(&e);
         entityDump << entityName << " id:" << id << "\n\t DestRect: " << "X:" << destCoord.first
             << " Y:" << destCoord.second << "\n\t SrcRect: " << "X:" << srcCoord.first
                 << " Y:" << srcCoord.second<< "\n\t MoveRect: " << "X:" << moveCoord.first
