@@ -258,7 +258,7 @@ bool Player::checkMarineState() {
         setControl(nullptr);
         respawnTick = SDL_GetTicks();
     } else if (!marine) {
-        if ((int)SDL_GetTicks() < (respawnTick + RESPAWN_DELAY)) {
+        if (static_cast<int>(SDL_GetTicks()) < (respawnTick + RESPAWN_DELAY)) {
                 return false;
         }
         return true;
