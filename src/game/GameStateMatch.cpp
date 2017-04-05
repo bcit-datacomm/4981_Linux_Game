@@ -52,7 +52,6 @@ bool GameStateMatch::load() {
         GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
     }
 #endif
-    //GameManager::instance()->createZombieWave(1);
 
     bool success = true;
     //set the boundary on the map
@@ -114,10 +113,6 @@ void GameStateMatch::handle() {
     if(GameManager::instance()->getPlayer().getMarine()){
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
-
-        //moving these calls to work for every marine
-        //GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-        //GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {

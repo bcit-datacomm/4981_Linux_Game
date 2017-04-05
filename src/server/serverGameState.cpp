@@ -70,7 +70,7 @@ void performAttack(const AttackAction& aa) {
         marine.setAngle(aa.direction);
 
         /* Using marine.fireWeapon instead because weapon ids aren't implemented and I wanted
-        to get shooting working. */
+        to get shooting working. From Brody */
         //const auto& weapon = gm->getWeapon(aa.weaponid);
         //weapon->fire(marine);
 
@@ -127,12 +127,12 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.xpos = marine.getX();
         tempPlayer.ypos = marine.getY();
         tempPlayer.xdel = marine.getDX();
-        tempPlayer.ydel = marine.getDX();
+        tempPlayer.ydel = marine.getDY();
         tempPlayer.vel = marine.getVelocity();
         tempPlayer.direction = marine.getAngle();
         tempPlayer.health = marine.getHealth();
 
-        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.direction);
+        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nPlayer dx: %f\nPlayer dy: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.xdel, tempPlayer.ydel, tempPlayer.direction);
         rtn.push_back(tempPlayer);
     }
     return rtn;

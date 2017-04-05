@@ -121,6 +121,8 @@ void Marine::updateImageDirection() {
 
 /**
 * Date: Mar 30
+* Modified: April 4 (Brody McCrone)
+*
 * Author: Aing Ragunathan
 *
 * Function Interface: void Marine::updateImageWalk(double frameCount)
@@ -128,14 +130,12 @@ void Marine::updateImageDirection() {
 *
 * Description:
 *       This function repeatedly updates the image of the marine in order to animate
-*       walking. It is called from GameStateMatch::handle after every frame and updates
-*       the feet placement of the marine.
+*       walking. It is called from GameManager::updateMarines every frame.
 */
 //void Marine::updateImageWalk(const Uint8 *state) {
 void Marine::updateImageWalk() {
     static unsigned long frameCount = 0;
     ++frameCount;
-    //state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]
     const float dy = getDY();
     const float dx = getDX();
     if (dy > 0) {
@@ -150,7 +150,6 @@ void Marine::updateImageWalk() {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
         }
-    //} else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
     } else if (dy < 0) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
@@ -161,7 +160,6 @@ void Marine::updateImageWalk() {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
         }
-    //else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A])
     } else if (dx < 0) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
@@ -172,7 +170,6 @@ void Marine::updateImageWalk() {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
         }
-    //else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D])
     } else if (dx > 0) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
