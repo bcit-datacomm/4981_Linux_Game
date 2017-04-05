@@ -31,7 +31,7 @@ else
 fi
 
 make clean
-make -j$(nproc --all)
+make -j$(nproc --all) all
 
 if [[ -n "$SUDO_COMMAND" ]]; then
     chown $SUDO_UID -R $PWD/bin
@@ -39,3 +39,5 @@ fi
 
 echo "The game has been successfully installed and compiled"
 echo "To play, just run './bin/Linux_Game'"
+echo "To run the server, just run './bin/server'"
+echo "Have fun!"
