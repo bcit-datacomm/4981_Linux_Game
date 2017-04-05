@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     setenv("OMP_NESTED", "TRUE", 1);
 
     int opt;
-    while ((opt = getopt(argc, argv, OPT_STRING)) != -1) {
+    while ((opt = getopt(argc, argv, OPT_STRING.c_str())) != -1) {
         switch(opt) {
             case 'h':
                 printf("usage %s\noptions:\n\t"

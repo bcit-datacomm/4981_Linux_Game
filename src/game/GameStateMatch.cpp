@@ -186,9 +186,9 @@ void GameStateMatch::handle() {
                         break;
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
-                        if (player.getMarine()) {
-                            GameManager::instance()->deleteMarine(player.getMarine()->getId());
-                            player.setControl(nullptr);
+                        if (GameManager::instance()->getPlayer().getMarine()) {
+                            GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
+                            GameManager::instance()->getPlayer().setControl(nullptr);
                         }
                         break;
                     default:
@@ -315,7 +315,7 @@ void GameStateMatch::render() {
 
 
             //Render the equipped weapon slot
-            hud.renderEquippedWeaponSlot(screenRect, player);
+            hud.renderEquippedWeaponSlot(screenRect, GameManager::instance()->getPlayer());
 
             //Reder the Weapon slots to the screen
             hud.renderWeaponSlots(screenRect, GameManager::instance()->getPlayer());

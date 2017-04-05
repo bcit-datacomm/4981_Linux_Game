@@ -17,7 +17,6 @@
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
 #include "../view/Camera.h"
-#include "../basic/LTimer.h"
 #include "MatchManager.h"
 #include "../game/GameHud.h"
 
@@ -33,9 +32,6 @@ static constexpr int BASE_SRC_X = 82;
 static constexpr int BASE_SRC_Y = 44;
 static constexpr int BASE_SRC_W = 1012;
 static constexpr int BASE_SRC_H = 1050;
-
-
-
 
 class GameStateMatch : public GameState {
 public:

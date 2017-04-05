@@ -1,16 +1,7 @@
 #ifndef BASE_H
 #define BASE_H
-//#include <string>
-//#include "LTexture.h"
-//#include "HitBox.h"
 #include "../basic/Entity.h"
 #include "Object.h"
-//#include "CollisionHandler.h"
-//#include "Player.h"
-//#include <vector>
-//#include <map>
-//#include <utility>
-//#include <SDL2/SDL.h>
 
 // base width/height
 static constexpr int BASE_WIDTH = 750;

@@ -3,7 +3,6 @@
 #include <utility>
 
 #include "../game/Game.h"
-#include "../basic/LTimer.h"
 #include "../player/Marine.h"
 #include "../creeps/Zombie.h"
 #include "../game/GameManager.h"

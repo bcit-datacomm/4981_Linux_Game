@@ -20,7 +20,7 @@
 #endif
 
 //Temp variable to represent client count
-static constexpr int CLIENT_COUNT 10
+static constexpr int CLIENT_COUNT = 10;
 
 static constexpr int LISTEN_PORT_UDP = 35222;
 static constexpr int LISTEN_PORT_TCP = 35223;
