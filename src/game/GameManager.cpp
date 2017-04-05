@@ -88,7 +88,8 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& w : wallManager) {
         if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, {15, 478, 122, 83},
+                WALL_WIDTH, WALL_HEIGHT);
         }
     }
 
@@ -576,7 +577,7 @@ Barricade& GameManager::getBarricade(const int32_t id) {
 /**
 * Date: Mar. 14, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
-*           Mar. 16 2017 - Micheal Goll
+*           Mar. 16 2017 - Michael Goll
 * Author: Maitiu Morton
 * Function Interface: int32_t GameManager::createWall(const float x, const float y, const int w,
 *       const int h)
@@ -633,4 +634,3 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
     createWall(eX, sY, width, height / 1.5);
     createWall(eX, sY + (height / 4 * 3), width, height / 4);
 }
-

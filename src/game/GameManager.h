@@ -44,6 +44,8 @@ static constexpr int WEAPON_STORE_SRC_X = 183;
 static constexpr int WEAPON_STORE_SRC_Y = 582;
 static constexpr int WEAPON_STORE_SRC_W = 158;
 static constexpr int WEAPON_STORE_SRC_H = 254;
+static constexpr int WALL_WIDTH = 150;
+static constexpr int WALL_HEIGHT = 150;
 
 class GameManager {
 public:

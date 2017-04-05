@@ -282,6 +282,25 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, const double a
 /**
  * DEVELOPER: Michael Goll
  * DESIGNER:  Michael Goll
+ * DATE:      April 4, 2017
+ *
+ */
+void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, int w,
+        int h) {
+    int tileNumX = dest.w / w;
+    int tileNumY = dest.h / h;
+
+    for (int i = 0; i < tileNumX; ++i) {
+        for (int j = 0; j < tileNumY; ++j) {
+            SDL_Rect tempRect = {dest.x + w * i, dest.y + h * j, w, h};
+            SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &tempRect, 0, nullptr, SDL_FLIP_NONE);
+        }
+    }
+}
+
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
  * DATE:      March 14, 2017
  * returns the sprite or sprite sheet that the object is looking to render
  */
