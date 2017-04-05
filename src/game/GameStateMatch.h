@@ -37,7 +37,6 @@ private:
     Camera camera;
     MatchManager matchManager;
     GameHud hud;
-
     SDL_Rect screenRect;
 
     float storeX;
