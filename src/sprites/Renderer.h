@@ -143,6 +143,7 @@ const std::string SPRITE_PATH = "assets/texture/SpriteSheets/";
 
 //-------- Map Objects Sprite Sheet --------
 const std::string MAP_OBJECTS = SPRITE_PATH + "mapObjects.png";
+const std::string MAP_OBJECT_BASE = SPRITE_PATH + "base.png";
 
 //-------- Zombie Sprite Sheets --------
 const std::string ZOMBIE_BABYZ = SPRITE_PATH + "babyz.png";

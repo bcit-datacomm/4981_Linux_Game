@@ -48,6 +48,33 @@ Weapon* Inventory::getCurrent() {
     return nullptr;
 }
 
+/**
+ * Function: getWeaponFromInventory
+ *
+ * Date:
+ * JF: April 4, 2017:
+ *
+ * Designer:
+ * Jacob Frank
+ *
+ * Programmer:
+ * Jacob Frank
+ *
+ * Interface: getWeaponFromInventory(int inventorySlot)
+ *                  int inventorySlot: The inventory slot to retrieve the weapon from
+ *
+ * Returns: A Weapon from the inventory if one is available
+ *
+ * Notes:
+ * Function, when called, retrieves the weapon from the inventory slot requested
+ */
+Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
+    if (weaponIds[inventorySlot] >= 0) {
+        return GameManager::instance()->getWeapon(weaponIds[inventorySlot]).get();
+    }
+    return nullptr;
+}
+
 void Inventory::useItem() {
     if (medkit != nullptr) {
         medkit->OnConsume();
