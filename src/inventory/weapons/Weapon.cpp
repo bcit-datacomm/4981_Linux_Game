@@ -14,7 +14,9 @@ using std::string;
 
 /**
  * Date: Feb 8, 2017
- * Modified: Mar 13, 2017 - Mark Tattrie
+ * Modified: 
+ *  Feb 9, 2017 - Jacob McPhail
+ *  Mar 13, 2017 - Mark Tattrie
  * Author: Maitiu Morton
  * Function Interface: Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound,
  *       const string& hitSound, const string& reloadSound, const string& emptySound, const int range,

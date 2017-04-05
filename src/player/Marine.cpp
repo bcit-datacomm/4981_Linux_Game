@@ -3,6 +3,22 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: Marine(const int32_t id, const SDL_Rect& dest,
+ *              const SDL_Rect& movementSize, const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
+ *              
+ *              id : Marine id
+ *              dest : Destination rect
+ *              movmentSize : Move hitbox size
+ *              projectileSize : Projectile hitbox size
+ *              damageSize : Damage hitbox size
+ *
+ * Description:
+ *     ctor for a marine.
+ */
 Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
         const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
 : Entity(id, dest, movementSize, projectileSize, damageSize),
@@ -10,14 +26,38 @@ Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
     logv("Create Marine\n");
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: ~Marine()
+ * Description:
+ *   dctor for a marine.  
+ */
 Marine::~Marine() {
     logv("Destroy Marine\n");
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: onCollision()
+ */
 void Marine::onCollision() {
     // Do nothing for now
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: collidingProjectile(const int damage)
+ *      damage : damage to deal to marine
+ *
+ * Description:
+ *     Deals damage to a marine.
+ */
 void Marine::collidingProjectile(const int damage) {
     health -= damage;
 }

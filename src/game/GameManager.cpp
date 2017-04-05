@@ -22,24 +22,40 @@ int32_t GameManager::generateID() {
     return ++counter;
 }
 
-GameManager::GameManager():collisionHandler(){
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: GameManager()
+ * Description:
+ *     ctor for the game manager.
+ */
+GameManager::GameManager() : collisionHandler() {
     logv("Create GM\n");
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: ~GameManager()
+ * Description:
+ *     dctor for the game manager.
+ */
 GameManager::~GameManager() {
     logv("Destroy GM\n");
 }
 
 
 /**
- * Date: Mar. 1, 2017
+ * Date: Feb. 4, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
  * Modified: Apr. 02, 2017 - Terry Kang
  *  Set alpha to the sprite of Brricade if it is not placeable
- * Author: Maitiu Morton
+ * Author: Jacob McPhail
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
  * Description:
- * Render all objects in level
+ *     Render all objects in level
  */
 void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
@@ -99,7 +115,16 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     }
 }
 
-// Update marine movements. health, and actions
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: (const float delta)
+ *      delta : Delta time to control frame rate.
+ *
+ * Description:
+ *     Update marine movements. health, and actions
+ */
 void GameManager::updateMarines(const float delta) {
     for (auto& m : marineManager) {
         m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
@@ -124,8 +149,14 @@ void GameManager::updateTurrets() {
     }
 }
 
-
-// Create marine add it to manager, returns marine id
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: createMarine()
+ * Description:
+ *     Create marine add it to manager, returns marine id
+ */
 int32_t GameManager::createMarine() {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, MARINE_WIDTH, MARINE_HEIGHT};
@@ -142,10 +173,10 @@ int32_t GameManager::createMarine() {
 /**
  * Date: Mar. 1, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
- * Author:
+ * Author: Jacob McPhail
  * Function Interface: bool GameManager::createMarine(const float x, const float y) {
  * Description:
- * create a marine at position x,y and add it to the marine manager
+ *     Create a marine at position x,y and add it to the marine manager
  */
 bool GameManager::createMarine(const float x, const float y) {
     const int32_t id = generateID();
@@ -173,7 +204,17 @@ void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
 }
 
-// Adds marine to level
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: addMarine(const int32_t id, const Marine& newMarine)
+ *      id : Marine id
+ *      newMarine : Marine to add the manager
+ *
+ * Description:
+ *     Adds marine to level.
+ */
 bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
     if (marineManager.count(id)) {
         return false;
@@ -182,14 +223,30 @@ bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
     return true;
 }
 
-// Get a marine by its id
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: getMarine(const int32_t id)
+ *      id : Marine id
+ *
+ * Description:
+ *     Get a marine by its id
+ */
 Marine& GameManager::getMarine(const int32_t id) {
     const auto& mar = marineManager[id];
     assert(mar.second);
     return mar.first;
 }
 
- //Create Turret add it to manager, returns tower id
+/**
+ * Date: Feb. 9, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: createTurret()
+ * Description:
+ *     Create Turret add it to manager, returns tower id.
+ */
 int32_t GameManager::createTurret() {
     const int32_t id = generateID();
     SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
@@ -204,12 +261,31 @@ int32_t GameManager::createTurret() {
     return id;
 }
 
-// Deletes tower from level
+/**
+ * Date: Feb. 9, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: deleteTurret(const int32_t id)
+ *      id : Turret id
+ *
+ * Description:
+ *     Deletes tower from level.
+ */
 void GameManager::deleteTurret(const int32_t id) {
     turretManager.erase(id);
 }
 
-// Adds tower to level
+/**
+ * Date: Feb. 9, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: addTurret (const int32_t id, const Turret& newTurret) 
+ *      id : Turret id
+ *      newTurret : Turret to add
+ *
+ * Description:
+ *     Adds tower to level.
+ */
 bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
     if (turretManager.count(id)) {
         return false;
@@ -241,13 +317,32 @@ int32_t GameManager::createTurret(const float x, const float y) {
     return id;
 }
 
-// Get a tower by its id
+/**
+ * Date: Feb. 9, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: getTurret(const int32_t id)
+ *      id : Turret id
+ *
+ * Description:
+ *      Get a tower by its id.
+ */
 Turret& GameManager::getTurret(const int32_t id) {
     const auto& turr = turretManager[id];
     assert(turr.second);
     return turr.first;
 }
 
+/**
+ * Date: Feb. 8, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: addZombie(const Zombie& newZombie) 
+ *      newZombie : Zombie to add
+ *
+ * Description:
+ *     Add a zombie to the manager.
+ */
 int32_t GameManager::addZombie(const Zombie& newZombie) {
     const int32_t id = generateID();
     zombieManager.emplace(id, newZombie);
@@ -257,10 +352,10 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 /**
 * Date: Mar. 1, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
-* Author:
+* Author: Jacob McPhail
 * Function Interface: bool GameManager::createZombie(const float x, const float y)
 * Description:
-* Create zombie add it to manager, returns success
+*   Create zombie add it to manager, returns success
 */
 int32_t GameManager::createZombie(const float x, const float y) {
     const int32_t id = generateID();
@@ -278,7 +373,16 @@ int32_t GameManager::createZombie(const float x, const float y) {
     return id;
 }
 
-// Deletes zombie from level
+/**
+ * Date: Feb. 8, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: deleteZombie(const int32_t id)
+ *      id : Zombie id
+ *
+ * Description:
+ *     Deletes zombie from level.
+ */
 void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
 }
@@ -301,12 +405,31 @@ Zombie& GameManager::getZombie(const int32_t id) {
     return z.first;
 }
 
+/**
+ * Date: Feb. 8, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: addObject(const Object& newObject)
+ *      newObject : Object to add
+ *
+ * Description:
+ *     Add object to the manager.
+ */
 int32_t GameManager::addObject(const Object& newObject) {
     objectManager.emplace(newObject.getId(), newObject);
     return newObject.getId();
 }
 
-// Deletes Object from level
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: deleteObject(const int32_t id)
+ *      id : Object id
+ *
+ * Description:
+ *     Deletes Object from level.
+ */
 void GameManager::deleteObject(const int32_t id) {
     objectManager.erase(id);
 }
@@ -492,12 +615,12 @@ CollisionHandler& GameManager::getCollisionHandler() {
 }
 
 /**
- * Date: Mar. 1, 2017
+ * Date: Feb. 4, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
- * Author: Maitiu Morton
+ * Author: Jacob McPhail
  * Function Interface: void GameManager::updateCollider()
  * Description:
- * Update colliders to current state
+ *     Update colliders to current state
  */
 void GameManager::updateCollider() {
     collisionHandler = CollisionHandler();
@@ -595,6 +718,15 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
     return id;
 }
 
+/**
+* Date: Mar. 1, 2017
+* Modified: Mar. 8 2017 - Jacob McPhail
+* Author: Terry Kang
+* Function Interface: setBoundary(const float startX, const float startY, 
+*        const float endX, const float endY)
+* Description:
+*   Create test area.
+*/
 void GameManager::setBoundary(const float startX, const float startY, const float endX, const float endY) {
 
     int width = endX - startX + 200;

@@ -4,11 +4,27 @@
 
 #include "Window.h"
 
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: Window()
+* Description: 
+*   ctor for the window.
+*/
 Window::Window() : window(nullptr), width(0), height(0), mouseFocus(false), keyboardFocus(false),
         fullScreen(false), minimized(false) {
 
 }
 
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: ~Window() 
+* Description: 
+*   dctor for the window, closes program window.
+*/
 Window::~Window() {
     if (window) {
         SDL_DestroyWindow(window);
@@ -20,6 +36,14 @@ Window::~Window() {
     height = 0;
 }
 
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: init()
+* Description: 
+*   Spawns program window.
+*/
 bool Window::init() {
     //Create window
     window = SDL_CreateWindow( "4981 Linux Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -34,10 +58,28 @@ bool Window::init() {
     return false;
 }
 
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: getScreenSurface()
+* Description: 
+*   Getter for window surface.
+*/
 SDL_Surface* Window::getScreenSurface() {
     return SDL_GetWindowSurface(window);
 }
 
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: handleEvent(SDL_Event& e)
+*       e : Event from user input
+*
+* Description: 
+*       Handles user input window events. 
+*/
 void Window::handleEvent(SDL_Event& e) {
     //Window event occured
     if (e.type == SDL_WINDOWEVENT) {

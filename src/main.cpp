@@ -2,19 +2,19 @@
 * Source: main.cpp     
 *
 * Functions:
-*    
+*               main
 *
-* Date: 
+* Date:     Jan. 20, 2017
 *
 * Revisions: 
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
 *
-* Author: 
+* Designer: Isaac Morneau + Jacob McPhail 
 *
-* Notes:
-*  
+* Author:   Isaac Morneau + Jacob McPhail 
+*
+*       
 ------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <iostream>
@@ -24,6 +24,13 @@
 #include "game/Game.h"
 #include "log/log.h"
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Function Interface: int main(int argc, char **argv)
+* Description: 
+*   Processes command args, and starts the game.
+*/
 int main(int argc, char **argv) {
     int opt;
     while ((opt = getopt(argc, argv, "evio")) != -1) {

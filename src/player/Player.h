@@ -11,6 +11,7 @@
 #include "../game/GameManager.h"
 
 static constexpr int PLAYER_PLACE_DISTANCE = 100;
+static constexpr int RESPAWN_DELAY = 3000;
 
 class Player {
 public:
@@ -30,7 +31,8 @@ public:
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
     
-    void checkMarineState();
+    bool checkMarineState();
+    void respawn(Point newPoint);
 
     Marine * getMarine() const {return marine;}
 
@@ -40,6 +42,7 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    int respawnTick;
     Marine *marine;
 };
 

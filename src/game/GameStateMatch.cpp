@@ -17,11 +17,30 @@
 #include "Game.h"
 #include "../../include/Colors.h"
 
-
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: GameStateMatch(Game& g,  const int gameWidth, const int gameHeight)
+*       g : Pointer to the game object
+*       gameWidth : Width of camera view
+*       gameHeight : Height of camera view
+*               
+* Description: 
+*       ctor for the match game state.
+*/
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
         player(), base(), camera(gameWidth,gameHeight), hud(),
         screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: load() 
+* Description: 
+*       Loads state resources.
+*/
 bool GameStateMatch::load() {
     bool success = true;
 
@@ -64,6 +83,14 @@ bool GameStateMatch::load() {
     return success;
 }
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: loop()
+* Description: 
+*       State loop, processes a frame per each loop.
+*/
 void GameStateMatch::loop() {
     int startTick = 0;
     int frameTicks = 0;
@@ -86,6 +113,14 @@ void GameStateMatch::loop() {
     }
 }
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: sync()
+* Description: 
+*       Sync game to server.
+*/
 void GameStateMatch::sync() {
 
 }
@@ -93,13 +128,13 @@ void GameStateMatch::sync() {
 /**
  * Function: handle
  *
- * Date:
+ * Date: Jan. 20, 2017
  *
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  *
  * Modified by:
@@ -111,7 +146,7 @@ void GameStateMatch::sync() {
  * Returns: void
  *
  * Notes:
- *
+ *      Handles user input.
  * Revisions:
  * JF Mar 25: Added a ScreenRect size adjustment whenever screen size changes (ensures proper hud placement)
  * JF Apr 1: Added set Weapon Inventory slot opacity function to mousewheel scroll and number key events
@@ -181,6 +216,16 @@ void GameStateMatch::handle() {
     }
 }
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: update(const float delta)
+*       delta : Delta time of the fps rate.       
+*
+* Description: 
+* 
+*/
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 
@@ -193,20 +238,22 @@ void GameStateMatch::update(const float delta) {
     if(player.getMarine()){
         camera.move(player.getMarine()->getX(), player.getMarine()->getY());
     }
-    player.checkMarineState();
+    if (player.checkMarineState()) {
+        player.respawn(base.getSpawnPoint());
+    }
     matchManager.checkMatchState();
 }
 
 /**
  * Function: render
  *
- * Date:
+ * Date: Jan. 20, 2017
  *
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  *
  * Modified by:
@@ -217,7 +264,7 @@ void GameStateMatch::update(const float delta) {
  * Returns: void
  *
  * Notes:
- *
+ *      Renders game objects to window.
  * Revisions:
  * JF Mar 25 - April 1: Added rendering functions to render the HUD overtop of the game
  */
