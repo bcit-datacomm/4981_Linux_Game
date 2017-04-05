@@ -27,6 +27,8 @@
 ------------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -92,11 +94,12 @@ AudioManager::~AudioManager(){
 }
 
 
-
 /**
 *   Function: playMusic(const char *fileName)
 *               const char *fileName: file path of audio file to play
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -120,6 +123,8 @@ void AudioManager::playMusic(const char *fileName){
 *               const char *fileName: file path of audio file to play
 *   Date:
 *
+*   Returns: void
+*
 *   Programmer: DericM
 *
 *   Description:
@@ -142,6 +147,8 @@ void AudioManager::playEffect(const char *fileName){
 *   Function:   loadFiles()
 *
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM, Alex Zielinski
 *
@@ -193,6 +200,8 @@ void AudioManager::loadFiles(){
 *               const char *fileName: file path of audio file to load
 *   Date:
 *
+*   Returns: void
+*
 *   Programmer: DericM
 *
 *   Description:
@@ -215,6 +224,8 @@ void AudioManager::loadMusic(const char *fileName){
 *               const char *fileName: file path of audio file to load
 *   Date:
 *
+*   Returns: void
+*
 *   Programmer: DericM
 *
 *   Description:
@@ -230,4 +241,54 @@ void AudioManager::loadEffect(const char *fileName){
     }
 
     chun[fileName] = sound;
+}
+
+/**
+*   Function: fadeMusicOut(int ms)
+*               int ms: amount of milliseconds to fade out music
+*
+*   Returns: void
+*
+*   Date: April 5, 2017
+*
+*   Programmer: Alex Zielinski
+*
+*   Description:
+*       Wrapper fucntion to fade music out. The amount of time is takes to fade
+*       the music out is specified by the paramater int ms (in milliseconds)
+*/
+void AudioManager::fadeMusicOut(int ms){
+    Mix_FadeOutMusic(ms);
+}
+
+/**
+*   Function: playMenuMusic(const char *fileName1, const char *fileName2)
+*               const char *fileName1: first menu music audio file
+*               const char *fileName2: second menu music audio file
+*
+*   Returns: void
+*
+*   Date: April 5, 2017
+*
+*   Programmer: Alex Zielinski
+*
+*   Description:
+*       Randomly selects one of the 2 menu background music audio files
+*       to play when the menu loads
+*/
+void AudioManager::playMenuMusic(const char *fileName1, const char *fileName2){   // generates either 1 or 2
+
+    srand (time(NULL)); // random seed generator
+    int random = rand() % 2 + 1; // randomly select 1 or 2
+
+    // check what number was selected
+    switch(random)
+    {
+        case 1:
+            playMusic(fileName1);
+            break;
+        case 2:
+            playMusic(fileName2);
+            break;
+    }
 }

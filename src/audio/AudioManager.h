@@ -7,8 +7,10 @@
 * Date:
 *
 * Revisions:
-* Edited By : Yiaoping Shu
-* Edited By : Alex Zielinski added a few more sounds (April 4, 2017)
+* Edited By :
+*   Yiaoping Shu
+*   Alex Zielinski: added a few more sounds (April 4, 2017)
+*   Alex Zielinski: added a music fade out wrapper function (April 5, 2017)
 *
 * Designer:
 *
@@ -77,6 +79,8 @@ public:
 
     void playMusic(const char *fileName);
     void playEffect(const char *fileName);
+    void fadeMusicOut(int ms);
+    void playMenuMusic(const char *fileName1, const char *fileName2);
 
 private:
     static AudioManager sInstance;

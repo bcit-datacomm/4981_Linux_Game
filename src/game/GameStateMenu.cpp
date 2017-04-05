@@ -500,4 +500,3 @@ void GameStateMenu::render() {
     //Update screen
     SDL_RenderPresent(Renderer::instance().getRenderer());
 }
-
