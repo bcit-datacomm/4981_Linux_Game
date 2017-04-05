@@ -206,8 +206,6 @@ void GameStateMenu::handle() {
     //Handle events on queue
     SDL_WaitEvent(&event);
     game.getWindow().handleEvent(event);
- * Revisions:
- * AZ
     switch (event.type) {
 
         case SDL_MOUSEBUTTONDOWN:
