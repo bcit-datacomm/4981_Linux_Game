@@ -104,18 +104,39 @@ const std::string TEXTBOX_ACTIVE_TEXTURE = "assets/texture/textboxActive.png";
 const std::string TEXTBOX_TRANSPARENT_TEXTURE = "assets/texture/textboxTransparent.png";
 //#define LOBBY_SCREEN "assets/texture/Map/" // <-- Will be used at a later date to show lobby bg
 
+
+//--------------------- Hud textures ---------------------
+const std::string WEAPON_CLIP_FULL_TEXTURE = "assets/texture/hud/weaponClipFull.png";
+const std::string WEAPON_CLIP_EMPTY_TEXTURE = "assets/texture/hud/weaponClipEmpty.png";
+const std::string ACTIVE_SLOT_TEXTURE = "assets/texture/hud/activeWeaponSlot.png";
+const std::string PASSIVE_SLOT_TEXTURE = "assets/texture/hud/inactiveWeaponSlot.png";
+const std::string HEALTHBAR_TEXTURE = "assets/texture/hud/healthbar.png";
+const std::string CONSUMABLE_SLOT_TEXTURE = "assets/texture/hud/consumableSlot.png";
+const std::string EQUIPPED_WEAPON_SLOT_TEXTURE = "assets/texture/hud/equippedWeaponSlot.png";
+
+// ---------- Consumable Textures ----------
+const std::string HEALTHPACK_TEXTURE = "assets/texture/hud/inventoryItems/firstAid.png";
+
+
 //-------- Map Textures --------
 const std::string MAP_TEXTURE_PATH = "assets/texture/Map/";
 const std::string TEXTURE_DIRT = MAP_TEXTURE_PATH + "dirt_grass.png"; //terraformed terrain
 const std::string TEXTURE_BARREN = MAP_TEXTURE_PATH + "mars_dirt.png"; //barren dirt
 const std::string TEXTURE_MIDDLE = MAP_TEXTURE_PATH + "middle_dirt.png"; //dead grass
 
+//------------- Inventory Textures ------------------
+const std::string SHOTGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/shotgun.png";
+const std::string RIFLE_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifle.png";
+const std::string HANDGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/pistol.png";
+
+//------------- Equipped Weapon Textures ------------------
+const std::string SHOTGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/shotgunEquipped.png";
+const std::string RIFLE_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifleEquipped.png";
+const std::string HANDGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/pistolEquipped.png";
+
 //TODO: remove these textures, temporary for now
 const std::string TEMP_MARINE_TEXTURE = "assets/texture/arrow.png";
 const std::string TEMP_ZOMBIE_TEXTURE = "assets/texture/babyz1.png";
-const std::string TEMP_SHOTGUN_TEXTURE = "assets/texture/shotGun.png";
-const std::string TEMP_RIFLE_TEXTURE = "assets/texture/Rifle.png";
-const std::string TEMP_HANDGUN_TEXTURE = "assets/texture/HandGun.png";
 
 //Sprite Sheet folder path
 const std::string SPRITE_PATH = "assets/texture/SpriteSheets/";
@@ -140,7 +161,7 @@ const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 22; //number of total sprites
+static constexpr int TOTAL_SPRITES = 31; //number of total sprites
 
 
 class Renderer {

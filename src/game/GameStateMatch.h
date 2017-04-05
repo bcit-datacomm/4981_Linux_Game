@@ -17,15 +17,14 @@
 #include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
+<<<<<<< HEAD
 #include "MatchManager.h"
+=======
+#include "../game/GameHud.h"
+>>>>>>> 33e3c5bdd29b44e599921878cb1d547c41060c99
 
 // ticks (ms) in 1 second
 static constexpr float TICK_SEC = 1000.0;
-static constexpr int STORE_X = 500;
-static constexpr int STORE_Y = 900;
-static constexpr int DROPZONE_X = 100;
-static constexpr int DROPZONE_Y = 100;
-static constexpr int DROPZONE_SIZE = 4;
 
 class GameStateMatch : public GameState {
 public:
@@ -39,7 +38,13 @@ private:
     Player player;
     Base base;
     Camera camera;
+<<<<<<< HEAD
     MatchManager matchManager;
+=======
+    GameHud hud;
+
+    SDL_Rect screenRect;
+>>>>>>> 33e3c5bdd29b44e599921878cb1d547c41060c99
     float storeX;
     float storeY;
     float dropZoneX;
