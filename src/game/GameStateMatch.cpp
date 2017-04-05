@@ -1,71 +1,60 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
+#include "GameStateMatch.h"
+#include "../client/NetworkManager.h"
 #include "../game/GameStateMatch.h"
 #include "../sprites/Renderer.h"
 #include "../sprites/SpriteTypes.h"
 #include "../view/Window.h"
 #include "../log/log.h"
+#include "../server/server.h"
+#include "../server/servergamestate.h"
 #include "../sprites/VisualEffect.h"
 #include "../map/Map.h"
 #include "Game.h"
 #include "../../include/Colors.h"
 
-
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
-        player(), base(), camera(gameWidth,gameHeight), hud(),
+        base(), camera(gameWidth,gameHeight), hud(),
         screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
 bool GameStateMatch::load() {
-    bool success = true;
+#ifndef SERVER
+    if (networked) {
+        GameManager::instance()->getPlayer().setControl(
+                &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
+        GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
+    } else {
+        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
+        GameManager::instance()->addObject(base);
+        Point newPoint = base.getSpawnPoint();
 
-    const int32_t playerMarineID = GameManager::instance()->createMarine();
+        GameManager::instance()->getPlayer().setControl(
+                &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
+        GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
+        GameManager::instance()->getPlayer().getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    }
+#endif
+
+    bool success = true;
+    //set the boundary on the map
+    // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
     // Load Map
-    Map m("assets/maps/Map4.csv");
+    Map m("assets/maps/DemoMap.csv");
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
     m.mapLoadToGame();
     GameManager::instance()->setAiMap(m.getAIMap());
-
-    // Create Dummy Entitys
-    GameManager::instance()->createMarine(1000, 500);
-
-    GameManager::instance()->createZombie(1050, 500);
-    GameManager::instance()->createZombie(950, 500);
-
-    GameManager::instance()->createMarine(850, 500);
-    //createStores
-    GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
-
-    //createDropPoint
-    GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
-    Rifle w(GameManager::instance()->generateID());
-    ShotGun w2(GameManager::instance()->generateID());
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
-    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
-    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
-
-    base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-    GameManager::instance()->addObject(base);
-
-    Point newPoint = base.getSpawnPoint();
-
-    //gives the player control of the marine
-    player.setControl(&GameManager::instance()->getMarine(playerMarineID));
-    player.getMarine()->setPosition(newPoint.first, newPoint.second);
-    player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-
     matchManager.setSpawnPoints(m.getZombieSpawn());
-
     return success;
 }
 
@@ -74,14 +63,25 @@ void GameStateMatch::loop() {
     int frameTicks = 0;
     // State Loop
     while (play) {
+#ifndef SERVER
+        // Process frame
         handle(); // Handle user input
+#endif
         update((SDL_GetTicks() - startTick) / TICK_SEC); // Update state values
-
         startTick = SDL_GetTicks();
+#ifndef SERVER
         // Sync game to server
         sync();
         // Render game state to window
         render();
+#else
+        //Server side sync packet sending
+        //This will send update packets every frame
+        //Currently at 60, so this is fine
+        //If frame rate changes, this may need limiting
+        sendSyncPacket(sendSocketUDP);
+        clearAttackActions();
+#endif
 
         //If frame finished early
         if ((frameTicks = SDL_GetTicks() - startTick) < SCREEN_TICK_PER_FRAME) {
@@ -89,6 +89,10 @@ void GameStateMatch::loop() {
             SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
     }
+}
+
+void GameStateMatch::updateServ() {
+
 }
 
 void GameStateMatch::sync() {
@@ -124,11 +128,12 @@ void GameStateMatch::sync() {
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
-    if(player.getMarine() != nullptr){
-        player.handleKeyboardInput(state);
-        player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
-        player.getMarine()->updateImageDirection(); //Update direction of player
-        player.getMarine()->updateImageWalk(state);  //Update walking animation
+    if(GameManager::instance()->getPlayer().getMarine()){
+        GameManager::instance()->getPlayer().handleKeyboardInput(state);
+        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
+                game.getWindow().getHeight(), camera.getX(), camera.getY());
+        GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
+        GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -139,12 +144,14 @@ void GameStateMatch::handle() {
                 screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
                 break;
             case SDL_MOUSEWHEEL:
-                player.handleMouseWheelInput(&(event));
+                GameManager::instance()->getPlayer().handleMouseWheelInput(&event);
                 hud.setOpacity(OPAQUE);
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_RIGHT) {
-                    player.handlePlacementClick(Renderer::instance().getRenderer());
+                    GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
+                } else if (event.button.button == SDL_BUTTON_LEFT) {
+                    GameManager::instance()->getPlayer().fireWeapon();
                 }
                 break;
             case SDL_KEYDOWN:
@@ -153,10 +160,11 @@ void GameStateMatch::handle() {
                         play = false;
                         break;
                     case SDLK_b:
-                        player.handleTempBarricade(Renderer::instance().getRenderer());
+                        GameManager::instance()->getPlayer().handleTempBarricade(
+                                Renderer::instance().getRenderer());
                         break;
                     case SDLK_p:
-                        player.handleTempTurret(Renderer::instance().getRenderer());
+                        GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
                     case SDLK_1: //Purposeful flow through
                     case SDLK_2:
                     case SDLK_3:
@@ -164,9 +172,9 @@ void GameStateMatch::handle() {
                         break;
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
-                        if (player.getMarine()) {
-                            GameManager::instance()->deleteMarine(player.getMarine()->getId());
-                            player.setControl(nullptr);
+                        if (GameManager::instance()->getPlayer().getMarine()) {
+                            GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
+                            GameManager::instance()->getPlayer().setControl(nullptr);
                         }
                         break;
                     default:
@@ -190,18 +198,36 @@ void GameStateMatch::handle() {
 
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
-
+#ifndef SERVER
     // Move player
-    GameManager::instance()->updateMarines(delta);
+    if (networked) {
+        if (GameManager::instance()->getPlayer().hasChangedCourse()
+                || GameManager::instance()->getPlayer().hasChangedAngle()) {
+            GameManager::instance()->getPlayer().sendServMoveAction();
+        }
+        GameManager::instance()->getPlayer().getMarine()->move(
+                GameManager::instance()->getPlayer().getMarine()->getDX() * delta,
+                GameManager::instance()->getPlayer().getMarine()->getDY() * delta,
+                GameManager::instance()->getCollisionHandler());
+    }
+    // Move Camera
+    camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
+            GameManager::instance()->getPlayer().getMarine()->getY());
+#endif
+    if (!networked) {
+        GameManager::instance()->updateMarines(delta);
+    }
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
-
-    // Move Camera
-    if(player.getMarine()){
-        camera.move(player.getMarine()->getX(), player.getMarine()->getY());
-    }
-    player.checkMarineState();
+    GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
+
+#ifndef SERVER
+    // Move Camera
+    if(GameManager::instance()->getPlayer().getMarine()){
+        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
+    }
+#endif
 }
 
 /**
@@ -259,27 +285,31 @@ void GameStateMatch::render() {
         GameManager::instance()->renderObjects(camera.getViewport());
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
-
-        if (player.getMarine()) {
+        if (GameManager::instance()->getPlayer().getMarine()) {
             //Render the healthbar's foreground to the screen
             //(displays how much player health is left)
-            hud.renderHealthBar(screenRect, player, camera);
-
+            hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
             //Reder the ammo clip foreground to the screen
             //(displays how much ammo is left in the players weapon clip)
-            hud.renderClip(screenRect, player);
+            hud.renderClip(screenRect, GameManager::instance()->getPlayer());
+           //Render the healthbar's foreground to the screen
+           //(displays how much player health is left)
+           //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
+          //Reder the ammo clip foreground to the screen
+           //(displays how much ammo is left in the players weapon clip)
+           //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
 
 
             //Render the equipped weapon slot
-            hud.renderEquippedWeaponSlot(screenRect, player);
+            hud.renderEquippedWeaponSlot(screenRect, GameManager::instance()->getPlayer());
 
             //Reder the Weapon slots to the screen
-            hud.renderWeaponSlots(screenRect, player);
+            hud.renderWeaponSlots(screenRect, GameManager::instance()->getPlayer());
 
             //Render the consumable slot if the player has any available
             //Currently only a single consumable item exits (the Medkit)
-            if (player.getMarine()->inventory.getMedkit()) {
-                hud.renderConsumable(screenRect, player);
+            if (GameManager::instance()->getPlayer().getMarine()->inventory.getMedkit()) {
+                hud.renderConsumable(screenRect, GameManager::instance()->getPlayer());
             }
         }
         //Update screen

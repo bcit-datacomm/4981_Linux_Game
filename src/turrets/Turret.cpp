@@ -204,7 +204,7 @@ void Turret::move(const float playerX, const float playerY,
  * Sets the turret onto the map by changing the transparency of the object and changes the private
  * member 'placed' of the turret to 'true'.
  */
-void Turret::placeTurret(const float moveX, const float moveY) {
+void Turret::placeTurret() {
     placed = true;
     activated = true;
 }

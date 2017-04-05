@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "../server/server.h"
 #include "../game/Game.h"
 #include "../game/GameStateMatch.h"
 #include "../game/GameStateMenu.h"
@@ -32,12 +33,19 @@ void Game::run() {
         logv("State ID: %d\n", stateID);
         loadState();
         if (state->load()) {
+#ifdef SERVER
+            isGameRunning.store(true, std::memory_order_relaxed);
+#endif
             state->loop();
         }
     }
 }
 
 void Game::loadState() {
+#ifdef SERVER
+    state = std::make_unique<GameStateMatch>(*this, window.getWidth(), window.getHeight());
+    stateID = 0;
+#else
     logv("Starting ");
     state.reset();
     // Sets the state by the state ID
@@ -55,6 +63,7 @@ void Game::loadState() {
     }
      // Reset stateID back to zero to allow states to end program or incase of load failure
     stateID = 0;
+#endif
 }
 
 bool Game::init() {

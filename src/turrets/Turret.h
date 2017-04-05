@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
-* Header: Turret.h   
+* Header: Turret.h
 *
 * Functions:
-*    
 *
-* Date: 05/02/2017 
 *
-* Revisions: 
+* Date: 05/02/2017
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
 * Author: Mark C.
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #ifndef TURRET_H
 #define TURRET_H
@@ -57,7 +57,7 @@ public:
     bool targetScanTurret(); // checks if there are any enemies in the turret's coverage
     void move(const float playerX, const float playerY,
             const float moveX, const float moveY, CollisionHandler& ch);
-    void placeTurret(const float moveX, const float moveY);
+    void placeTurret();
     bool isPlaced() {return placed;};
     void pickUpTurret();
     bool isActivated() {return activated;};

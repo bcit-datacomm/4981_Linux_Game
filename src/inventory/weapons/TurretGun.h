@@ -26,9 +26,9 @@ namespace TurretGunVars {
     constexpr int AOE           = 1;
     constexpr int PENETRATION   = 3;
 
-    constexpr int CLIP          = 250;
-    constexpr int CLIPMAX       = 250;
-    constexpr int AMMO          = 250;
+    constexpr int CLIP          = 10;
+    constexpr int CLIPMAX       = 10;
+    constexpr int AMMO          = 10;
 
     constexpr int RELOADDELAY   = 100;
     constexpr int FIREDELAY     = 1500;
