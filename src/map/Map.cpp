@@ -112,6 +112,7 @@ int Map::loadFileData() {
         ++j;
     }
     genWalls(wallStart);
+    printData();
     return 1;
 }
 

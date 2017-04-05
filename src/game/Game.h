@@ -26,7 +26,6 @@ private:
     Window window; //Game window
     unsigned int stateID; //Starting game state id
     SDL_Surface *screenSurface;
-
 };
 
 #endif

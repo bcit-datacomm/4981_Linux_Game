@@ -11,6 +11,8 @@
 #include "GameStateMenu.h"
 #include "Game.h"
 #include "../view/Window.h"
+#include <unistd.h>
+#include "../client/NetworkManager.h"
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
 #include "../sprites/SpriteTypes.h"
@@ -30,6 +32,7 @@
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank (March 26, 2017)
  *
@@ -86,6 +89,7 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank (March 26. 2017)
  *
@@ -121,8 +125,9 @@ bool GameStateMenu::load() {
  * Programmer:
  * Jacob Frank
  *
- * Modified:
+ * Modified By:
  * Alex Zielinski (April 5, 2017)
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  *
  * Interface: loop()
  *
@@ -138,8 +143,20 @@ bool GameStateMenu::load() {
 void GameStateMenu::loop() {
     // play background music
     AudioManager::instance().playMenuMusic(MUS_MENUBKG_1, MUS_MENUBKG_2);
+
     // State Loop
     while (play) {
+        if(networked) {
+            const NetworkState netState = NetworkManager::instance().getNetworkState();
+            if (netState == NetworkState::FAILED_TO_CONNECT) {
+
+                NetworkManager::instance().reset();
+            } else if (netState >= NetworkState::GAME_STARTED) {
+                game.setStateID(2);
+                play = false;
+            }
+        }
+
         handle(); // Handle user input
         render(); // Render game state to window
     }
@@ -148,11 +165,11 @@ void GameStateMenu::loop() {
 /**
  * Function: sync
  *
- * Date:
+ * Date: Feb 2, 2017
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  * Interface: sync()
  *
@@ -179,6 +196,7 @@ void GameStateMenu::sync() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (March 28, 2017)
  * Alex Zielinski (April 5, 2017)
  *
@@ -213,9 +231,13 @@ void GameStateMenu::handle() {
             y = event.button.y;
 
             if (joinSelected) {
-                AudioManager::instance().fadeMusicOut(MUSICFADE); // fade background music
-                game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
-                play = false;
+                if (networked) {
+                    NetworkManager::instance().run(hostInput, userInput);
+                } else {
+                    AudioManager::instance().fadeMusicOut(MUSICFADE); // fade background music
+                    game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
+                    play = false;
+                }
                 break;
             }
 
@@ -358,6 +380,7 @@ void GameStateMenu::handle() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (Febuary 8, 2017)
  *
  * Interface: update(const float& delta)
@@ -442,6 +465,7 @@ void GameStateMenu::positionElements() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank   (March 28, 2017)
  *
