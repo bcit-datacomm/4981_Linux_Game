@@ -44,7 +44,8 @@ GameManager::~GameManager() {
 void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : weaponDropManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), getWeapon(m.second.getWeaponId())->getTexture());
+            Renderer::instance().render(m.second.getRelativeDestRect(cam),
+                getWeapon(m.second.getWeaponId())->getTexture());
         }
     }
 
@@ -57,13 +58,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE, o.second.getSrcRect());
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
+                o.second.getSrcRect());
         }
     }
 
     for (const auto& z : zombieManager) {
         if (z.second.getX() - cam.x < cam.w && z.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE, z.second.getSrcRect());
+            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE,
+                z.second.getSrcRect());
         }
     }
 
@@ -88,14 +91,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& w : wallManager) {
         if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H},
-                WALL_WIDTH, WALL_HEIGHT);
+            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
+                {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H}, WALL_WIDTH, WALL_HEIGHT);
         }
     }
 
     for (const auto& s : storeManager) {
         if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
-            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, s.second->getSrcRect());
+            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
+                s.second->getSrcRect());
         }
     }
 }
@@ -257,7 +261,8 @@ int32_t GameManager::createTurret(const float x, const float y) {
     SDL_Rect damRect = temp;
     SDL_Rect pickRect = {INITVAL, INITVAL, PUSIZE, PUSIZE};
 
-    const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect));
+    const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect,
+        pickRect));
     elem->second.setPosition(x,y);
     return id;
 }
