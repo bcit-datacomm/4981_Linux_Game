@@ -63,7 +63,7 @@ void Zombie::update(){
     int hypY;
 
     //hypo variables
-    float hyp = 0.0;
+    float hyp = ZOMBIE_SIGHT;
     float temp;
 
     //who is closest?
@@ -72,7 +72,7 @@ void Zombie::update(){
         hypY = m.second.getY() + (m.second.getH() / 2);
 
         //we only want the closest one
-        if(!hyp || (temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
+        if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
             hyp = temp;
             movX = hypX - midMeX;
             movY = hypY - midMeY;
@@ -81,7 +81,8 @@ void Zombie::update(){
 
     //only change the angle a max of 4 times a second and its not being ignored
     if (!ignore) {
-        if (hyp > ZOMBIE_SIGHT) {
+        //if no one was close lets go get the base!
+        if (hyp >= ZOMBIE_SIGHT) {
             movX = midBaseX - midMeX;
             movY = midBaseY - midMeY;
         }
@@ -94,8 +95,10 @@ void Zombie::update(){
     setDX(ZOMBIE_VELOCITY * sin(moveAngle));
     setDY(ZOMBIE_VELOCITY * cos(moveAngle));
 
-    VisualEffect::instance().addPreLine(2, midMeX, midMeY, midMeX + ZOMBIE_SIGHT * sin(moveAngle),
-        midMeY + ZOMBIE_SIGHT * cos(moveAngle), 0, 0, 0);
+    //useful for figuring out where the zombies are tracking, it paints a line on where they are currently headed.
+    //for example, right at you.
+    //VisualEffect::instance().addPreLine(2, midMeX, midMeY, midMeX + ZOMBIE_SIGHT * sin(moveAngle),
+    //    midMeY + ZOMBIE_SIGHT * cos(moveAngle), 0, 0, 0);
 
     //Attack updates
     if (!(frameCount % CHECK_RATE)){
