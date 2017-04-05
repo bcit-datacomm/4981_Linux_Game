@@ -158,7 +158,7 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
 }
 
 void Player::checkMarineState() {
-    if (marine != nullptr && marine->getHealth() <= 0){
+    if (marine && marine->getHealth() <= 0){
         GameManager::instance()->deleteMarine(marine->getId());
         setControl(nullptr);
     }

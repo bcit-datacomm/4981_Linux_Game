@@ -20,7 +20,7 @@ void MatchManager::spawnZombies() {
     }
     spawnTick = currentTime;
     
-    int32_t id = GameManager::instance()->createZombie(0, 0);
+    const int32_t id = GameManager::instance()->createZombie(0, 0);
     Zombie& zombie = GameManager::instance()->getZombie(id);
     CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
     for (auto& pos : spawnPoints) {
