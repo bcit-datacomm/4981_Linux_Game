@@ -28,7 +28,7 @@ bool GameStateMatch::load() {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     // Load Map
-    Map m("assets/maps/Map4.csv");
+    Map m("assets/maps/DemoMap.csv");
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
