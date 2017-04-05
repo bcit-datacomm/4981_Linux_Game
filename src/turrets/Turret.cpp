@@ -1,5 +1,5 @@
 /**
- * Source: Turret.cpp  
+ * Source: Turret.cpp
  *
  * Functions: void placementCheckTurret()
  *            bool placementCheckTurret()
@@ -21,9 +21,9 @@
  *
  * Designer: Mark Chen, Jaime Lee, Terry Kang
  *
- * Author: Mark Chen, Micheal Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
+ * Author: Mark Chen, Michael Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
  *
- * Revisions: 
+ * Revisions:
  * Edited By : Yiaoping Shu- Style guide
  *
  * Notes:
@@ -38,10 +38,10 @@
 /**
  * Date: Feb. 02, 2017
  * Modified: Mar. 15, 2017 - Mark Chen, Maitiu Morton, Mark Tattrie
- *           Mar. 16, 2016 - Mark Chen, Micheal Goll
+ *           Mar. 16, 2016 - Mark Chen, Michael Goll
  *
  * Designer: Mark Chen
- * Programmer: Mark Chen, Micheal Goll, Maitiu Morton
+ * Programmer: Mark Chen, Michael Goll, Maitiu Morton
  * Function Interface: Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize,
          const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize,
          bool activated, int health, int ammo, bool placed)
