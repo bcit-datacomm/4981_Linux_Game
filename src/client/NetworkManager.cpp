@@ -19,6 +19,22 @@ using namespace std;
 bool networked = false;
 
 /**------------------------------------------------------------------------------
+Method: instance
+
+Date: February. 1, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: NetworkManager& instance()
+
+Returns:
+NetworkManager&: Introducing the one and only NetworkManager!
+
+Notes:
+Creates NetworkManager the first time it is called, and returns that NetworkManager.
+Subsequent calls to instance return the NetworkManager created in the first call.
   -------------------------------------------------------------------------------*/
 NetworkManager& NetworkManager::instance() {
     static NetworkManager sInstance;
@@ -26,6 +42,18 @@ NetworkManager& NetworkManager::instance() {
 }
 
 /**------------------------------------------------------------------------------
+Method: instance
+
+Date: February. 1, 2017
+
+Designer: Eva Yu
+
+Programmer: Eva Yu
+
+Interface: NetworkManager::~NetworkManager()
+
+Notes:
+Closes all NetworkManager sockets.
   -------------------------------------------------------------------------------*/
 NetworkManager::~NetworkManager() {
     close(sockTCP);
@@ -77,8 +105,8 @@ void NetworkManager::run(const std::string ip, const std::string username) {
 * directs the udp thread loop to game sync de packetizer
 -------------------------------------------------------------------------------*/
 void NetworkManager::runUDPClient(const in_addr_t serverIP) {
-    servUDPAddr = createAddress(serverIP, LISTEN_PORT_UDP);
-    servUDPAddrLen = sizeof(servUDPAddr);
+    servUDPAddr = createAddress(serverIP, htons(LISTEN_PORT_UDP));
+    servUDPAddrLen = sizeof(struct sockaddr_in);
 
     sockUDP = createSocket(true, false);
     bindSocket(sockUDP, INADDR_ANY, LISTEN_PORT_UDP);
@@ -96,12 +124,11 @@ void NetworkManager::runUDPClient(const in_addr_t serverIP) {
     }
 
     char buffer[SYNC_PACKET_MAX];
-    state = NetworkState::GAME_STARTED;
-    int packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
-    parseGameSync(buffer, packetSize);
-
     for(;;) {
-        packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
+        const int packetSize = readUDPSocket(buffer, SYNC_PACKET_MAX);
+        if (state < NetworkState::GAME_STARTED) {
+            state = NetworkState::GAME_STARTED;
+        }
         parseGameSync(buffer, packetSize);
         memset(buffer, 0, SYNC_PACKET_MAX);
     }
@@ -125,7 +152,7 @@ void NetworkManager::initTCPClient(const in_addr_t serverIP, const std::string u
     sockTCP = createSocket(false, false);
     bindSocket(sockTCP, INADDR_ANY, htons(LISTEN_PORT_TCP));
 
-    if (!connectSocket(sockTCP, createAddress(serverIP, LISTEN_PORT_TCP))) {
+    if (!connectSocket(sockTCP, createAddress(serverIP, htons(LISTEN_PORT_TCP)))) {
         state = NetworkState::FAILED_TO_CONNECT;
     } else {
         state = NetworkState::CONNECTED;
@@ -318,7 +345,7 @@ void NetworkManager::writeUDPSocket(const char *buf, const int len) const {
     /* NetworkManager::run should be called before this is writeUDPSocket is called. */
     assert(state != NetworkState::NOT_RUNNING);
 
-    int res = sendto(sockUDP, buf, len, 0,
+    const int res = sendto(sockUDP, buf, len, 0,
         reinterpret_cast<sockaddr *>(const_cast<sockaddr_in *>(&servUDPAddr)),
         servUDPAddrLen);
 
@@ -361,7 +388,7 @@ int NetworkManager::readUDPSocket(char *buf, const int len) const {
     sockaddr_in recvAddr;
     socklen_t recvAddrLen = sizeof(recvAddr);
     memset(&recvAddr, 0, recvAddrLen);
-    int res = recvfrom(sockUDP, buf, len, 0, (struct sockaddr *)&recvAddr, &recvAddrLen);
+    const int res = recvfrom(sockUDP, buf, len, 0, (struct sockaddr *)&recvAddr, &recvAddrLen);
     if (res < 0) {
         perror("recvfrom");
         exit(1);
@@ -426,7 +453,7 @@ sockaddr_in NetworkManager::createAddress(const in_addr_t ip, const int port) {
     sockaddr_in addr;
     memset(&addr, '0', sizeof(sockaddr_in));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
+    addr.sin_port = port;
     addr.sin_addr.s_addr = ip;
     return addr;
 }

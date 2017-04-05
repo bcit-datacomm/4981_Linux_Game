@@ -51,9 +51,9 @@ bool GameStateMatch::load() {
         //createDropPoint
         GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
     }
-#else
-    GameManager::instance()->createZombieWave(1);
 #endif
+    //GameManager::instance()->createZombieWave(1);
+
     bool success = true;
     //set the boundary on the map
     // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);

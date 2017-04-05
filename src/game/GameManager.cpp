@@ -51,7 +51,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& m : marineManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                m.second.getSrcRect()); 
+                m.second.getSrcRect());
         }
     }
 
@@ -548,6 +548,10 @@ void GameManager::updateCollider() {
 
     for (auto& o : objectManager) {
         collisionHandler.quadtreeObj.insert(&o.second);
+    }
+
+    for (auto& o : wallManager) {
+        collisionHandler.quadtreeWall.insert(&o.second);
     }
 
     for (auto& m : turretManager) {
