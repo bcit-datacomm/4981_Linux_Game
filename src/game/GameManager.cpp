@@ -312,7 +312,7 @@ void GameManager::deleteTurret(const int32_t id) {
  * Date: Feb. 9, 2017
  * Modified: ----
  * Author: Jacob McPhail
- * Function Interface: addTurret (const int32_t id, const Turret& newTurret) 
+ * Function Interface: addTurret (const int32_t id, const Turret& newTurret)
  *      id : Turret id
  *      newTurret : Turret to add
  *
@@ -371,7 +371,7 @@ Turret& GameManager::getTurret(const int32_t id) {
  * Date: Feb. 8, 2017
  * Modified: ----
  * Author: Jacob McPhail
- * Function Interface: addZombie(const Zombie& newZombie) 
+ * Function Interface: addZombie(const Zombie& newZombie)
  *      newZombie : Zombie to add
  *
  * Description:
@@ -702,8 +702,6 @@ void GameManager::updateCollider() {
         }
     }
 
-
-
     for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
             collisionHandler.quadtreeBarricade.insert(&b.second);
@@ -712,6 +710,10 @@ void GameManager::updateCollider() {
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(&m.second);
+    }
+
+    for (auto& s : storeManager) {
+        collisionHandler.quadtreeStore.insert(s.second.get());
     }
 }
 
@@ -786,10 +788,6 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
             marine.first.setAngle(curAngle);
         }
     }
-
-    for (auto& s : storeManager) {
-        collisionHandler.quadtreeStore.insert(s.second.get());
-    }
 }
 
 /**
@@ -852,7 +850,7 @@ int32_t GameManager::createWall(const float x, const float y, const int w, const
 * Date: Mar. 1, 2017
 * Modified: Mar. 8 2017 - Jacob McPhail
 * Author: Terry Kang
-* Function Interface: setBoundary(const float startX, const float startY, 
+* Function Interface: setBoundary(const float startX, const float startY,
 *        const float endX, const float endY)
 * Description:
 *   Create test area.

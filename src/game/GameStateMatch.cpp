@@ -30,8 +30,8 @@
 *       g : Pointer to the game object
 *       gameWidth : Width of camera view
 *       gameHeight : Height of camera view
-*               
-* Description: 
+*
+* Description:
 *       ctor for the match game state.
 */
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
@@ -42,8 +42,8 @@ GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeig
 * Date: Jan. 20, 2017
 * Author: Jacob McPhail
 * Modified: ---
-* Function Interface: load() 
-* Description: 
+* Function Interface: load()
+* Description:
 *       Loads state resources.
 */
 bool GameStateMatch::load() {
@@ -85,7 +85,7 @@ bool GameStateMatch::load() {
 * Author: Jacob McPhail
 * Modified: ---
 * Function Interface: loop()
-* Description: 
+* Description:
 *       State loop, processes a frame per each loop.
 */
 void GameStateMatch::loop() {
@@ -126,7 +126,7 @@ void GameStateMatch::loop() {
 * Author: Jacob McPhail
 * Modified: ---
 * Function Interface: sync()
-* Description: 
+* Description:
 *       Sync game to server.
 */
 void GameStateMatch::sync() {
@@ -171,7 +171,7 @@ void GameStateMatch::handle() {
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
         GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-        GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
+        GameManager::instance()->getPlayer().getMarine()->updateImageWalk();  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -242,10 +242,10 @@ void GameStateMatch::handle() {
 * Author: Jacob McPhail
 * Modified: ---
 * Function Interface: update(const float delta)
-*       delta : Delta time of the fps rate.       
+*       delta : Delta time of the fps rate.
 *
-* Description: 
-* 
+* Description:
+*
 */
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();

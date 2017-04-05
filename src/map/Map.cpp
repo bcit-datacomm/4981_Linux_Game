@@ -182,7 +182,7 @@ void Map::mapLoadToGame() {
 
     // Shop position being used.
     // Log which shop position index is loaded.
-    shopPosition = shops[pos];
+    shopPosition = shops[1];
     logv("Shop position index: %d\n", pos);
     GameManager::instance()->createWeaponStore(shopPosition.x, shopPosition.y);
     // Only using one drop zone position.
