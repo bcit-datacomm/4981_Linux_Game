@@ -95,9 +95,13 @@ public:
 
     virtual ~Zombie();
 
+
     void onCollision();
 
     void collidingProjectile(int damage);
+
+    int getHealth() const {return health;}
+    void setHealth(const int h) {health = h;}
 
     void generateMove();                    // A* movement
 

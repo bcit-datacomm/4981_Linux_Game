@@ -61,7 +61,6 @@ InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, str
 
 */
 bool InstantWeapon::fire(Movable& movable) {
-
     if (!Weapon::fire(movable)) {
         return false;
     }
