@@ -37,6 +37,13 @@ bool GameStateMatch::load() {
     GameManager::instance()->setAiMap(m.getAIMap());
 
     // Create Dummy Entitys
+    GameManager::instance()->createMarine(850, 500);
+
+    //createStores
+    GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
+
+    //createDropPoint
+    GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
     Rifle w(GameManager::instance()->generateID());
     ShotGun w2(GameManager::instance()->generateID());
     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
@@ -44,6 +51,7 @@ bool GameStateMatch::load() {
     GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
     GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
+    base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
     GameManager::instance()->addObject(base);
 
     Point newPoint = base.getSpawnPoint();
@@ -54,7 +62,7 @@ bool GameStateMatch::load() {
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 
     matchManager.setSpawnPoints(m.getZombieSpawn());
-        
+
     return success;
 }
 
