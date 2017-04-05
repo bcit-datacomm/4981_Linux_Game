@@ -258,8 +258,7 @@ bool Player::checkMarineState() {
         setControl(nullptr);
         respawnTick = SDL_GetTicks();
     } else if (!marine) {
-        const int currentTime = SDL_GetTicks();
-        if (currentTime < (respawnTick + RESPAWN_DELAY)) {
+        if ((int)SDL_GetTicks() < (respawnTick + RESPAWN_DELAY)) {
                 return false;
         }
         return true;
@@ -276,7 +275,7 @@ bool Player::checkMarineState() {
  * Description:
  *      Respawn player with a new marine.
  */
-void Player::respawn(Point newPoint) {
+void Player::respawn(const Point& newPoint) {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
     //gives the player control of the marine
     setControl(&GameManager::instance()->getMarine(playerMarineID).first);

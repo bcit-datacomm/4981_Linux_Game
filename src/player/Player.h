@@ -35,7 +35,7 @@ public:
     void handleTempTurret(SDL_Renderer *renderer);
     
     bool checkMarineState();
-    void respawn(Point newPoint);
+    void respawn(const Point& newPoint);
 
     void fireWeapon();
 
