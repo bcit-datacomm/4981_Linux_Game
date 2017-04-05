@@ -96,6 +96,7 @@ public:
 
     int32_t addObject(const Object&);
     void deleteObject(const int32_t id);
+    Object& getBase();
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);

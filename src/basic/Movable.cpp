@@ -29,7 +29,7 @@
  * Description:
  * move the movable object by moveX, moveY. If there is a collision detection, move it back
  */
-void Movable::move(float moveX, float moveY, CollisionHandler& ch){
+void Movable::move(const float moveX, const float moveY, CollisionHandler& ch){
     //Move the Movable left or right
     setX(getX() + moveX);
 

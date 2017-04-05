@@ -250,6 +250,9 @@ void GameStateMatch::handle() {
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 #ifndef SERVER
+    if (!GameManager::instance()->getPlayer().getMarine()) {
+        return;
+    }
     // Move player
     if (networked) {
         if (GameManager::instance()->getPlayer().hasChangedCourse()

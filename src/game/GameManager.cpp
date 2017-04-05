@@ -145,10 +145,8 @@ void GameManager::updateMarines(const float delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
-        z.second.generateMove();
-        if (z.second.isMoving()) {
-            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
-        }
+        z.second.update();
+        z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
     }
 }
 
@@ -413,8 +411,6 @@ int32_t GameManager::createZombie(const float x, const float y) {
 
     const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
     elem->second.setPosition(x,y);
-    elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    elem->second.setState(ZombieState::ZOMBIE_MOVE);
     return id;
 }
 
@@ -466,6 +462,16 @@ Zombie& GameManager::getZombie(const int32_t id) {
 int32_t GameManager::addObject(const Object& newObject) {
     objectManager.emplace(newObject.getId(), newObject);
     return newObject.getId();
+}
+
+/**
+ * Author: Isaac Morneau
+ * Date: April 5, 2017
+ * gets just the base from the object manager
+ */
+Object& GameManager::getBase(){
+    //base is always 0, it is the only constant id
+    return objectManager[0].first;
 }
 
 /**
