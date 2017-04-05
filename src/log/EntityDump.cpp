@@ -4,9 +4,9 @@
 
 --
 -- FUNCTIONS:
--- void dumpEntityPositions(const Player* p);
--- std::pair<float, float> getCoordinates(const Entity* e);
--- void printEntityPositions(std::string entityName, int32_t id, const Entity &e, std::ofstream &entitydump);
+--void dumpEntityPositions(const Player* p);
+--std::pair<float, float> getCoordinates(const Entity* e);
+--void printEntityPositions(std::string entityName, int32_t id, const Entity &e, std::ofstream &entitydump);
 --
 -- DATE: March 16, 2008
 --
@@ -32,7 +32,7 @@ void dumpEntityPositions(const Player* p){
 #ifndef NDEBUG
     std::ofstream entityDump("EntityDumpLog.txt", std::ofstream::out);
     GameManager *gm = GameManager::instance();
-    std::pair<float, float> coord = getCoordinates(dynamic_cast<Entity*>(p->getMarine()));
+    std::pair<float, float> coord = getDestCoordinates(dynamic_cast<Entity*>(p->getMarine()));
     entityDump << "ENTITY POSITION DUMP\n\n";
 
     entityDump << "PLAYER MARINE'S POSITION X:" << coord.first << " Y:" << coord.second
@@ -76,7 +76,7 @@ void dumpEntityPositions(const Player* p){
     entityDump << "\nAll STORE POSITIONS:\n";
     //print Store Positions to File
     for (const auto& s : gm->getStoreManager()) {
-        std::pair<float, float> coord = getCoordinates(s.second.get());
+        std::pair<float, float> coord = getDestCoordinates(s.second.get());
         entityDump << "Store id:" << s.first << " Position: " << "X:" << coord.first
             << " Y:" << coord.second << "\n";
     }
@@ -94,8 +94,20 @@ void dumpEntityPositions(const Player* p){
 /*created by Maitiu Morton 4/3/2017
  * Gets the Coordinates of an Entity and returns them as a pair
  */
-std::pair<float, float> getCoordinates(const Entity* e){
-    return {e->getX(), e->getY()};
+std::pair<float, float> getDestCoordinates(const Entity* e){
+    return e->getDestCoord();
+}
+
+/*Create BY Maitiu 4/3/2017
+ */
+std::pair<float, float> getSrcCoordinates(const Entity* e){
+    return e->getSrcCoord();
+}
+
+/*Create BY Maitiu 4/3/2017
+ */
+std::pair<float, float> getMoveCoordinates(const Entity* e){
+    return e->getMoveCoord();
 }
 
 /*Created by Maitiu Morton 4/3/1017
@@ -103,7 +115,11 @@ std::pair<float, float> getCoordinates(const Entity* e){
  * an Entity's reference
  */
 void printEntityPositions(std::string entityName, int32_t id, const Entity &e, std::ofstream& entityDump){
-        std::pair<float, float> coord = getCoordinates(&e);
-        entityDump << entityName << " id:" << id << " Position: " << "X:" << coord.first
-            << " Y:" << coord.second << "\n";
+        std::pair<float, float> destCoord = getDestCoordinates(&e);
+        std::pair<float, float> srcCoord = getSrcCoordinates(&e);
+        std::pair<float, float> moveCoord = getMoveCoordinates(&e);
+        entityDump << entityName << " id:" << id << "\n\t DestRect: " << "X:" << destCoord.first
+            << " Y:" << destCoord.second << "\n\t SrcRect: " << "X:" << srcCoord.first
+                << " Y:" << srcCoord.second<< "\n\t MoveRect: " << "X:" << moveCoord.first
+                    << " Y:" << moveCoord.second << "\n";
 }

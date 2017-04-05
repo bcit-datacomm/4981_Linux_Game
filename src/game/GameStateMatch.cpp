@@ -19,9 +19,11 @@
 #include "../sprites/VisualEffect.h"
 #include "../map/Map.h"
 #include "Game.h"
+#include "../../include/Colors.h"
 
-GameStateMatch::GameStateMatch(Game& g, const int gameWidth, const int gameHeight) : GameState(g),
-        base(), camera(gameWidth,gameHeight){}
+GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
+        base(), camera(gameWidth,gameHeight), hud(),
+        screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
 bool GameStateMatch::load() {
 #ifndef SERVER
@@ -32,6 +34,8 @@ bool GameStateMatch::load() {
     } else {
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
+        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
+
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
@@ -45,24 +49,28 @@ bool GameStateMatch::load() {
         //set the boundary on the map
         GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
-        //createStores
-        GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
-
-        //createDropPoint
-        GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
+        // Create Dummy Entitys
+        Rifle w(GameManager::instance()->generateID());
+        ShotGun w2(GameManager::instance()->generateID());
+        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
+        GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
+        GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
     }
 #endif
 
     bool success = true;
     //set the boundary on the map
     // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+
     // Load Map
     Map m("assets/maps/Map4.csv");
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
     m.mapLoadToGame();
-
+    GameManager::instance()->setAiMap(m.getAIMap());
+    matchManager.setSpawnPoints(m.getZombieSpawn());
     return success;
 }
 
@@ -107,12 +115,39 @@ void GameStateMatch::sync() {
 
 }
 
+/**
+ * Function: handle
+ *
+ * Date:
+ *
+ *
+ * Designer:
+ *
+ *
+ * Programmer:
+ *
+ *
+ * Modified by:
+ * Jacob Frank (March 25, 2017)
+ * Jacob Frank (April, 2017)
+ *
+ * Interface: handle()
+ *
+ * Returns: void
+ *
+ * Notes:
+ *
+ * Revisions:
+ * JF Mar 25: Added a ScreenRect size adjustment whenever screen size changes (ensures proper hud placement)
+ * JF Apr 1: Added set Weapon Inventory slot opacity function to mousewheel scroll and number key events
+ */
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
     if(GameManager::instance()->getPlayer().getMarine()){
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
-        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
+            game.getWindow().getHeight(), camera.getX(), camera.getY());
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -120,9 +155,11 @@ void GameStateMatch::handle() {
         switch(event.type) {
             case SDL_WINDOWEVENT:
                 camera.setViewSize(game.getWindow().getWidth(), game.getWindow().getHeight());
+                screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
                 break;
             case SDL_MOUSEWHEEL:
-                GameManager::instance()->getPlayer().handleMouseWheelInput(&(event));
+                GameManager::instance()->getPlayer().handleMouseWheelInput(&event);
+                hud.setOpacity(OPAQUE);
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -140,12 +177,18 @@ void GameStateMatch::handle() {
                         GameManager::instance()->getPlayer().handleTempBarricade(
                                 Renderer::instance().getRenderer());
                         break;
+                    case SDLK_1: //Purposeful flow through
+                    case SDLK_2:
+                    case SDLK_3:
+                        hud.setOpacity(OPAQUE);
+                        break;
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
-                        GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
-                        GameManager::instance()->getPlayer().setControl(nullptr);
+                        if (GameManager::instance()->getPlayer().getMarine()) {
+                            GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
+                            GameManager::instance()->getPlayer().setControl(nullptr);
+                        }
                         break;
-
                     default:
                         break;
                     }
@@ -186,6 +229,8 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
+    GameManager::instance()->getPlayer().checkMarineState();
+    matchManager.checkMatchState();
 
 #ifndef SERVER
     // Move Camera
@@ -195,6 +240,30 @@ void GameStateMatch::update(const float delta) {
 #endif
 }
 
+/**
+ * Function: render
+ *
+ * Date:
+ *
+ *
+ * Designer:
+ *
+ *
+ * Programmer:
+ *
+ *
+ * Modified by:
+ * Jacob Frank (March 28 - April 1, 2017)
+ *
+ * Interface: render()
+ *
+ * Returns: void
+ *
+ * Notes:
+ *
+ * Revisions:
+ * JF Mar 25 - April 1: Added rendering functions to render the HUD overtop of the game
+ */
 void GameStateMatch::render() {
     //Only draw when not minimized
     if (!game.getWindow().isMinimized()) {
@@ -226,7 +295,33 @@ void GameStateMatch::render() {
         GameManager::instance()->renderObjects(camera.getViewport());
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
+        if (GameManager::instance()->getPlayer().getMarine()) {
+            //Render the healthbar's foreground to the screen
+            //(displays how much player health is left)
+            hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
+            //Reder the ammo clip foreground to the screen
+            //(displays how much ammo is left in the players weapon clip)
+            hud.renderClip(screenRect, GameManager::instance()->getPlayer());
+           //Render the healthbar's foreground to the screen
+           //(displays how much player health is left)
+           //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
+          //Reder the ammo clip foreground to the screen
+           //(displays how much ammo is left in the players weapon clip)
+           //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
 
+
+            //Render the equipped weapon slot
+            hud.renderEquippedWeaponSlot(screenRect, GameManager::instance()->getPlayer());
+
+            //Reder the Weapon slots to the screen
+            hud.renderWeaponSlots(screenRect, GameManager::instance()->getPlayer());
+
+            //Render the consumable slot if the player has any available
+            //Currently only a single consumable item exits (the Medkit)
+            if (GameManager::instance()->getPlayer().getMarine()->inventory.getMedkit()) {
+                hud.renderConsumable(screenRect, GameManager::instance()->getPlayer());
+            }
+        }
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
     }

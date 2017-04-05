@@ -3,7 +3,6 @@
 #include <utility>
 
 #include "../game/Game.h"
-#include "../basic/LTimer.h"
 #include "../player/Marine.h"
 #include "../creeps/Zombie.h"
 #include "../game/GameManager.h"
@@ -132,7 +131,9 @@ std::vector<PlayerData> getPlayers() {
         tempPlayer.direction = marine.getAngle();
         tempPlayer.health = marine.getHealth();
 
-        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nPlayer dx: %f\nPlayer dy: %f\nDirection: %f\n", tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.xdel, tempPlayer.ydel, tempPlayer.direction);
+        logv("Player ID: %d\nPlayer x: %f\nPlayer y: %f\nPlayer dx: %f\nPlayer dy: %f\nDirection: %f\n",
+            tempPlayer.playerid, tempPlayer.xpos, tempPlayer.ypos, tempPlayer.xdel, tempPlayer.ydel, tempPlayer.direction);
+
         rtn.push_back(tempPlayer);
     }
     return rtn;

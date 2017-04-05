@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Zombie.h
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
 

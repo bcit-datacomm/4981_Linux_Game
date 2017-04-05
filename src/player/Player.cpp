@@ -265,6 +265,9 @@ void Player::handleKeyboardInput(const Uint8 *state) {
 
 void Player::handleTempBarricade(SDL_Renderer *renderer) {
     if(tempBarricadeID < 0) {
+        if (!marine) {
+            return;
+        }
         const double angle = marine->getAngle();
         tempBarricadeID = GameManager::instance()->createBarricade(
             marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
@@ -286,3 +289,11 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
        tempTurretID = -1;
    }
 }
+
+void Player::checkMarineState() {
+    if (marine && marine->getHealth() <= 0){
+        GameManager::instance()->deleteMarine(marine->getId());
+        setControl(nullptr);
+    }
+}
+

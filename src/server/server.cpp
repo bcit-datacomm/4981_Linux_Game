@@ -147,7 +147,6 @@ void processPacket(const char *data) {
         case UDPHeaders::WALK:
             {
                 const MoveAction& ma = mesg->data.ma;
-                logv("Move actions packets contents:\nID:%d\nXpos:%f\n, Ypos:%f\n, Vel:%f\n, Direction:%f\n", ma.id, ma.xpos, ma.ypos, ma.vel, ma.direction);
                 updateMarine(ma);
             }
             break;

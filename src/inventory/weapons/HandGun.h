@@ -15,7 +15,7 @@
 using std::string;
 
 namespace HandgunVars {
-    const string TYPE = "HandGun";
+    const string TYPE = "Handgun";
 
     const string FIRESOUND = EFX_WLPISTOL;
     const string HITSOUND = "";

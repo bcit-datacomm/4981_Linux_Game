@@ -1,7 +1,30 @@
-/** AudioManager.cpp
-*   This class loads the audio files and plays them.
-    Author: DericM
-*/
+/*------------------------------------------------------------------------------
+* Source: AudioManage.cpp
+*
+* Functions:
+*    AudioManager& AudioManager::instance()
+*    AudioManager::AudioManager()
+*    void AudioManager::playMusic(const char *fileName)
+*    void AudioManager::playEffect(const char *fileName)
+*    void AudioManager::loadFiles()
+*    void AudioManager::loadMusic(const char *fileName)
+*    void AudioManager::loadEffect(const char *fileName)
+*
+* Date:
+*
+* Revisions:
+* Edited By : Yiaoping Shu- Style guide
+* Edited By : Alex Zielinski - Fixed seg fault caused by desctructor
+*                            - Added comments where appropriate
+*                            -
+*
+* Designer:
+*
+* Author: DericM
+*
+* Notes:
+* This class loads the audio files and plays them.
+------------------------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <iostream>
@@ -22,6 +45,16 @@ AudioManager& AudioManager::instance() {
     return sInstance;
 }
 
+/**
+*   Function: ~AudioManager()
+*
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Constructor of AudioManager
+*/
 AudioManager::AudioManager(){
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -31,13 +64,25 @@ AudioManager::AudioManager(){
     loadFiles();
 }
 
-
+/**
+*   Function: ~AudioManager()
+*
+*   Date:
+*
+*   Programmer: DericM, Alex Zielinski
+*
+*   Modified: Alex Zielinski ~ March 30
+*               Fix seg fault
+*
+*   Description:
+*       Desctructor of AudioManager. Frees memory and quits SLD mixer
+*/
 AudioManager::~AudioManager(){
     //clear all loaded files
-    for(auto const& music : _music) {
+    for(auto const& music : mus) {
         Mix_FreeMusic(music.second);
     }
-    for(auto const& chunk : _chunks) {
+    for(auto const& chunk : chun) {
         Mix_FreeChunk(chunk.second);
     }
 
@@ -48,10 +93,19 @@ AudioManager::~AudioManager(){
 
 
 
-//This plays a single background music file from the _music map.
-void AudioManager::playMusic(const char * fileName){
+/**
+*   Function: playMusic(const char *fileName)
+*               const char *fileName: file path of audio file to play
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Plays a single background music file from the _music map.
+*/
+void AudioManager::playMusic(const char *fileName){
 
-    Mix_Music * music = _music[fileName];
+    Mix_Music *music = mus[fileName];
 
     logv("%s\n", fileName);
 
@@ -61,11 +115,19 @@ void AudioManager::playMusic(const char * fileName){
 }
 
 
+/**
+*   Function: playEffect(const char *fileName)
+*               const char *fileName: file path of audio file to play
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Plays a single sound effect from the _chunks map.
+*/
+void AudioManager::playEffect(const char *fileName){
 
-//This plays a single sound effect from the _chunks map.
-void AudioManager::playEffect(const char * fileName){
-
-    Mix_Chunk * chunk = _chunks[fileName];
+    Mix_Chunk *chunk = chun[fileName];
 
     logv("%s\n", fileName);
 
@@ -76,12 +138,26 @@ void AudioManager::playEffect(const char * fileName){
 
 
 
-
+/**
+*   Function:   loadFiles()
+*
+*   Date:
+*
+*   Programmer: DericM, Alex Zielinski
+*
+*   Modified: Alex Zielinski ~ April 4
+*               Added few more audio files to load
+*
+*   Description:
+*       Loads all audio asset files
+*/
 void AudioManager::loadFiles(){
 
     ////MUSIC
     loadMusic(MUS_DARKNUBULA);
     loadMusic(MUS_TESTMENU01);
+    loadMusic(MUS_MENUBKG_1);
+    loadMusic(MUS_MENUBKG_2);
 
 
     ////CHUNKS
@@ -105,34 +181,53 @@ void AudioManager::loadFiles(){
     loadEffect(EFX_ZGROAN01);
     loadEffect(EFX_ZGRUNT01);
 
+    //baracade
+    loadEffect(EFX_BINSTALL);
+
 }
 
 
 
+/**
+*   Function: loadMusic(const char *fileName)
+*               const char *fileName: file path of audio file to load
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Loads a single background music file into the _music map.
+*/
+void AudioManager::loadMusic(const char *fileName){
 
-//This loads a single background music file into the _music map.
-void AudioManager::loadMusic(const char * fileName){
-
-    Mix_Music * music = NULL;
+    Mix_Music *music = NULL;
     music = Mix_LoadMUS(fileName);
     if (music == NULL ) {
         logv( "Failed to load music: %s\n SDL_mixer Error: %s\n",
             fileName, Mix_GetError() );
     }
 
-    _music[fileName] = music;
+    mus[fileName] = music;
 }
 
+/**
+*   Function: loadEffect(const char *fileName)
+*               const char *fileName: file path of audio file to load
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Loads a single sound effect file into the _chunks map.
+*/
+void AudioManager::loadEffect(const char *fileName){
 
-//This loads a single sound effect file into the _chunks map.
-void AudioManager::loadEffect(const char * fileName){
-
-    Mix_Chunk * sound = NULL;
+    Mix_Chunk *sound = NULL;
     sound = Mix_LoadWAV(fileName);
     if (sound == NULL ) {
         logv( "Failed to load sound: %s\n SDL_mixer Error: %s\n",
             fileName, Mix_GetError() );
     }
 
-    _chunks[fileName] = sound;
+    chun[fileName] = sound;
 }

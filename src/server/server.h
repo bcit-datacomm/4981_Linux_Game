@@ -20,23 +20,23 @@
 #endif
 
 //Temp variable to represent client count
-#define CLIENT_COUNT 10
+static constexpr int CLIENT_COUNT = 10;
 
-#define LISTEN_PORT_UDP 35222
-#define LISTEN_PORT_TCP 35223
-#define TICK_RATE 20
-#define IN_PACKET_SIZE USHRT_MAX
-#define OUT_PACKET_SIZE USHRT_MAX
-#define SYNC_IN 32 //name padded with nulls
-#define NAMELEN 32 //same as above but kept seperate for clarity of purpose
-#define SYNC_OUT 33 //name padded with nulls + id
-#define OPT_STRING "ni:p:hl:L:c:evo:"
-#define MAX_PORT 65535
-#define LISTENQ 25 //although many kernals define it as 5 usually it can support many more
-#define MAXEVENTS 100 //Maximum number of simultaneous epoll events
-#define MAX_UDP_PACKET_COUNT 500 //Maximum number of packets to read from the UDP socket in one go
-#define TCP_HEADER_SIZE 5 //4 bytes for int32_t one byte for C/T char
-#define MULTICAST_ADDR "226.23.41.86"
+static constexpr int LISTEN_PORT_UDP = 35222;
+static constexpr int LISTEN_PORT_TCP = 35223;
+static constexpr int TICK_RATE = 20;
+static constexpr int IN_PACKET_SIZE = USHRT_MAX;
+static constexpr int OUT_PACKET_SIZE = USHRT_MAX;
+static constexpr int SYNC_IN = 32; //name padded with nulls
+static constexpr int NAMELEN = 32; //same as above but kept seperate for clarity of purpose
+static constexpr int SYNC_OUT = 33; //name padded with nulls + id
+static const std::string OPT_STRING = "ni:p:hl:L:c:evo:";
+static constexpr int MAX_PORT = 65535;
+static constexpr int LISTENQ = 25; //although many kernals define it as 5 usually it can support many more
+static constexpr int MAXEVENTS = 100; //Maximum number of simultaneous epoll events
+static constexpr int MAX_UDP_PACKET_COUNT = 500; //Maximum number of packets to read from the UDP socket in one go
+static constexpr int TCP_HEADER_SIZE = 5; //4 bytes for int32_t one byte for C/T char
+static const std::string MULTICAST_ADDR = "226.23.41.86";
 
 struct ClientEntry {
     char username[NAMELEN + 1];

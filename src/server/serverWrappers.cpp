@@ -65,7 +65,7 @@ int createSocket(const bool useUDP, const bool nonblocking) {
 void fillMulticastAddr(sockaddr_in& addr) {
     memset(&addr, 0, sizeof(addr));
 
-    if (inet_pton(AF_INET, MULTICAST_ADDR, &addr.sin_addr) != 1) {
+    if (inet_pton(AF_INET, MULTICAST_ADDR.c_str(), &addr.sin_addr) != 1) {
         perror("inet_pton");
         exit(3);
     }
@@ -337,7 +337,7 @@ epoll_event *createEpollEventList() {
  * John Agapeyev March 19
  */
 void processClientUsername(const int sock, const char *buff, std::pair<const int32_t, PlayerJoin>& client) {
-    static float yPos = 0;
+    static Base base;
     //Handle initial username read
     client.second.hasSentUsername = true;
     client.second.isPlayerReady = false;
@@ -357,8 +357,8 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
 
     gm->createMarine(client.first);
     auto& marine = gm->getMarine(client.first).first;
-    marine.setPosition(100, yPos);
-    yPos += marine.getW() * 10;
+    const auto& spawnPoint = base.getSpawnPoint();
+    marine.setPosition(spawnPoint.first, spawnPoint.second);
 
     //Send client their allocated id and username
     if (!rawClientSend(sock, outBuff, bufferSize)) {

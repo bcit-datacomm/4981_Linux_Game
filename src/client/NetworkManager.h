@@ -10,12 +10,12 @@
 #include "../UDPHeaders.h"
 #include "../server/server.h"
 
-#define STDIN           0
-#define STD_BUFFSIZE    1024
-#define MAX_EVENTS         1
-#define MAX_USERS        23
-#define UNAME_SIZE      32
-#define SYNC_PACKET_MAX USHRT_MAX
+static constexpr int STDIN = 0;
+static constexpr int STD_BUFFSIZE = 1024;
+static constexpr int MAX_EVENTS = 1;
+static constexpr int MAX_USERS = 23;
+static constexpr int UNAME_SIZE = 32;
+static constexpr int SYNC_PACKET_MAX = USHRT_MAX;
 
 extern bool networked;
 

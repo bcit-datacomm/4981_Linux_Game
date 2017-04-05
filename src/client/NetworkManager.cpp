@@ -13,6 +13,7 @@
 #include "../server/serverwrappers.h"
 #include "NetworkManager.h"
 #include "packetizer.h"
+#include "../log/log.h"
 
 using namespace std;
 
@@ -115,7 +116,7 @@ void NetworkManager::runUDPClient(const in_addr_t serverIP) {
     ip_mreq mreq;
     memset(&mreq, 0, sizeof(mreq));
     mreq.imr_interface.s_addr = INADDR_ANY;
-    if (inet_pton(AF_INET, MULTICAST_ADDR, &mreq.imr_multiaddr) != 1) {
+    if (inet_pton(AF_INET, MULTICAST_ADDR.c_str(), &mreq.imr_multiaddr) != 1) {
         perror("inet_pton");
         exit(1);
     }
@@ -168,7 +169,7 @@ void NetworkManager::initTCPClient(const in_addr_t serverIP, const std::string u
 }
 
 void NetworkManager::runTCPClient(const std::string username) {
-    std::cout << "username in runTCPClient: " << username << "\n";
+    logv("Username in runTCPClient: %s\n", username.c_str());
     handshake(username);
     waitRecvId();
 
@@ -200,7 +201,7 @@ void NetworkManager::runTCPClient(const std::string username) {
 
         if (FD_ISSET(sockTCP, &readSet)) {
             if ((bytesRead = readTCPSocket(buffrecv, STD_BUFFSIZE)) == 0) {
-                std::cout << "TCP Connection closed by server. (Bytes read == 0)\n";
+                logv("TCP Copnnection closed by server. (Bytes read == 0)\n");
                 break;
             }
 

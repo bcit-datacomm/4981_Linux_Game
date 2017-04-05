@@ -21,6 +21,9 @@
 #include "../buildings/Store.h"
 #include "../buildings/Barricade.h"
 #include "../UDPHeaders.h"
+#include "../buildings/DropPoint.h"
+#include "../map/Map.h"
+
 #include "../inventory/WeaponDrop.h"
 #include "../inventory/weapons/Weapon.h"
 #include "../inventory/weapons/HandGun.h"
@@ -34,8 +37,13 @@ static constexpr int INITVAL = 0;
 static constexpr int DEFAULT_SIZE = 100;
 static constexpr int PUSIZE = 120;
 static constexpr int DROP_POINT_SPACE = 200;//distance between drop points
-static constexpr int STORE_SIZE = 400; //Store  width  and hieght length
+static constexpr int STORE_SIZE_W = 200; //Store width
+static constexpr int STORE_SIZE_H = 330; //Store height
 static constexpr int STORE_PICKUP_SIZE = 50;//How much bigger the Stores PIckup hitbox is
+static constexpr int WEAPON_STORE_SRC_X = 183;
+static constexpr int WEAPON_STORE_SRC_Y = 582;
+static constexpr int WEAPON_STORE_SRC_W = 158;
+static constexpr int WEAPON_STORE_SRC_H = 254;
 
 class GameManager {
 public:
@@ -83,9 +91,8 @@ public:
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);
-    bool createZombie(const float x, const float y);
+    int32_t createZombie(const float x, const float y);
     void deleteZombie(const int32_t id);
-    bool createZombieWave(const int n);
     bool zombieExists(const int32_t id);
     Zombie& getZombie(const int32_t id);
 
@@ -132,6 +139,12 @@ public:
     void freeDropPoint(const int32_t id);
     bool checkFreeDropPoints();
 
+    // Ai Map setters and getters
+    auto& getAiMap() const { return AiMap; };
+    void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
+        AiMap = a;
+    }
+
     //getManagers
     auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
@@ -149,6 +162,7 @@ private:
     Player player;
 
     CollisionHandler collisionHandler;
+    std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
     GameHashMap<int32_t, Object> objectManager;

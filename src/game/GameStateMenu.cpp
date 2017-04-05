@@ -48,7 +48,6 @@
  * JF Mar 26: Re-added non-excessive initializations
  * Isaac Morneau, March 29, 2017 Re-removed the initializations that were in fact excessive
  *      then refactored the menu system to operate more logically and cleanly
-
 */
 GameStateMenu::GameStateMenu(Game& g):GameState(g),
         screenRect{0, 0, g.getWindow().getWidth(), g.getWindow().getHeight()},
@@ -107,7 +106,6 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
  * Isaac Morneau:
  *      off loaded loading into constructor and Textomagic objects
  */
-
 bool GameStateMenu::load() {
     return true;
 }
