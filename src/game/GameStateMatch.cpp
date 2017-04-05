@@ -33,6 +33,8 @@ bool GameStateMatch::load() {
     }
     m.mapLoadToGame();
 
+    GameManager::instance()->setAiMap(m.getAIMap());
+    GameManager::instance()->printAiMap();
 
     // Create Dummy Entitys
     GameManager::instance()->createMarine(1000, 500);

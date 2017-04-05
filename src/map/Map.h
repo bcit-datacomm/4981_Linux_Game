@@ -2,13 +2,12 @@
 #define MAP_H
 
 #include <iostream>
+#include <array>
 #include <fstream>
 #include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "../game/GameManager.h"
-
 // Tile Size
 static constexpr int T_SIZE = 150;
 
@@ -59,7 +58,7 @@ public:
     void mapLoadToGame();
     void printData();
 
-    void setFile(const string f) { fname = f; };
+    void setFile(const std::string f) { fname = f; };
     const std::string getFile() const { return fname; };
     const std::vector<MapPoint> getZombieSpawn() const { return zombieSpawn; };
     const std::array<std::array<bool, M_WIDTH>, M_HEIGHT> getAIMap() const { return AIMap; };
