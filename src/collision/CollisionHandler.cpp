@@ -174,6 +174,26 @@ void CollisionHandler::detectLineCollision(TargetList &targetList, const int gun
 }
 
 /**
+ * Date: Mar. 28, 2017
+ * Author: Mark Tattrie
+ * Function Interface: std::vector<Entity *> CollisionHandler::detectMeleeCollision(
+ *      std::vector<Entity*> returnObjects, const Entity *entity, const HitBox hb)
+ * Description:
+ * returns a vector of entities that have a damage hitbox collision between the vector of entities
+ * and the entity you pass in
+ */
+std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*> returnObjects,
+        const Entity *entity, const HitBox hb){
+    std::vector<Entity*> allEntities;
+    for (const auto& obj: returnObjects){
+        if (obj && entity != obj && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())){
+            allEntities.push_back(obj);
+        }
+    }
+    return allEntities;
+}
+
+/**
     checkTargets
 
     DISCRIPTION:

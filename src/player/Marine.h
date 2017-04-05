@@ -12,10 +12,15 @@
 #include "../inventory/Inventory.h"
 #include "../view/Window.h"
 
-#define MARINE_VELOCITY 500
-#define SPRITE_SIZE_X 75 //width of any marine image
-#define SPRITE_SIZE_Y 125 //height of any marine image 
-#define FRAME_COUNT_WALK 10 //speed of walking animation
+
+//speed of marine in relation to current frame duration / desired frame duration
+static constexpr int MARINE_VELOCITY = 400;
+//width of any marine image
+static constexpr int SPRITE_SIZE_X = 75;
+//height of any marine image
+static constexpr int SPRITE_SIZE_Y = 125;
+//speed of walking animation ie frames till next animation
+static constexpr int FRAME_COUNT_WALK = 7;
 
 static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;
 static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y * 3;
@@ -38,8 +43,8 @@ static constexpr double SPRITE_ANGLE8 = 3 * M_PI / 8;
 
 
 
-const int MARINE_HEIGHT = 100;
-const int MARINE_WIDTH = 100;
+const int MARINE_HEIGHT = 125;
+const int MARINE_WIDTH = 75;
 
 class Marine : public Movable {
 public:
@@ -52,9 +57,9 @@ public:
     void collidingProjectile(const int damage);
     void fireWeapon();
     int32_t checkForPickUp();
-
-    void updateImageDirection(); 
-    void updateImageWalk(const Uint8 *state, const unsigned long frameCount);
+    int getHealth() {return health;};
+    void updateImageDirection();
+    void updateImageWalk(const Uint8 *state);
     void activateStore(const Entity *ep);
     Inventory inventory;
 

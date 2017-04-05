@@ -10,10 +10,10 @@
 #include "../game/GameStateMatch.h"
 #include "../sprites/Renderer.h"
 #include "../sprites/SpriteTypes.h"
-#include "../basic/LTimer.h"
 #include "../view/Window.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "../map/Map.h"
 #include "Game.h"
 
 
@@ -27,7 +27,13 @@ bool GameStateMatch::load() {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
     //set the boundary on the map
-    GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    // Load Map
+    Map m("assets/maps/Map4.csv");
+    if(m.loadFileData() == 0) {
+        logv("file not found");
+    }
+    m.mapLoadToGame();
 
 
     // Create Dummy Entitys
@@ -45,50 +51,30 @@ bool GameStateMatch::load() {
     Point newPoint = base.getSpawnPoint();
 
     //gives the player control of the marine
-    player.setControl(GameManager::instance()->getMarine(playerMarineID));
+    player.setControl(&GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-    
+
     return success;
 }
 
 void GameStateMatch::loop() {
-    //The frames per second timer
-    LTimer fpsTimer;
-
-    //The frames per second cap timer
-    LTimer capTimer;
-
-    //Keeps track of time between steps
-    LTimer stepTimer;
-
-    //Start counting frames per second
-    int frameTicks;
-    unsigned int second = 0;
-    fpsTimer.start();
-
+    int startTick = 0;
+    int frameTicks = 0;
     // State Loop
     while (play) {
-        //Start cap timer
-        capTimer.start();
-
         // Process frame
-        handle(stepTimer.getTicks());    // Handle user input
-        update(stepTimer.getTicks() / TIME_SECOND); // Update state values
-        
+        handle(); // Handle user input
+        update((SDL_GetTicks() - startTick) / TICK_SEC); // Update state values
 
-        stepTimer.start(); //Restart step timer
-        sync();    // Sync game to server
-
-        render();    // Render game state to window
-
-        if ((stepTimer.getTicks() / TIME_SECOND) > second) {
-            GameManager::instance()->createZombieWave(1);
-            second += 5;
-        }
+        startTick = SDL_GetTicks();
+        // Sync game to server
+        sync();
+        // Render game state to window
+        render();
 
         //If frame finished early
-        if ((frameTicks = capTimer.getTicks()) < SCREEN_TICK_PER_FRAME) {
+        if ((frameTicks = SDL_GetTicks() - startTick) < SCREEN_TICK_PER_FRAME) {
             //Wait remaining time
             SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
         }
@@ -99,14 +85,15 @@ void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::handle(const unsigned long countedFrames) {
+void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
-    // Handle movement input
-    player.handleKeyboardInput(state);
-    player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
-    player.getMarine()->updateImageDirection(); //Update direction of player
-    player.getMarine()->updateImageWalk(state, countedFrames);  //Update walking animation
-
+    // Handle movement input if the player has a marine
+    if(player.getMarine() != nullptr){
+        player.handleKeyboardInput(state);
+        player.handleMouseUpdate(game.getWindow().getWidth(), game.getWindow().getHeight(), camera.getX(), camera.getY());
+        player.getMarine()->updateImageDirection(); //Update direction of player
+        player.getMarine()->updateImageWalk(state);  //Update walking animation
+    }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
         game.getWindow().handleEvent(event);
@@ -130,6 +117,12 @@ void GameStateMatch::handle(const unsigned long countedFrames) {
                     case SDLK_b:
                         player.handleTempBarricade(Renderer::instance().getRenderer());
                         break;
+                    case SDLK_k:
+                        //k is for kill, sets player marine to a nullptr
+                        GameManager::instance()->deleteMarine(player.getMarine()->getId());
+                        player.setControl(nullptr);
+                        break;
+
                     default:
                         break;
                     }
@@ -158,7 +151,9 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateTurrets();
 
     // Move Camera
-    camera.move(player.getMarine()->getX(), player.getMarine()->getY());
+    if(player.getMarine()){
+        camera.move(player.getMarine()->getX(), player.getMarine()->getY());
+    }
 }
 
 void GameStateMatch::render() {

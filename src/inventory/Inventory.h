@@ -10,6 +10,7 @@
 #include "weapons/HandGun.h"
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
+#include "weapons/ZombieHand.h"
 
 /*
  * Created By Maitiu Morton
@@ -27,11 +28,13 @@ public:
     int getCurretSlot() const {return current;}; //returns the current sloted selected int the inventory 
     Inventory();
     ~Inventory() = default;
+    void initZombie();
 
 private:
     int current = 0;//current weapon
     std::array<int32_t, 3> weaponIds;//array of weapon ids
     HandGun defaultGun;
+    ZombieHand tempZombieHand;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     std::shared_ptr<BasicMedkit> medkit = std::shared_ptr<BasicMedkit>(new BasicMedkit());
     int slotScrollTick = 0;
