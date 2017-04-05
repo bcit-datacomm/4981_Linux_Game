@@ -258,6 +258,7 @@ void AudioManager::loadEffect(const char *fileName){
 *       the music out is specified by the paramater int ms (in milliseconds)
 */
 void AudioManager::fadeMusicOut(int ms){
+    
     Mix_FadeOutMusic(ms);
 }
 
