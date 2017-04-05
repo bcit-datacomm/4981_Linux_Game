@@ -283,7 +283,8 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, const double a
  * DEVELOPER: Michael Goll
  * DESIGNER:  Michael Goll
  * DATE:      April 4, 2017
- *
+ * Renders the walls in a tiling fashion around the perimeters of blocking volumes and the
+ * border of the map.
  */
 void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, int w,
         int h) {

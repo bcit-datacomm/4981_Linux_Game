@@ -424,6 +424,7 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 
 /*
  * Created By Maitiu March 30 2017
+ * Revised By Michael Goll [April 4, 2017] - Added sprite for store.
  * Creates a Weapon store object and then calls addStore to add it to the manager.
  */
 int32_t GameManager::createWeaponStore(const float x, const float y) {
@@ -436,6 +437,7 @@ int32_t GameManager::createWeaponStore(const float x, const float y) {
     std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect);
     addStore(id, std::dynamic_pointer_cast<Store>(ws));
     ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
+
     return id;
 }
 

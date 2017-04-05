@@ -77,8 +77,10 @@ void dumpEntityPositions(const Player* p){
     //print Store Positions to File
     for (const auto& s : gm->getStoreManager()) {
         std::pair<float, float> coord = getDestCoordinates(s.second.get());
-        entityDump << "Store id:" << s.first << " Position: " << "X:" << coord.first
-            << " Y:" << coord.second << "\n";
+        std::pair<float, float> mCoord = getMoveCoordinates(s.second.get());
+        entityDump << "Store id:" << s.first << "\n\tDest Position: " << "X:" << coord.first
+            << " Y:" << coord.second << "\n\tMove Position: " << "X:" << mCoord.first
+                << " Y:" << mCoord.second << "\n";
     }
 
     entityDump << "\nAll Drop POINT POSITIONS:\n";
