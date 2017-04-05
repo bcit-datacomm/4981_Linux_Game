@@ -32,30 +32,14 @@ bool GameStateMatch::load() {
                 &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
+        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
-        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-      
+
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
         GameManager::instance()->getPlayer().getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-
-        // Create Dummy Entitys
-        //GameManager::instance()->createMarine(100, 100);
-        GameManager::instance()->createZombie(800, 800);
-        GameManager::instance()->createTurret(1000, 500);
-
-        //set the boundary on the map
-        GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
-
-        // Create Dummy Entitys
-        Rifle w(GameManager::instance()->generateID());
-        ShotGun w2(GameManager::instance()->generateID());
-        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
-        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
-        GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
-        GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
     }
 #endif
 
@@ -64,7 +48,7 @@ bool GameStateMatch::load() {
     // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
     // Load Map
-    Map m("assets/maps/Map4.csv");
+    Map m("assets/maps/DemoMap.csv");
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
@@ -146,7 +130,7 @@ void GameStateMatch::handle() {
     // Handle movement input if the player has a marine
     if(GameManager::instance()->getPlayer().getMarine()){
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
-        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), 
+        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
         GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
         GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
