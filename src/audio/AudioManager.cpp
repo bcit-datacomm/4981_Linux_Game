@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-* Source: AudioManage.cpp        
+* Source: AudioManage.cpp
 *
 * Functions:
 *    AudioManager& AudioManager::instance()
@@ -9,13 +9,16 @@
 *    void AudioManager::loadFiles()
 *    void AudioManager::loadMusic(const char *fileName)
 *    void AudioManager::loadEffect(const char *fileName)
-*    
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
+* Edited By : Alex Zielinski - Fixed seg fault caused by desctructor
+*                            - Added comments where appropriate
+*                            -
 *
-* Designer: 
+* Designer:
 *
 * Author: DericM
 *
@@ -42,6 +45,16 @@ AudioManager& AudioManager::instance() {
     return sInstance;
 }
 
+/**
+*   Function: ~AudioManager()
+*
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Constructor of AudioManager
+*/
 AudioManager::AudioManager(){
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -51,7 +64,19 @@ AudioManager::AudioManager(){
     loadFiles();
 }
 
-
+/**
+*   Function: ~AudioManager()
+*
+*   Date:
+*
+*   Programmer: DericM, Alex Zielinski
+*
+*   Modified: Alex Zielinski ~ March 30
+*               Fix seg fault
+*
+*   Description:
+*       Desctructor of AudioManager. Frees memory and quits SLD mixer
+*/
 AudioManager::~AudioManager(){
     //clear all loaded files
     for(auto const& music : mus) {
@@ -68,7 +93,16 @@ AudioManager::~AudioManager(){
 
 
 
-//This plays a single background music file from the _music map.
+/**
+*   Function: playMusic(const char *fileName)
+*               const char *fileName: file path of audio file to play
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Plays a single background music file from the _music map.
+*/
 void AudioManager::playMusic(const char *fileName){
 
     Mix_Music *music = mus[fileName];
@@ -81,8 +115,16 @@ void AudioManager::playMusic(const char *fileName){
 }
 
 
-
-//This plays a single sound effect from the _chunks map.
+/**
+*   Function: playEffect(const char *fileName)
+*               const char *fileName: file path of audio file to play
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Plays a single sound effect from the _chunks map.
+*/
 void AudioManager::playEffect(const char *fileName){
 
     Mix_Chunk *chunk = chun[fileName];
@@ -96,12 +138,26 @@ void AudioManager::playEffect(const char *fileName){
 
 
 
-
+/**
+*   Function:   loadFiles()
+*
+*   Date:
+*
+*   Programmer: DericM, Alex Zielinski
+*
+*   Modified: Alex Zielinski ~ April 4
+*               Added few more audio files to load
+*
+*   Description:
+*       Loads all audio asset files
+*/
 void AudioManager::loadFiles(){
 
     ////MUSIC
     loadMusic(MUS_DARKNUBULA);
     loadMusic(MUS_TESTMENU01);
+    loadMusic(MUS_MENUBKG_1);
+    loadMusic(MUS_MENUBKG_2);
 
 
     ////CHUNKS
@@ -125,12 +181,23 @@ void AudioManager::loadFiles(){
     loadEffect(EFX_ZGROAN01);
     loadEffect(EFX_ZGRUNT01);
 
+    //baracade
+    loadEffect(EFX_BINSTALL);
+
 }
 
 
 
-
-//This loads a single background music file into the _music map.
+/**
+*   Function: loadMusic(const char *fileName)
+*               const char *fileName: file path of audio file to load
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Loads a single background music file into the _music map.
+*/
 void AudioManager::loadMusic(const char *fileName){
 
     Mix_Music *music = NULL;
@@ -143,8 +210,16 @@ void AudioManager::loadMusic(const char *fileName){
     mus[fileName] = music;
 }
 
-
-//This loads a single sound effect file into the _chunks map.
+/**
+*   Function: loadEffect(const char *fileName)
+*               const char *fileName: file path of audio file to load
+*   Date:
+*
+*   Programmer: DericM
+*
+*   Description:
+*       Loads a single sound effect file into the _chunks map.
+*/
 void AudioManager::loadEffect(const char *fileName){
 
     Mix_Chunk *sound = NULL;
