@@ -121,7 +121,7 @@ void Marine::updateImageDirection() {
 
 /**
 * Date: Mar 30
-* Modified: April 4 (Brody McCrone)
+* Modified: April 4 (Brody McCrone) - Swapped use of keyboard input to deltas.
 *
 * Author: Aing Ragunathan
 *
@@ -132,7 +132,6 @@ void Marine::updateImageDirection() {
 *       This function repeatedly updates the image of the marine in order to animate
 *       walking. It is called from GameManager::updateMarines every frame.
 */
-//void Marine::updateImageWalk(const Uint8 *state) {
 void Marine::updateImageWalk() {
     static unsigned long frameCount = 0;
     ++frameCount;
