@@ -71,7 +71,6 @@ bool MeleeWeapon::fire(Movable &mov){
     for(const auto& x: hitMarines){
         //update hit marine
         x->collidingProjectile(damage);
-        logv("hit a marine, marine hp = %d\n", dynamic_cast<Marine *>(x)->getHealth());
     }
 
     //vector of each turret the melee attack connects with
@@ -80,7 +79,6 @@ bool MeleeWeapon::fire(Movable &mov){
     for(const auto& y: hitTurrets){
         //update hit turret
         y->collidingProjectile(damage);
-        logv("hit a turret, turret > 0 = %d\n", dynamic_cast<Turret *>(y)->healthCheckTurret());
     }
 
     //vector of each barricade the melee attack connects with

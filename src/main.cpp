@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Source: main.cpp     
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -8,8 +26,8 @@
 
 int main(int argc, char **argv) {
     int opt;
-    while((opt = getopt(argc, argv, "evio")) != -1){
-        switch(opt){
+    while ((opt = getopt(argc, argv, "evio")) != -1) {
+        switch (opt) {
             case 'i'://verbose
                 log_verbose = 3;
                 break;

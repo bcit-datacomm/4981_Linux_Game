@@ -27,21 +27,29 @@ bool GameStateMatch::load() {
 
     const int32_t playerMarineID = GameManager::instance()->createMarine();
 
-    //set the boundary on the map
-    // GameManager::instance()->setBoundary(0, 0, MAP_WIDTH, MAP_HEIGHT);
     // Load Map
     Map m("assets/maps/Map4.csv");
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
     m.mapLoadToGame();
+    GameManager::instance()->setAiMap(m.getAIMap());
 
+    // Create Dummy Entitys
+    GameManager::instance()->createMarine(850, 500);
     //createStores
     GameManager::instance()->createWeaponStore(STORE_X, STORE_Y);
 
     //createDropPoint
     GameManager::instance()->createDropZone(DROPZONE_X , DROPZONE_Y, DROPZONE_SIZE);
+    Rifle w(GameManager::instance()->generateID());
+    ShotGun w2(GameManager::instance()->generateID());
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(w)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(w2)));
+    GameManager::instance()->createWeaponDrop(1200, 500, w.getID());
+    GameManager::instance()->createWeaponDrop(1200, 300, w2.getID());
 
+    base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
     GameManager::instance()->addObject(base);
 
     Point newPoint = base.getSpawnPoint();
@@ -50,6 +58,8 @@ bool GameStateMatch::load() {
     player.setControl(&GameManager::instance()->getMarine(playerMarineID));
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+
+    matchManager.setSpawnPoints(m.getZombieSpawn());
 
     return success;
 }
@@ -181,6 +191,8 @@ void GameStateMatch::update(const float delta) {
     if(player.getMarine()){
         camera.move(player.getMarine()->getX(), player.getMarine()->getY());
     }
+    player.checkMarineState();
+    matchManager.checkMatchState();
 }
 
 /**
@@ -239,26 +251,28 @@ void GameStateMatch::render() {
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
 
-        //Render the healthbar's foreground to the screen
-        //(displays how much player health is left)
-        hud.renderHealthBar(screenRect, player, camera);
+        if (player.getMarine()) {
+            //Render the healthbar's foreground to the screen
+            //(displays how much player health is left)
+            hud.renderHealthBar(screenRect, player, camera);
 
-        //Reder the ammo clip foreground to the screen
-        //(displays how much ammo is left in the players weapon clip)
-        hud.renderClip(screenRect, player);
+            //Reder the ammo clip foreground to the screen
+            //(displays how much ammo is left in the players weapon clip)
+            hud.renderClip(screenRect, player);
 
-        //Render the equipped weapon slot
-        hud.renderEquippedWeaponSlot(screenRect, player);
 
-        //Reder the Weapon slots to the screen
-        hud.renderWeaponSlots(screenRect, player);
+            //Render the equipped weapon slot
+            hud.renderEquippedWeaponSlot(screenRect, player);
 
-        //Render the consumable slot if the player has any available
-        //Currently only a single consumable item exits (the Medkit)
-        if (player.getMarine()->inventory.getMedkit()) {
-            hud.renderConsumable(screenRect, player);
+            //Reder the Weapon slots to the screen
+            hud.renderWeaponSlots(screenRect, player);
+
+            //Render the consumable slot if the player has any available
+            //Currently only a single consumable item exits (the Medkit)
+            if (player.getMarine()->inventory.getMedkit()) {
+                hud.renderConsumable(screenRect, player);
+            }
         }
-
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
     }

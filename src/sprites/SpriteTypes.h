@@ -57,6 +57,7 @@ enum class TEXTURES : int {
     //--------------------- Map Object textures ---------------------
 
     MAP_OBJECTS,
+    BASE,
     //---------- Nature ----------
     // TREE,
     // ROCK,
