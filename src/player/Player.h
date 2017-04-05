@@ -8,8 +8,10 @@
 #include "../player/Marine.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
-#include "../game/GameManager.h"
+#include "../client/NetworkManager.h"
+#include "../UDPHeaders.h"
 
+static constexpr double DOUBLE_COMPARISON_PRECISION = 0.001;
 static constexpr int PLAYER_PLACE_DISTANCE = 100;
 
 class Player {
@@ -32,6 +34,16 @@ public:
     
     void checkMarineState();
 
+    void fireWeapon();
+
+    void sendServMoveAction();
+    void sendServAttackAction();
+    bool hasChangedAngle() const;
+    bool hasChangedCourse() const;
+    void setId(const int32_t newId) {id = newId;};
+    int32_t getId() const {return id;};
+
+    //Stays as pointer cause the player gets a marine object after the ctor is called
     Marine * getMarine() const {return marine;}
 
 private:
@@ -40,6 +52,9 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    int32_t id;
+    ClientMessage moveAction;
+    ClientMessage attackAction;
     Marine *marine;
 };
 
