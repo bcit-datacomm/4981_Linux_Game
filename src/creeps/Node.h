@@ -54,9 +54,7 @@ public:
     explicit Node(const int xPos = 0, const int yPos = 0, const int lv = 0,
             const int pri = 0) : xPos(xPos), yPos(yPos), lv(lv), pri(pri) {}
 
-    virtual ~Node() {
-        logv("destroy Node\n");
-    } // default dtor
+    virtual ~Node() = default;
 
     // X coordinate of current node
     int getXPos() const {

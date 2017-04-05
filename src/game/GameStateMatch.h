@@ -17,6 +17,7 @@
 #include "../sprites/Renderer.h"
 #include "../collision/CollisionHandler.h"
 #include "../view/Window.h"
+#include "MatchManager.h"
 #include "../game/GameHud.h"
 
 // ticks (ms) in 1 second
@@ -34,9 +35,10 @@ private:
     Player player;
     Base base;
     Camera camera;
+    MatchManager matchManager;
     GameHud hud;
-
     SDL_Rect screenRect;
+
     float storeX;
     float storeY;
     float dropZoneX;

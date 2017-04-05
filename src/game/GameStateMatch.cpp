@@ -53,6 +53,8 @@ bool GameStateMatch::load() {
     player.getMarine()->setPosition(newPoint.first, newPoint.second);
     player.getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 
+    matchManager.setSpawnPoints(m.getZombieSpawn());
+        
     return success;
 }
 
@@ -183,6 +185,8 @@ void GameStateMatch::update(const float delta) {
     if(player.getMarine()){
         camera.move(player.getMarine()->getX(), player.getMarine()->getY());
     }
+    player.checkMarineState();
+    matchManager.checkMatchState();
 }
 
 /**
@@ -241,26 +245,27 @@ void GameStateMatch::render() {
         //render the temps after the object in the game
         VisualEffect::instance().renderPostEntity(camera.getViewport());
 
-        //Render the healthbar's foreground to the screen
-        //(displays how much player health is left)
-        hud.renderHealthBar(screenRect, player, camera);
+        if (player.getMarine()) {
+           //Render the healthbar's foreground to the screen
+           //(displays how much player health is left)
+           hud.renderHealthBar(screenRect, player, camera);
 
-        //Reder the ammo clip foreground to the screen
-        //(displays how much ammo is left in the players weapon clip)
-        hud.renderClip(screenRect, player);
+          //Reder the ammo clip foreground to the screen
+           //(displays how much ammo is left in the players weapon clip)
+           hud.renderClip(screenRect, player);
 
-        //Render the equipped weapon slot
-        hud.renderEquippedWeaponSlot(screenRect);
+          //Render the equipped weapon slot
+          hud.renderEquippedWeaponSlot(screenRect);
 
-        //Reder the Weapon slots to the screen
-        hud.renderWeaponSlots(screenRect, player);
+            //Reder the Weapon slots to the screen
+            hud.renderWeaponSlots(screenRect, player);
 
-        //Render the consumable slot if the player has any available
-        //Currently only a single consumable item exits (the Medkit)
-        if (player.getMarine()->inventory.getMedkit()) {
-            hud.renderConsumable(screenRect, player);
+            //Render the consumable slot if the player has any available
+             //Currently only a single consumable item exits (the Medkit)
+             if (player.getMarine()->inventory.getMedkit()) {
+                 hud.renderConsumable(screenRect, player);
+              }
         }
-
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());
     }

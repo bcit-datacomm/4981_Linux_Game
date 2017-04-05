@@ -80,9 +80,8 @@ public:
     void deleteObject(const int32_t id);
 
     int32_t addZombie(const Zombie&);
-    bool createZombie(const float x, const float y);
+    int32_t createZombie(const float x, const float y);
     void deleteZombie(const int32_t id);
-    bool createZombieWave(const int n);
     bool zombieExists(const int32_t id);
     Zombie& getZombie(const int32_t id);
 
