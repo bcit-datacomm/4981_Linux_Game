@@ -289,11 +289,21 @@ void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL
         int h) {
     int tileNumX = dest.w / w;
     int tileNumY = dest.h / h;
+    SDL_Rect tempRect;
+    int y = 0;
 
     for (int i = 0; i < tileNumX; ++i) {
-        for (int j = 0; j < tileNumY; ++j) {
-            SDL_Rect tempRect = {dest.x + w * i, dest.y + h * j, w, h};
+        if ((y == 0 || (y == tileNumY - 1))) {
+            tempRect = {dest.x + w * i, dest.y + y * h, w, h};
             SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &tempRect, 0, nullptr, SDL_FLIP_NONE);
+        } else if ((i == 0 || i == tileNumX - 1) && (y < tileNumY - 1)) {
+            tempRect = {dest.x + w * i, dest.y + y * h, w, h};
+            SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &tempRect, 0, nullptr, SDL_FLIP_NONE);
+        }
+
+        if ((i == tileNumX - 1) && (y < tileNumY)) {
+            i = -1;
+            ++y;
         }
     }
 }
