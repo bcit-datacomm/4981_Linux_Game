@@ -57,7 +57,6 @@ public:
     int32_t checkForPickUp();
     int getHealth() {return health;};
     void updateImageDirection();
-    //void updateImageWalk(const Uint8 *state);
     void updateImageWalk();
     void activateStore(const Entity *ep);
     Inventory inventory;
