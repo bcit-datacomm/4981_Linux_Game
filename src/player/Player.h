@@ -31,6 +31,8 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
+    
+    void checkMarineState();
 
     void fireWeapon();
 

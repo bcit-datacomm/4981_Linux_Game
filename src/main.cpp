@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Source: main.cpp     
+*
+* Functions:
+*    
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Yiaoping Shu- Style guide
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+*  
+------------------------------------------------------------------------------*/
 #include <cstdio>
 #include <iostream>
 #include <string>

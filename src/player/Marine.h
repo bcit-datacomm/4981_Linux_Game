@@ -60,7 +60,9 @@ public:
     void updateImageWalk(const Uint8 *state);
     void activateStore(const Entity *ep);
     Inventory inventory;
-    void setHealth(const int& hlth) {health = hlth;};
+    void setHealth(const int hlth) {health = hlth;};
+    int getCurrentHealth() {return health;}; //returns the current health of the marine
+
 private:
     std::string username;
     int health = 100;
