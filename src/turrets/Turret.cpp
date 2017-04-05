@@ -161,7 +161,7 @@ void Turret::collidingProjectile(const int damage) {
 void Turret::shootTurret() {
 
     Weapon *w = inventory.getCurrent();
-    if (w != nullptr) {
+    if (w) {
         w->fire(*this);
     }
 }

@@ -135,7 +135,7 @@ void GameManager::updateTurrets() {
     std::vector<int32_t> deleteVector = markForDeletionTurret();
 
     for (auto it = deleteVector.begin() ; it != deleteVector.end(); ++it) {
-        removeWeapon(getTurret(*it).inventory.getCurrent()->getID());
+        removeWeapon(getTurret(*it).getInventory().getCurrent()->getID());
         deleteTurret(*it);
     }
 
@@ -158,7 +158,7 @@ void GameManager::updateTurrets() {
 std::vector<int32_t> GameManager::markForDeletionTurret() {
     std::vector<int32_t> deleteVector;
     for (auto& t: turretManager) {
-        if (t.second.inventory.getCurrent()->getClip() == 0) {
+        if (t.second.getInventory().getCurrent()->getClip() == 0) {
             deleteVector.push_back(t.second.getId());
         }
     }

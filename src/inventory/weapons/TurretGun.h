@@ -14,24 +14,24 @@
 using std::string;
 
 namespace TurretGunVars {
-    const string TYPE           = "TurretGun";
+    const string TYPE = "TurretGun";
 
-    const string FIRESOUND      = EFX_WTURRET01;
-    const string HITSOUND       = "";
-    const string RELOADSOUND    = "";
-    const string EMPTYSOUND     = "";
+    const string FIRESOUND = EFX_WTURRET01;
+    const string HITSOUND = "";
+    const string RELOADSOUND = "";
+    const string EMPTYSOUND = "";
 
-    constexpr int RANGE         = 400;
-    constexpr int DAMAGE        = 75;
-    constexpr int AOE           = 1;
-    constexpr int PENETRATION   = 3;
+    constexpr int RANGE = 400;
+    constexpr int DAMAGE = 75;
+    constexpr int AOE = 1;
+    constexpr int PENETRATION = 3;
 
-    constexpr int CLIP          = 10;
-    constexpr int CLIPMAX       = 10;
-    constexpr int AMMO          = 10;
+    constexpr int CLIP = 10;
+    constexpr int CLIPMAX = 10;
+    constexpr int AMMO = 10;
 
-    constexpr int RELOADDELAY   = 100;
-    constexpr int FIREDELAY     = 1500;
+    constexpr int RELOADDELAY = 100;
+    constexpr int FIREDELAY = 1500;
 }
 
 

@@ -62,12 +62,12 @@ public:
     void pickUpTurret();
     bool isActivated() {return activated;};
     void removeTurret(); // removes the turret
+    Inventory getInventory() {return inventory;};
     // Jamie Lee, 2017-03-01.
     float getRange() const {
         return range;
     }
 
-    Inventory inventory;
 
 private:
     bool activated; // turret activated state
@@ -76,6 +76,8 @@ private:
     bool placed;
     float range; // turret's range.
     int32_t dropzone;
+
+    Inventory inventory;
 };
 
 #endif
