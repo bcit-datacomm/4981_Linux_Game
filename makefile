@@ -6,7 +6,7 @@ CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
 ODIR := bin
 SRC := src
-EXCLUDEFOLDERS := server UnitTests
+EXCLUDEFOLDERS := UnitTests
 
 #The following variable generates a pattern to create these "not" flag chains for the find command based on the exclude list
 #find . -not \( -path *server -prune \) -not \( -path *gamefolder -prune \) -name *\.cpp
@@ -25,10 +25,7 @@ CONVERT := $(patsubst $(SRCOBJS), $(OBJS), $(shell basename -a $(EXCLUDEDSRCWILD
 EXEC := $(ODIR)/$(APPNAME)
 DEPS := $(EXEC).d
 
-release: all
-debug: all
-
-all: $(CONVERT)
+all release debug: $(CONVERT)
 # Command takes all bin .o files and creates an executable called chess in the bin folder
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(EXEC)
 
@@ -36,7 +33,7 @@ $(ODIR):
 	@mkdir -p $(ODIR)
 
 # Create dependency file for make and manually adjust it silently to work with other directories
-$(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR) 
+$(DEPS): $(SRCWILD) $(HEADWILD) | $(ODIR)
 # Compile the non-system dependencies and store it in outputdir/execname.d
 	@$(CXX) -MM $(CFLAGS) $(CXXFLAGS) $(SRCWILD) > $(DEPS)
 # Take the temp file contents, do a regex text replace to change all .o strings into
@@ -70,9 +67,7 @@ $(OBJS): $(filter .+$$@, $(SRCWILD))
 # Command compiles the src .cpp file with the listed flags and turns it into a bin .o file
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $@
 
-dserver: server
-
-server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
+dserver server: $(patsubst $(SRC)/server/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/server/*.cpp)) $(CONVERT)
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
 
 tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTests/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
