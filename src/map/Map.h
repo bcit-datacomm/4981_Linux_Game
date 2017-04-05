@@ -56,7 +56,6 @@ public:
     Map(const std::string& file);
     int loadFileData();
     void genWalls(const std::vector<MapPoint>& wallStart);
-    void generateShops(const std::array<MapPoint,MAX_SHOPS> shop);
     void mapLoadToGame();
     void printData();
 
