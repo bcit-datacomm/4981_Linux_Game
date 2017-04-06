@@ -58,7 +58,6 @@ AudioManager& AudioManager::instance() {
 *   Description:
 *       Constructor of AudioManager
 */
-#ifndef SERVER
 AudioManager::AudioManager(){
 #ifndef SERVER
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -68,7 +67,6 @@ AudioManager::AudioManager(){
     loadFiles();
 #endif
 }
-#endif
 
 
 /**
@@ -84,7 +82,6 @@ AudioManager::AudioManager(){
 *   Description:
 *       Desctructor of AudioManager. Frees memory and quits SLD mixer
 */
-#ifndef SERVER
 AudioManager::~AudioManager(){
 #ifndef SERVER
     //clear all loaded files
@@ -100,7 +97,6 @@ AudioManager::~AudioManager(){
     Mix_Quit();
 #endif
 }
-#endif
 
 
 /**
@@ -115,7 +111,6 @@ AudioManager::~AudioManager(){
 *   Description:
 *       Plays a single background music file from the _music map.
 */
-#ifndef SERVER
 void AudioManager::playMusic(const char *fileName){
 #ifndef SERVER
     Mix_Music *music = mus[fileName];
@@ -127,7 +122,6 @@ void AudioManager::playMusic(const char *fileName){
     }
 #endif
 }
-#endif
 
 
 /**
@@ -142,7 +136,6 @@ void AudioManager::playMusic(const char *fileName){
 *   Description:
 *       Plays a single sound effect from the _chunks map.
 */
-#ifndef SERVER
 void AudioManager::playEffect(const char *fileName){
 #ifndef SERVER
     Mix_Chunk *chunk = chun[fileName];
@@ -154,7 +147,6 @@ void AudioManager::playEffect(const char *fileName){
     }
 #endif
 }
-#endif
 
 
 /**
@@ -172,7 +164,6 @@ void AudioManager::playEffect(const char *fileName){
 *   Description:
 *       Loads all audio asset files
 */
-#ifndef SERVER
 void AudioManager::loadFiles(){
 #ifndef SERVER
     ////MUSIC
@@ -205,8 +196,8 @@ void AudioManager::loadFiles(){
 
     //baracade
     loadEffect(EFX_BINSTALL);
-}
 #endif
+}
 
 
 /**
@@ -221,7 +212,6 @@ void AudioManager::loadFiles(){
 *   Description:
 *       Loads a single background music file into the _music map.
 */
-#ifndef SERVER
 void AudioManager::loadMusic(const char *fileName){
 #ifndef SERVER
     Mix_Music *music = nullptr;
@@ -234,7 +224,6 @@ void AudioManager::loadMusic(const char *fileName){
     mus[fileName] = music;
 #endif
 }
-#endif
 
 
 /**
@@ -249,7 +238,6 @@ void AudioManager::loadMusic(const char *fileName){
 *   Description:
 *       Loads a single sound effect file into the _chunks map.
 */
-#ifndef SERVER
 void AudioManager::loadEffect(const char *fileName){
 #ifndef SERVER
     Mix_Chunk *sound = nullptr;
@@ -262,7 +250,6 @@ void AudioManager::loadEffect(const char *fileName){
     chun[fileName] = sound;
 #endif
 }
-#endif
 
 
 /**
@@ -279,11 +266,11 @@ void AudioManager::loadEffect(const char *fileName){
 *       Wrapper fucntion to fade music out. The amount of time is takes to fade
 *       the music out is specified by the paramater int ms (in milliseconds)
 */
-#ifndef SERVER
 void AudioManager::fadeMusicOut(int ms){
+#ifndef SERVER
     Mix_FadeOutMusic(ms);
-}
 #endif
+}
 
 
 /**
@@ -301,9 +288,8 @@ void AudioManager::fadeMusicOut(int ms){
 *       Randomly selects one of the 2 menu background music audio files
 *       to play when the menu loads
 */
-#ifndef SERVER
 void AudioManager::playMenuMusic(const char *fileName1, const char *fileName2){   // generates either 1 or 2
-
+#ifndef SERVER
     srand (time(nullptr)); // random seed generator
     int random = rand() % 2; // randomly select 1 or 2
 
@@ -317,5 +303,5 @@ void AudioManager::playMenuMusic(const char *fileName1, const char *fileName2){ 
             playMusic(fileName2);
             break;
     }
-}
 #endif
+}
