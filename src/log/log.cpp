@@ -1,11 +1,10 @@
 #include <cstdarg>
-#include <stdio.h>
+#include <cstdio>
 
 #include "log.h"
 
 
 int log_verbose = 0;
-
 
 void logv(const int spec, const char *msg, ...) {
     if(log_verbose != spec) {
@@ -28,7 +27,6 @@ void logv(const char *msg, ...) {
     va_end(args);
     fflush(stdout);
 }
-
 
 void loge(const char *msg, ...) {
     if(!log_verbose) {
