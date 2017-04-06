@@ -3,6 +3,22 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: Marine(const int32_t id, const SDL_Rect& dest,
+ *              const SDL_Rect& movementSize, const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
+ *              
+ *              id : Marine id
+ *              dest : Destination rect
+ *              movmentSize : Move hitbox size
+ *              projectileSize : Projectile hitbox size
+ *              damageSize : Damage hitbox size
+ *
+ * Description:
+ *     ctor for a marine.
+ */
 Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
         const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
 : Entity(id, dest, movementSize, projectileSize, damageSize),
@@ -10,14 +26,38 @@ Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
     logv("Create Marine\n");
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: ~Marine()
+ * Description:
+ *   dctor for a marine.  
+ */
 Marine::~Marine() {
     logv("Destroy Marine\n");
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: onCollision()
+ */
 void Marine::onCollision() {
     // Do nothing for now
 }
 
+/**
+ * Date: Feb. 4, 2017
+ * Modified: ----
+ * Author: Jacob McPhail
+ * Function Interface: collidingProjectile(const int damage)
+ *      damage : damage to deal to marine
+ *
+ * Description:
+ *     Deals damage to a marine.
+ */
 void Marine::collidingProjectile(const int damage) {
     health -= damage;
 }
@@ -118,6 +158,8 @@ void Marine::updateImageDirection() {
 
 /**
 * Date: Mar 30
+* Modified: April 4 (Brody McCrone) - Swapped use of keyboard input to deltas.
+*
 * Author: Aing Ragunathan
 *
 * Function Interface: void Marine::updateImageWalk(double frameCount)
@@ -125,13 +167,14 @@ void Marine::updateImageDirection() {
 *
 * Description:
 *       This function repeatedly updates the image of the marine in order to animate
-*       walking. It is called from GameStateMatch::handle after every frame and updates
-*       the feet placement of the marine.
+*       walking. It is called from GameManager::updateMarines every frame.
 */
-void Marine::updateImageWalk(const Uint8 *state) {
+void Marine::updateImageWalk() {
     static unsigned long frameCount = 0;
     ++frameCount;
-    if (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) {
+    const float dy = getDY();
+    const float dx = getDX();
+    if (dy > 0) {
         //stops lag when taking first step
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
@@ -143,7 +186,7 @@ void Marine::updateImageWalk(const Uint8 *state) {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
         }
-    } else if (state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) {
+    } else if (dy < 0) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {
@@ -153,7 +196,7 @@ void Marine::updateImageWalk(const Uint8 *state) {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
         }
-    } else if (state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) {
+    } else if (dx < 0) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {
@@ -163,7 +206,7 @@ void Marine::updateImageWalk(const Uint8 *state) {
                 setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
             }
         }
-    } else if (state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) {
+    } else if (dx > 0) {
         if (getSrcRect().x == SPRITE_FRONT) {
             setSrcRect(SPRITE_SIZE_X, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
         } else if (frameCount % FRAME_COUNT_WALK == 0) {

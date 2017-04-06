@@ -30,7 +30,7 @@ inline constexpr SDL_Rect relative(const SDL_Rect& dest, const SDL_Rect& camera)
  * Designer: Isaac Morneau
  * Date: March 25, 2017
  * Notes:
- * render and remove timed out effects 
+ * render and remove timed out effects
  */
 void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
     auto& renderer = Renderer::instance();
@@ -39,7 +39,13 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
         if (--p->second.dur > 0) {
             SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
             SDL_RenderDrawLine(rend, p->second.x - camera.x, p->second.y - camera.y,
-                    p->second.ex - camera.x, p->second.ey - camera.y);
+                   p->second.ex - camera.x, p->second.ey - camera.y);
+
+            SDL_RenderDrawLine(rend, p->second.x - camera.x + 1, p->second.y - camera.y + 1,
+                p->second.ex - camera.x + 1, p->second.ey - camera.y + 1);
+
+            SDL_RenderDrawLine(rend, p->second.x - camera.x - 1, p->second.y - camera.y - 1,
+                p->second.ex - camera.x - 1, p->second.ey - camera.y - 1);
             ++p;
         } else {
             p = preLines.erase(p);
@@ -54,7 +60,7 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
         } else {
             p = preRects.erase(p);
         }
-    } 
+    }
     for (auto p = preTex.begin(); p != preTex.end();) {
         if (--p->second.dur > 0) {
             const SDL_Rect temp = relative(p->second.dest, camera);
@@ -71,7 +77,7 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
  * Designer: Isaac Morneau
  * Date: March 25, 2017
  * Notes:
- * render and remove timed out effects 
+ * render and remove timed out effects
  */
 void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
     auto& renderer = Renderer::instance();
@@ -95,7 +101,7 @@ void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
         } else {
             p = postRects.erase(p);
         }
-    } 
+    }
     for (auto p = postTex.begin(); p != postTex.end();) {
         if (--p->second.dur > 0) {
             const SDL_Rect temp = relative(p->second.dest, camera);
@@ -249,4 +255,3 @@ void VisualEffect::removePostRect(const int id) {
 void VisualEffect::removePostTex(const int id) {
     postTex.erase(id);
 }
-

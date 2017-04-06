@@ -4,25 +4,96 @@
 #include "../game/GameManager.h"
 #include "../log/EntityDump.h"
 
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), pickupTick(0), pickupDelay(200),
-        marine(nullptr) {
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: Player()
+* Description: 
+*   ctor for a player.
+*/
+Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), 
+        pickupTick(0), pickupDelay(200), respawnTick(0), marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
 
+/**
+* Date: Jan. 28, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: setControl(Marine* newControl)
+*       newControl : Marine to control
+*
+* Description: 
+*   Set what marine the player controls.
+*/
 void Player::setControl(Marine* newControl) {
     marine = newControl;
 }
 
+/**------------------------------------------------------------------------------
+Method: hasChangedAngle
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool hasChangedAngle()
+
+Returns:
+true: The players angle has changed since the last frame.
+false: The players angle has NOT changed since the last frame.
+
+Notes:
+Checks if the players angle has changed since the last frame.
+-------------------------------------------------------------------------------*/
 bool Player::hasChangedAngle() const {
     return fabs(moveAction.data.ma.direction - marine->getAngle()) > DOUBLE_COMPARISON_PRECISION;
 }
 
+/**------------------------------------------------------------------------------
+Method: hasChangedCourse
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool hasChangedCourse()
+
+Returns:
+true: The player's course has changed since the last frame.
+false: The player's course has NOT changed since the last frame.
+
+Notes:
+Checks if the player's course has changed since the last frame.
+-------------------------------------------------------------------------------*/
 bool Player::hasChangedCourse() const {
     return moveAction.data.ma.xdel - marine->getDX()
             || moveAction.data.ma.ydel - marine->getDY();
 }
 
+/**------------------------------------------------------------------------------
+Method: sendServMoveAction
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool sendServMoveAction
+
+Returns:
+void
+
+Notes:
+Updates the player's moveAction struct and send it to the server via UDP.
+-------------------------------------------------------------------------------*/
 void Player::sendServMoveAction() {
     moveAction.data.ma.id = id;
     moveAction.data.ma.xpos = marine->getX();
@@ -34,6 +105,23 @@ void Player::sendServMoveAction() {
     NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
 }
 
+/**------------------------------------------------------------------------------
+Method: sendServAttackAction
+
+Date: April 4, 2017
+
+Designer: Brody McCrone
+
+Programmer: Brody McCrone
+
+Interface: bool sendServMoveAction
+
+Returns:
+void
+
+Notes:
+Updates the player's attack action and send it to the server via UDP.
+-------------------------------------------------------------------------------*/
 void Player::sendServAttackAction() {
     attackAction.data.aa.playerid = id;
     attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
@@ -45,6 +133,20 @@ void Player::sendServAttackAction() {
     NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
 }
 
+/**
+* Date: Feb. 6, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: handleMouseUpdate(const int winWidth, const int winHeight, 
+*                const float camX, const float camY) 
+*       winWidth : Window width
+*       winHeight : Window height
+*       camX : Camera x position
+*       camY : Camera y position
+*
+* Description: 
+*   Handle user mouse input.
+*/
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
@@ -87,6 +189,23 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 */
 }
 
+/**------------------------------------------------------------------------------
+Method: fireWeapon
+
+Date: April 4, 2017
+
+Designer: Deric Mccadden
+
+Programmer: Deric Mccadden, Brody McCrone
+
+Interface: void fireWeapon()
+
+Returns:
+void
+
+Notes:
+Fires player's marine's weapon amd sends the Attack Action to the server.
+-------------------------------------------------------------------------------*/
 void Player::fireWeapon() {
     if (marine->inventory.getCurrent() && marine->fireWeapon() && networked) {
         sendServAttackAction();
@@ -108,6 +227,16 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
     }
 }
 
+/**
+* Date: Feb. 6, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: handleKeyboardInput(const Uint8 *state)
+*         state : Keyboard state
+*
+* Description: 
+*   Handle user key input.
+*/
 void Player::handleKeyboardInput(const Uint8 *state) {
     float x = 0;
     float y = 0;
@@ -203,10 +332,43 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
    }
 }
 
-void Player::checkMarineState() {
+/**
+ * Date: Apl. 5, 2017
+ * Author: Jacob McPhail
+ * Function Interface: checkMarineState()
+ * Description:
+ *      Check marine health if 0 kill marine, also check if player respawns.
+ */
+bool Player::checkMarineState() {
     if (marine && marine->getHealth() <= 0){
         GameManager::instance()->deleteMarine(marine->getId());
         setControl(nullptr);
+        respawnTick = SDL_GetTicks();
+    } else if (!marine) {
+        if (static_cast<int>(SDL_GetTicks()) < (respawnTick + RESPAWN_DELAY)) {
+                return false;
+        }
+        return true;
     }
+    return false;
 }
+
+/**
+ * Date: Apl. 5, 2017
+ * Author: Jacob McPhail
+ * Function Interface: respawn(Point newPoint)
+ *      newPoint : Player respawn point
+ *
+ * Description:
+ *      Respawn player with a new marine.
+ */
+void Player::respawn(const Point& newPoint) {
+    const int32_t playerMarineID = GameManager::instance()->createMarine();
+    //gives the player control of the marine
+    setControl(&GameManager::instance()->getMarine(playerMarineID).first);
+    getMarine()->setPosition(newPoint.first, newPoint.second);
+    getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
+}
+
+
 
