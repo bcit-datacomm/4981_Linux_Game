@@ -75,9 +75,9 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
     return nullptr;
 }
 
-void Inventory::useItem() {
+void Inventory::useItem(Marine &x) {
     if (medkit != nullptr) {
-        medkit->OnConsume();
+        medkit->OnConsume(x);
         medkit = nullptr;
     }
 

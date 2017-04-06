@@ -294,7 +294,7 @@ void Player::handleKeyboardInput(const Uint8 *state) {
     }
     //use Inventory
     if(state[SDL_SCANCODE_I]) {
-        marine->inventory.useItem();
+        marine->inventory.useItem(*marine);
     }
 
     //added by Maitiu Debug print 4/3/2017

@@ -1,7 +1,4 @@
 /*
-    Created by Matt Goerwell 3/8/2017
-*/
-/*
     Created by Matthew Goerwell 3/8/2017
 */
 #ifndef BASICMEDKIT_H
@@ -22,7 +19,7 @@ public:
     //standard dtor
     ~BasicMedkit();
     //Consumable specific OnConsume Method
-    void OnConsume() override;
+    void OnConsume(Marine &x) override;
 };
 
 #endif

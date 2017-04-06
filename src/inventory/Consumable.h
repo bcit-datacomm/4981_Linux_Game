@@ -9,7 +9,7 @@
 
 #include "../log/log.h"
 
-
+class Marine;
 class Consumable {
 public:
     //constructor that will assign the right textures to the consumable
@@ -19,7 +19,7 @@ public:
     //standard destructor
     virtual ~Consumable(){logv("Destroy Consumable\n");};
     //abstarct method that must be filled in for each consumable type
-    virtual void OnConsume() = 0;
+    virtual void OnConsume(Marine &x) = 0;
 };
 
 #endif

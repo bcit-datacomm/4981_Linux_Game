@@ -3,6 +3,7 @@
 */
 #include "BasicMedkit.h"
 #include "../log/log.h"
+#include "../player/Marine.h"
 
 BasicMedkit::BasicMedkit() : Consumable() {
     logv("BasicMedkit Created\n");
@@ -12,6 +13,7 @@ BasicMedkit::~BasicMedkit() {
     logv("BasicMedkit Destroyed\n");
 }
 
-void BasicMedkit::OnConsume() {
+void BasicMedkit::OnConsume(Marine& x) {
+	x.setHealth(100);
     logv("BasicMedkit Consumed\n");
 }
