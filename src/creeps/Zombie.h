@@ -42,6 +42,7 @@ static constexpr int ZOMBIE_HEIGHT = 125; // y value
 static constexpr int ZOMBIE_WIDTH = 75; // x value
 static constexpr int ZOMBIE_DEAD_WIDTH = 122; // dead zombie x value
 static constexpr int FRAME_COUNT_ZOMBIE = 10; // speed of walking animation
+static constexpr int RESPAWN_DELAY_ZOMBIE = 700;
 
 static constexpr int ZOMBIE_RIGHT = ZOMBIE_HEIGHT * 2;
 static constexpr int ZOMBIE_BACK_RIGHT = ZOMBIE_HEIGHT * 3;
@@ -55,7 +56,7 @@ static constexpr int ZOMBIE_DEAD = ZOMBIE_HEIGHT * 8;
 static constexpr int ZOMBIE_NEXT_STEP = ZOMBIE_WIDTH;
 static constexpr int ZOMBIE_STEP_TWO = ZOMBIE_WIDTH * 2;
 static constexpr int ZOMBIE_ATTACK_IMG = ZOMBIE_WIDTH * 4;
-
+static constexpr int ZOMBIE_HIT_IMG = ZOMBIE_WIDTH * 3;
 
 /* 8 possible directions combining left, right, up, down.
  * Fred Yang
@@ -98,6 +99,7 @@ enum class ZombieState {
     ZOMBIE_IDLE,
     ZOMBIE_MOVE,
     ZOMBIE_ATTACK,
+    ZOMBIE_HIT,
     ZOMBIE_DIE
 };
 
@@ -117,6 +119,8 @@ public:
     void collidingProjectile(int damage);
 
     void updateZombieWalk(int directionVal);
+
+    int getLastHealth() const {return lastHealth;}
 
     int getHealth() const {return health;}
     void setHealth(const int h) {health = h;}
@@ -231,6 +235,8 @@ private:
     ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
     int frameCountZombie;
+    int respawnTick;
+    int lastHealth;
     Inventory inventory;//inventory holds a weapon used to attack
 
     void zAttack();
