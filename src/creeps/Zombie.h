@@ -42,7 +42,7 @@ static constexpr int ZOMBIE_HEIGHT = 125; // y value
 static constexpr int ZOMBIE_WIDTH = 75; // x value
 static constexpr int ZOMBIE_DEAD_WIDTH = 122; // dead zombie x value
 static constexpr int FRAME_COUNT_ZOMBIE = 10; // speed of walking animation
-static constexpr int RESPAWN_DELAY_ZOMBIE = 700;
+static constexpr int HIT_DELAY_ZOMBIE = 700;
 
 static constexpr int ZOMBIE_RIGHT = ZOMBIE_HEIGHT * 2;
 static constexpr int ZOMBIE_BACK_RIGHT = ZOMBIE_HEIGHT * 3;
@@ -235,7 +235,7 @@ private:
     ZombieDirection dir;            // moving direction
     int frame;          // frames per tile
     int frameCountZombie;
-    int respawnTick;
+    int delayTick;
     int lastHealth;
     Inventory inventory;//inventory holds a weapon used to attack
 
