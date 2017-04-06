@@ -44,6 +44,7 @@ static constexpr int ZOMBIE_WIDTH = 75; // x value
 static constexpr int ZOMBIE_DEAD_WIDTH = 122; // dead zombie x value
 static constexpr int FRAME_COUNT_ZOMBIE = 10; // speed of walking animation
 static constexpr int CHECK_RATE = 15; // 60 / 4 times 
+static constexpr int ANGLE_UPDATE_RATE = 5;
 
 static constexpr int ZOMBIE_RIGHT = ZOMBIE_HEIGHT * 2;
 static constexpr int ZOMBIE_BACK_RIGHT = ZOMBIE_HEIGHT * 3;
@@ -56,6 +57,20 @@ static constexpr int ZOMBIE_FRONT_RIGHT = ZOMBIE_HEIGHT;
 static constexpr int ZOMBIE_NEXT_STEP = ZOMBIE_HEIGHT;
 static constexpr int ZOMBIE_DEAD = ZOMBIE_HEIGHT * 8;
 
+//Isaac Morneau April 6, 2017
+//
+//these are not a duplicate of marine, these need to be seperate because
+//marine has its angle caluclated in screen coords with the mouse while
+//this one has its angle calculated from atan2 normalized to be from 0-2pi
+static constexpr double ZOMBIE_SPRITE_ANGLE1 = 0;
+static constexpr double ZOMBIE_SPRITE_ANGLE2 = M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE3 = 3 * M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE4 = 5 * M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE5 = 7 * M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE6 = 9 * M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE7 = 11 * M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE8 = 13 * M_PI / 8;
+static constexpr double ZOMBIE_SPRITE_ANGLE9 = 2 * M_PI;
 
 class Zombie : public Movable {
 public:
@@ -72,11 +87,12 @@ public:
     void setHealth(const int h) {health = h;}
 
     void update();
+    void updateImageWalk();
+    void updateImageDirection();
 
 private:
     int health;// health points of zombie
     int frameCount;
-    float moveAngle;
     int ignore;
     Inventory inventory;//inventory holds a weapon used to attack
     void zAttack();

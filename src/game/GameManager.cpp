@@ -147,6 +147,10 @@ void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
         z.second.update();
         z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
+#ifndef SERVER
+        z.second.updateImageDirection();
+        z.second.updateImageWalk();
+#endif
     }
 }
 

@@ -170,8 +170,6 @@ void GameStateMatch::handle() {
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
-        GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-        GameManager::instance()->getPlayer().getMarine()->updateImageWalk();  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -207,7 +205,7 @@ void GameStateMatch::handle() {
                                 Renderer::instance().getRenderer());
                         }
                         break;
-                    case SDLK_1: //Purposeful flow through
+                    case SDLK_1: //Purposeful fall through
                     case SDLK_2:
                     case SDLK_3:
                         hud.setOpacity(OPAQUE);
@@ -250,11 +248,8 @@ void GameStateMatch::handle() {
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 #ifndef SERVER
-    if (!GameManager::instance()->getPlayer().getMarine()) {
-        return;
-    }
     // Move player
-    if (networked) {
+    if (networked && GameManager::instance()->getPlayer().getMarine()) {
         if (GameManager::instance()->getPlayer().hasChangedCourse()
                 || GameManager::instance()->getPlayer().hasChangedAngle()) {
             GameManager::instance()->getPlayer().sendServMoveAction();
@@ -275,7 +270,8 @@ void GameStateMatch::update(const float delta) {
 #ifndef SERVER
     // Move Camera
     if(GameManager::instance()->getPlayer().getMarine()){
-        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
+        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), 
+                GameManager::instance()->getPlayer().getMarine()->getY());
     }
     if (GameManager::instance()->getPlayer().checkMarineState()) {
         GameManager::instance()->getPlayer().respawn(base.getSpawnPoint());
@@ -345,12 +341,12 @@ void GameStateMatch::render() {
             //Reder the ammo clip foreground to the screen
             //(displays how much ammo is left in the players weapon clip)
             hud.renderClip(screenRect, GameManager::instance()->getPlayer());
-           //Render the healthbar's foreground to the screen
-           //(displays how much player health is left)
-           //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
-          //Reder the ammo clip foreground to the screen
-           //(displays how much ammo is left in the players weapon clip)
-           //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
+            //Render the healthbar's foreground to the screen
+            //(displays how much player health is left)
+            //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
+            //Reder the ammo clip foreground to the screen
+            //(displays how much ammo is left in the players weapon clip)
+            //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
 
 
             //Render the equipped weapon slot
