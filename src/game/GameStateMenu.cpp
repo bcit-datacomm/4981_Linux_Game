@@ -142,7 +142,7 @@ bool GameStateMenu::load() {
  */
 void GameStateMenu::loop() {
     // play background music
-    AudioManager::instance().playMenuMusic(MUS_MENUBKG_1, MUS_MENUBKG_2);
+    AudioManager::instance().playMenuMusic(MUS_MENUBKG01, MUS_MENUBKG02);
 
     // State Loop
     while (play) {

@@ -54,9 +54,7 @@ static constexpr int ZOMBIE_LEFT = ZOMBIE_HEIGHT * 6;
 static constexpr int ZOMBIE_FRONT_LEFT = ZOMBIE_HEIGHT * 7;
 static constexpr int ZOMBIE_FRONT = 0;
 static constexpr int ZOMBIE_FRONT_RIGHT = ZOMBIE_HEIGHT;
-static constexpr int ZOMBIE_NEXT_STEP = ZOMBIE_HEIGHT;
 static constexpr int ZOMBIE_DEAD = ZOMBIE_HEIGHT * 8;
-
 //Isaac Morneau April 6, 2017
 //
 //these are not a duplicate of marine, these need to be seperate because

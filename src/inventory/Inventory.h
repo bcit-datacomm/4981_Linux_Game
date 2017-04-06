@@ -10,6 +10,7 @@
 #include "weapons/HandGun.h"
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
+#include "weapons/TurretGun.h"
 #include "weapons/ZombieHand.h"
 
 /*
@@ -29,6 +30,8 @@ public:
     std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
     int getCurrentSlot() const {return current;}; //returns the current slot selected in the inventory
     Weapon *getWeaponFromInventory(int inventorySlot); //returns the weapon in the inventory slot specified
+    int getCurretSlot() const {return current;}; //returns the current sloted selected int the inventory
+    void makeTurretInv();//swaps the default gun to a turretGun
     Inventory();
     ~Inventory() = default;
     void initZombie();

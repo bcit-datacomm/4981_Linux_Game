@@ -9,10 +9,10 @@
 * Author: Jacob McPhail
 * Modified: ---
 * Function Interface: Player()
-* Description: 
+* Description:
 *   ctor for a player.
 */
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), 
+Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
         pickupTick(0), pickupDelay(200), respawnTick(0), marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
@@ -25,7 +25,7 @@ Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
 * Function Interface: setControl(Marine* newControl)
 *       newControl : Marine to control
 *
-* Description: 
+* Description:
 *   Set what marine the player controls.
 */
 void Player::setControl(Marine* newControl) {
@@ -137,15 +137,18 @@ void Player::sendServAttackAction() {
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
 * Modified: ---
-* Function Interface: handleMouseUpdate(const int winWidth, const int winHeight, 
-*                const float camX, const float camY) 
+* Function Interface: handleMouseUpdate(const int winWidth, const int winHeight,
+*                const float camX, const float camY)
 *       winWidth : Window width
 *       winHeight : Window height
 *       camX : Camera x position
 *       camY : Camera y position
 *
-* Description: 
+* Description:
 *   Handle user mouse input.
+*
+* Revisions:
+* Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
 */
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
@@ -176,39 +179,12 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
             }
         }
     }
-/*
+
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(marine->inventory.getCurrent() != nullptr){
+        if(marine->inventory.getCurrent()) {
             marine->fireWeapon();
-            if (networked) {
-                sendServAttackAction();
-            }
         }
-    }
-*/
-}
-
-/**------------------------------------------------------------------------------
-Method: fireWeapon
-
-Date: April 4, 2017
-
-Designer: Deric Mccadden
-
-Programmer: Deric Mccadden, Brody McCrone
-
-Interface: void fireWeapon()
-
-Returns:
-void
-
-Notes:
-Fires player's marine's weapon amd sends the Attack Action to the server.
--------------------------------------------------------------------------------*/
-void Player::fireWeapon() {
-    if (marine->inventory.getCurrent() && marine->fireWeapon() && networked) {
-        sendServAttackAction();
     }
 }
 
@@ -234,7 +210,7 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 * Function Interface: handleKeyboardInput(const Uint8 *state)
 *         state : Keyboard state
 *
-* Description: 
+* Description:
 *   Handle user key input.
 */
 void Player::handleKeyboardInput(const Uint8 *state) {
@@ -363,8 +339,5 @@ void Player::respawn(const Point& newPoint) {
     //gives the player control of the marine
     setControl(&GameManager::instance()->getMarine(playerMarineID).first);
     getMarine()->setPosition(newPoint.first, newPoint.second);
-    getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);  
+    getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 }
-
-
-
