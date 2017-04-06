@@ -346,7 +346,7 @@ bool Player::checkMarineState() {
         setControl(nullptr);
         return false;
     }
-    return !marine && (SDL_GetTicks() >= (respawnTick + RESPAWN_DELAY));
+    return !marine && (static_cast<int>(SDL_GetTicks()) >= (respawnTick + RESPAWN_DELAY));
 }
 
 /**
