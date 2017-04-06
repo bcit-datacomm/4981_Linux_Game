@@ -125,7 +125,8 @@ bool GameStateMenu::load() {
  * Programmer:
  * Jacob Frank
  *
- * Modified by:
+ * Modified By:
+ * Alex Zielinski (April 5, 2017)
  * Jacob McPhail (Feburay 2, 2017) - Init Creation
  *
  * Interface: loop()
@@ -135,8 +136,14 @@ bool GameStateMenu::load() {
  * Notes:
  * Function acts as main loop for the menu game state
  * Listens for events and renders all assets to the screen
+ *
+ * Revisions:
+ * AZ Apr 5: implemented playing of menu background music
  */
 void GameStateMenu::loop() {
+    // play background music
+    AudioManager::instance().playMenuMusic(MUS_MENUBKG_1, MUS_MENUBKG_2);
+
     // State Loop
     while (play) {
         if(networked) {
@@ -191,6 +198,7 @@ void GameStateMenu::sync() {
  * Modified by:
  * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (March 28, 2017)
+ * Alex Zielinski (April 5, 2017)
  *
  * Interface: handle()
  *
@@ -206,6 +214,7 @@ void GameStateMenu::sync() {
  * JF Mar 28: Re-added logic Highlighting and Clicking a menu option that was removed during the great refactoring
  * Isaac Morneau, March 29, 2017 Fixed highlighting, clicking, and typing to work with the improved renderer that now
  *      makes sense because of the god send that was the great refactoring.
+ * AZ Apr 5: implemented fading menu background music out
  */
 void GameStateMenu::handle() {
     int x, y;
@@ -215,7 +224,6 @@ void GameStateMenu::handle() {
     //Handle events on queue
     SDL_WaitEvent(&event);
     game.getWindow().handleEvent(event);
-
     switch (event.type) {
 
         case SDL_MOUSEBUTTONDOWN:
@@ -226,6 +234,7 @@ void GameStateMenu::handle() {
                 if (networked) {
                     NetworkManager::instance().run(hostInput, userInput);
                 } else {
+                    AudioManager::instance().fadeMusicOut(MUSICFADE); // fade background music
                     game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
                     play = false;
                 }

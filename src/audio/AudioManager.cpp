@@ -20,18 +20,21 @@
 *
 * Designer:
 *
-* Author: DericM
+* Author(s): DericM, Alex Zielinski
 *
 * Notes:
 * This class loads the audio files and plays them.
 ------------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <random>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <map>
+#include <stdlib.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -65,6 +68,7 @@ AudioManager::AudioManager(){
 #endif
 }
 
+
 /**
 *   Function: ~AudioManager()
 *
@@ -95,11 +99,12 @@ AudioManager::~AudioManager(){
 }
 
 
-
 /**
 *   Function: playMusic(const char *fileName)
 *               const char *fileName: file path of audio file to play
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -124,6 +129,8 @@ void AudioManager::playMusic(const char *fileName){
 *               const char *fileName: file path of audio file to play
 *   Date:
 *
+*   Returns: void
+*
 *   Programmer: DericM
 *
 *   Description:
@@ -142,11 +149,12 @@ void AudioManager::playEffect(const char *fileName){
 }
 
 
-
 /**
 *   Function:   loadFiles()
 *
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM, Alex Zielinski
 *
@@ -192,11 +200,12 @@ void AudioManager::loadFiles(){
 }
 
 
-
 /**
 *   Function: loadMusic(const char *fileName)
 *               const char *fileName: file path of audio file to load
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -216,10 +225,13 @@ void AudioManager::loadMusic(const char *fileName){
 #endif
 }
 
+
 /**
 *   Function: loadEffect(const char *fileName)
 *               const char *fileName: file path of audio file to load
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -236,5 +248,60 @@ void AudioManager::loadEffect(const char *fileName){
     }
 
     chun[fileName] = sound;
+#endif
+}
+
+
+/**
+*   Function: fadeMusicOut(int ms)
+*               int ms: amount of milliseconds to fade out music
+*
+*   Returns: void
+*
+*   Date: April 5, 2017
+*
+*   Programmer: Alex Zielinski
+*
+*   Description:
+*       Wrapper fucntion to fade music out. The amount of time is takes to fade
+*       the music out is specified by the paramater int ms (in milliseconds)
+*/
+void AudioManager::fadeMusicOut(int ms){
+#ifndef SERVER
+    Mix_FadeOutMusic(ms);
+#endif
+}
+
+
+/**
+*   Function: playMenuMusic(const char *fileName1, const char *fileName2)
+*               const char *fileName1: first menu music audio file
+*               const char *fileName2: second menu music audio file
+*
+*   Returns: void
+*
+*   Date: April 5, 2017
+*
+*   Programmer: Alex Zielinski
+*
+*   Description:
+*       Randomly selects one of the 2 menu background music audio files
+*       to play when the menu loads
+*/
+void AudioManager::playMenuMusic(const char *fileName1, const char *fileName2){   // generates either 1 or 2
+#ifndef SERVER
+    srand (time(nullptr)); // random seed generator
+    int random = rand() % 2; // randomly select 1 or 2
+
+    // check what number was selected
+    switch(random)
+    {
+        case 0:
+            playMusic(fileName1);
+            break;
+        case 1:
+            playMusic(fileName2);
+            break;
+    }
 #endif
 }
