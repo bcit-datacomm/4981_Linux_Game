@@ -18,6 +18,7 @@
 ------------------------------------------------------------------------------*/
 #include <cmath>
 #include "Movable.h"
+#include <cmath>
 
 // Move Movable by x and y amount
 /**
@@ -56,7 +57,6 @@ void Movable::move(float moveX, float moveY, CollisionHandler& ch){
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
         setY(getY() - moveY);
     }
-
 }
 
 // Set delta x coordinate
@@ -90,8 +90,8 @@ int Movable::getVelocity() const{
 }
 
 //sets the angle of the player's Movable sprite
-void Movable::setAngle(double a){
-    angle = fmod(a, 360);
+void Movable::setAngle(const double a) {
+    angle = fmod(a, THREE_HUNDRED_SIXTY_DEGREES);
 }
 
 //returns the angle of the player's Movable sprite
