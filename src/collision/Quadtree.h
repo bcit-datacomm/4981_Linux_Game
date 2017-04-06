@@ -1,3 +1,21 @@
+/*------------------------------------------------------------------------------
+* Header: Quadtree.h
+*
+* Functions:
+*
+*
+* Date:
+*
+* Revisions:
+* Reviewed By : Justen DePourcq- Style guide
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+*
+------------------------------------------------------------------------------*/
 #ifndef QUADTREE_H
 #define QUADTREE_H
 #include <SDL2/SDL.h>

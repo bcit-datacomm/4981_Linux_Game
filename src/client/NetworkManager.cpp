@@ -43,7 +43,7 @@ NetworkManager& NetworkManager::instance() {
 }
 
 /**------------------------------------------------------------------------------
-Method: instance
+Method: ~NetworkManager
 
 Date: February. 1, 2017
 
@@ -53,7 +53,7 @@ Programmer: Eva Yu
 
 Interface: NetworkManager::~NetworkManager()
 
-Notes:
+Notes:W
 Closes all NetworkManager sockets.
   -------------------------------------------------------------------------------*/
 NetworkManager::~NetworkManager() {
@@ -70,7 +70,7 @@ Designer: Brody McCrone
 
 Programmer: Brody McCrone
 
-Interface: void run(std::string ip, std::string username)
+Interface: void run(const std::string ip, const std::string username)
 ip: IP of the server.
 username: Client's username.
 
@@ -78,8 +78,8 @@ Returns:
 void
 
 Notes:
-Creates TCP, and UDP sockets, bind sockets, connects TCP socket, and starts threads
-for TCP Client and UDP Client.
+Sets NetworkManager state to INITIALIZING and start a thread for the NetworkManager
+to run on.
 -------------------------------------------------------------------------------*/
 void NetworkManager::run(const std::string ip, const std::string username) {
     state = NetworkState::INITIALIZING;
@@ -92,6 +92,7 @@ void NetworkManager::run(const std::string ip, const std::string username) {
 * Function: runUDPClient
 *
 * Date: February. 1, 2017
+* Modified: April 5, 2017 (Brody McCrone)
 *
 * Designer: Eva YU
 *
@@ -136,18 +137,22 @@ void NetworkManager::runUDPClient(const in_addr_t serverIP) {
 }
 
 /**------------------------------------------------------------------------------
-* Method: runTCPClient
+* Method: initTCPClient
 *
 * Date: February. 1, 2017
+* Modified: April 5, 2017 (Brody McCrone)
 *
-* Designer: BM
+* Designer: Brody McCrone
 *
 * Programmer: Eva Yu
 *
-* Interface: void runTCPClient(const std::string username)
+* Interface: void initTCPClient(const in_addr_t serverIP, const std::string username)
 *
 * Notes:
-* directs the udp thread loop to game sync de packetizer
+* Sets up TCP Sockets and makes TCP Connection with server. If Connection cannot
+* be made it sets the state of the NetMan to FAILED_TO_CONNECT and stops running.
+* Once connection is made the UDP client is started in its own thread and the TCP
+* client continues in runTCPClient.
 *-------------------------------------------------------------------------------*/
 void NetworkManager::initTCPClient(const in_addr_t serverIP, const std::string username) {
     sockTCP = createSocket(false, false);
@@ -215,7 +220,7 @@ void NetworkManager::runTCPClient(const std::string username) {
 * Revisions:
 * Version 1.0 - [EY] - 2016/FEB/01 - Created Function
 *
-* DEsigner: Brody Mccrone & Eva Yu
+* Designer: Brody Mccrone & Eva Yu
 *
 * Programmer: Eva Yu
 *
@@ -262,8 +267,9 @@ void NetworkManager::waitRecvId() {
  *
  * Revisions:
  * Version 1.0 - [EY] - 2016/FEB/01 - Created Function
+ * Version 2.0 - [Brody McCrone] - 2017/APR/05 - swapped loop for assert.
  *
- * Designer: Brody Mccrone
+ * Designer: Eva Yu
  *
  * Programmer: Eva Yu
  *
@@ -308,7 +314,7 @@ len: read was successful.
 
 Notes:
 This read method reads the amount specified by the param len from the TCP
-socket stored as a private member of the Client object.
+socket stored as a private member of the NetworkManager.
 -------------------------------------------------------------------------------*/
 int NetworkManager::readTCPSocket(char *buf, const int len) const {
     int res = 0;
@@ -320,9 +326,11 @@ int NetworkManager::readTCPSocket(char *buf, const int len) const {
 }
 
 /**------------------------------------------------------------------------------
- Method: sendTo
+ Method: writeUDPSocket
 
 Date: Feb. 7, 2017
+modified:
+April 1 (Brody McCrone) - Swapped loop for assert and added running assert
 
 Revisions:
 Version, Date and Description
@@ -340,7 +348,7 @@ Returns:
 void
 
 Notes:
-Sends buf to servAddr. Reliable even when len exceeds MTU.
+Sends buf to servAddr.
 -------------------------------------------------------------------------------*/
 void NetworkManager::writeUDPSocket(const char *buf, const int len) const {
     /* NetworkManager::run should be called before this is writeUDPSocket is called. */
@@ -382,8 +390,7 @@ Returns:
 void
 
 Notes:
-Receives data from servAddr and stores it in buf. Reliable even when data
-being received exceeds MTU.
+Receives data from servAddr and stores it in buf.
 -------------------------------------------------------------------------------*/
 int NetworkManager::readUDPSocket(char *buf, const int len) const {
     sockaddr_in recvAddr;
@@ -415,10 +422,11 @@ int NetworkManager::readUDPSocket(char *buf, const int len) const {
 * const sockar_in& addr -- address to associate with socket
 *
 * Returns:
-* exit on failure ( -1 )
+* true: Successfully made connection.
+* false: Failed to make connection.
 *
 * Notes:
-* This loops the writing to the TCP Socket
+* Connects a TCP Socket, sock, to an address, addr.
   -------------------------------------------------------------------------------*/
 bool NetworkManager::connectSocket(const int sock, const sockaddr_in& addr) {
     if ((connect(sock, (struct sockaddr *)&addr, sizeof(sockaddr_in))) < 0) {

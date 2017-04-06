@@ -40,7 +40,7 @@ public:
 
     Turret(const int32_t id, const SDL_Rect& dest,const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated = false,
-        const int health = 200, const int ammo = 100, const bool placed = false, const float range = 400.0f,
+        const int health = 200, const bool placed = false, const float range = 400.0f,
         const int32_t dropzone = -1);
     virtual ~Turret();
 
@@ -72,7 +72,6 @@ public:
 private:
     bool activated; // turret activated state
     int health; // turret health pool
-    int ammo; // turret ammo pool
     bool placed;
     float range; // turret's range.
     int32_t dropzone;

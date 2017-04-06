@@ -57,7 +57,7 @@ public:
     int32_t checkForPickUp();
     int getHealth() {return health;};
     void updateImageDirection();
-    void updateImageWalk(const Uint8 *state);
+    void updateImageWalk();
     void activateStore(const Entity *ep);
     Inventory inventory;
     void setHealth(const int hlth) {health = hlth;};
@@ -67,6 +67,7 @@ private:
     std::string username;
     int health = 100;
     int state; //used to select sprite to display
+    static int frameCount;
 };
 
 #endif

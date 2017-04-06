@@ -21,10 +21,31 @@
 #include "Game.h"
 #include "../../include/Colors.h"
 
+
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: GameStateMatch(Game& g,  const int gameWidth, const int gameHeight)
+*       g : Pointer to the game object
+*       gameWidth : Width of camera view
+*       gameHeight : Height of camera view
+*
+* Description:
+*       ctor for the match game state.
+*/
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
         base(), camera(gameWidth,gameHeight), hud(),
         screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: load()
+* Description:
+*       Loads state resources.
+*/
 bool GameStateMatch::load() {
 #ifndef SERVER
     if (networked) {
@@ -35,6 +56,7 @@ bool GameStateMatch::load() {
         base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
+        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
 
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
@@ -58,6 +80,14 @@ bool GameStateMatch::load() {
     return success;
 }
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: loop()
+* Description:
+*       State loop, processes a frame per each loop.
+*/
 void GameStateMatch::loop() {
     int startTick = 0;
     int frameTicks = 0;
@@ -91,24 +121,32 @@ void GameStateMatch::loop() {
     }
 }
 
-void GameStateMatch::updateServ() {
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: sync()
+* Description:
+*       Sync game to server.
+*/
+void GameStateMatch::sync() {
 
 }
 
-void GameStateMatch::sync() {
+void GameStateMatch::updateServ() {
 
 }
 
 /**
  * Function: handle
  *
- * Date:
+ * Date: Jan. 20, 2017
  *
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  *
  * Modified by:
@@ -120,7 +158,7 @@ void GameStateMatch::sync() {
  * Returns: void
  *
  * Notes:
- *
+ *      Handles user input.
  * Revisions:
  * JF Mar 25: Added a ScreenRect size adjustment whenever screen size changes (ensures proper hud placement)
  * JF Apr 1: Added set Weapon Inventory slot opacity function to mousewheel scroll and number key events
@@ -133,7 +171,7 @@ void GameStateMatch::handle() {
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
         GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-        GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
+        GameManager::instance()->getPlayer().getMarine()->updateImageWalk();  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -144,14 +182,18 @@ void GameStateMatch::handle() {
                 screenRect = {0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()};
                 break;
             case SDL_MOUSEWHEEL:
-                GameManager::instance()->getPlayer().handleMouseWheelInput(&event);
+                if(GameManager::instance()->getPlayer().getMarine()) {
+                  GameManager::instance()->getPlayer().handleMouseWheelInput(&event);
+                }
                 hud.setOpacity(OPAQUE);
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                if (event.button.button == SDL_BUTTON_RIGHT) {
-                    GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                } else if (event.button.button == SDL_BUTTON_LEFT) {
-                    GameManager::instance()->getPlayer().fireWeapon();
+                if(GameManager::instance()->getPlayer().getMarine()) {
+                     if (event.button.button == SDL_BUTTON_RIGHT) {
+                        GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
+                    } else if (event.button.button == SDL_BUTTON_LEFT) {
+                        GameManager::instance()->getPlayer().fireWeapon();
+                    }
                 }
                 break;
             case SDL_KEYDOWN:
@@ -160,8 +202,10 @@ void GameStateMatch::handle() {
                         play = false;
                         break;
                     case SDLK_b:
-                        GameManager::instance()->getPlayer().handleTempBarricade(
+                        if(GameManager::instance()->getPlayer().getMarine()) {
+                                GameManager::instance()->getPlayer().handleTempBarricade(
                                 Renderer::instance().getRenderer());
+                        }
                         break;
                     case SDLK_p:
                         GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
@@ -173,8 +217,7 @@ void GameStateMatch::handle() {
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
                         if (GameManager::instance()->getPlayer().getMarine()) {
-                            GameManager::instance()->deleteMarine(GameManager::instance()->getPlayer().getMarine()->getId());
-                            GameManager::instance()->getPlayer().setControl(nullptr);
+                            GameManager::instance()->getPlayer().getMarine()->setHealth(0);
                         }
                         break;
                     default:
@@ -196,6 +239,16 @@ void GameStateMatch::handle() {
     }
 }
 
+/**
+* Date: Jan. 20, 2017
+* Author: Jacob McPhail
+* Modified: ---
+* Function Interface: update(const float delta)
+*       delta : Delta time of the fps rate.
+*
+* Description:
+*
+*/
 void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 #ifndef SERVER
@@ -210,13 +263,9 @@ void GameStateMatch::update(const float delta) {
                 GameManager::instance()->getPlayer().getMarine()->getDY() * delta,
                 GameManager::instance()->getCollisionHandler());
     }
-    // Move Camera
-    camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
-            GameManager::instance()->getPlayer().getMarine()->getY());
+
 #endif
-    if (!networked) {
-        GameManager::instance()->updateMarines(delta);
-    }
+    GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
     GameManager::instance()->getPlayer().checkMarineState();
@@ -227,19 +276,22 @@ void GameStateMatch::update(const float delta) {
     if(GameManager::instance()->getPlayer().getMarine()){
         camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
     }
+    if (GameManager::instance()->getPlayer().checkMarineState()) {
+        GameManager::instance()->getPlayer().respawn(base.getSpawnPoint());
+    }
 #endif
 }
 
 /**
  * Function: render
  *
- * Date:
+ * Date: Jan. 20, 2017
  *
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  *
  * Modified by:
@@ -250,7 +302,7 @@ void GameStateMatch::update(const float delta) {
  * Returns: void
  *
  * Notes:
- *
+ *      Renders game objects to window.
  * Revisions:
  * JF Mar 25 - April 1: Added rendering functions to render the HUD overtop of the game
  */

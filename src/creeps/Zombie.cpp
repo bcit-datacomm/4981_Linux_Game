@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
-* Source: Zombie.cpp    
+* Source: Zombie.cpp
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #include <math.h>
 #include <random>
@@ -31,7 +31,7 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
         const SDL_Rect& damageSize, const int health, const ZombieState state, const int step,
         const ZombieDirection dir, const int frame) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
-        health(health), state(state), step(step), dir(dir), frame(frame) {
+        health(health), state(state), step(step), dir(dir), frame(frame), frameCountZombie(0) {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -94,10 +94,15 @@ bool Zombie::checkTarget() const {
  * Get the direction of the zombie and take a step in the appropriate direction
  * Rob, Fred
  * March 13
+ * Modified:
+ *      Trista Huang Apr 4, 2017
+ *      - Added zombie sprite rendering
 */
 void Zombie::generateMove() {
     const ZombieDirection direction = getMoveDir();   //Direction zombie is moving
     //cout << "move dir: " << d << " state: " << state << " Frame: " << frame << endl;
+
+    int directionVal;
 
     // Path is empty, shouldn't move
     if (direction == ZombieDirection::DIR_INVALID || checkTarget()) {
@@ -117,45 +122,56 @@ void Zombie::generateMove() {
             setDX(ZOMBIE_VELOCITY);
             setDY(0);
             setAngle(static_cast<double>(ZombieAngles::EAST));
+            directionVal = ZOMBIE_RIGHT;
             break;
         case ZombieDirection::DIR_RD:
             setDX(ZOMBIE_VELOCITY);
             setDY(ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::SOUTHEAST));
+            directionVal = ZOMBIE_FRONT_RIGHT;
             break;
         case ZombieDirection::DIR_D:
             setDX(0);
             setDY(ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::SOUTH));
+            directionVal = ZOMBIE_FRONT;
             break;
         case ZombieDirection::DIR_LD:
             setDX(-ZOMBIE_VELOCITY);
             setDY(ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::SOUTHWEST));
+            directionVal = ZOMBIE_FRONT_LEFT;
             break;
         case ZombieDirection::DIR_L:
             setDX(-ZOMBIE_VELOCITY);
             setDY(0);
             setAngle(static_cast<double>(ZombieAngles::WEST));
+            directionVal = ZOMBIE_LEFT;
             break;
         case ZombieDirection::DIR_LU:
             setDX(-ZOMBIE_VELOCITY);
             setDY(-ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::NORTHWEST));
+            directionVal = ZOMBIE_BACK_LEFT;
             break;
         case ZombieDirection::DIR_U:
             setDX(0);
             setDY(-ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::NORTH));
+            directionVal = ZOMBIE_BACK;
             break;
         case ZombieDirection::DIR_RU:
             setDX(ZOMBIE_VELOCITY);
             setDY(-ZOMBIE_VELOCITY);
             setAngle(static_cast<double>(ZombieAngles::NORTHEAST));
+            directionVal = ZOMBIE_BACK_RIGHT;
             break;
         case ZombieDirection::DIR_INVALID:  // Shouldn't ever happens, gets rid of warning
             break;
     }
+
+    updateZombieWalk(directionVal);
+
     zAttack();
     // Frames are used to make sure the zombie doesn't move through the path too quickly/slowly
     if (frame > 0) {
@@ -167,6 +183,40 @@ void Zombie::generateMove() {
 
     setCurDir(direction);
     setState(ZombieState::ZOMBIE_MOVE);
+}
+
+/**
+ * Date: Apr 4, 2017
+ * Author: Trista Huang
+ * Function Interface: void Zombie::updateZombieWalk(const int directionVal)
+ * Description:
+ * Changes the zombie sprite in order to simulate walking animation.
+ * It's called by Zombie::generateMove every time the zombie moves.
+ */
+void Zombie::updateZombieWalk(const int directionVal) {
+    ++frameCountZombie;
+
+    // Used to reset zombies back to non-moving sprite
+    const int pathLength = getPath().length();
+    const int stepsLeft = getStep();
+
+    setSrcRect(getSrcRect().x, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+
+    if (getSrcRect().x == directionVal) {
+        setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+    } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
+        //cycle throught the walking images
+        if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
+            setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        } else {
+            setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        }
+    }
+
+    // Resets zombie sprite to original non-moving sprite
+    if(pathLength == stepsLeft) {
+        setSrcRect(0, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+    }
 }
 
 /**
