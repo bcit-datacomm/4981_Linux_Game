@@ -206,10 +206,12 @@ void Zombie::updateZombieWalk(const int directionVal) {
         setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
     } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
         //cycle throught the walking images
-        if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-            setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-        } else {
-            setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        if (getSrcRect().x <= ZOMBIE_NEXT_STEP) {
+            setSrcRect(ZOMBIE_ATTACK_IMG, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        } else if (getSrcRect().x == ZOMBIE_ATTACK_IMG) {
+            setSrcRect(ZOMBIE_STEP_TWO, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        } else if (getSrcRect().x == ZOMBIE_STEP_TWO){
+            setSrcRect(ZOMBIE_NEXT_STEP, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
         }
     }
 

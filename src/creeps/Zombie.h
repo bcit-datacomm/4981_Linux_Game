@@ -51,8 +51,10 @@ static constexpr int ZOMBIE_LEFT = ZOMBIE_HEIGHT * 6;
 static constexpr int ZOMBIE_FRONT_LEFT = ZOMBIE_HEIGHT * 7;
 static constexpr int ZOMBIE_FRONT = 0;
 static constexpr int ZOMBIE_FRONT_RIGHT = ZOMBIE_HEIGHT;
-static constexpr int ZOMBIE_NEXT_STEP = ZOMBIE_HEIGHT;
 static constexpr int ZOMBIE_DEAD = ZOMBIE_HEIGHT * 8;
+static constexpr int ZOMBIE_NEXT_STEP = ZOMBIE_WIDTH;
+static constexpr int ZOMBIE_STEP_TWO = ZOMBIE_WIDTH * 2;
+static constexpr int ZOMBIE_ATTACK_IMG = ZOMBIE_WIDTH * 4;
 
 
 /* 8 possible directions combining left, right, up, down.
