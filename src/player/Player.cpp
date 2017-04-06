@@ -45,14 +45,14 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(marine->inventory.getCurrent() != nullptr){
+        if (marine->inventory.getCurrent() != nullptr) {
             marine->fireWeapon();
         }
     }
 
 }
 
-void Player::handleMouseWheelInput(const SDL_Event *e){
+void Player::handleMouseWheelInput(const SDL_Event *e) {
     marine->inventory.scrollCurrent(e->wheel.y);
 }
 
@@ -88,26 +88,26 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
     }
 
     //Inventory inputs
-    if (state[SDL_SCANCODE_1]){
+    if (state[SDL_SCANCODE_1]) {
         marine->inventory.switchCurrent(0);
-    } else if (state[SDL_SCANCODE_2]){
+    } else if (state[SDL_SCANCODE_2]) {
         marine->inventory.switchCurrent(1);
-    } else if (state[SDL_SCANCODE_3]){
+    } else if (state[SDL_SCANCODE_3]) {
         marine->inventory.switchCurrent(2);
     }
 
     //Weapon input
-    if(state[SDL_SCANCODE_R]){
+    if (state[SDL_SCANCODE_R]) {
         Weapon *w = marine->inventory.getCurrent();
-        if(w){
+        if (w) {
             w->reloadClip();
         }
     }
     //pickup button
-    if(state[SDL_SCANCODE_E]){
+    if (state[SDL_SCANCODE_E]) {
         const int currentTime = SDL_GetTicks();
 
-        if(currentTime > (pickupTick + pickupDelay)) {
+        if (currentTime > (pickupTick + pickupDelay)) {
             pickupTick = currentTime;
 
             const int checkTurret = marine->checkForPickUp();
@@ -120,22 +120,22 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
         }
     }
     //Drop button
-    if(state[SDL_SCANCODE_F]){
+    if (state[SDL_SCANCODE_F]) {
         marine->inventory.dropWeapon(marine->getX(), marine->getY());
     }
     //use Inventory
-    if(state[SDL_SCANCODE_I]) {
+    if (state[SDL_SCANCODE_I]) {
         marine->inventory.useItem();
     }
 
     //added by Maitiu Debug print 5/3 / 2017
-    if(state[SDL_SCANCODE_SPACE]){
+    if (state[SDL_SCANCODE_SPACE]) {
         //render guide arrows
         spawnArrowGuides(winWidth, winHeight);
     }
 
     //added by Maitiu Debug print 4/3 / 2017
-    if(state[SDL_SCANCODE_PERIOD]){
+    if (state[SDL_SCANCODE_PERIOD]) {
         dumpEntityPositions(this);
     }
     marine->setDY(y);
@@ -143,7 +143,7 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
 }
 
 void Player::handleTempBarricade(SDL_Renderer *renderer) {
-    if(tempBarricadeID < 0) {
+    if (tempBarricadeID < 0) {
         if (!marine) {
             return;
         }
@@ -158,7 +158,7 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
 }
 
 void Player::handleTempTurret(SDL_Renderer *renderer) {
-   if(tempTurretID < 0) {
+   if (tempTurretID < 0) {
        const double angle = marine->getAngle();
        tempTurretID = GameManager::instance()->createTurret(
            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
@@ -170,13 +170,13 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
 }
 
 void Player::checkMarineState() {
-    if (marine && marine->getHealth() <= 0){
+    if (marine && marine->getHealth() <= 0) {
         GameManager::instance()->deleteMarine(marine->getId());
         setControl(nullptr);
     }
 }
 
-void Player::spawnArrowGuides(const int winWidth, const int winHeight){
+void Player::spawnArrowGuides(const int winWidth, const int winHeight) {
     VisualEffect &ve = VisualEffect::instance();
     GameManager *gm = GameManager::instance();
     auto &om = gm->getObjectManager();
@@ -191,66 +191,90 @@ void Player::spawnArrowGuides(const int winWidth, const int winHeight){
 
 }
 
-double Player::getAngleBetweenPoints(const std::pair<float, float> p1, const std::pair<float, float> p2){
+double Player::getAngleBetweenPoints(const std::pair<float, float> p1, const std::pair<float, float> p2) {
     return atan2(p1.second - p2.second, p1.first - p2.first);
 }
 
-std::pair<float, float> Player::getGuideCoord(const double radian, const int winWidth, const int winHeight){
+std::pair<float, float> Player::getGuideCoord(const double radian, const int winWidth, const int winHeight) {
     double angle = 90 - (radian * 180/3.14159265);
-    printf("Angle: %f\n", angle + 90);
-    if(angle == 90 || angle == -90){
-        return{marine->getX(), marine->getY() - (winHeight / 2)};
-    }
-    if(angle + 90 >= 30 && angle + 90 <= 180){
+    //Top of the screen so the base is north
+    if (angle + 90 >= 40 && angle + 90 <= 145) {
         //going up
         double h = (tan(angle * 3.14159265/180) * ((double)winHeight / 2));
         double x;
-        printf("H:%f\n", h);
-        printf("Marine: %f\n", marine->getX());
-        printf("Bounds: %f\n", marine->getX() + winWidth / 2);
-        printf("tests: %f\n", marine->getX() + h);
-        if((h > 0 && marine->getX() + winWidth / 2 > marine->getX() + h) || (h < 0 && marine->getX() + winWidth / 2 > marine->getX() - h)){
-            x = marine->getX() - h;
+        if (winWidth / 2 > abs(h)) {
+            x = marine->getX() - h + 50;
         } else {
-
-            if(angle + 90 > 90){
-                printf("Hit\n");
-                x = marine->getX() - winWidth / 2;//marine->getY() + 620;
+            //if ANgle Brings IMG out of screen set it to the screens width/2
+            if (angle + 90 > 90) {
+                x = marine->getX() - winWidth / 2;
             } else {
-                printf("Miss\n");
-                x = marine->getX() + winWidth / 2;//marine->getX() - 620;
+                x = marine->getX() + winWidth / 2;
             }
-
         }
 
         printf("X:%f\n", x);
         return{x, marine->getY() - (winHeight / 2)};
-        //printf("1: %f\n",cos(angle * 3.14/180) * (winHeight / 2));
-    } else if((angle + 90 <= 360 && angle + 90 >= 180)){
-        double h = (tan(angle * 3.14159265/180) * ((double)winHeight / 2));
+
+    } else if ((angle + 90 <= 323 && angle + 90 >= 216)) {//BASE IS DOWN
+        double t = tan(angle * 3.14159265/180);
+        double h = t * 480;
         double x;
-        printf("H:%f\n", h);
-        printf("Marine: %f\n", marine->getX());
-        printf("Bounds: %f\n", marine->getX() + winWidth / 2);
-        printf("tests: %f\n", marine->getX() + h);
-        if((h > 0 && marine->getX() + winWidth / 2 > marine->getX() + h) || (h < 0 && marine->getX() + winWidth / 2 > marine->getX() - h)){
-            x = marine->getX() + h;
+        printf("DOWN\n");
+        if (winWidth / 2 > abs(h)) {
+            x = marine->getX() + h - 50;
         } else {
 
-            if(angle + 90 > 270){
-                printf("Hit\n");
-                x = marine->getX() + winWidth / 2;//marine->getY() + 620;
+            if (angle + 90 > 270) {
+                x = marine->getX() + winWidth / 2;
             } else {
-                printf("Miss\n");
-                x = marine->getX() - winWidth / 2;//marine->getX() - 620;
+                x = marine->getX() - winWidth / 2;
             }
 
         }
 
         printf("X:%f\n", x);
-        return{x, marine->getY() + (winHeight / 2) - 50};
-    }
+        return{x, marine->getY() + (winHeight / 2)};
 
-    //printf("2: %d\n",cos(angle) * 50);
-    //return {1, 2};
+    } else if (angle + 90 <= 40 || angle + 90 >= 323) {//BASE IS ON THE RIGHT
+        double t = tan((angle + 90) * 3.14159265/180);
+        double h = t * ((double)winWidth / 2);
+        double y;
+        if (winHeight / 2 > abs(h) - 100) {
+            y = marine->getY() - h;
+        } else {
+
+            if (angle + 90 < 40) {
+                y = marine->getY() - winHeight / 2;
+            } else {
+                y = marine->getY() + winHeight / 2;
+            }
+
+        }
+
+        printf("Y:%f\n", y);
+        return{marine->getX() + (winWidth / 2), y};
+
+    } else if (angle + 90 <= 216 || angle + 90 >= 145) {//BASE IS ON THE LEFT
+        double t = tan((angle + 90) * 3.14159265/180);
+        double h = t * ((double)winWidth / 2);
+        double y;
+        if (winHeight / 2 > abs(h) - 100) {
+            printf("Hit\n");
+            y = marine->getY() + h;
+        } else {
+
+            if (angle + 90 < 40) {
+                y = marine->getY() + winHeight / 2;
+            } else {
+                printf("Miss\n");
+                y = marine->getY() - winHeight / 2;
+            }
+
+        }
+
+        printf("Y:%f\n", y);
+        return{marine->getX() - (winWidth / 2) + 100, y};
+    }
+    return {1, 2};
 }
