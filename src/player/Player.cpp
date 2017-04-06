@@ -213,14 +213,12 @@ std::pair<float, float> Player::getGuideCoord(const double radian, const int win
             }
         }
 
-        printf("X:%f\n", x);
-        return{x, marine->getY() - (winHeight / 2)};
+        return{x, marine->getY() - (winHeight / 2) + 20};
 
     } else if ((angle + 90 <= 323 && angle + 90 >= 216)) {//BASE IS DOWN
         double t = tan(angle * 3.14159265/180);
         double h = t * 480;
         double x;
-        printf("DOWN\n");
         if (winWidth / 2 > abs(h)) {
             x = marine->getX() + h - 50;
         } else {
@@ -233,7 +231,6 @@ std::pair<float, float> Player::getGuideCoord(const double radian, const int win
 
         }
 
-        printf("X:%f\n", x);
         return{x, marine->getY() + (winHeight / 2)};
 
     } else if (angle + 90 <= 40 || angle + 90 >= 323) {//BASE IS ON THE RIGHT
@@ -252,28 +249,25 @@ std::pair<float, float> Player::getGuideCoord(const double radian, const int win
 
         }
 
-        printf("Y:%f\n", y);
-        return{marine->getX() + (winWidth / 2), y};
+        return{marine->getX() + (winWidth / 2) - 100, y};
 
     } else if (angle + 90 <= 216 || angle + 90 >= 145) {//BASE IS ON THE LEFT
         double t = tan((angle + 90) * 3.14159265/180);
         double h = t * ((double)winWidth / 2);
         double y;
         if (winHeight / 2 > abs(h) - 100) {
-            printf("Hit\n");
+
             y = marine->getY() + h;
         } else {
 
             if (angle + 90 < 40) {
                 y = marine->getY() + winHeight / 2;
             } else {
-                printf("Miss\n");
                 y = marine->getY() - winHeight / 2;
             }
 
         }
 
-        printf("Y:%f\n", y);
         return{marine->getX() - (winWidth / 2) + 100, y};
     }
     return {1, 2};
