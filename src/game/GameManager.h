@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <iostream>
 #include <cassert>
 
@@ -83,6 +84,7 @@ public:
     bool addTurret(const int32_t id, const Turret& newTurret);
     int32_t createTurret(const float x, const float y) ;
     Turret& getTurret(const int32_t id);
+    std::vector<int32_t> markForDeletionTurret();
 
     // Method for getting collisionHandler
     CollisionHandler& getCollisionHandler();

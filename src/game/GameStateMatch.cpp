@@ -187,9 +187,7 @@ void GameStateMatch::handle() {
                 if(GameManager::instance()->getPlayer().getMarine()) {
                      if (event.button.button == SDL_BUTTON_RIGHT) {
                         GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                    } else if (event.button.button == SDL_BUTTON_LEFT) {
-                        GameManager::instance()->getPlayer().fireWeapon();
-                    }
+                    } 
                 }
                 break;
             case SDL_KEYDOWN:
@@ -203,6 +201,8 @@ void GameStateMatch::handle() {
                                 Renderer::instance().getRenderer());
                         }
                         break;
+                    case SDLK_p:
+                        GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
                     case SDLK_1: //Purposeful flow through
                     case SDLK_2:
                     case SDLK_3:

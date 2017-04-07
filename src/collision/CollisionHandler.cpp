@@ -153,6 +153,7 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     AUTHOR: Deric Mccadden 3/8/2017
         Edited: 3/16/2017 fixed to use new quad trees (cant shoot walls yet)
         Edited: 3/17/2017 walls work now.
+        Edited: 4/04/2017 Mark Chen - Removed turrets from the check.
 
     PARAMS:
         TargetList &targetList,
@@ -183,11 +184,9 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndY(endY);
 
     auto& zombies = quadtreeZombie.objects;
-    auto& turrets = quadtreeTurret.objects;
     auto& walls   = quadtreeWall.objects;
 
     checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombies, TYPE_ZOMBIE);
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, turrets, TYPE_TURRET);
     checkForTargetsInVector(gunX, gunY, endX, endY, targetList, walls,   TYPE_WALL);
 
     logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());

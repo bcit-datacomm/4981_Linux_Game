@@ -180,12 +180,61 @@ bool GameManager::hasMarine(const int32_t id) const {
     return marineManager.count(id);
 }
 
-// Update turret actions.
-// Jamie, 2017-03-01.
+
+/**
+ * Date: Mar. 01, 2017
+ * Modified: Mar. 30, 2017 - Mark Chen
+ *           Apr. 05, 2017 - Mark Chen
+ * Designer: Jamie Lee
+ *
+ * Programmer: Jamie Lee, Mark Chen
+ *
+ * Function Interface: void updateTurrets()
+ *
+ * Description:
+ * Updates the turrets actions.
+ *
+ * Revisions:
+ * Mar. 30, 2017, Mark Chen : turrets now fire when they detect an enemy
+ * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
+ */
+
 void GameManager::updateTurrets() {
-    for (auto& t : turretManager) {
-        t.second.targetScanTurret();
+    std::vector<int32_t> deleteVector = markForDeletionTurret();
+
+    for (auto it = deleteVector.begin() ; it != deleteVector.end(); ++it) {
+        removeWeapon(getTurret(*it).getInventory().getCurrent()->getID());
+        deleteTurret(*it);
     }
+
+    for (auto& t: turretManager) {
+        if (t.second.targetScanTurret() && t.second.isActivated()) {
+            t.second.shootTurret();
+        }
+    }
+}
+
+/**
+ * Date: Apr. 05, 2017
+ *
+ * Designer: Mark Chen
+ *
+ * Programmer: Mark Chen
+ *
+ * Function Interface: vector<int32_t> GameManager::markForDeletionTurret()
+ *
+ * Description:
+ * Searches the turretManager for any turrets with 0 ammo.
+ */
+
+std::vector<int32_t> GameManager::markForDeletionTurret() {
+    std::vector<int32_t> deleteVector;
+    for (auto& t: turretManager) {
+        if (t.second.getInventory().getCurrent()->getClip() == 0) {
+            deleteVector.push_back(t.second.getId());
+        }
+    }
+    return deleteVector;
 }
 
 /**
