@@ -146,6 +146,9 @@ void Player::sendServAttackAction() {
 *
 * Description:
 *   Handle user mouse input.
+*
+* Revisions:
+* Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
 */
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
