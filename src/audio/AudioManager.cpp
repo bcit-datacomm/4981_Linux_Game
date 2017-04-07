@@ -176,8 +176,8 @@ void AudioManager::loadFiles(){
 
     /* CHUNKS */
     // menu interactions
-    loadMusic(MENU_CLICK01);
-    loadMusic(MENU_CLICK02);
+    loadEffect(MENU_CLICK01);
+    loadEffect(MENU_CLICK02);
 
     // marine
     loadEffect(EFX_PDROP01);

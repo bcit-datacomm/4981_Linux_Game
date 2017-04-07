@@ -85,6 +85,8 @@ bool GameStateMatch::load() {
 *       State loop, processes a frame per each loop.
 */
 void GameStateMatch::loop() {
+    // play ingame music
+    AudioManager::instance().playMusic(MUS_GAMEBKG);
     int startTick = 0;
     int frameTicks = 0;
     // State Loop

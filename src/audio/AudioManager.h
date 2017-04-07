@@ -68,7 +68,7 @@
 #define EFX_WLPISTOL    AUDIO_PATH "weapon_pistol_fire_effect.ogg"
 #define EFX_WLRIFLE     AUDIO_PATH "weapon_rifle_fire_effect.ogg"
 #define EFX_WSHOTGUN    AUDIO_PATH "weapon_rifle_fire_effect.ogg"
-#define EFX_WTURRET01     AUDIO_PATH "weapon_turret_fire_effect.ogg"
+#define EFX_WTURRET01   AUDIO_PATH "weapon_turret_fire_effect.ogg"
 
 // weapon reload sounds
 #define EFX_WRELOAD01   AUDIO_PATH "weapon_reload_effect.ogg"
