@@ -318,15 +318,11 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
 bool Player::checkMarineState() {
     if (marine && marine->getHealth() <= 0){
         GameManager::instance()->deleteMarine(marine->getId());
-        setControl(nullptr);
         respawnTick = SDL_GetTicks();
-    } else if (!marine) {
-        if (static_cast<int>(SDL_GetTicks()) < (respawnTick + RESPAWN_DELAY)) {
-                return false;
-        }
-        return true;
+        setControl(nullptr);
+        return false;
     }
-    return false;
+    return !marine && (static_cast<int>(SDL_GetTicks()) >= (respawnTick + RESPAWN_DELAY));
 }
 
 /**

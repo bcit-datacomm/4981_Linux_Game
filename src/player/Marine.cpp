@@ -134,7 +134,7 @@ int32_t Marine::checkForPickUp() {
 *       mouse from the center of the screen.
 */
 void Marine::updateImageDirection() {
-    const double radians = (getAngle() -90) * M_PI/180;
+    const double radians = getRadianAngle() - M_PI / 2;
 
     //order: start from ~0 rad, counter clockwise
     if (radians > SPRITE_ANGLE2 && radians < SPRITE_ANGLE1) {

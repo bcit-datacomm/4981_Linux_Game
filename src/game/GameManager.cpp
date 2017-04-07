@@ -151,14 +151,12 @@ void GameManager::updateMarines(const float delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
-        if (z.second.getLastHealth() > z.second.getHealth()) {
-            z.second.setState(ZombieState::ZOMBIE_HIT);
-        }
-
-        z.second.generateMove();
-        if (z.second.isMoving()) {
-            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
-        }
+        z.second.update();
+        z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
+#ifndef SERVER
+        z.second.updateImageDirection();
+        z.second.updateImageWalk();
+#endif
     }
 }
 
@@ -486,8 +484,6 @@ int32_t GameManager::createZombie(const float x, const float y) {
 
     const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
     elem->second.setPosition(x,y);
-    elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    elem->second.setState(ZombieState::ZOMBIE_MOVE);
     return id;
 }
 
