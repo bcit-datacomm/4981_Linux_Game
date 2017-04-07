@@ -179,7 +179,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(!marine->inventory.getCurrent()) {
+        if(marine->inventory.getCurrent()) {
             marine->fireWeapon();
         }
     }
