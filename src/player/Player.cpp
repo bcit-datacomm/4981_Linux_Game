@@ -6,6 +6,7 @@
 #include "../sprites/VisualEffect.h"
 #include "../sprites/SpriteTypes.h"
 #include "../game/GameHashMap.h"
+#include "../buildings/Base.h"
 
 /**
 * Date: Jan. 28, 2017
@@ -149,6 +150,9 @@ void Player::sendServAttackAction() {
 *
 * Description:
 *   Handle user mouse input.
+*
+* Revisions:
+* Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
 */
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
@@ -179,39 +183,12 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
             }
         }
     }
-/*
+
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if (marine->inventory.getCurrent() != nullptr) {
+        if(marine->inventory.getCurrent()) {
             marine->fireWeapon();
-            if (networked) {
-                sendServAttackAction();
-            }
         }
-    }
-*/
-}
-
-/**------------------------------------------------------------------------------
-Method: fireWeapon
-
-Date: April 4, 2017
-
-Designer: Deric Mccadden
-
-Programmer: Deric Mccadden, Brody McCrone
-
-Interface: void fireWeapon()
-
-Returns:
-void
-
-Notes:
-Fires player's marine's weapon amd sends the Attack Action to the server.
--------------------------------------------------------------------------------*/
-void Player::fireWeapon() {
-    if (marine->inventory.getCurrent() && marine->fireWeapon() && networked) {
-        sendServAttackAction();
     }
 }
 
@@ -396,14 +373,14 @@ void Player::spawnMapGuides(const int winWidth, const int winHeight) {
     GameManager *gm = GameManager::instance();
 
     //BASE
-    auto &om = gm->getObjectManager();
-    std::pair<float, float> bCoord = om[0].first.getDestCoord();
+    Base base = gm->getBase();
+    std::pair<float, float> bCoord = base.getDestCoord();
     double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, bCoord);
 
     const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
     //Rect for BASE guide img
     SDL_Rect baseGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
-    ve.addPostTex(2, om[0].first.getSrcRect(), baseGuide, TEXTURES::BASE);
+    ve.addPostTex(2, base.getSrcRect(), baseGuide, TEXTURES::BASE);
 
 
     //STORES

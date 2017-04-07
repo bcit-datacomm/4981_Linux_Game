@@ -31,7 +31,7 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
         const SDL_Rect& damageSize, const int health, const ZombieState state, const int step,
         const ZombieDirection dir, const int frame) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY),
-        health(health), state(state), step(step), dir(dir), frame(frame), frameCountZombie(0) {
+        health(health), state(state), step(step), dir(dir), frame(frame), frameCountZombie(0), delayTick(0) {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -190,7 +190,7 @@ void Zombie::generateMove() {
  * Author: Trista Huang
  * Function Interface: void Zombie::updateZombieWalk(const int directionVal)
  * Description:
- * Changes the zombie sprite in order to simulate walking animation.
+ * Changes the zombie sprite in order to simulate walking animation and being hit.
  * It's called by Zombie::generateMove every time the zombie moves.
  */
 void Zombie::updateZombieWalk(const int directionVal) {
@@ -200,16 +200,34 @@ void Zombie::updateZombieWalk(const int directionVal) {
     const int pathLength = getPath().length();
     const int stepsLeft = getStep();
 
+    if (lastHealth == getHealth()) {
+        delayTick = SDL_GetTicks();
+    }
+
     setSrcRect(getSrcRect().x, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+
+    // If the zombie was hit, render hit image for a few ticks
+    if (getState() == ZombieState::ZOMBIE_HIT) {
+        if (static_cast<int>(SDL_GetTicks()) < (delayTick + HIT_DELAY_ZOMBIE)) {
+            setSrcRect(ZOMBIE_HIT_IMG, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        }else{
+            setState(ZombieState::ZOMBIE_MOVE);
+            setSrcRect(0, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+            lastHealth = getHealth();
+        }
+        return;
+    }
 
     if (getSrcRect().x == directionVal) {
         setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
     } else if (frameCountZombie % FRAME_COUNT_ZOMBIE == 0) {
-        //cycle throught the walking images
-        if (getSrcRect().x < ZOMBIE_NEXT_STEP) {
-            setSrcRect(getSrcRect().x + ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
-        } else {
-            setSrcRect(ZOMBIE_WIDTH, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        //cycle throught the walking images with hitting motion
+        if (getSrcRect().x <= ZOMBIE_NEXT_STEP) {
+            setSrcRect(ZOMBIE_ATTACK_IMG, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        } else if (getSrcRect().x == ZOMBIE_ATTACK_IMG) {
+            setSrcRect(ZOMBIE_STEP_TWO, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
+        } else if (getSrcRect().x == ZOMBIE_STEP_TWO){
+            setSrcRect(ZOMBIE_NEXT_STEP, getSrcRect().y, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
         }
     }
 
@@ -217,6 +235,8 @@ void Zombie::updateZombieWalk(const int directionVal) {
     if(pathLength == stepsLeft) {
         setSrcRect(0, directionVal, ZOMBIE_WIDTH, ZOMBIE_HEIGHT);
     }
+
+    lastHealth = getHealth();
 }
 
 /**

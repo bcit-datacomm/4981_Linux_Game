@@ -55,7 +55,6 @@ public:
     bool checkMarineState();
     void respawn(const Point& newPoint);
 
-    void fireWeapon();
 
     void sendServMoveAction();
     void sendServAttackAction();
