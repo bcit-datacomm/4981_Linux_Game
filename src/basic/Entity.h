@@ -55,8 +55,8 @@ public:
     float getY() const{return y;} // Get y coordinate
     int getW() const{return destRect.w;} // Get width
     int getH() const{return destRect.h;} // Get height
-    void setW(int w) {destRect.w = w;} // Set width
-    void setH(int h) {destRect.h = h;} // Set height
+    void setW(const int w) {destRect.w = w;} // Set width
+    void setH(const int h) {destRect.h = h;} // Set height
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
 

@@ -39,12 +39,13 @@ typedef std::pair<float, float> Point;
 
 class Base : public Object {
 public:
-    Base(const int32_t nid = 0, const SDL_Rect& dest = {MAP_WIDTH / 2, MAP_HEIGHT / 2, BASE_WIDTH, BASE_HEIGHT}, int health = BASE_INIT_HP);
+    Base(const int32_t nid = 0, const SDL_Rect& dest = {
+        MAP_WIDTH / 2, MAP_HEIGHT / 2, BASE_WIDTH, BASE_HEIGHT}, int health = BASE_INIT_HP);
     virtual ~Base();
 
     void onCollision();
     void collidingProjectile(int damage);
-    void setHealth(int newHealth) {health = newHealth;}
+    void setHealth(const int newHealth) {health = newHealth;}
     int getHealth() {return health;}
     int getLastHealth() const {return lastHealth;}
     void updateBaseImage();

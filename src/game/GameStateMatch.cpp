@@ -53,7 +53,7 @@ bool GameStateMatch::load() {
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
         GameManager::instance()->addObject(GameManager::instance()->getBase());
-        Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
+        const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
@@ -187,7 +187,7 @@ void GameStateMatch::handle() {
                 if(GameManager::instance()->getPlayer().getMarine()) {
                      if (event.button.button == SDL_BUTTON_RIGHT) {
                         GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                    } 
+                    }
                 }
                 break;
             case SDL_KEYDOWN:
