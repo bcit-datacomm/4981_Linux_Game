@@ -39,7 +39,8 @@ public:
     Player();
     ~Player() = default;
 
-    void handleKeyboardInput(const int winWidth, const int winHeight, const Uint8 *state); // Handles player input with keyboard state
+    // Handles player input with keyboard state
+    void handleKeyboardInput(const int winWidth, const int winHeight, const Uint8 *state);
     void handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY);
 
     void setControl(Marine* newControl);
@@ -69,8 +70,10 @@ public:
     void spawnMapGuides(const int winWidth, const int winHeight);
     double  getAngleBetweenPoints(const std::pair<float, float> p1, const std::pair<float, float> p2);
     std::pair<float, float> getGuideCoord(const double angle, const int winWidth, const int winHeight);
-    std::pair<float, float> calculateHorizontalCoords(const double angle, const int compareDegree, const int winWidth, const int winHeight);
-    std::pair<float, float> calculateVerticleCoords(const double angle, const int compareDegree, const int winWidth, const int winHeight);
+    std::pair<float, float> calculateHorizontalCoords(const double angle, const int compareDegree,
+            const int winWidth, const int winHeight);
+    std::pair<float, float> calculateVerticleCoords(const double angle, const int compareDegree,
+            const int winWidth, const int winHeight);
 private:
     int tempBarricadeID;
     int tempTurretID;
