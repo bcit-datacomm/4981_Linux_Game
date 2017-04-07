@@ -18,12 +18,13 @@
 ------------------------------------------------------------------------------*/
 #ifndef COLLISION_H
 #define COLLISION_H
-#include "HitBox.h"
-#include "Quadtree.h"
+
 #include <vector>
 #include <queue>
-#include "../inventory/weapons/Target.h"
 
+#include "HitBox.h"
+#include "Quadtree.h"
+#include "../inventory/weapons/Target.h"
 
 class Movable;
 
@@ -45,9 +46,19 @@ public:
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);
 
     void detectLineCollision(TargetList& targetList, const int gunX, const int gunY, const double angle, const int range);
-    std::vector<Entity *> detectMeleeCollision(std::vector<Entity*> returnObjects, const Entity *entity, const HitBox hb);
 
-    std::vector<Entity *>getQuadTreeEntities(Quadtree& q,const Entity *entity); // General Collision handler, pass in quadtree check
+    std::vector<Entity *> detectMeleeCollision(const std::vector<Entity*>& returnObjects, const Entity *entity, const HitBox hb);
+
+    std::vector<Entity *>getQuadTreeEntities(const Quadtree& q, const Entity *entity) const; // General Collision handler, pass in quadtree check
+
+    CollisionHandler& operator=(const CollisionHandler& handle);
+
+private:
+    void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
+        TargetList& targetList, const std::vector<Entity*>& allEntities, const int type) const;
+
+
+    Quadtree totalTree;
 
     Quadtree quadtreeMarine; //can take dmg
     Quadtree quadtreeZombie; //can take dmg
@@ -57,13 +68,6 @@ public:
     Quadtree quadtreePickUp;
     Quadtree quadtreeObj;
     Quadtree quadtreeStore;
-
-    CollisionHandler& operator=(const CollisionHandler& handle);
-
-private:
-    void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
-        TargetList& targetList, std::vector<Entity*>& allEntities, int type);
-
 };
 
 
