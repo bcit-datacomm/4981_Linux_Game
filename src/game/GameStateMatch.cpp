@@ -276,10 +276,11 @@ void GameStateMatch::update(const float delta) {
         camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
                 GameManager::instance()->getPlayer().getMarine()->getY());
     }
+#endif
+
     if (GameManager::instance()->getPlayer().checkMarineState()) {
         GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
     }
-#endif
 }
 
 /**
@@ -309,12 +310,10 @@ void GameStateMatch::update(const float delta) {
 void GameStateMatch::render() {
     //Only draw when not minimized
     if (!game.getWindow().isMinimized()) {
-
         SDL_RenderClear(Renderer::instance().getRenderer());
 
         //Render textures
         for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
-
             if (i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
                 break;
             }

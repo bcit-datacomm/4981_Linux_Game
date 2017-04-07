@@ -44,7 +44,7 @@ bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
  * Returns pointer to Weapon in current slot
  * If slot is empty it returns a null pointer
  */
-Weapon* Inventory::getCurrent() {
+Weapon* Inventory::getCurrent() const {
     if (weaponIds[current] >= 0) {
         return GameManager::instance()->getWeapon(weaponIds[current]).get();
     }
