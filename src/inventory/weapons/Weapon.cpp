@@ -9,12 +9,13 @@
 
 #include "../../log/log.h"
 #include "../../audio/AudioManager.h"
+#include "../../game/GameManager.h"
 
 using std::string;
 
 /**
  * Date: Feb 8, 2017
- * Modified: 
+ * Modified:
  *  Feb 9, 2017 - Jacob McPhail
  *  Mar 13, 2017 - Mark Tattrie
  * Author: Maitiu Morton
@@ -103,7 +104,9 @@ bool Weapon::fire(Movable& movable){
     if(!chamberRound()){
         return false;
     }
-
+    if (networked) {
+        GameManager::instance()->getPlayer().sendServAttackAction();
+    }
     AudioManager::instance().playEffect(fireSound.c_str());
     return true;
 }

@@ -33,11 +33,10 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
-    
+
     bool checkMarineState();
     void respawn(const Point& newPoint);
 
-    void fireWeapon();
 
     void sendServMoveAction();
     void sendServAttackAction();
