@@ -162,8 +162,10 @@ void GameStateMatch::updateServ() {
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
+
     if(GameManager::instance()->getPlayer().getMarine()){
-        GameManager::instance()->getPlayer().handleKeyboardInput(state);
+        GameManager::instance()->getPlayer().handleKeyboardInput(game.getWindow().getWidth(),
+                game.getWindow().getHeight(), state);
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
     }
