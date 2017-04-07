@@ -145,6 +145,10 @@ void GameManager::updateMarines(const float delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
+        if (z.second.getLastHealth() > z.second.getHealth()) {
+            z.second.setState(ZombieState::ZOMBIE_HIT);
+        }
+        
         z.second.generateMove();
         if (z.second.isMoving()) {
             z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);

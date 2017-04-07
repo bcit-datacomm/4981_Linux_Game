@@ -136,6 +136,7 @@ void Player::sendServAttackAction() {
 /**
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
+* Modified: ---
 * Function Interface: handleMouseUpdate(const int winWidth, const int winHeight,
 *                const float camX, const float camY)
 *       winWidth : Window width
@@ -178,39 +179,12 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
             }
         }
     }
-/*
+
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(marine->inventory.getCurrent() != nullptr){
+        if(!marine->inventory.getCurrent()) {
             marine->fireWeapon();
-            if (networked) {
-                sendServAttackAction();
-            }
         }
-    }
-*/
-}
-
-/**------------------------------------------------------------------------------
-Method: fireWeapon
-
-Date: April 4, 2017
-
-Designer: Deric Mccadden
-
-Programmer: Deric Mccadden, Brody McCrone
-
-Interface: void fireWeapon()
-
-Returns:
-void
-
-Notes:
-Fires player's marine's weapon amd sends the Attack Action to the server.
--------------------------------------------------------------------------------*/
-void Player::fireWeapon() {
-    if (marine->inventory.getCurrent() && marine->fireWeapon() && networked) {
-        sendServAttackAction();
     }
 }
 

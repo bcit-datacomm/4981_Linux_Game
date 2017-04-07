@@ -191,9 +191,7 @@ void GameStateMatch::handle() {
                 if(GameManager::instance()->getPlayer().getMarine()) {
                      if (event.button.button == SDL_BUTTON_RIGHT) {
                         GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                    } else if (event.button.button == SDL_BUTTON_LEFT) {
-                        GameManager::instance()->getPlayer().fireWeapon();
-                    }
+                    } 
                 }
                 break;
             case SDL_KEYDOWN:
