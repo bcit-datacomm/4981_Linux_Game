@@ -20,7 +20,6 @@
 #include <random>
 #include <cassert>
 #include <utility>
-#include <math.h>
 #include "Zombie.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
