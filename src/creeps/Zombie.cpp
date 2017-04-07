@@ -58,7 +58,7 @@ void Zombie::update(){
     //middle of me
     const int midMeX = getX() + (getW() / 2);
     const int midMeY = getY() + (getH() / 2);
-    Entity visSection(0, {midMeX - ZOMBIE_SIGHT, midMeY - ZOMBIE_SIGHT,
+    const Entity visSection(0, {midMeX - ZOMBIE_SIGHT, midMeY - ZOMBIE_SIGHT,
         2 * ZOMBIE_SIGHT, 2 * ZOMBIE_SIGHT});
 
     if (!(frameCount % ANGLE_UPDATE_RATE)) {
@@ -67,12 +67,11 @@ void Zombie::update(){
         const auto& base = gm->getBase();
         auto& collision = gm->getCollisionHandler();
         const auto& marines = collision.getQuadTreeEntities(collision.getMarineTree(), &visSection);
-        const auto& turrrets = collision.getQuadTreeEntities(collision.getMarineTree(), &visSection);
+        const auto& turrrets = collision.getQuadTreeEntities(collision.getTurretTree(), &visSection);
 
         //the difference in zombie to target distance
         float movX;
         float movY;
-        
         
         //middle of the base
         const int midBaseX = base.getX() + (base.getW() / 2);
