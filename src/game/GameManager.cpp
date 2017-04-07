@@ -729,43 +729,38 @@ CollisionHandler& GameManager::getCollisionHandler() {
  *     Update colliders to current state
  */
 void GameManager::updateCollider() {
-    collisionHandler = CollisionHandler();
+    collisionHandler.clear();
 
     for (auto& m : marineManager) {
-        collisionHandler.quadtreeMarine.insert(&m.second);
+        collisionHandler.insertMarine(&m.second);
     }
 
     for (auto& z : zombieManager) {
-        collisionHandler.quadtreeZombie.insert(&z.second);
+        collisionHandler.insertZombie(&z.second);
     }
 
     for (auto& o : objectManager) {
-        collisionHandler.quadtreeObj.insert(&o.second);
-    }
-
-    for (auto& o : wallManager) {
-        collisionHandler.quadtreeWall.insert(&o.second);
+        collisionHandler.insertObj(&o.second);
     }
 
     for (auto& m : turretManager) {
         if (m.second.isPlaced()) {
-            collisionHandler.quadtreeTurret.insert(&m.second);
-            collisionHandler.quadtreePickUp.insert(&m.second);
+            collisionHandler.insertTurret(&m.second);
         }
     }
 
     for (auto& b : barricadeManager) {
         if (b.second.isPlaced()) {
-            collisionHandler.quadtreeBarricade.insert(&b.second);
+            collisionHandler.insertBarricade(&b.second);
         }
     }
 
     for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp.insert(&m.second);
+        collisionHandler.insertPickUp(&m.second);
     }
 
     for (auto& s : storeManager) {
-        collisionHandler.quadtreeStore.insert(s.second.get());
+        collisionHandler.insertStore(s.second.get());
     }
 }
 
@@ -781,7 +776,7 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData &playerData) {
-    if(marineManager.count(playerData.playerid) == 0) {
+    if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager[playerData.playerid].first;

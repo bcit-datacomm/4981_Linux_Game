@@ -72,12 +72,12 @@ Barricade::~Barricade() {
 bool Barricade::checkPlaceablePosition(const float distance, CollisionHandler& ch) {
     placeable = (distance <= 200);
 
-    if(placeable && (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this))) {
+    if(placeable && (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.marineTree,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.zombieTree,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.barricadeTree,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.wallTree,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.turretTree,this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.objTree,this),this))) {
         placeable = false;
     }
     return placeable;

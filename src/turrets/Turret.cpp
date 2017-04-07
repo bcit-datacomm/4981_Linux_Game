@@ -140,13 +140,13 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX + distanceY));
 
-    return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this), this)));
+    return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.marineTree,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.zombieTree,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.barricadeTree,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.wallTree,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.turretTree,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.objTree,this), this)
+        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.pickUpTree,this), this)));
 }
 
 /**

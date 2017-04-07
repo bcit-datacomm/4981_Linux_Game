@@ -48,8 +48,8 @@ void MatchManager::spawnZombies() {
         if (zombiesToSpawn > 0) {
             zombie.setPosition(pos.x, pos.y);
             if (!ch.detectMovementCollision(ch.getQuadTreeEntities(
-                    ch.quadtreeMarine,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,&zombie),&zombie)) {
+                    ch.marineTree,&zombie),&zombie)
+                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.zombieTree,&zombie),&zombie)) {
                 GameManager::instance()->createZombie(pos.x, pos.y);
                 --zombiesToSpawn; 
             }

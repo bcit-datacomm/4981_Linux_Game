@@ -53,21 +53,29 @@ public:
 
     CollisionHandler& operator=(const CollisionHandler& handle);
 
+    void clear();
+    void insertMarine(Entity *e);
+    void insertZombie(Entity *e);
+    void insertBarricade(Entity *e);
+    void insertTurret(Entity *e);
+    void insertWall(Entity *e);
+    void insertPickUp(Entity *e);
+    void insertObj(Entity *e);
+    void insertStore(Entity *e);
+
 private:
     void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList& targetList, const std::vector<Entity*>& allEntities, const int type) const;
 
-
-    Quadtree totalTree;
-
-    Quadtree quadtreeMarine; //can take dmg
-    Quadtree quadtreeZombie; //can take dmg
-    Quadtree quadtreeBarricade; //can take dmg
-    Quadtree quadtreeTurret;
-    Quadtree quadtreeWall;
-    Quadtree quadtreePickUp;
-    Quadtree quadtreeObj;
-    Quadtree quadtreeStore;
+    Quadtree zombieMovementTree;
+    Quadtree marineTree; //can take dmg
+    Quadtree zombieTree; //can take dmg
+    Quadtree barricadeTree; //can take dmg
+    Quadtree turretTree;
+    Quadtree wallTree;
+    Quadtree pickUpTree;
+    Quadtree objTree;
+    Quadtree storeTree;
 };
 
 

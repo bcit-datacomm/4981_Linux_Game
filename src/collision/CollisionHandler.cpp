@@ -34,10 +34,10 @@
  * Description:
  * Constructor for Collision Handler
  */
-CollisionHandler::CollisionHandler() : totalTree(0, {0,0,2000,2000}), quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
-        quadtreeBarricade(0, {0,0,2000,2000}),quadtreeTurret(0, {0,0,2000,2000}),
-        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}),
-        quadtreeStore(0,{0,0,2000,2000}) {
+CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), marineTree(0, {0,0,2000,2000}), 
+        zombieTree(0, {0,0,2000,2000}), barricadeTree(0, {0,0,2000,2000}),turretTree(0, {0,0,2000,2000}), 
+        wallTree(0, {0,0,2000,2000}), pickUpTree(0, {0,0,2000,2000}), objTree(0, {0,0,2000,2000}), 
+        storeTree(0,{0,0,2000,2000}) {
 
 }
 
@@ -50,14 +50,15 @@ CollisionHandler::CollisionHandler() : totalTree(0, {0,0,2000,2000}), quadtreeMa
  * Comparison operator for = to set each Quadtree
  */
 CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
-    quadtreeMarine = handle.quadtreeMarine;
-    quadtreeZombie = handle.quadtreeZombie;
-    quadtreeBarricade = handle.quadtreeBarricade;
-    quadtreeTurret = handle.quadtreeTurret;
-    quadtreeWall = handle.quadtreeWall;
-    quadtreePickUp = handle.quadtreePickUp;
-    quadtreeObj = handle.quadtreeObj;
-    quadtreeStore = handle.quadtreeStore;
+    zombieMovementTree = handle.zombieMovementTree;
+    marineTree = handle.marineTree;
+    zombieTree = handle.zombieTree;
+    barricadeTree = handle.barricadeTree;
+    turretTree = handle.turretTree;
+    wallTree = handle.wallTree;
+    pickUpTree = handle.pickUpTree;
+    objTree = handle.objTree;
+    storeTree = handle.storeTree;
     return *this;
 }
 
@@ -182,8 +183,8 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, quadtreeZombie.getObjects(), TYPE_ZOMBIE);
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, quadtreeWall.getObjects(), TYPE_WALL);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombieTree.getObjects(), TYPE_ZOMBIE);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, wallTree.getObjects(), TYPE_WALL);
 
     logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
@@ -283,3 +284,53 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
 std::vector<Entity *> CollisionHandler::getQuadTreeEntities(const Quadtree& q, const Entity *entity) const {
     return q.retrieve(entity);
 }
+
+void CollisionHandler::clear() {
+    zombieMovementTree.clear();
+    marineTree.clear();
+    zombieTree.clear();
+    //barricadeTree.clear(); 
+    turretTree.clear();
+    pickUpTree.clear();
+    objTree.clear();
+    storeTree.clear();
+}
+
+void CollisionHandler::insertMarine(Entity *e) {
+    zombieMovementTree.insert(e);
+    marineTree.insert(e);
+}
+
+void CollisionHandler::insertZombie(Entity *e) {
+    zombieTree.insert(e);
+}
+
+void CollisionHandler::insertBarricade(Entity *e) {
+    zombieMovementTree.insert(e);
+    barricadeTree.insert(e);
+}
+
+void CollisionHandler::insertTurret(Entity *e) {
+    zombieMovementTree.insert(e);
+    turretTree.insert(e);
+}
+
+void CollisionHandler::insertWall(Entity *e) {
+    zombieMovementTree.insert(e);
+    wallTree.insert(e);
+}
+
+void CollisionHandler::insertPickUp(Entity *e) {
+    pickUpTree.insert(e);
+}
+
+void CollisionHandler::insertObj(Entity *e) {
+    zombieMovementTree.insert(e);
+    objTree.insert(e);
+}
+
+void CollisionHandler::insertStore(Entity *e) {
+    zombieMovementTree.insert(e);
+    storeTree.insert(e);
+}
+

@@ -77,6 +77,12 @@ bool GameStateMatch::load() {
     m.mapLoadToGame();
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
+
+    //Since walls never change, add them to quadtrees here instead of every frame re-adding them
+    for (auto& o : gm->getWallManager()) {
+        gm->getCollisionHandler().insertWall(&o.second);
+    }
+
     return success;
 }
 
