@@ -75,6 +75,8 @@ public:
     bool addMarine(const int32_t id, const Marine& newMarine);
     auto getMarine(const int32_t id) {return marineManager[id];};
 
+    Base& getBase() {return base;}
+
     // Methods for creating, getting, and deleting towers from the level.
     int32_t createTurret();
     void deleteTurret(const int32_t id);
@@ -91,6 +93,7 @@ public:
     void updateMarines(const float delta); // Update marine actions
     void updateZombies(const float delta); // Update zombie actions
     void updateTurrets(); // Update turret actions
+    void updateBase(); // Update base images
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.
@@ -98,7 +101,6 @@ public:
 
     int32_t addObject(const Object&);
     void deleteObject(const int32_t id);
-    Object& getBase();
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);
@@ -171,6 +173,7 @@ private:
     ~GameManager();
     static GameManager sInstance;
     Player player;
+    Base base;
 
     CollisionHandler collisionHandler;
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;

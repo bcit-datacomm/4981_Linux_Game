@@ -74,9 +74,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
-                o.second.getSrcRect());
+            // TODO: Base image rendering has been moved, clear/change this as other objects are added
+            // Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
+            //     o.second.getSrcRect());
         }
+    }
+
+    if (base.getX() - cam.x < cam.w && base.getY() - cam.y < cam.h) {
+        Renderer::instance().render(base.getRelativeDestRect(cam), TEXTURES::BASE,
+            base.getSrcRect());
     }
 
     for (const auto& z : zombieManager) {
@@ -153,6 +159,21 @@ void GameManager::updateZombies(const float delta) {
 #endif
     }
 }
+
+/**
+* Date: April 6, 2017
+* Designer: Trista Huang
+* Programmer: Trista Huang
+* Function Interface: void GameManager::updateBase()
+* Description:
+*       This function calls function to check for base health everytime an update happens,
+*       and changes base image accordingly.
+*       It is called from GameStateMatch every update.
+*/
+void GameManager::updateBase() {
+    base.updateBaseImage();
+}
+
 bool GameManager::hasMarine(const int32_t id) const {
     return marineManager.count(id);
 }
@@ -514,16 +535,6 @@ Zombie& GameManager::getZombie(const int32_t id) {
 int32_t GameManager::addObject(const Object& newObject) {
     objectManager.emplace(newObject.getId(), newObject);
     return newObject.getId();
-}
-
-/**
- * Author: Isaac Morneau
- * Date: April 5, 2017
- * gets just the base from the object manager
- */
-Object& GameManager::getBase(){
-    //base is always 0, it is the only constant id
-    return objectManager[0].first;
 }
 
 /**
