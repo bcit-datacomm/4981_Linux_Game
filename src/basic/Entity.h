@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
-* Header: Entity.h   
+* Header: Entity.h
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #ifndef ENTITY_H
 #define ENTITY_H
@@ -55,6 +55,8 @@ public:
     float getY() const{return y;} // Get y coordinate
     int getW() const{return destRect.w;} // Get width
     int getH() const{return destRect.h;} // Get height
+    void setW(const int w) {destRect.w = w;} // Set width
+    void setH(const int h) {destRect.h = h;} // Set height
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
 
@@ -82,7 +84,6 @@ public:
     const std::pair<float, float> getDestCoord() const {return {destRect.x, destRect.y};};
     const std::pair<float, float> getSrcCoord() const {return {srcRect.x, srcRect.y};};
 private:
-
     int32_t id; //is the index num of the entity in its respective manager
     SDL_Rect destRect;
     SDL_Rect srcRect;

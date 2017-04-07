@@ -11,6 +11,8 @@
 #include "GameStateMenu.h"
 #include "Game.h"
 #include "../view/Window.h"
+#include <unistd.h>
+#include "../client/NetworkManager.h"
 #include "../sprites/Renderer.h"
 #include "../log/log.h"
 #include "../sprites/SpriteTypes.h"
@@ -30,6 +32,7 @@
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank (March 26, 2017)
  *
@@ -86,6 +89,7 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank (March 26. 2017)
  *
@@ -121,6 +125,10 @@ bool GameStateMenu::load() {
  * Programmer:
  * Jacob Frank
  *
+ * Modified By:
+ * Alex Zielinski (April 5, 2017)
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
+ *
  * Interface: loop()
  *
  * Returns: void
@@ -128,11 +136,27 @@ bool GameStateMenu::load() {
  * Notes:
  * Function acts as main loop for the menu game state
  * Listens for events and renders all assets to the screen
+ *
+ * Revisions:
+ * AZ Apr 5: implemented playing of menu background music
  */
 void GameStateMenu::loop() {
+    // play background music
+    AudioManager::instance().playMenuMusic(MUS_MENUBKG01, MUS_MENUBKG02);
 
     // State Loop
     while (play) {
+        if(networked) {
+            const NetworkState netState = NetworkManager::instance().getNetworkState();
+            if (netState == NetworkState::FAILED_TO_CONNECT) {
+
+                NetworkManager::instance().reset();
+            } else if (netState >= NetworkState::GAME_STARTED) {
+                game.setStateID(2);
+                play = false;
+            }
+        }
+
         handle(); // Handle user input
         render(); // Render game state to window
     }
@@ -141,11 +165,11 @@ void GameStateMenu::loop() {
 /**
  * Function: sync
  *
- * Date:
+ * Date: Feb 2, 2017
  *
- * Designer:
+ * Designer: Jacob McPhail
  *
- * Programmer:
+ * Programmer: Jacob McPhail
  *
  * Interface: sync()
  *
@@ -172,7 +196,9 @@ void GameStateMenu::sync() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (March 28, 2017)
+ * Alex Zielinski (April 5, 2017)
  *
  * Interface: handle()
  *
@@ -188,6 +214,7 @@ void GameStateMenu::sync() {
  * JF Mar 28: Re-added logic Highlighting and Clicking a menu option that was removed during the great refactoring
  * Isaac Morneau, March 29, 2017 Fixed highlighting, clicking, and typing to work with the improved renderer that now
  *      makes sense because of the god send that was the great refactoring.
+ * AZ Apr 5: implemented fading menu background music out
  */
 void GameStateMenu::handle() {
     int x, y;
@@ -197,7 +224,6 @@ void GameStateMenu::handle() {
     //Handle events on queue
     SDL_WaitEvent(&event);
     game.getWindow().handleEvent(event);
-
     switch (event.type) {
 
         case SDL_MOUSEBUTTONDOWN:
@@ -205,8 +231,13 @@ void GameStateMenu::handle() {
             y = event.button.y;
 
             if (joinSelected) {
-                game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
-                play = false;
+                if (networked) {
+                    NetworkManager::instance().run(hostInput, userInput);
+                } else {
+                    AudioManager::instance().fadeMusicOut(MUSICFADE); // fade background music
+                    game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
+                    play = false;
+                }
                 break;
             }
 
@@ -349,6 +380,7 @@ void GameStateMenu::handle() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Jacob Frank (Febuary 8, 2017)
  *
  * Interface: update(const float& delta)
@@ -433,6 +465,7 @@ void GameStateMenu::positionElements() {
  * Jacob Frank
  *
  * Modified by:
+ * Jacob McPhail (Feburay 2, 2017) - Init Creation
  * Michael Goll (March 16, 2017)
  * Jacob Frank   (March 28, 2017)
  *
@@ -500,4 +533,3 @@ void GameStateMenu::render() {
     //Update screen
     SDL_RenderPresent(Renderer::instance().getRenderer());
 }
-

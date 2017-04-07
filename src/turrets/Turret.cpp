@@ -1,8 +1,7 @@
 /**
- * Source: Turret.cpp  
+ * Source: Turret.cpp
  *
  * Functions: void placementCheckTurret()
- *            bool placementCheckTurret()
  *            bool collisionCheckTurret(const float , const float , const float , const float , CollisionHandler &)
  *            void activateTurret()
  *            void collidingProjectile(const int damage)
@@ -21,9 +20,9 @@
  *
  * Designer: Mark Chen, Jaime Lee, Terry Kang
  *
- * Author: Mark Chen, Micheal Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
+ * Author: Mark Chen, Michael Goll, Jacob McPhail, Isaac Morneau, Maitiu Morton, Mark Tattrie
  *
- * Revisions: 
+ * Revisions:
  * Edited By : Yiaoping Shu- Style guide
  *
  * Notes:
@@ -37,35 +36,48 @@
 
 /**
  * Date: Feb. 02, 2017
- * Modified: Mar. 15, 2017 - Mark Chen, Maitiu Morton, Mark Tattrie
- *           Mar. 16, 2016 - Mark Chen, Micheal Goll
  *
  * Designer: Mark Chen
- * Programmer: Mark Chen, Micheal Goll, Maitiu Morton
+ *
+ * Programmer: Mark Chen, Michael Goll, Maitiu Morton
+ *
  * Function Interface: Turret(int32_t id, const SDL_Rect dest, const SDL_Rect &movementSize,
-         const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize,
-         bool activated, int health, int ammo, bool placed)
+ *       const SDL_Rect &projectileSize, const SDL_Rect &damageSize, const SDL_Rect &pickupSize,
+ *       bool activated, int health, int ammo, bool placed)
+ *
  * Description:
  * Constructor for a turret, creates a turret on the map.
+ *
+ * Revisions:
+ * Mar. 15, 2017, Mark Chen : Changed parameters that the constructor takes.
+ * Mar. 15, 2017, Matiu Morton : Changed parameteres that the constructor takes.
+ * Mar. 15, 2017, Micheal Goll : Fixed rendereing issues with turret images.
+ * Mar. 16, 2017, Mark Chen : Changed parameters that the constructor takes.
+ * Mar. 30, 2017, Mark Chen : Turret now has an inventory.
+ * Apr. 02, 2017, Mark Chen : Turret now has a dropzone value.
  */
 
 Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
-        const int ammo, const bool placed, const float range): Entity(id, dest, movementSize,
-        projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize,
-        damageSize, pickupSize, MARINE_VELOCITY), activated(activated), ammo(ammo), placed(placed),
-        range(range) {
+        const bool placed, const float range, const int32_t dropzone): Entity(id, dest, movementSize,
+        projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize, damageSize,
+        pickupSize, MARINE_VELOCITY), activated(activated), placed(placed), range(range) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
+    inventory.makeTurretInv();
     logv("Turret created\n");
 }
 
 /**
  * Date: Feb. 02, 2017
+ *
  * Designer: Mark Chen
+ *
  * Programmer: Mark Chen
+ *
  * Function Interface: ~Turret()
+ *
  * Description:
  * Destructor for the turret object, destroys a turret from the map.
  */
@@ -76,9 +88,13 @@ Turret::~Turret() {
 
 /**
  * Date: Feb. 02, 2017
+ *
  * Designer: Mark Chen
+ *
  * Programmer: Mark Chen
+ *
  * Function Interface: bool placementCheckTurret()
+ *
  * Description:
  * Checks if the turret is placed within the bounds of the map. The function will return true if the
  * turret is within bounds and false if it falls outside the bounds.
@@ -89,12 +105,14 @@ bool Turret::placementCheckTurret(){
 
 /**
  * Date: Mar. 10, 2017
- * Modified: Mar. 15, 2017 - Mark Chen, Mark Tattrie
- *           Mar. 16, 2017 - Mark Chen
+ *
  * Designer: Mark Chen, Terry Kang
+ *
  * Programmer: Mark Chen, Mark Tattrie
+ *
  * Function Interface: bool collisionCheckTurret(const float playerX, const float playerY, const float moveX,
-         const float moveY, CollisionHandler &ch)
+ *       const float moveY, CollisionHandler &ch)
+ *
  * Description:
  * Checks whether the area where the user selects to place the turret is valid. The following are the two
  * requirements:
@@ -103,6 +121,11 @@ bool Turret::placementCheckTurret(){
  *
  * If both requirements are met, then the function returns true. If either or both the requirements are false,
  * then the function returns false.
+ *
+ * Revisions:
+ * Mar. 15, 2017, Mark Chen : Changed turret collision to work similar to barricades.
+ * Mar. 15, 2017, Mark Tattrie : Changed the checks for hitboxes.
+ * Mar. 16, 2017, Mark Chen : General formatting changes.
  */
 bool Turret::collisionCheckTurret(const float playerX, const float playerY, const float moveX,
         const float moveY, CollisionHandler& ch) {
@@ -128,25 +151,18 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
 
 /**
  * Date: Feb. 02, 2017
+ *
  * Designer: Mark Chen
- * Programmer: Mark Chen
- * Function Interface: void activateTurret()
- * Description:
- * Changes the private member of the turret to true. This 'activates' the turret, allowing the turret to shoot
- * at zombies.
- */
-void Turret::activateTurret() {
-    activated = true;
-}
-
-/**
- * Date: Feb. 02, 2017
- * Modified: March 31, 2017 - Mark Tattrie
- * Designer: Mark Chen
+ *
  * Programmer: Mark Chen, Mark Tattrie
+ *
  * Function Interface: void collidingProjectile(const int damage)
+ *
  * Description:
  * Damages the turret by the amount of 'damage' parameter passed in.
+ *
+ * Revisions:
+ * Mar. 31, 2017, Mark Tattrie : Turret now takes damage and dies when health is <= 0.
  */
 void Turret::collidingProjectile(const int damage) {
     health -= damage;
@@ -158,42 +174,46 @@ void Turret::collidingProjectile(const int damage) {
 
 /**
  * Date: Feb. 02, 2017
+ *
  * Designer: Mark Chen
+ *
  * Programmer: Mark Chen
+ *
  * Function Interface: void shootTurret()
+ *
  * Description:
  * Makes the turret shoot in a direction.
+ *
+ * Revisions:
+ * Mar. 30, 2017, Mark Chen : Made the function actually fire the turrets weapon.
+ * Apr. 04, 2017, Mark Chen : Altered the funuction to check for null weapon.
  */
 void Turret::shootTurret() {
 
-}
-
-/**
- * Date: Feb. 02, 2017
- * Designer: Mark Chen
- * Programmer: Mark Chen
- * Function Interface: bool ammoCheckTurret()
- * Description:
- * Checks the current amount of ammo for the turret's gun. If the current amount of
- * ammo is greater than 0, the function returns true and false otherwise.
- */
-bool Turret::ammoCheckTurret() {
-    // This is going to be changed soon so it is no longer a simple getter.
-    return (ammo > 0);
+    Weapon *w = inventory.getCurrent();
+    if (w) {
+        w->fire(*this);
+    }
 }
 
 /**
  * Date: Mar. 10, 2017
- * Modified: Mar. 15, 2017 - Mark Chen
- *           Mar. 16, 2017 - Mark Chen
+ *
  * Designer: Mark Chen, Terry Kang
+ *
  * Programmer: Mark Chen
+ *
  * Function Interface: void move(const float playerX, const float playerY,
          const float moveX, const float moveY, CollisionHandler &ch)
+         *
  * Description:
  * Changes the transparency of the turret object that replaces the mouse cursor when the player
  * is holding a turret. The turret is transparency is changed depending on whether the location
  * is a valid location.
+ *
+ * Revisions:
+ * Mar. 15, 2017, Mark Chen: Function now takes in a collision handler.
+ * Mar. 16, 2017, Mark Chen: Formatting issues resolved.
  */
 void Turret::move(const float playerX, const float playerY,
         const float moveX, const float moveY, CollisionHandler& ch) {
@@ -211,40 +231,61 @@ void Turret::move(const float playerX, const float playerY,
 
 /**
  * Date: Feb. 02, 2017
+ *
  * Modified: Mar. 15, 2017 - Mark Chen
  * Designer: Mark Chen
+ *
  * Programmer: Mark Chen
+ *
  * Function Interface: void placeTurret()
+ *
  * Description:
  * Sets the turret onto the map by changing the transparency of the object and changes the private
  * member 'placed' of the turret to 'true'.
+ *
+ * Revisions:
+ * Mar. 15, 2017, Mark Chen: Made turret be in a 'placed' and activated state when placed on map.
  */
 void Turret::placeTurret() {
     placed = true;
+    activated = true;
 }
 
 /**
  * Date: Feb. 02, 2017
- * Modified: Mar. 15, 2017 - Mark Chen
+ *
  * Designer: Mark Chen
+ *
  * Programmer: Mark Chen
+ *
  * Function Interface: void pickUpTurret()
+ *
  * Description:
  * Picks up the truret from the map, temporarily removing it from the map by changing its private
  * member 'placed' to false.
+ *
+ * Revisions:
+ * Mar. 15, 2017, Mark Chen : Made turrets deactivated when picked up.
  */
 void Turret::pickUpTurret() {
     placed = false;
+    activated = false;
 }
 
 /**
  * Date: Mar. 01, 2017
  * Modified: Mar. 05, 2017 - Robert Arendac
  * Designer: Jamie Lee
+ *
  * Programmer: Jamie Lee, Robert Arendac
+ *
  * Function Interface: bool targetScanTurret()
+ *
  * Description:
  * Checks if there are any enemies in the turret's coverage area.
+ *
+ * Revisions:
+ * Mar. 05, 2017, Robert Arendac - General code clean up
  */
 bool Turret::targetScanTurret() {
     //Get map of all zombies

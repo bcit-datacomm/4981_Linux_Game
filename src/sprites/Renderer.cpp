@@ -77,7 +77,7 @@ void Renderer::loadSprites() {
     //-------- zombie textures --------
     //baby
     //createTexture(ZOMBIE_BABYZ);
-    createTexture(TEXTURES::BABY_ZOMBIE, TEMP_ZOMBIE_TEXTURE);
+    createTexture(TEXTURES::BABY_ZOMBIE, ZOMBIE_BABYZ);
     //digger
     createTexture(TEXTURES::DIGGER_ZOMBIE, ZOMBIE_DIGGER);
     //boss
@@ -277,6 +277,36 @@ void Renderer::render(const SDL_Rect& dest, const int spriteType, const double a
     //Render to screen
     SDL_RenderCopyEx(renderer, getTexture(spriteType), nullptr, &dest, angle,
             center, flip);
+}
+
+/**
+ * DEVELOPER: Michael Goll
+ * DESIGNER:  Michael Goll
+ * DATE:      April 4, 2017
+ * Renders the walls in a tiling fashion around the perimeters of blocking volumes and the
+ * border of the map.
+ */
+void Renderer::render(const SDL_Rect& dest, const TEXTURES spriteType, const SDL_Rect& clip, int w,
+        int h) {
+    const int tileNumX = dest.w / w;
+    const int tileNumY = dest.h / h;
+    SDL_Rect tempRect;
+    int y = 0;
+
+    for (int i = 0; i < tileNumX; ++i) {
+        if ((y == 0 || (y == tileNumY - 1))) {
+            tempRect = {dest.x + w * i, dest.y + y * h, w, h};
+            SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &tempRect, 0, nullptr, SDL_FLIP_NONE);
+        } else if ((i == 0 || i == tileNumX - 1) && (y < tileNumY - 1)) {
+            tempRect = {dest.x + w * i, dest.y + y * h, w, h};
+            SDL_RenderCopyEx(renderer, getTexture(static_cast<int>(spriteType)), &clip, &tempRect, 0, nullptr, SDL_FLIP_NONE);
+        }
+
+        if ((i == tileNumX - 1) && (y < tileNumY)) {
+            i = -1;
+            ++y;
+        }
+    }
 }
 
 /**

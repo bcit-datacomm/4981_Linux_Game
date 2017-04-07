@@ -6,11 +6,15 @@
 #include <memory>
 
 #include "../player/Marine.h"
+#include "../buildings/Base.h"
 #include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
-#include "../game/GameManager.h"
+#include "../client/NetworkManager.h"
+#include "../UDPHeaders.h"
 
+static constexpr double DOUBLE_COMPARISON_PRECISION = 0.001;
 static constexpr int PLAYER_PLACE_DISTANCE = 100;
+static constexpr int RESPAWN_DELAY = 3000;
 
 class Player {
 public:
@@ -29,9 +33,19 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
-    
-    void checkMarineState();
 
+    bool checkMarineState();
+    void respawn(const Point& newPoint);
+
+
+    void sendServMoveAction();
+    void sendServAttackAction();
+    bool hasChangedAngle() const;
+    bool hasChangedCourse() const;
+    void setId(const int32_t newId) {id = newId;};
+    int32_t getId() const {return id;};
+
+    //Stays as pointer cause the player gets a marine object after the ctor is called
     Marine * getMarine() const {return marine;}
 
 private:
@@ -40,6 +54,10 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    int respawnTick;
+    int32_t id;
+    ClientMessage moveAction;
+    ClientMessage attackAction;
     Marine *marine;
 };
 

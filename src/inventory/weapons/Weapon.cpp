@@ -9,12 +9,15 @@
 
 #include "../../log/log.h"
 #include "../../audio/AudioManager.h"
+#include "../../game/GameManager.h"
 
 using std::string;
 
 /**
  * Date: Feb 8, 2017
- * Modified: Mar 13, 2017 - Mark Tattrie
+ * Modified:
+ *  Feb 9, 2017 - Jacob McPhail
+ *  Mar 13, 2017 - Mark Tattrie
  * Author: Maitiu Morton
  * Function Interface: Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound,
  *       const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
@@ -42,9 +45,9 @@ Weapon::Weapon(const Weapon& w)
 
 //Deric M       3/3/2017
 bool Weapon::reduceClip(const int rounds){
-    logv(3, "Current ammo: %d/%d\n", clip, ammo + clip);
     if(clip < rounds){
         reloadClip();
+        return false;
     }
     clip -= rounds;
     return true;
@@ -91,6 +94,7 @@ bool Weapon::chamberRound() {
     if(!reduceClip(1)){
         return false;
     }
+    logv(3, "Current ammo: %d/%d\n", clip, ammo + clip);
     return true;
 }
 
@@ -100,7 +104,9 @@ bool Weapon::fire(Movable& movable){
     if(!chamberRound()){
         return false;
     }
-
+    if (networked) {
+        GameManager::instance()->getPlayer().sendServAttackAction();
+    }
     AudioManager::instance().playEffect(fireSound.c_str());
     return true;
 }

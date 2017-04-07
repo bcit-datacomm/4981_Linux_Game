@@ -124,7 +124,6 @@ void Inventory::scrollCurrent(int direction) {
      }
  }
 
-
  /**
   * Date: Mar. 31, 2017
   * Author: Mark Tattrie
@@ -139,3 +138,19 @@ void Inventory::scrollCurrent(int direction) {
      GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>
             (std::make_shared<ZombieHand>(tempZombieHand)));
  }
+ /**
+ * Date: Mar. 30, 2017
+ * Designer: Mark Chen
+ * Programmer: Mark Chen
+ * Function Interface: void makeTurretInv()
+ * Description:
+ * Switches the defaultGun to a turretGun.
+ */
+ void Inventory::makeTurretInv() {
+     //Weapon *w = getCurrent();
+     GameManager::instance()->removeWeapon(weaponIds[current]);
+     TurretGun tGun(GameManager::instance()->generateID());
+     weaponIds[0] = tGun.getID();
+     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
+ }
+ 
