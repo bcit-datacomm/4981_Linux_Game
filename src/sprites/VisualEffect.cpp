@@ -1,6 +1,7 @@
 #include "VisualEffect.h"
 #include "Renderer.h"
 #include <SDL2/SDL.h>
+#include <thread>
 
 VisualEffect VisualEffect::sInstance;
 
@@ -35,39 +36,48 @@ inline constexpr SDL_Rect relative(const SDL_Rect& dest, const SDL_Rect& camera)
 void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
     auto& renderer = Renderer::instance();
     SDL_Renderer *rend = renderer.getRenderer();
-    for (auto p = preLines.begin(); p != preLines.end();) {
-        if (--p->second.dur > 0) {
-            SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
-            SDL_RenderDrawLine(rend, p->second.x - camera.x, p->second.y - camera.y,
-                   p->second.ex - camera.x, p->second.ey - camera.y);
+    {
+        std::lock_guard<std::mutex> lock(preLineMut);
+        for (auto p = preLines.begin(); p != preLines.end();) {
+            if (--p->second.dur > 0) {
+                SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
+                SDL_RenderDrawLine(rend, p->second.x - camera.x, p->second.y - camera.y,
+                       p->second.ex - camera.x, p->second.ey - camera.y);
 
-            SDL_RenderDrawLine(rend, p->second.x - camera.x + 1, p->second.y - camera.y + 1,
-                p->second.ex - camera.x + 1, p->second.ey - camera.y + 1);
+                SDL_RenderDrawLine(rend, p->second.x - camera.x + 1, p->second.y - camera.y + 1,
+                    p->second.ex - camera.x + 1, p->second.ey - camera.y + 1);
 
-            SDL_RenderDrawLine(rend, p->second.x - camera.x - 1, p->second.y - camera.y - 1,
-                p->second.ex - camera.x - 1, p->second.ey - camera.y - 1);
-            ++p;
-        } else {
-            p = preLines.erase(p);
+                SDL_RenderDrawLine(rend, p->second.x - camera.x - 1, p->second.y - camera.y - 1,
+                    p->second.ex - camera.x - 1, p->second.ey - camera.y - 1);
+                ++p;
+            } else {
+                p = preLines.erase(p);
+            }
         }
     }
-    for (auto p = preRects.begin(); p != preRects.end();) {
-        if (--p->second.dur > 0) {
-            SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
-            const SDL_Rect temp = relative(p->second.s, camera);
-            SDL_RenderDrawRect(rend, &temp);
-            ++p;
-        } else {
-            p = preRects.erase(p);
+    {
+        std::lock_guard<std::mutex> lock(preRectMut);
+        for (auto p = preRects.begin(); p != preRects.end();) {
+            if (--p->second.dur > 0) {
+                SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
+                const SDL_Rect temp = relative(p->second.s, camera);
+                SDL_RenderDrawRect(rend, &temp);
+                ++p;
+            } else {
+                p = preRects.erase(p);
+            }
         }
     }
-    for (auto p = preTex.begin(); p != preTex.end();) {
-        if (--p->second.dur > 0) {
-            const SDL_Rect temp = relative(p->second.dest, camera);
-            renderer.render(temp, p->second.tex, p->second.src);
-            ++p;
-        } else {
-            p = preTex.erase(p);
+    {
+        std::lock_guard<std::mutex> lock(preTexMut);
+        for (auto p = preTex.begin(); p != preTex.end();) {
+            if (--p->second.dur > 0) {
+                const SDL_Rect temp = relative(p->second.dest, camera);
+                renderer.render(temp, p->second.tex, p->second.src);
+                ++p;
+            } else {
+                p = preTex.erase(p);
+            }
         }
     }
 }
@@ -82,33 +92,42 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
 void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
     auto& renderer = Renderer::instance();
     SDL_Renderer *rend = renderer.getRenderer();
-    for (auto p = postLines.begin(); p != postLines.end();) {
-        if (--p->second.dur > 0) {
-            SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
-            SDL_RenderDrawLine(rend, p->second.x - camera.x, p->second.y - camera.y,
-                    p->second.ex - camera.x, p->second.ey - camera.y);
-            ++p;
-        } else {
-            p = postLines.erase(p);
+    {
+        std::lock_guard<std::mutex> lock(postLineMut);
+        for (auto p = postLines.begin(); p != postLines.end();) {
+            if (--p->second.dur > 0) {
+                SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
+                SDL_RenderDrawLine(rend, p->second.x - camera.x, p->second.y - camera.y,
+                        p->second.ex - camera.x, p->second.ey - camera.y);
+                ++p;
+            } else {
+                p = postLines.erase(p);
+            }
         }
     }
-    for (auto p = postRects.begin(); p != postRects.end();) {
-        if (--p->second.dur > 0) {
-            SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
-            const SDL_Rect temp = relative(p->second.s, camera);
-            SDL_RenderDrawRect(rend, &temp);
-            ++p;
-        } else {
-            p = postRects.erase(p);
+    {
+        std::lock_guard<std::mutex> lock(postRectMut);
+        for (auto p = postRects.begin(); p != postRects.end();) {
+            if (--p->second.dur > 0) {
+                SDL_SetRenderDrawColor(rend, p->second.r, p->second.g, p->second.b, p->second.a);
+                const SDL_Rect temp = relative(p->second.s, camera);
+                SDL_RenderDrawRect(rend, &temp);
+                ++p;
+            } else {
+                p = postRects.erase(p);
+            }
         }
     }
-    for (auto p = postTex.begin(); p != postTex.end();) {
-        if (--p->second.dur > 0) {
-            const SDL_Rect temp = relative(p->second.dest, camera);
-            renderer.render(temp, p->second.tex, p->second.src);
-            ++p;
-        } else {
-            p = postTex.erase(p);
+    {
+        std::lock_guard<std::mutex> lock(postTexMut);
+        for (auto p = postTex.begin(); p != postTex.end();) {
+            if (--p->second.dur > 0) {
+                const SDL_Rect temp = relative(p->second.dest, camera);
+                renderer.render(temp, p->second.tex, p->second.src);
+                ++p;
+            } else {
+                p = postTex.erase(p);
+            }
         }
     }
 }
@@ -123,6 +142,7 @@ void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
  */
 int VisualEffect::addPreLine (const int dur, const int startx, const int starty, const int endx,
         const int endy, const Uint8 r, const Uint8 g, const Uint8 b, const Uint8 a) {
+    std::lock_guard<std::mutex> lock(preLineMut);
     preLines[++preLineId] = {dur, startx, starty, endx, endy, r, g, b, a};
     return preLineId;
 }
@@ -136,6 +156,7 @@ int VisualEffect::addPreLine (const int dur, const int startx, const int starty,
  */
 int VisualEffect::addPostLine(const int dur, const int startx, const int starty, const int endx,
         const int endy, const Uint8 r, const Uint8 g, const Uint8 b, const Uint8 a) {
+    std::lock_guard<std::mutex> lock(postLineMut);
     postLines[++postLineId] = {dur, startx, starty, endx, endy, r, g, b, a};
     return postLineId;
 }
@@ -149,6 +170,7 @@ int VisualEffect::addPostLine(const int dur, const int startx, const int starty,
  */
 int VisualEffect::addPreRect(const int dur, const SDL_Rect &dest, const Uint8 r,
         const Uint8 g, const Uint8 b, const Uint8 a) {
+    std::lock_guard<std::mutex> lock(preRectMut);
     preRects[++preRectId] = {dur, dest, r, g, b, a};
     return preRectId;
 }
@@ -162,6 +184,7 @@ int VisualEffect::addPreRect(const int dur, const SDL_Rect &dest, const Uint8 r,
  */
 int VisualEffect::addPostRect(const int dur, const SDL_Rect &dest, const Uint8 r,
         const Uint8 g, const Uint8 b, const Uint8 a) {
+    std::lock_guard<std::mutex> lock(postRectMut);
     postRects[++postRectId] = {dur, dest, r, g, b, a};
     return postRectId;
 }
@@ -174,6 +197,7 @@ int VisualEffect::addPostRect(const int dur, const SDL_Rect &dest, const Uint8 r
  * add a texture effect
  */
 int VisualEffect::addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex) {
+    std::lock_guard<std::mutex> lock(preTexMut);
     preTex[++preTexId] = {dur, tex, src, dest};
     return preTexId;
 }
@@ -186,6 +210,7 @@ int VisualEffect::addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &
  * add a texture effect
  */
 int VisualEffect::addPostTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex) {
+    std::lock_guard<std::mutex> lock(postTexMut);
     postTex[++postTexId] = {dur, tex, src, dest};
     return postTexId;
 }
@@ -198,6 +223,7 @@ int VisualEffect::addPostTex(const int dur, const SDL_Rect &src, const SDL_Rect 
  * cancel effect with given id
  */
 void VisualEffect::removePreLine(const int id) {
+    std::lock_guard<std::mutex> lock(preLineMut);
     preLines.erase(id);
 }
 
@@ -209,6 +235,7 @@ void VisualEffect::removePreLine(const int id) {
  * cancel effect with given id
  */
 void VisualEffect::removePreRect(const int id) {
+    std::lock_guard<std::mutex> lock(preRectMut);
     preRects.erase(id);
 }
 
@@ -220,6 +247,7 @@ void VisualEffect::removePreRect(const int id) {
  * cancel effect with given id
  */
 void VisualEffect::removePreTex(const int id) {
+    std::lock_guard<std::mutex> lock(preTexMut);
     preTex.erase(id);
 }
 
@@ -231,6 +259,7 @@ void VisualEffect::removePreTex(const int id) {
  * cancel effect with given id
  */
 void VisualEffect::removePostLine(const int id) {
+    std::lock_guard<std::mutex> lock(postLineMut);
     postLines.erase(id);
 }
 
@@ -242,6 +271,7 @@ void VisualEffect::removePostLine(const int id) {
  * cancel effect with given id
  */
 void VisualEffect::removePostRect(const int id) {
+    std::lock_guard<std::mutex> lock(postRectMut);
     postRects.erase(id);
 }
 
@@ -253,5 +283,6 @@ void VisualEffect::removePostRect(const int id) {
  * cancel effect with given id
  */
 void VisualEffect::removePostTex(const int id) {
+    std::lock_guard<std::mutex> lock(postTexMut);
     postTex.erase(id);
 }

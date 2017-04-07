@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <unordered_map>
+#include <mutex>
 
 #include "SpriteTypes.h"
 
@@ -128,6 +129,14 @@ private:
         std::unordered_map<int, Line> postLines;
         std::unordered_map<int, Rect> postRects;
         std::unordered_map<int, Tex> postTex;
+
+        std::mutex preLineMut;
+        std::mutex preRectMut;
+        std::mutex preTexMut;
+
+        std::mutex postLineMut;
+        std::mutex postRectMut;
+        std::mutex postTexMut;
 };
 
 #endif
