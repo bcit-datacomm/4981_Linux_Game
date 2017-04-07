@@ -153,6 +153,7 @@ void Player::sendServAttackAction() {
 *
 * Revisions:
 * Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
+* Apr. 07, 2017, Mark Chen - Can no longer shoot while holding a turret.
 */
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
@@ -174,7 +175,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
 
-        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
                 tempTurret.placeTurret();
@@ -182,15 +183,19 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                 holdingTurret = false;
             }
         }
-    }
-
+    } else if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
+            if(marine->inventory.getCurrent()) {
+                marine->fireWeapon();
+            }
+        }
+}
+/*
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if(marine->inventory.getCurrent()) {
             marine->fireWeapon();
         }
-    }
-}
+    }*/
 
 void Player::handleMouseWheelInput(const SDL_Event *e) {
     marine->inventory.scrollCurrent(e->wheel.y);
