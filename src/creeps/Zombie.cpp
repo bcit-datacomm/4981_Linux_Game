@@ -85,9 +85,7 @@ bool Zombie::isMoving() const {
 */
 bool Zombie::checkTarget() const {
     auto ch = GameManager::instance()->getCollisionHandler();
-    return (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.marineTree, this), this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.objTree, this), this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.turretTree, this), this));
+    return (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(), this), this));
 }
 
 /**

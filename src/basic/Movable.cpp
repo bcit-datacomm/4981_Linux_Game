@@ -34,13 +34,8 @@ void Movable::move(float moveX, float moveY, CollisionHandler& ch){
     setX(getX() + moveX);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.marineTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.zombieTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.wallTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.barricadeTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.turretTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.objTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.storeTree,this),this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this),this)) {
         setX(getX() - moveX);
     }
 
@@ -48,13 +43,8 @@ void Movable::move(float moveX, float moveY, CollisionHandler& ch){
     setY(getY()+moveY);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.marineTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.zombieTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.wallTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.barricadeTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.turretTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.objTree,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.storeTree,this),this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this),this)) {
         setY(getY() - moveY);
     }
 }

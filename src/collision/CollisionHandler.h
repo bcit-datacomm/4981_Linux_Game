@@ -63,6 +63,16 @@ public:
     void insertObj(Entity *e);
     void insertStore(Entity *e);
 
+    auto& getZombieMovementTree() {return zombieMovementTree;}
+    auto& getMarineTree() {return marineTree;}
+    auto& getZombieTree() {return zombieTree;}
+    auto& getBarricadeTree() {return barricadeTree;}
+    auto& getTurretTree() {return turretTree;}
+    auto& getWallTree() {return wallTree;}
+    auto& getPickUpTree() {return pickUpTree;}
+    auto& getObjTree() {return objTree;}
+    auto& getStoreTree() {return storeTree;}
+
 private:
     void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList& targetList, const std::vector<Entity*>& allEntities, const int type) const;
