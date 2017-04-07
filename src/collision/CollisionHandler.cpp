@@ -289,7 +289,7 @@ void CollisionHandler::clear() {
     zombieMovementTree.clear();
     marineTree.clear();
     zombieTree.clear();
-    //barricadeTree.clear(); 
+    barricadeTree.clear(); 
     turretTree.clear();
     pickUpTree.clear();
     objTree.clear();
