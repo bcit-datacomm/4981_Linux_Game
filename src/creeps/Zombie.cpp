@@ -28,6 +28,11 @@
 #include <cstdlib>
 using namespace std;
 
+/**
+ * Author: Robert Arendac
+ *
+ * Date: April 6, 2017
+ */
 Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const int health) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health),
@@ -36,10 +41,19 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
     inventory.initZombie();
 }
 
+/**
+ * Author: Robert Arendac
+ *
+ * Date: April 6, 2017
+ */
 Zombie::~Zombie() {
     logv("Destroy Zombie\n");
 }
-
+/**
+ * Author: Robert Arendac
+ *
+ * Date: April 6, 2017
+ */
 void Zombie::update(){
     ++frameCount;
     //middle of me
@@ -111,8 +125,15 @@ void Zombie::update(){
     }
 }
 
+/**
+ * Author: Jamie Lee
+ *
+ * Date: April 6, 2017
+ */
 void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
 
+    static constexpr int IGNORE_TIME = 10;
+    static constexpr int RANDOM_DEGREE = 5;
     //Move the Movable left or right
     setX(getX() + moveX);
 
@@ -124,8 +145,8 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
         setX(getX() - moveX);
-        setAngle(getAngle() + 5 * (1 - rand()));
-        ignore = 10;
+        setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
+        ignore = IGNORE_TIME;
     }
 
     //Move the Movable up or down
@@ -139,11 +160,16 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
         setY(getY() - moveY);
-        setAngle(getAngle() + 5 * (1 - rand()));
-        ignore = 10;
+        setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
+        ignore = IGNORE_TIME;
     }
 }
 
+/**
+ * Author: Jamie Lee
+ *
+ * Date: April 6, 2017
+ */
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
     if (health <= 0) {
@@ -237,7 +263,7 @@ void Zombie::updateImageWalk() {
 *
 * Designer: Trista Huang
 *
-* Programmer: Isaac Morneau
+* Programmer: Fred Yang
 *
 * Interface: void Marine::updateImageDirection()
 *

@@ -38,9 +38,9 @@ public:
     // Moves Marine
     void move(const float moveX, const float moveY, CollisionHandler& ch);
     //set delta x coordinate
-    void setDX(float px) {dx = px;}
+    void setDX(const float px) {dx = px;}
     //set delta y coordinate
-    void setDY(float py) {dy = py;}
+    void setDY(const float py) {dy = py;}
     // set velocity of Marine movement
     void setVelocity(int pvel) {velocity = pvel;}
     //sets angle of sprite in degrees
