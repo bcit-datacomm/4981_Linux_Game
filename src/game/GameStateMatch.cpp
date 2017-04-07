@@ -267,7 +267,7 @@ void GameStateMatch::update(const float delta) {
 #ifndef SERVER
     // Move Camera
     if(GameManager::instance()->getPlayer().getMarine()){
-        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), 
+        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
                 GameManager::instance()->getPlayer().getMarine()->getY());
     }
     if (GameManager::instance()->getPlayer().checkMarineState()) {

@@ -40,7 +40,7 @@ void MatchManager::spawnZombies() {
         return;
     }
     spawnTick = currentTime;
-    
+
     const int32_t id = GameManager::instance()->createZombie(0, 0);
     Zombie& zombie = GameManager::instance()->getZombie(id);
     CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
@@ -51,7 +51,7 @@ void MatchManager::spawnZombies() {
                     ch.quadtreeMarine,&zombie),&zombie)
                     || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,&zombie),&zombie)) {
                 GameManager::instance()->createZombie(pos.x, pos.y);
-                --zombiesToSpawn; 
+                --zombiesToSpawn;
             }
         } else {
            break;
