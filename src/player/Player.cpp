@@ -389,7 +389,8 @@ void Player::spawnMapGuides(const int winWidth, const int winHeight) {
         double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, destCoord);
         const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
         //RECT for Store Guide img
-        SDL_Rect StoreGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE / 2, GUIDE_SIZE};
+        SDL_Rect StoreGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second),
+                GUIDE_SIZE / 2, GUIDE_SIZE};
         ve.addPostTex(2, s.second->getSrcRect(), StoreGuide, TEXTURES::MAP_OBJECTS);
     }
 
