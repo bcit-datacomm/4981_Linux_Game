@@ -19,6 +19,7 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
+#include <omp.h>
 
 #include "Quadtree.h"
 #include "CollisionHandler.h"
@@ -297,7 +298,10 @@ void CollisionHandler::clear() {
 }
 
 void CollisionHandler::insertMarine(Entity *e) {
-    zombieMovementTree.insert(e);
+#pragma omp critical
+    {
+        zombieMovementTree.insert(e);
+    }
     marineTree.insert(e);
 }
 
@@ -306,17 +310,26 @@ void CollisionHandler::insertZombie(Entity *e) {
 }
 
 void CollisionHandler::insertBarricade(Entity *e) {
-    zombieMovementTree.insert(e);
+#pragma omp critical
+    {
+        zombieMovementTree.insert(e);
+    }
     barricadeTree.insert(e);
 }
 
 void CollisionHandler::insertTurret(Entity *e) {
-    zombieMovementTree.insert(e);
+#pragma omp critical
+    {
+        zombieMovementTree.insert(e);
+    }
     turretTree.insert(e);
 }
 
 void CollisionHandler::insertWall(Entity *e) {
-    zombieMovementTree.insert(e);
+#pragma omp critical
+    {
+        zombieMovementTree.insert(e);
+    }
     wallTree.insert(e);
 }
 
@@ -325,12 +338,18 @@ void CollisionHandler::insertPickUp(Entity *e) {
 }
 
 void CollisionHandler::insertObj(Entity *e) {
-    zombieMovementTree.insert(e);
+#pragma omp critical
+    {
+        zombieMovementTree.insert(e);
+    }
     objTree.insert(e);
 }
 
 void CollisionHandler::insertStore(Entity *e) {
-    zombieMovementTree.insert(e);
+#pragma omp critical
+    {
+        zombieMovementTree.insert(e);
+    }
     storeTree.insert(e);
 }
 

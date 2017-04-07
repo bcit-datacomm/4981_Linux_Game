@@ -32,7 +32,7 @@
  * Description:
  *      ctor for a quadtree.
  */
-Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) : level(pLevel), bounds(pBounds), objectCounter(0) {}
+Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) : objectCounter(0), level(pLevel), bounds(pBounds) {}
 
 Quadtree& Quadtree::operator=(const Quadtree& quad) {
     objects = quad.objects;
@@ -126,6 +126,7 @@ int Quadtree::getIndex(const HitBox *pRect) const {
             return 3;
         }
     }
+    return -1;
 }
 
 /**

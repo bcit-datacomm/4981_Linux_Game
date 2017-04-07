@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <memory>
 #include <utility>
 #include <atomic>
@@ -731,36 +732,46 @@ CollisionHandler& GameManager::getCollisionHandler() {
 void GameManager::updateCollider() {
     collisionHandler.clear();
 
-    for (auto& m : marineManager) {
-        collisionHandler.insertMarine(&m.second);
-    }
-
-    for (auto& z : zombieManager) {
-        collisionHandler.insertZombie(&z.second);
-    }
-
-    for (auto& o : objectManager) {
-        collisionHandler.insertObj(&o.second);
-    }
-
-    for (auto& m : turretManager) {
-        if (m.second.isPlaced()) {
-            collisionHandler.insertTurret(&m.second);
+#pragma omp parallel sections shared(collisionHandler)
+    {
+#pragma omp section
+        for (auto& m : marineManager) {
+            collisionHandler.insertMarine(&m.second);
         }
-    }
 
-    for (auto& b : barricadeManager) {
-        if (b.second.isPlaced()) {
-            collisionHandler.insertBarricade(&b.second);
+#pragma omp section
+        for (auto& z : zombieManager) {
+            collisionHandler.insertZombie(&z.second);
         }
-    }
 
-    for (auto& m : weaponDropManager) {
-        collisionHandler.insertPickUp(&m.second);
-    }
+#pragma omp section
+        for (auto& o : objectManager) {
+            collisionHandler.insertObj(&o.second);
+        }
 
-    for (auto& s : storeManager) {
-        collisionHandler.insertStore(s.second.get());
+#pragma omp section
+        for (auto& m : turretManager) {
+            if (m.second.isPlaced()) {
+                collisionHandler.insertTurret(&m.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& b : barricadeManager) {
+            if (b.second.isPlaced()) {
+                collisionHandler.insertBarricade(&b.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& m : weaponDropManager) {
+            collisionHandler.insertPickUp(&m.second);
+        }
+
+#pragma omp section
+        for (auto& s : storeManager) {
+            collisionHandler.insertStore(s.second.get());
+        }
     }
 }
 
