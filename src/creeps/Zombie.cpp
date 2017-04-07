@@ -130,19 +130,13 @@ void Zombie::update(){
  * Date: April 6, 2017
  */
 void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
-
     static constexpr int IGNORE_TIME = 10;
     static constexpr int RANDOM_DEGREE = 5;
     //Move the Movable left or right
     setX(getX() + moveX);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setX(getX() - moveX);
         setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
         ignore = IGNORE_TIME;
@@ -152,12 +146,7 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
     setY(getY()+moveY);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setY(getY() - moveY);
         setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
         ignore = IGNORE_TIME;

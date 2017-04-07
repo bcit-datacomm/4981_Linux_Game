@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <memory>
 #include <utility>
 #include <atomic>
@@ -150,13 +151,21 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-    for (auto& z : zombieManager) {
-        z.second.update();
-        z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                it->second.update();
+                it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
 #ifndef SERVER
-        z.second.updateImageDirection();
-        z.second.updateImageWalk();
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
+            }
 #endif
+        }
+#pragma omp taskwait
     }
 }
 
@@ -746,43 +755,53 @@ CollisionHandler& GameManager::getCollisionHandler() {
  *     Update colliders to current state
  */
 void GameManager::updateCollider() {
-    collisionHandler = CollisionHandler();
+    collisionHandler.clear();
 
-    for (auto& m : marineManager) {
-        collisionHandler.quadtreeMarine.insert(&m.second);
-    }
-
-    for (auto& z : zombieManager) {
-        collisionHandler.quadtreeZombie.insert(&z.second);
-    }
-
-    for (auto& o : objectManager) {
-        collisionHandler.quadtreeObj.insert(&o.second);
-    }
-
-    for (auto& o : wallManager) {
-        collisionHandler.quadtreeWall.insert(&o.second);
-    }
-
-    for (auto& m : turretManager) {
-        if (m.second.isPlaced()) {
-            collisionHandler.quadtreeTurret.insert(&m.second);
-            collisionHandler.quadtreePickUp.insert(&m.second);
+#pragma omp parallel sections shared(collisionHandler)
+    {
+#pragma omp section
+        for (auto& m : marineManager) {
+            collisionHandler.insertMarine(&m.second);
         }
-    }
 
-    for (auto& b : barricadeManager) {
-        if (b.second.isPlaced()) {
-            collisionHandler.quadtreeBarricade.insert(&b.second);
+#pragma omp section
+        for (auto& z : zombieManager) {
+            collisionHandler.insertZombie(&z.second);
         }
-    }
 
-    for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp.insert(&m.second);
-    }
+#pragma omp section
+        for (auto& o : objectManager) {
+            collisionHandler.insertObj(&o.second);
+        }
 
-    for (auto& s : storeManager) {
-        collisionHandler.quadtreeStore.insert(s.second.get());
+#pragma omp section
+        for (auto& w : wallManager) {
+            collisionHandler.insertWall(&w.second);
+        }
+
+#pragma omp section
+        for (auto& m : turretManager) {
+            if (m.second.isPlaced()) {
+                collisionHandler.insertTurret(&m.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& b : barricadeManager) {
+            if (b.second.isPlaced()) {
+                collisionHandler.insertBarricade(&b.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& m : weaponDropManager) {
+            collisionHandler.insertPickUp(&m.second);
+        }
+
+#pragma omp section
+        for (auto& s : storeManager) {
+            collisionHandler.insertStore(s.second.get());
+        }
     }
 }
 
@@ -798,7 +817,7 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData &playerData) {
-    if(marineManager.count(playerData.playerid) == 0) {
+    if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager[playerData.playerid].first;
