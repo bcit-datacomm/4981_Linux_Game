@@ -190,7 +190,7 @@ void AudioManager::loadFiles(){
     loadEffect(EFX_WLPISTOL);
     loadEffect(EFX_WLRIFLE);
     loadEffect(EFX_WSHOTGUN);
-    loadEffect(EFX_WTURRET);
+    loadEffect(EFX_WTURRET01);
 
     // weapon reload
     loadEffect(EFX_WRELOAD01);
