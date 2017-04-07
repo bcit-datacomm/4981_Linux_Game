@@ -21,7 +21,6 @@
 #include "Game.h"
 #include "../../include/Colors.h"
 
-
 /**
 * Date: Jan. 20, 2017
 * Author: Jacob McPhail
@@ -35,7 +34,7 @@
 *       ctor for the match game state.
 */
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
-        base(), camera(gameWidth,gameHeight), hud(),
+        camera(gameWidth,gameHeight), hud(),
         screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
 /**
@@ -53,11 +52,8 @@ bool GameStateMatch::load() {
                 &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
-        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-        GameManager::instance()->addObject(base);
-        Point newPoint = base.getSpawnPoint();
-        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-
+        GameManager::instance()->addObject(GameManager::instance()->getBase());
+        const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
@@ -191,7 +187,7 @@ void GameStateMatch::handle() {
                 if(GameManager::instance()->getPlayer().getMarine()) {
                      if (event.button.button == SDL_BUTTON_RIGHT) {
                         GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                    } 
+                    }
                 }
                 break;
             case SDL_KEYDOWN:
@@ -266,6 +262,7 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
+    GameManager::instance()->updateBase();
     GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
 
@@ -275,7 +272,7 @@ void GameStateMatch::update(const float delta) {
         camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
     }
     if (GameManager::instance()->getPlayer().checkMarineState()) {
-        GameManager::instance()->getPlayer().respawn(base.getSpawnPoint());
+        GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
     }
 #endif
 }
