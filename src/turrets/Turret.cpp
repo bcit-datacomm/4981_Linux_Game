@@ -33,6 +33,8 @@
 #include "Turret.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
+//for the angle update rate
+#include "../creeps/Zombie.h"
 
 /**
  * Date: Feb. 02, 2017
@@ -55,6 +57,7 @@
  * Mar. 16, 2017, Mark Chen : Changed parameters that the constructor takes.
  * Mar. 30, 2017, Mark Chen : Turret now has an inventory.
  * Apr. 02, 2017, Mark Chen : Turret now has a dropzone value.
+ * Apr. 07, 2017, Isaac Morneau : Turret checks more efficiently
  */
 
 Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
@@ -288,47 +291,49 @@ void Turret::pickUpTurret() {
  * Mar. 05, 2017, Robert Arendac - General code clean up
  */
 bool Turret::targetScanTurret() {
-    //Get map of all zombies
-    const auto& mapZombies = GameManager::instance()->getZombies();
+    ++frameCount;
+    //middle of me
+    const int midMeX = getX() + (getW() / 2);
+    const int midMeY = getY() + (getH() / 2);
+    const Entity visSection(0, {midMeX - ZOMBIE_SIGHT, static_cast<int>(midMeY - getRange()),
+        static_cast<int>(2 * getRange()), static_cast<int>(2 * getRange())});
 
-    unsigned int closestZombieId = 0;
-    float closestZombieDist = std::numeric_limits<float>::max();
+    if (!(frameCount % ANGLE_UPDATE_RATE)) {
+        //Movement updates
+        GameManager *gm = GameManager::instance();
+        auto& collision = gm->getCollisionHandler();
+        const auto& zombies = collision.getQuadTreeEntities(collision.getZombieTree(), &visSection);
 
-    // Detect zombies
-    bool detect = false;
-    for (const auto& item : mapZombies) {
-        const auto& zombie = item.second;
-        const float zombieX = zombie.getX();
-        const float zombieY = zombie.getY();
+        //the difference in zombie to target distance
+        float movX;
+        float movY;
 
-        const float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
-        const float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
-        const float distance = sqrt(xDelta * xDelta + yDelta * yDelta);
+        //temp x and y for calculating the hypot
+        int hypX;
+        int hypY;
 
-        if (distance < getRange()) {
-            if (distance < closestZombieDist) {
-                closestZombieId = item.first;
-                closestZombieDist = distance;
-                detect = true;
+        //hypo variables
+        float hyp = getRange();
+        float temp;
+
+        //who is closest?
+        for (const auto t : zombies){
+            hypX = t->getX() + (t->getW() / 2);
+            hypY = t->getY() + (t->getH() / 2);
+
+            //we only want the closest one
+            if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
+                hyp = temp;
+                movX = hypX - midMeX;
+                movY = hypY - midMeY;
             }
         }
+
+        //invert the return of the arc tan
+        if (hyp < getRange()) {
+            setRadianAngle(fmod((-1 * atan2(movX, movY)) + M_PI, 2 * M_PI));
+            return true;
+        }
     }
-
-    if (!detect) {
-        return false;
-    }
-
-    const auto& target = mapZombies.find(closestZombieId);
-    if (target == mapZombies.end()) {
-        return false;
-    }
-
-    const float deltaX = getX() - target->second.getX();
-    const float deltaY = getY() - target->second.getY();
-
-    // Set angle so turret points at zombie
-    setAngle(((atan2(deltaX, deltaY) * 180.0) / M_PI) * -1);
-    //detectList[closestZombieId]->damage(this->attackDmg);
-
-    return true;
+    return false;
 }
