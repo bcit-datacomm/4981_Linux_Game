@@ -138,14 +138,22 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  *     Update marine movements. health, and actions
  */
 void GameManager::updateMarines(const float delta) {
-    for (auto& m : marineManager) {
-        if (!networked) {
-            m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
-        }
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = marineManager.begin(); it != marineManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                if (!networked) {
+                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                }
 #ifndef SERVER
-        m.second.updateImageDirection();
-        m.second.updateImageWalk();
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
 #endif
+            }
+        }
+#pragma omp taskwait
     }
 }
 
@@ -214,10 +222,18 @@ void GameManager::updateTurrets() {
         deleteTurret(*it);
     }
 
-    for (auto& t: turretManager) {
-        if (t.second.targetScanTurret() && t.second.isActivated()) {
-            t.second.shootTurret();
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                if (it->second.targetScanTurret() && it->second.isActivated()) {
+                    it->second.shootTurret();
+                }
+            }
         }
+#pragma omp taskwait
     }
 }
 

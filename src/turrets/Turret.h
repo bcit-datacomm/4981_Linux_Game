@@ -62,7 +62,7 @@ public:
     void pickUpTurret();
     bool isActivated() {return activated;};
     void removeTurret(); // removes the turret
-    Inventory getInventory() {return inventory;};
+    Inventory getInventory() const {return inventory;};
     // Jamie Lee, 2017-03-01.
     float getRange() const {
         return range;
