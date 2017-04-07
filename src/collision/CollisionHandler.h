@@ -77,6 +77,8 @@ private:
     void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList& targetList, const std::vector<Entity*>& allEntities, const int type) const;
 
+    void insertZombieMovementEntity(Entity *e);
+
     Quadtree zombieMovementTree;
     Quadtree marineTree; //can take dmg
     Quadtree zombieTree; //can take dmg

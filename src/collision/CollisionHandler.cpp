@@ -298,10 +298,7 @@ void CollisionHandler::clear() {
 }
 
 void CollisionHandler::insertMarine(Entity *e) {
-#pragma omp critical
-    {
-        zombieMovementTree.insert(e);
-    }
+    insertZombieMovementEntity(e);
     marineTree.insert(e);
 }
 
@@ -310,26 +307,17 @@ void CollisionHandler::insertZombie(Entity *e) {
 }
 
 void CollisionHandler::insertBarricade(Entity *e) {
-#pragma omp critical
-    {
-        zombieMovementTree.insert(e);
-    }
+    insertZombieMovementEntity(e);
     barricadeTree.insert(e);
 }
 
 void CollisionHandler::insertTurret(Entity *e) {
-#pragma omp critical
-    {
-        zombieMovementTree.insert(e);
-    }
+    insertZombieMovementEntity(e);
     turretTree.insert(e);
 }
 
 void CollisionHandler::insertWall(Entity *e) {
-#pragma omp critical
-    {
-        zombieMovementTree.insert(e);
-    }
+    insertZombieMovementEntity(e);
     wallTree.insert(e);
 }
 
@@ -338,18 +326,16 @@ void CollisionHandler::insertPickUp(Entity *e) {
 }
 
 void CollisionHandler::insertObj(Entity *e) {
-#pragma omp critical
-    {
-        zombieMovementTree.insert(e);
-    }
+    insertZombieMovementEntity(e);
     objTree.insert(e);
 }
 
 void CollisionHandler::insertStore(Entity *e) {
-#pragma omp critical
-    {
-        zombieMovementTree.insert(e);
-    }
+    insertZombieMovementEntity(e);
     storeTree.insert(e);
 }
 
+void CollisionHandler::insertZombieMovementEntity(Entity *e) {
+#pragma omp critical
+    zombieMovementTree.insert(e);
+}

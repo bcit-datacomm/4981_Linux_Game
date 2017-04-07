@@ -750,6 +750,11 @@ void GameManager::updateCollider() {
         }
 
 #pragma omp section
+        for (auto& w : wallManager) {
+            collisionHandler.insertWall(&w.second);
+        }
+
+#pragma omp section
         for (auto& m : turretManager) {
             if (m.second.isPlaced()) {
                 collisionHandler.insertTurret(&m.second);
