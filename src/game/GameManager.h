@@ -158,6 +158,8 @@ public:
         AiMap = a;
     }
 
+
+
     //getManagers
     auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
@@ -166,13 +168,16 @@ public:
     auto& getWeaponDropManager() const {return weaponDropManager;};
     auto& getWeaponManager() const {return weaponManager;};
     auto& getBarricadeManager() const {return barricadeManager;};
-    auto& getWallManager() const {return wallManager;};
+    auto& getWallManager() {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
+    auto& getObjectManager() {return objectManager;};
+
 private:
     GameManager();
     ~GameManager();
     static GameManager sInstance;
     Player player;
+
     Base base;
 
     CollisionHandler collisionHandler;

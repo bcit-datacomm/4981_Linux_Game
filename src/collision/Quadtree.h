@@ -19,16 +19,16 @@
 #ifndef QUADTREE_H
 #define QUADTREE_H
 #include <SDL2/SDL.h>
-#include "HitBox.h"
-#include "../basic/Entity.h"
 #include <vector>
 #include <array>
 #include <memory>
 
-constexpr unsigned int BRANCHSIZE = 4;
+#include "HitBox.h"
+#include "../basic/Entity.h"
 
-constexpr unsigned int MAX_OBJECTS = 1000;
-constexpr unsigned int MAX_LEVELS = 50;
+static constexpr unsigned int BRANCHSIZE = 4;
+static constexpr unsigned int MAX_OBJECTS = 1000;
+static constexpr unsigned int MAX_LEVELS = 50;
 
 class Quadtree {
 public:
@@ -42,15 +42,15 @@ public:
     unsigned int getTreeSize() const;
     int getIndex(const HitBox *pRect) const;
     void insert(Entity *entity);
-    std::vector<Entity *> retrieve(const Entity *entity);
-
-    std::vector<Entity *> objects;
+    std::vector<Entity *> retrieve(const Entity *entity) const;
+    auto& getObjects() const {return objects;}
 
 private:
     unsigned int objectCounter;
     unsigned int level;
     SDL_Rect bounds;
     std::array<std::shared_ptr<Quadtree>, BRANCHSIZE> nodes;
+    std::vector<Entity *> objects;
 };
 
 #endif

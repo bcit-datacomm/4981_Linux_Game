@@ -231,6 +231,8 @@ void GameStateMenu::handle() {
             y = event.button.y;
 
             if (joinSelected) {
+                // play menu click effect
+                AudioManager::instance().playEffect(MENU_CLICK01);
                 if (networked) {
                     NetworkManager::instance().run(hostInput, userInput);
                 } else {
@@ -245,6 +247,8 @@ void GameStateMenu::handle() {
             //to it's acive state when the mouse button down event occurred within the textbox's bounds
             if (x >= hostRect.x && x <= hostRect.x + hostRect.w &&
                     y >= hostRect.y && y <= hostRect.y + hostRect.h) {
+                // play menu click effect
+                AudioManager::instance().playEffect(MENU_CLICK01);
                 hostIPSelected = true;  //Activate the button
 
                 //If default string is detected, delete it
@@ -264,6 +268,8 @@ void GameStateMenu::handle() {
             //to it's acive state when the mouse button down event occurred within the textbox's bounds
             if (x >= userRect.x && x <= userRect.x + userRect.w &&
                     y >= userRect.y && y <= userRect.y + userRect.h) {
+                // play menu click effect
+                AudioManager::instance().playEffect(MENU_CLICK01);
                 usernameSelected = true;  //Activate the button
 
                 //If default string is detected, delete it

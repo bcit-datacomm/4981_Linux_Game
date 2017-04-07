@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -73,6 +74,7 @@ bool GameStateMatch::load() {
     m.mapLoadToGame();
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
+
     return success;
 }
 
@@ -85,6 +87,8 @@ bool GameStateMatch::load() {
 *       State loop, processes a frame per each loop.
 */
 void GameStateMatch::loop() {
+    // play ingame music
+    AudioManager::instance().playMusic(MUS_GAMEBKG);
     int startTick = 0;
     int frameTicks = 0;
     // State Loop
@@ -162,8 +166,10 @@ void GameStateMatch::updateServ() {
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
+
     if(GameManager::instance()->getPlayer().getMarine()){
-        GameManager::instance()->getPlayer().handleKeyboardInput(state);
+        GameManager::instance()->getPlayer().handleKeyboardInput(game.getWindow().getWidth(),
+                game.getWindow().getHeight(), state);
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
     }

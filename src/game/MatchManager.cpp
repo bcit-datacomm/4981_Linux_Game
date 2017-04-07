@@ -45,16 +45,14 @@ void MatchManager::spawnZombies() {
     Zombie& zombie = GameManager::instance()->getZombie(id);
     CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
     for (auto& pos : spawnPoints) {
-        if (zombiesToSpawn > 0) {
-            zombie.setPosition(pos.x, pos.y);
-            if (!ch.detectMovementCollision(ch.getQuadTreeEntities(
-                    ch.quadtreeMarine,&zombie),&zombie)
-                    || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,&zombie),&zombie)) {
-                GameManager::instance()->createZombie(pos.x, pos.y);
-                --zombiesToSpawn;
-            }
-        } else {
-           break;
+        if (zombiesToSpawn <= 0) {
+            break;
+        }
+        zombie.setPosition(pos.x, pos.y);
+        if (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getMarineTree(),&zombie),&zombie)
+                || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),&zombie),&zombie)) {
+            GameManager::instance()->createZombie(pos.x, pos.y);
+            --zombiesToSpawn; 
         }
     }
     printf("Z:%ld P:%d\n", GameManager::instance()->getZombieManager().size(), zombiesToSpawn);
