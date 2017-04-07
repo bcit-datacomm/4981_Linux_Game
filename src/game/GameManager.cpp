@@ -162,8 +162,8 @@ void GameManager::updateZombies(const float delta) {
 #ifndef SERVER
                 it->second.updateImageDirection();
                 it->second.updateImageWalk();
-            }
 #endif
+            }
         }
 #pragma omp taskwait
     }

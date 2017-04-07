@@ -1,4 +1,4 @@
-oc#ifndef PLAYER_H
+#ifndef PLAYER_H
 #define PLAYER_H
 
 #include <SDL2/SDL.h>
