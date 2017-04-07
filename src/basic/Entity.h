@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
-* Header: Entity.h   
+* Header: Entity.h
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #ifndef ENTITY_H
 #define ENTITY_H
@@ -55,9 +55,11 @@ public:
     float getY() const{return y;} // Get y coordinate
     int getW() const{return destRect.w;} // Get width
     int getH() const{return destRect.h;} // Get height
+    void setW(const int w) {destRect.w = w;} // Set width
+    void setH(const int h) {destRect.h = h;} // Set height
     void updateHitBoxes(); // update hitbox positions
     void updateRectHitBoxes(); // update hitbox sizes
-    
+
     int32_t getId()const{return id;}; //returns the id of the entity
 
 

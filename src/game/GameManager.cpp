@@ -75,9 +75,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
-                o.second.getSrcRect());
+            // TODO: Base image rendering has been moved, clear/change this as other objects are added
+            // Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
+            //     o.second.getSrcRect());
         }
+    }
+
+    if (base.getX() - cam.x < cam.w && base.getY() - cam.y < cam.h) {
+        Renderer::instance().render(base.getRelativeDestRect(cam), TEXTURES::BASE,
+            base.getSrcRect());
     }
 
     for (const auto& z : zombieManager) {
@@ -145,17 +151,38 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-    for (auto& z : zombieManager) {
-        if (z.second.getLastHealth() > z.second.getHealth()) {
-            z.second.setState(ZombieState::ZOMBIE_HIT);
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                it->second.update();
+                it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+#ifndef SERVER
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
+            }
+#endif
         }
-        
-        z.second.generateMove();
-        if (z.second.isMoving()) {
-            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
-        }
+#pragma omp taskwait
     }
 }
+
+/**
+* Date: April 6, 2017
+* Designer: Trista Huang
+* Programmer: Trista Huang
+* Function Interface: void GameManager::updateBase()
+* Description:
+*       This function calls function to check for base health everytime an update happens,
+*       and changes base image accordingly.
+*       It is called from GameStateMatch every update.
+*/
+void GameManager::updateBase() {
+    base.updateBaseImage();
+}
+
 bool GameManager::hasMarine(const int32_t id) const {
     return marineManager.count(id);
 }
@@ -466,8 +493,6 @@ int32_t GameManager::createZombie(const float x, const float y) {
 
     const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
     elem->second.setPosition(x,y);
-    elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    elem->second.setState(ZombieState::ZOMBIE_MOVE);
     return id;
 }
 

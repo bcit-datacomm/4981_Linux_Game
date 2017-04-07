@@ -55,6 +55,7 @@ void MatchManager::spawnZombies() {
             --zombiesToSpawn; 
         }
     }
+    printf("Z:%ld P:%d\n", GameManager::instance()->getZombieManager().size(), zombiesToSpawn);
     GameManager::instance()->deleteZombie(id);
 }
 
@@ -79,5 +80,7 @@ void MatchManager::setSpawnPoints(std::vector<MapPoint> points) {
  *      Starts a new round, adds zombies to spawn.
  */
 void MatchManager::newRound() {
-    zombiesToSpawn = (spawnPoints.size() * ++round) * 2;
+    //this needs to be set based on testing to provide good round scaling
+    static constexpr int scaleFactor = 16;
+    zombiesToSpawn = (spawnPoints.size() * ++round) * scaleFactor;
 }
