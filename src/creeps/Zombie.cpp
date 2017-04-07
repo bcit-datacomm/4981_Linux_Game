@@ -16,7 +16,7 @@
 * Notes:
 *
 ------------------------------------------------------------------------------*/
-#include <math.h>
+#include <cmath>
 #include <random>
 #include <cassert>
 #include <utility>
