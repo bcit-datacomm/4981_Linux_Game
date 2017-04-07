@@ -157,7 +157,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
     const int mouseDeltaX = winWidth / 2 - mouseX;
     const int mouseDeltaY = winHeight / 2 - mouseY;
 
-    marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* 180.0)/M_PI) * - 1);
+    marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* ONE_EIGHTY)/M_PI) * - 1);
 
     if (tempBarricadeID > -1) {
         Barricade& tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
@@ -304,7 +304,7 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
     //added by Maitiu Debug print 5/3 / 2017
     if (state[SDL_SCANCODE_SPACE]) {
         //render guide arrows
-        spawnArrowGuides(winWidth, winHeight);
+        spawnMapGuides(winWidth, winHeight);
     }
 
     //added by Maitiu Debug print 4/3 / 2017
@@ -351,7 +351,7 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
  *      Check marine health if 0 kill marine, also check if player respawns.
  */
 bool Player::checkMarineState() {
-    if (marine && marine->getHealth() <= 0){
+    if (marine && marine->getHealth() <= 0) {
         GameManager::instance()->deleteMarine(marine->getId());
         setControl(nullptr);
         respawnTick = SDL_GetTicks();
@@ -381,100 +381,184 @@ void Player::respawn(const Point& newPoint) {
     getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 }
 
-
-void Player::spawnArrowGuides(const int winWidth, const int winHeight) {
+/**
+ * Date: Apl. 5, 2017
+ * Author: Maitiu Morton
+ * Function Interface: spawnMapGuides(const int winWidth, const int winHeight)
+ *      winWidth: windows width
+ *      winHeight: windows height
+ * Description:
+ *      Gets the base entity and store entities and renders their guides on the edge of the screen by
+ *      using getAngle and getGuideCoord functions.
+ */
+void Player::spawnMapGuides(const int winWidth, const int winHeight) {
     VisualEffect &ve = VisualEffect::instance();
     GameManager *gm = GameManager::instance();
-    auto &om = gm->getObjectManager();
 
+    //BASE
+    auto &om = gm->getObjectManager();
     std::pair<float, float> bCoord = om[0].first.getDestCoord();
     double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, bCoord);
 
-    std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
-    SDL_Rect baseGuide = {gCoord.first, gCoord.second, 100, 100};
-    SDL_Rect baseSrc = {82, 44, 1012, 1050};
-    ve.addPostTex(2, baseSrc, baseGuide, TEXTURES::BASE);
+    const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
+    //Rect for BASE guide img
+    SDL_Rect baseGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
+    ve.addPostTex(2, om[0].first.getSrcRect(), baseGuide, TEXTURES::BASE);
+
+
+    //STORES
+    for (const auto& s : gm->getStoreManager()) {
+        const std::pair<float, float> destCoord = getDestCoordinates(s.second.get());
+        double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, destCoord);
+        const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
+        //RECT for Store Guide img
+        SDL_Rect StoreGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE / 2, GUIDE_SIZE};
+        ve.addPostTex(2, s.second->getSrcRect(), StoreGuide, TEXTURES::MAP_OBJECTS);
+    }
+
+    //DROP ZONE
+
 
 }
 
+/**
+ * Date: Apl. 5, 2017
+ * Author: Maitiu Morton
+ * Function Interface:getAngleBetweenPoints(const std::pair<float, float> p1, const std::pair<float, float> p2)
+ *      p1: corrdinates of the first point
+ *      p2: corrdinates of the second point
+ *
+ * Description:
+ *      GEts the angle between two points in the world.
+ */
 double Player::getAngleBetweenPoints(const std::pair<float, float> p1, const std::pair<float, float> p2) {
     return atan2(p1.second - p2.second, p1.first - p2.first);
 }
 
+/**
+ * Date: Apl. 5, 2017
+ * Author: JMaitiu Morton
+ * Function Interface: getGuideCoord(const double radian, const int winWidth, const int winHeight)
+ *      radian : degree of object from player in Radians
+ *      winWidth: window width
+ *      winHeight: window height
+ *
+ * Description:
+ *      comverts radian to an angle and then compares it with the angles of the four corners so that
+ *      it can call the appropriate calulate coordinates function.
+ */
 std::pair<float, float> Player::getGuideCoord(const double radian, const int winWidth, const int winHeight) {
-    double angle = 90 - (radian * 180/3.14159265);
-    //Top of the screen so the base is north
-    if (angle + 90 >= 40 && angle + 90 <= 145) {
-        //going up
-        double h = (tan(angle * 3.14159265/180) * ((double)winHeight / 2));
-        double x;
-        if (winWidth / 2 > abs(h)) {
-            x = marine->getX() - h + 50;
-        } else {
-            //if ANgle Brings IMG out of screen set it to the screens width/2
-            if (angle + 90 > 90) {
-                x = marine->getX() - winWidth / 2;
-            } else {
-                x = marine->getX() + winWidth / 2;
-            }
-        }
 
-        return{x, marine->getY() - (winHeight / 2) + 20};
+    double angle = NINTY_DEGREES - (radian * ONE_EIGHTY/M_PI);
 
-    } else if ((angle + 90 <= 323 && angle + 90 >= 216)) {//BASE IS DOWN
-        double t = tan(angle * 3.14159265/180);
-        double h = t * 480;
-        double x;
-        if (winWidth / 2 > abs(h)) {
-            x = marine->getX() + h - 50;
-        } else {
+    if (angle + NINTY_DEGREES >= TOP_RIGHT_ANGLE && angle + NINTY_DEGREES <= TOP_LEFT_ANGLE) {
+        //ENTITY IS NORTH
+        return calculateHorizontalCoords(angle, NINTY_DEGREES, winWidth, winHeight);
 
-            if (angle + 90 > 270) {
-                x = marine->getX() + winWidth / 2;
-            } else {
-                x = marine->getX() - winWidth / 2;
-            }
+    } else if ((angle + NINTY_DEGREES <= BOTTOM_RIGHT_ANGLE && angle + NINTY_DEGREES >= BOTTOM_LEFT_ANGLE)) {
+        //BASE IS SOUTH
+        return calculateHorizontalCoords(angle, TWO_SEVENTY_DEGREES, winWidth, winHeight);
 
-        }
+    } else if (angle + NINTY_DEGREES <= TOP_LEFT_ANGLE || angle + NINTY_DEGREES >= BOTTOM_RIGHT_ANGLE) {
+        //BASE IS ON THE RIGHT
+        return calculateVerticleCoords(angle + NINTY_DEGREES, TOP_LEFT_ANGLE, winWidth, winHeight);
 
-        return{x, marine->getY() + (winHeight / 2)};
-
-    } else if (angle + 90 <= 40 || angle + 90 >= 323) {//BASE IS ON THE RIGHT
-        double t = tan((angle + 90) * 3.14159265/180);
-        double h = t * ((double)winWidth / 2);
-        double y;
-        if (winHeight / 2 > abs(h) - 100) {
-            y = marine->getY() - h;
-        } else {
-
-            if (angle + 90 < 40) {
-                y = marine->getY() - winHeight / 2;
-            } else {
-                y = marine->getY() + winHeight / 2;
-            }
-
-        }
-
-        return{marine->getX() + (winWidth / 2) - 100, y};
-
-    } else if (angle + 90 <= 216 || angle + 90 >= 145) {//BASE IS ON THE LEFT
-        double t = tan((angle + 90) * 3.14159265/180);
-        double h = t * ((double)winWidth / 2);
-        double y;
-        if (winHeight / 2 > abs(h) - 100) {
-
-            y = marine->getY() + h;
-        } else {
-
-            if (angle + 90 < 40) {
-                y = marine->getY() + winHeight / 2;
-            } else {
-                y = marine->getY() - winHeight / 2;
-            }
-
-        }
-
-        return{marine->getX() - (winWidth / 2) + 100, y};
+    } else {
+        //BASE IS ON THE LEFT
+        return calculateVerticleCoords(angle + NINTY_DEGREES, ONE_SIXTY_DEGREES, winWidth, winHeight);
     }
-    return {1, 2};
+}
+
+/**
+ * Date: Apl. 5, 2017
+ * Author: Maitiu Morton
+ * Function Interface: calculateVerticleCoords(const double angle, const int compareDegree, const int winWidth,
+ *                                             const int winHeight)
+ *      angle : angle of the object compared to the player in degrees
+ *      compareDegree: a dregree the angle will be compared to depending on which direction the Entity is in
+ *      winWidth: window width
+ *      winHeight: window height
+ *
+ * Description:
+ *      THis calcualte coordinates function is for when the Entity is above or below the player. It uses the angle
+ *      between the player along with the widht and height of the screen to calculates the coordinates for the guide
+ */
+std::pair<float, float> Player::calculateVerticleCoords(const double angle, const int compareDegree, const int winWidth, const int winHeight) {
+
+    double t = tan((angle) * M_PI/ONE_EIGHTY);
+    double h = t * (winWidth / 2);//the difference on the x axis compared to the player
+    double y;
+    if (winHeight / 2 > abs(h) + VERTICAL_ADJUST) {//if not going off screen
+        if(compareDegree == TOP_LEFT_ANGLE) {//if on right
+            y = marine->getY() - h - GUIDE_SIZE;
+        } else {
+            y = marine->getY() + h - GUIDE_SIZE;//on left
+        }
+    } else {
+        if (angle < compareDegree) {
+            y = marine->getY() - winHeight / 2 + TOP_AND_LEFT_PADDING;//go to top corner
+        } else {
+            y = marine->getY() + winHeight / 2 - BOTTOM_PADDING;//go to bottom corner
+        }
+
+    }
+    if(compareDegree == TOP_LEFT_ANGLE) {//if on right
+        return {marine->getX() + (winWidth / 2) - TOP_AND_LEFT_PADDING, y};
+    }
+    return {marine->getX() - (winWidth / 2) + MAX_WIDTH, y};//on left
+}
+
+/**
+ * Date: Apl. 5, 2017
+ * Author: Maitiu Morton
+ * Function Interface: calculateHorizontalCoords(const double angle, const int compareDegree, const int winWidth,
+ *                                               const int winHeight)
+ *      angle : angle of the object compared to the player in degrees
+ *      compareDegree: a dregree the angle will be compared to depending on which direction the Entity is in
+ *      winWidth: window width
+ *      winHeight: window height
+ *
+ * Description:
+ *      THis calcualte coordinates function is for when the Entity is Left or right of the player. It uses the angle
+ *      between the player along with the width and height of the screen to calculates the coordinates for the guide
+ */
+std::pair<float, float> Player::calculateHorizontalCoords(const double angle, const int compareDegree, const int winWidth, const int winHeight) {
+
+    double h = (tan(angle * M_PI/ONE_EIGHTY) * (winHeight / 2));//the difference on the y axis compared to the player
+    double x;
+
+    if ((winWidth / 2) + MAX_WIDTH > abs(h) + HORIZONTAL_ADJUST) {
+        if(compareDegree == NINTY_DEGREES) {//is top or bottom
+            x = marine->getX() - h + TOP_AND_LEFT_PADDING;
+        } else {
+            x = marine->getX() + h - RIGHT_PADDING;
+        }
+    } else {
+
+        //if ANgle Brings IMG out of screen set it to the screens width/2
+        if (angle + NINTY_DEGREES > compareDegree) {
+            switch(compareDegree) {//is top or bottom
+                case(NINTY_DEGREES):
+                    x = marine->getX() - winWidth / 2 + RIGHT_PADDING;
+                    break;
+                case(TWO_SEVENTY_DEGREES):
+                    x = marine->getX() + winWidth / 2 - TOP_AND_LEFT_PADDING;
+                    break;
+            }
+        } else {
+            switch(compareDegree) {//is top or bottom
+                case(NINTY_DEGREES):
+                    x = marine->getX() + winWidth / 2 - TOP_AND_LEFT_PADDING;
+                    break;
+                case(TWO_SEVENTY_DEGREES):
+                    x = marine->getX() - winWidth / 2 + RIGHT_PADDING;
+                    break;
+            }
+        }
+
+    }
+    if(compareDegree == NINTY_DEGREES) {
+        return {x, marine->getY() - (winHeight / 2) + TOP_AND_LEFT_PADDING};
+    }
+    return {x, marine->getY() + (winHeight / 2) - BOTTOM_PADDING};
 }

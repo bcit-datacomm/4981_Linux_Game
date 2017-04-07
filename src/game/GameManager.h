@@ -172,7 +172,7 @@ private:
     ~GameManager();
     static GameManager sInstance;
     Player player;
-
+    
     CollisionHandler collisionHandler;
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
