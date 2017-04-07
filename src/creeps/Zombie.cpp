@@ -58,16 +58,20 @@ void Zombie::update(){
     //middle of me
     const int midMeX = getX() + (getW() / 2);
     const int midMeY = getY() + (getH() / 2);
+    const Entity visSection(0, {midMeX - ZOMBIE_SIGHT, midMeY - ZOMBIE_SIGHT,
+        2 * ZOMBIE_SIGHT, 2 * ZOMBIE_SIGHT});
+
     if (!(frameCount % ANGLE_UPDATE_RATE)) {
         //Movement updates
         GameManager *gm = GameManager::instance();
         const auto& base = gm->getBase();
-        const auto& marines = gm->getMarineManager();
+        auto& collision = gm->getCollisionHandler();
+        const auto& marines = collision.getQuadTreeEntities(collision.getMarineTree(), &visSection);
+        const auto& turrrets = collision.getQuadTreeEntities(collision.getTurretTree(), &visSection);
 
         //the difference in zombie to target distance
         float movX;
         float movY;
-        
         
         //middle of the base
         const int midBaseX = base.getX() + (base.getW() / 2);
@@ -82,9 +86,20 @@ void Zombie::update(){
         float temp;
 
         //who is closest?
-        for (const auto& m : marines){
-            hypX = m.second.getX() + (m.second.getW() / 2);
-            hypY = m.second.getY() + (m.second.getH() / 2);
+        for (const auto m : marines){
+            hypX = m->getX() + (m->getW() / 2);
+            hypY = m->getY() + (m->getH() / 2);
+
+            //we only want the closest one
+            if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
+                hyp = temp;
+                movX = hypX - midMeX;
+                movY = hypY - midMeY;
+            }
+        }
+        for (const auto t : turrrets){
+            hypX = t->getX() + (t->getW() / 2);
+            hypY = t->getY() + (t->getH() / 2);
 
             //we only want the closest one
             if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){

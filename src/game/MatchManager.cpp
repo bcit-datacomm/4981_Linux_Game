@@ -1,4 +1,5 @@
 #include "MatchManager.h"
+#include "../log/log.h"
 
 /**
  * Date: Apl. 4, 2017
@@ -55,7 +56,7 @@ void MatchManager::spawnZombies() {
             --zombiesToSpawn; 
         }
     }
-    printf("Z:%ld P:%d\n", GameManager::instance()->getZombieManager().size(), zombiesToSpawn);
+    logv(7, "Zombies Spawned:%ld Still Pending:%d\n", GameManager::instance()->getZombieManager().size(), zombiesToSpawn);
     GameManager::instance()->deleteZombie(id);
 }
 
