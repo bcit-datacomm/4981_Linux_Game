@@ -313,15 +313,18 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
 }
 
 void Player::handleTempTurret(SDL_Renderer *renderer) {
-   if (tempTurretID < 0) {
-       const double angle = marine->getAngle();
-       tempTurretID = GameManager::instance()->createTurret(
-           marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
-           marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
-   } else {
-       GameManager::instance()->deleteTurret(tempTurretID);
-       tempTurretID = -1;
-   }
+    if (tempTurretID < 0) {
+        if (!marine) {
+            return;
+        }
+        const double angle = marine->getAngle();
+        tempTurretID = GameManager::instance()->createTurret(
+            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
+            marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
+    } else {
+        GameManager::instance()->deleteTurret(tempTurretID);
+        tempTurretID = -1;
+    }
 }
 
 
