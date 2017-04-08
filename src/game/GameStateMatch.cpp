@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -21,7 +22,6 @@
 #include "Game.h"
 #include "../../include/Colors.h"
 
-
 /**
 * Date: Jan. 20, 2017
 * Author: Jacob McPhail
@@ -35,7 +35,7 @@
 *       ctor for the match game state.
 */
 GameStateMatch::GameStateMatch(Game& g,  const int gameWidth, const int gameHeight) : GameState(g),
-        base(), camera(gameWidth,gameHeight), hud(),
+        camera(gameWidth,gameHeight), hud(),
         screenRect{0, 0, game.getWindow().getWidth(), game.getWindow().getHeight()}{}
 
 /**
@@ -53,11 +53,8 @@ bool GameStateMatch::load() {
                 &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
-        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-        GameManager::instance()->addObject(base);
-        Point newPoint = base.getSpawnPoint();
-        base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-
+        GameManager::instance()->addObject(GameManager::instance()->getBase());
+        const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
@@ -77,6 +74,7 @@ bool GameStateMatch::load() {
     m.mapLoadToGame();
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
+
     return success;
 }
 
@@ -89,6 +87,8 @@ bool GameStateMatch::load() {
 *       State loop, processes a frame per each loop.
 */
 void GameStateMatch::loop() {
+    // play ingame music
+    AudioManager::instance().playMusic(MUS_GAMEBKG);
     int startTick = 0;
     int frameTicks = 0;
     // State Loop
@@ -166,12 +166,12 @@ void GameStateMatch::updateServ() {
 void GameStateMatch::handle() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr); // Keyboard state
     // Handle movement input if the player has a marine
+
     if(GameManager::instance()->getPlayer().getMarine()){
-        GameManager::instance()->getPlayer().handleKeyboardInput(state);
+        GameManager::instance()->getPlayer().handleKeyboardInput(game.getWindow().getWidth(),
+                game.getWindow().getHeight(), state);
         GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
-        GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
-        GameManager::instance()->getPlayer().getMarine()->updateImageWalk();  //Update walking animation
     }
     //Handle events on queue
     while (SDL_PollEvent(&event)) {
@@ -191,7 +191,7 @@ void GameStateMatch::handle() {
                 if(GameManager::instance()->getPlayer().getMarine()) {
                      if (event.button.button == SDL_BUTTON_RIGHT) {
                         GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                    } 
+                    }
                 }
                 break;
             case SDL_KEYDOWN:
@@ -205,6 +205,8 @@ void GameStateMatch::handle() {
                                 Renderer::instance().getRenderer());
                         }
                         break;
+                    case SDLK_p:
+                        GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
                     case SDLK_1: //Purposeful flow through
                     case SDLK_2:
                     case SDLK_3:
@@ -249,7 +251,7 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateCollider();
 #ifndef SERVER
     // Move player
-    if (networked) {
+    if (networked && GameManager::instance()->getPlayer().getMarine()) {
         if (GameManager::instance()->getPlayer().hasChangedCourse()
                 || GameManager::instance()->getPlayer().hasChangedAngle()) {
             GameManager::instance()->getPlayer().sendServMoveAction();
@@ -264,18 +266,21 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
+    GameManager::instance()->updateBase();
     GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
 
 #ifndef SERVER
     // Move Camera
     if(GameManager::instance()->getPlayer().getMarine()){
-        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), GameManager::instance()->getPlayer().getMarine()->getY());
-    }
-    if (GameManager::instance()->getPlayer().checkMarineState()) {
-        GameManager::instance()->getPlayer().respawn(base.getSpawnPoint());
+        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
+                GameManager::instance()->getPlayer().getMarine()->getY());
     }
 #endif
+
+    if (GameManager::instance()->getPlayer().checkMarineState()) {
+        GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
+    }
 }
 
 /**
@@ -305,12 +310,10 @@ void GameStateMatch::update(const float delta) {
 void GameStateMatch::render() {
     //Only draw when not minimized
     if (!game.getWindow().isMinimized()) {
-
         SDL_RenderClear(Renderer::instance().getRenderer());
 
         //Render textures
         for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
-
             if (i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
                 break;
             }
@@ -340,12 +343,12 @@ void GameStateMatch::render() {
             //Reder the ammo clip foreground to the screen
             //(displays how much ammo is left in the players weapon clip)
             hud.renderClip(screenRect, GameManager::instance()->getPlayer());
-           //Render the healthbar's foreground to the screen
-           //(displays how much player health is left)
-           //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
-          //Reder the ammo clip foreground to the screen
-           //(displays how much ammo is left in the players weapon clip)
-           //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
+            //Render the healthbar's foreground to the screen
+            //(displays how much player health is left)
+            //hud.renderHealthBar(screenRect, GameManager::instance()->getPlayer(), camera);
+            //Reder the ammo clip foreground to the screen
+            //(displays how much ammo is left in the players weapon clip)
+            //hud.renderClip(screenRect, GameManager::instance()->getPlayer());
 
 
             //Render the equipped weapon slot

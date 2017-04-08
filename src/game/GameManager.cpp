@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <memory>
 #include <utility>
 #include <atomic>
@@ -74,9 +75,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : objectManager) {
         if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
-                o.second.getSrcRect());
+            // TODO: Base image rendering has been moved, clear/change this as other objects are added
+            // Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
+            //     o.second.getSrcRect());
         }
+    }
+
+    if (base.getX() - cam.x < cam.w && base.getY() - cam.y < cam.h) {
+        Renderer::instance().render(base.getRelativeDestRect(cam), TEXTURES::BASE,
+            base.getSrcRect());
     }
 
     for (const auto& z : zombieManager) {
@@ -131,41 +138,126 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  *     Update marine movements. health, and actions
  */
 void GameManager::updateMarines(const float delta) {
-    for (auto& m : marineManager) {
-        if (!networked) {
-            m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
-        }
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = marineManager.begin(); it != marineManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                if (!networked) {
+                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                }
 #ifndef SERVER
-        m.second.updateImageDirection();
-        m.second.updateImageWalk();
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
 #endif
+            }
+        }
+#pragma omp taskwait
     }
 }
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-    for (auto& z : zombieManager) {
-        if (z.second.getLastHealth() > z.second.getHealth()) {
-            z.second.setState(ZombieState::ZOMBIE_HIT);
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                it->second.update();
+                it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+#ifndef SERVER
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
+#endif
+            }
         }
-        
-        z.second.generateMove();
-        if (z.second.isMoving()) {
-            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
-        }
+#pragma omp taskwait
     }
+}
+
+/**
+* Date: April 6, 2017
+* Designer: Trista Huang
+* Programmer: Trista Huang
+* Function Interface: void GameManager::updateBase()
+* Description:
+*       This function calls function to check for base health everytime an update happens,
+*       and changes base image accordingly.
+*       It is called from GameStateMatch every update.
+*/
+void GameManager::updateBase() {
+    base.updateBaseImage();
 }
 
 bool GameManager::hasMarine(const int32_t id) const {
     return marineManager.count(id);
 }
 
-// Update turret actions.
-// Jamie, 2017-03-01.
+
+/**
+ * Date: Mar. 01, 2017
+ * Modified: Mar. 30, 2017 - Mark Chen
+ *           Apr. 05, 2017 - Mark Chen
+ * Designer: Jamie Lee
+ *
+ * Programmer: Jamie Lee, Mark Chen
+ *
+ * Function Interface: void updateTurrets()
+ *
+ * Description:
+ * Updates the turrets actions.
+ *
+ * Revisions:
+ * Mar. 30, 2017, Mark Chen : turrets now fire when they detect an enemy
+ * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
+ */
+
 void GameManager::updateTurrets() {
-    for (auto& t : turretManager) {
-        t.second.targetScanTurret();
+    std::vector<int32_t> deleteVector = markForDeletionTurret();
+
+    for (auto it = deleteVector.begin() ; it != deleteVector.end(); ++it) {
+        removeWeapon(getTurret(*it).getInventory().getCurrent()->getID());
+        deleteTurret(*it);
     }
+
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                if (it->second.targetScanTurret() && it->second.isActivated()) {
+                    it->second.shootTurret();
+                }
+            }
+        }
+#pragma omp taskwait
+    }
+}
+
+/**
+ * Date: Apr. 05, 2017
+ *
+ * Designer: Mark Chen
+ *
+ * Programmer: Mark Chen
+ *
+ * Function Interface: vector<int32_t> GameManager::markForDeletionTurret()
+ *
+ * Description:
+ * Searches the turretManager for any turrets with 0 ammo.
+ */
+
+std::vector<int32_t> GameManager::markForDeletionTurret() {
+    std::vector<int32_t> deleteVector;
+    for (auto& t: turretManager) {
+        if (t.second.getInventory().getCurrent()->getClip() == 0) {
+            deleteVector.push_back(t.second.getId());
+        }
+    }
+    return deleteVector;
 }
 
 /**
@@ -417,8 +509,6 @@ int32_t GameManager::createZombie(const float x, const float y) {
 
     const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
     elem->second.setPosition(x,y);
-    elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    elem->second.setState(ZombieState::ZOMBIE_MOVE);
     return id;
 }
 
@@ -681,43 +771,53 @@ CollisionHandler& GameManager::getCollisionHandler() {
  *     Update colliders to current state
  */
 void GameManager::updateCollider() {
-    collisionHandler = CollisionHandler();
+    collisionHandler.clear();
 
-    for (auto& m : marineManager) {
-        collisionHandler.quadtreeMarine.insert(&m.second);
-    }
-
-    for (auto& z : zombieManager) {
-        collisionHandler.quadtreeZombie.insert(&z.second);
-    }
-
-    for (auto& o : objectManager) {
-        collisionHandler.quadtreeObj.insert(&o.second);
-    }
-
-    for (auto& o : wallManager) {
-        collisionHandler.quadtreeWall.insert(&o.second);
-    }
-
-    for (auto& m : turretManager) {
-        if (m.second.isPlaced()) {
-            collisionHandler.quadtreeTurret.insert(&m.second);
-            collisionHandler.quadtreePickUp.insert(&m.second);
+#pragma omp parallel sections shared(collisionHandler)
+    {
+#pragma omp section
+        for (auto& m : marineManager) {
+            collisionHandler.insertMarine(&m.second);
         }
-    }
 
-    for (auto& b : barricadeManager) {
-        if (b.second.isPlaced()) {
-            collisionHandler.quadtreeBarricade.insert(&b.second);
+#pragma omp section
+        for (auto& z : zombieManager) {
+            collisionHandler.insertZombie(&z.second);
         }
-    }
 
-    for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp.insert(&m.second);
-    }
+#pragma omp section
+        for (auto& o : objectManager) {
+            collisionHandler.insertObj(&o.second);
+        }
 
-    for (auto& s : storeManager) {
-        collisionHandler.quadtreeStore.insert(s.second.get());
+#pragma omp section
+        for (auto& w : wallManager) {
+            collisionHandler.insertWall(&w.second);
+        }
+
+#pragma omp section
+        for (auto& m : turretManager) {
+            if (m.second.isPlaced()) {
+                collisionHandler.insertTurret(&m.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& b : barricadeManager) {
+            if (b.second.isPlaced()) {
+                collisionHandler.insertBarricade(&b.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& m : weaponDropManager) {
+            collisionHandler.insertPickUp(&m.second);
+        }
+
+#pragma omp section
+        for (auto& s : storeManager) {
+            collisionHandler.insertStore(s.second.get());
+        }
     }
 }
 
@@ -733,7 +833,7 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData &playerData) {
-    if(marineManager.count(playerData.playerid) == 0) {
+    if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager[playerData.playerid].first;

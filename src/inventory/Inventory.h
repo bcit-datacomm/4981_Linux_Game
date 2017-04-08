@@ -10,6 +10,7 @@
 #include "weapons/HandGun.h"
 #include "weapons/Rifle.h"
 #include "weapons/ShotGun.h"
+#include "weapons/TurretGun.h"
 #include "weapons/ZombieHand.h"
 
 /*
@@ -21,7 +22,7 @@ class Inventory {
 public:
     void switchCurrent(int slot);//switches currently selected slot based on key input
     bool pickUp(int32_t weaponId, const float x, const float y);//picks up weapon in to current slot
-    Weapon *getCurrent();//Returns current weapon
+    Weapon *getCurrent() const;//Returns current weapon
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
     void useItem(); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
@@ -29,6 +30,8 @@ public:
     std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
     int getCurrentSlot() const {return current;}; //returns the current slot selected in the inventory
     Weapon *getWeaponFromInventory(int inventorySlot); //returns the weapon in the inventory slot specified
+    int getCurretSlot() const {return current;}; //returns the current sloted selected int the inventory
+    void makeTurretInv();//swaps the default gun to a turretGun
     Inventory();
     ~Inventory() = default;
     void initZombie();

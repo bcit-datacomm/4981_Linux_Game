@@ -176,8 +176,8 @@ void AudioManager::loadFiles(){
 
     /* CHUNKS */
     // menu interactions
-    loadMusic(MENU_CLICK01);
-    loadMusic(MENU_CLICK02);
+    loadEffect(MENU_CLICK01);
+    loadEffect(MENU_CLICK02);
 
     // marine
     loadEffect(EFX_PDROP01);
@@ -190,7 +190,7 @@ void AudioManager::loadFiles(){
     loadEffect(EFX_WLPISTOL);
     loadEffect(EFX_WLRIFLE);
     loadEffect(EFX_WSHOTGUN);
-    loadEffect(EFX_WTURRET);
+    loadEffect(EFX_WTURRET01);
 
     // weapon reload
     loadEffect(EFX_WRELOAD01);

@@ -16,13 +16,15 @@
 * Notes:
 *
 ------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cmath>
+#include <cassert>
+#include <omp.h>
+
 #include "Quadtree.h"
 #include "CollisionHandler.h"
 #include "../player/Marine.h"
 #include "../log/log.h"
-#include <iostream>
-#include <cmath>
-#include <cassert>
 #include "../inventory/weapons/Target.h"
 
 /**
@@ -33,10 +35,10 @@
  * Description:
  * Constructor for Collision Handler
  */
-CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadtreeZombie(0, {0,0,2000,2000}),
-        quadtreeBarricade(0, {0,0,2000,2000}),quadtreeTurret(0, {0,0,2000,2000}),
-        quadtreeWall(0, {0,0,2000,2000}), quadtreePickUp(0, {0,0,2000,2000}), quadtreeObj(0, {0,0,2000,2000}),
-        quadtreeStore(0,{0,0,2000,2000}) {
+CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), marineTree(0, {0,0,2000,2000}), 
+        zombieTree(0, {0,0,2000,2000}), barricadeTree(0, {0,0,2000,2000}),turretTree(0, {0,0,2000,2000}), 
+        wallTree(0, {0,0,2000,2000}), pickUpTree(0, {0,0,2000,2000}), objTree(0, {0,0,2000,2000}), 
+        storeTree(0,{0,0,2000,2000}) {
 
 }
 
@@ -49,14 +51,15 @@ CollisionHandler::CollisionHandler() : quadtreeMarine(0, {0,0,2000,2000}), quadt
  * Comparison operator for = to set each Quadtree
  */
 CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
-    quadtreeMarine = handle.quadtreeMarine;
-    quadtreeZombie = handle.quadtreeZombie;
-    quadtreeBarricade = handle.quadtreeBarricade;
-    quadtreeTurret = handle.quadtreeTurret;
-    quadtreeWall = handle.quadtreeWall;
-    quadtreePickUp = handle.quadtreePickUp;
-    quadtreeObj = handle.quadtreeObj;
-    quadtreeStore = handle.quadtreeStore;
+    zombieMovementTree = handle.zombieMovementTree;
+    marineTree = handle.marineTree;
+    zombieTree = handle.zombieTree;
+    barricadeTree = handle.barricadeTree;
+    turretTree = handle.turretTree;
+    wallTree = handle.wallTree;
+    pickUpTree = handle.pickUpTree;
+    objTree = handle.objTree;
+    storeTree = handle.storeTree;
     return *this;
 }
 
@@ -69,13 +72,12 @@ CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
  * Description:
  * Check for projectile collisions, return hitbox it hits
  */
-const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects,
-        const Entity *entity) {
+const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
-        if (obj != nullptr && entity != obj
+        if (obj && entity != obj
             && SDL_HasIntersection(&entity->getDamHitBox().getRect(), &obj->getDamHitBox().getRect())
                 && !(entity->getDamHitBox().isPlayerFriendly() && obj->getDamHitBox().isPlayerFriendly())) {
-            return &(obj->getDamHitBox());
+            return &obj->getDamHitBox();
         }
     }
     return nullptr;
@@ -90,10 +92,9 @@ const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> retur
  * Description:
  * Check for projectile collisions, return object it hits
  */
-const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects,
-        const Entity *entity) {
+const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
-        if (obj != nullptr && entity != obj
+        if (obj && entity != obj
             && SDL_HasIntersection(&entity->getProHitBox().getRect(), &obj->getProHitBox().getRect())
                 && !(entity->getProHitBox().isPlayerFriendly() && obj->getProHitBox().isPlayerFriendly())) {
             return &(obj->getProHitBox());
@@ -113,7 +114,7 @@ const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> r
  */
 bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
-        if (obj != nullptr && entity != obj
+        if (obj && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getMoveHitBox().getRect())
                 && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getMoveHitBox().isPlayerFriendly())) {
             return true;
@@ -133,7 +134,7 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
  */
 Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
-        if (obj != nullptr && entity != obj
+        if (obj && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getPickUpHitBox().getRect())
                 && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getPickUpHitBox().isPlayerFriendly())) {
             return obj;
@@ -153,6 +154,7 @@ Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjec
     AUTHOR: Deric Mccadden 3/8/2017
         Edited: 3/16/2017 fixed to use new quad trees (cant shoot walls yet)
         Edited: 3/17/2017 walls work now.
+        Edited: 4/04/2017 Mark Chen - Removed turrets from the check.
 
     PARAMS:
         TargetList &targetList,
@@ -182,13 +184,8 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
-    auto& zombies = quadtreeZombie.objects;
-    auto& turrets = quadtreeTurret.objects;
-    auto& walls   = quadtreeWall.objects;
-
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombies, TYPE_ZOMBIE);
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, turrets, TYPE_TURRET);
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, walls,   TYPE_WALL);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombieTree.getObjects(), TYPE_ZOMBIE);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, wallTree.getObjects(), TYPE_WALL);
 
     logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
@@ -202,10 +199,9 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
  * returns a vector of entities that have a damage hitbox collision between the vector of entities
  * and the entity you pass in
  */
-std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*> returnObjects,
-        const Entity *entity, const HitBox hb) {
+std::vector<Entity *> CollisionHandler::detectMeleeCollision(const std::vector<Entity*>& returnObjects, const Entity *entity, const HitBox hb) {
     std::vector<Entity *> allEntities;
-    for (const auto& obj: returnObjects) {
+    for (const auto& obj : returnObjects) {
         if (obj && entity != obj && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())) {
             allEntities.push_back(obj);
         }
@@ -242,7 +238,7 @@ std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity*
             This is needed for identification purposes in InstantWeapon.fire()
 */
 void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
-        TargetList& targetList, std::vector<Entity *>& allEntities, int type) {
+        TargetList& targetList, const std::vector<Entity *>& allEntities, const int type) const {
 
     for(const auto& possibleTarget : allEntities) {
 
@@ -257,14 +253,14 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
         int exitWoundX = endX;
         int exitWoundY = endY;
 
-        if (SDL_IntersectRectAndLine(&(possibleTarget->getProHitBox().getRect()),
+        if (SDL_IntersectRectAndLine(&possibleTarget->getProHitBox().getRect(),
                 &entranceWoundX, &entranceWoundY , &exitWoundX, &exitWoundY)) {
 
             //the change in x and y from the firing origin to the spot the bullet hits the target.
-            int localDeltaX = entranceWoundX - gunX;
-            int localDeltaY = entranceWoundY - gunY;
+            const int localDeltaX = entranceWoundX - gunX;
+            const int localDeltaY = entranceWoundY - gunY;
             //the direct distance from the firing origin to the spot the bullet hits each target.
-            int distanceToOrigin = std::hypot(localDeltaX, localDeltaY);
+            const int distanceToOrigin = std::hypot(localDeltaX, localDeltaY);
 
             Target tar(possibleTarget->getId(), type, entranceWoundX, entranceWoundY, distanceToOrigin);
             targetList.addTarget(tar);
@@ -286,6 +282,60 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
  * Description:
  * Wrapper to grab a vector of entities from the specified quadtree
  */
-std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q, const Entity *entity) {
+std::vector<Entity *> CollisionHandler::getQuadTreeEntities(const Quadtree& q, const Entity *entity) const {
     return q.retrieve(entity);
+}
+
+void CollisionHandler::clear() {
+    zombieMovementTree.clear();
+    marineTree.clear();
+    zombieTree.clear();
+    barricadeTree.clear(); 
+    turretTree.clear();
+    pickUpTree.clear();
+    objTree.clear();
+    storeTree.clear();
+}
+
+void CollisionHandler::insertMarine(Entity *e) {
+    insertZombieMovementEntity(e);
+    marineTree.insert(e);
+}
+
+void CollisionHandler::insertZombie(Entity *e) {
+    zombieTree.insert(e);
+}
+
+void CollisionHandler::insertBarricade(Entity *e) {
+    insertZombieMovementEntity(e);
+    barricadeTree.insert(e);
+}
+
+void CollisionHandler::insertTurret(Entity *e) {
+    insertZombieMovementEntity(e);
+    turretTree.insert(e);
+}
+
+void CollisionHandler::insertWall(Entity *e) {
+    insertZombieMovementEntity(e);
+    wallTree.insert(e);
+}
+
+void CollisionHandler::insertPickUp(Entity *e) {
+    pickUpTree.insert(e);
+}
+
+void CollisionHandler::insertObj(Entity *e) {
+    insertZombieMovementEntity(e);
+    objTree.insert(e);
+}
+
+void CollisionHandler::insertStore(Entity *e) {
+    insertZombieMovementEntity(e);
+    storeTree.insert(e);
+}
+
+void CollisionHandler::insertZombieMovementEntity(Entity *e) {
+#pragma omp critical
+    zombieMovementTree.insert(e);
 }
