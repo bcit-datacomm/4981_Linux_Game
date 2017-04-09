@@ -208,6 +208,7 @@ enum class TEXTURES : int {
 
     //--------------------- Zombie textures ---------------------
 
+    BLOOD,
     //---------- Baby Zombie ----------
     BABY_ZOMBIE, //Sprite sheet, not split
     //Baby Zombie Front

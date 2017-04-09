@@ -182,6 +182,7 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
  */
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
+    VisualEffect::instance().addBlood(getDestRect());
     if (health <= 0) {
         GameManager::instance()->deleteZombie(getId());
     }
