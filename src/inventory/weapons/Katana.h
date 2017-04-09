@@ -20,7 +20,7 @@ namespace KatanaVars {
     const string RELOADSOUND = EFX_WRELOAD01;
     const string EMPTYSOUND = EFX_PDROP01;
 
-    constexpr int RANGE = 200;
+    constexpr int RANGE = 150;
     constexpr int DAMAGE = 100;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 5;

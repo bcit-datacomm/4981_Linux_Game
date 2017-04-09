@@ -48,9 +48,9 @@ bool Katana::fire(Movable& movable){
     const double angle = movable.getAngle();
 
     //cone angle is how far the buckshot will spread out.
-    const double coneAngle = ShotgunVars::SPREAD_ANGLE;
+    const double coneAngle = KatanaVars::SPREAD_ANGLE;
     //number of shots is how many buckshot pellets we are firing.
-    const double numberOfShots = ShotgunVars::SPREAD_SHOTS;
+    const double numberOfShots = KatanaVars::SPREAD_SHOTS;
     //seperation between buckshot pellets.
     const double seperation = coneAngle / numberOfShots;
 
