@@ -59,7 +59,7 @@ void Marine::onCollision() {
  *     Deals damage to a marine.
  */
 void Marine::collidingProjectile(const int damage) {
-    health -= damage;
+    //health -= damage;
 }
 
 // Created by DericM 3/8/2017

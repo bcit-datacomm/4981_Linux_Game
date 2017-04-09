@@ -22,6 +22,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <deque>
 
 #include "HitBox.h"
 #include "../basic/Entity.h"
@@ -42,7 +43,7 @@ public:
     unsigned int getTreeSize() const;
     int getIndex(const HitBox *pRect) const;
     void insert(Entity *entity);
-    std::vector<Entity *> retrieve(const Entity *entity) const;
+    std::deque<Entity *> retrieve(const Entity *entity) const;
     auto& getObjects() const {return objects;}
 
 private:
@@ -50,7 +51,7 @@ private:
     unsigned int level;
     SDL_Rect bounds;
     std::array<std::shared_ptr<Quadtree>, BRANCHSIZE> nodes;
-    std::vector<Entity *> objects;
+    std::deque<Entity *> objects;
 };
 
 #endif

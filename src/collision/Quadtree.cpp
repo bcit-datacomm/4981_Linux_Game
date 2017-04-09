@@ -18,6 +18,7 @@
 ------------------------------------------------------------------------------*/
 #include <array>
 #include <memory>
+#include <deque>
 #include "Quadtree.h"
 #include "../basic/Entity.h"
 
@@ -178,8 +179,8 @@ void Quadtree::insert(Entity *entity) {
  * Description:
  *      Retrieve a vector of hitboxes that are near the param hitbox.      
  */
-std::vector<Entity *> Quadtree::retrieve(const Entity *entity) const {
-    std::vector<Entity *> returnObjects;
+std::deque<Entity *> Quadtree::retrieve(const Entity *entity) const {
+    std::deque<Entity *> returnObjects;
     const int index = getIndex(&entity->getMoveHitBox());
     if (index != -1 && nodes[0]) {
         returnObjects = nodes[index]->retrieve(entity);
