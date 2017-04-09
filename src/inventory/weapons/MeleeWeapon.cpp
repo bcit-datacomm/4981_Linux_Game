@@ -23,7 +23,7 @@
  */
 MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fireSound,
         const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
-        const int damage, const int AOE, const int penetration, const int clip, const int clipMax,
+        const int damage, const int AOE, const int penetration, const int accuracy, const int clip, const int clipMax,
         const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
         penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {

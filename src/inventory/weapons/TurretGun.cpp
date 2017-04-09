@@ -11,7 +11,7 @@
 
 TurretGun::TurretGun(int32_t id) : InstantWeapon(TurretGunVars::TYPE, TEXTURES::SHOTGUN, TurretGunVars::FIRESOUND, TurretGunVars::HITSOUND,
         TurretGunVars::RELOADSOUND, TurretGunVars::EMPTYSOUND, TurretGunVars::RANGE, TurretGunVars::DAMAGE,
-        TurretGunVars::AOE, TurretGunVars::PENETRATION, TurretGunVars::CLIP, TurretGunVars::CLIPMAX, TurretGunVars::AMMO,
+        TurretGunVars::AOE, TurretGunVars::PENETRATION, TurretGunVars::ACCURACY, TurretGunVars::CLIP, TurretGunVars::CLIPMAX, TurretGunVars::AMMO,
         TurretGunVars::RELOADDELAY, TurretGunVars::FIREDELAY, id) {
 
 }
