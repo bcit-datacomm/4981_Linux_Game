@@ -92,6 +92,7 @@ private:
     int health;// health points of zombie
     int frameCount;
     int ignore;
+    int flipper;
     Inventory inventory;//inventory holds a weapon used to attack
     void zAttack();
 };
