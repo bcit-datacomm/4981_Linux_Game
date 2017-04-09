@@ -21,10 +21,13 @@ namespace KatanaVars {
     const string EMPTYSOUND = EFX_PDROP01;
 
     constexpr int RANGE = 200;
-    constexpr int DAMAGE = 200;
+    constexpr int DAMAGE = 100;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 5;
     constexpr int ACCURACY = 2;
+
+    constexpr int SPREAD_ANGLE = 100;
+    constexpr int SPREAD_SHOTS = 10;
 
     constexpr int CLIP = 1;
     constexpr int CLIPMAX = 1;
@@ -40,6 +43,8 @@ public:
 
     Katana(const int32_t id);
     ~Katana() = default;
+
+    bool fire(Movable& movable);
 };
 
 #endif
