@@ -163,8 +163,13 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombieTree.getObjects(), TYPE_ZOMBIE);
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, wallTree.getObjects(), TYPE_WALL);
+    Entity dummy(0, {(endX - gunX) / 2, (endY - gunY) / 2, 100, 100});
+
+    const auto& nearbyZombies = zombieTree.retrieve(&dummy);
+    const auto& nearbyWalls = wallTree.retrieve(&dummy);
+
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, nearbyZombies, TYPE_ZOMBIE);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, nearbyWalls, TYPE_WALL);
 
     logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
