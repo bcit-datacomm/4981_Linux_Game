@@ -67,7 +67,7 @@ bool InstantWeapon::fire(Movable& movable) {
     logv(3, "InstantWeapon::fire()\n");
 
 
-    const double deviation = rand() % accuracy + (accuracy / 2);
+    const double deviation = rand() % accuracy - (accuracy / 2);
 
     const int gunX = movable.getX() + (MARINE_WIDTH / 2);
     const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
