@@ -27,17 +27,17 @@ using std::string;
  * Ctor for Weapon
  */
 Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
-        const string& emptySound, const int range, const int damage, const int AOE, const int penetration,
+        const string& emptySound, const int range, const int damage, const int AOE, const int penetration, const int accuracy,
         const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
 : type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
-        range(range), damage(damage), AOE(AOE), penetration(penetration), clip(clip), clipMax(clipMax), ammo(ammo),
+        range(range), damage(damage), AOE(AOE), penetration(penetration), accuracy(accuracy), clip(clip), clipMax(clipMax), ammo(ammo),
         reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id){
 
 }
 
 Weapon::Weapon(const Weapon& w)
 : type(w.type), spriteType(w.spriteType), fireSound(w.fireSound), hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound),
-        range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), clip(w.clip), clipMax(w.clipMax),
+        range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), accuracy(w.accuracy), clip(w.clip), clipMax(w.clipMax),
         ammo(w.ammo), reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick),
         fireTick(w.fireTick), wID(w.getID()){
 }
