@@ -46,12 +46,12 @@ CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), m
  * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
- * Function Interface: const HitBox *CollisionHandler::detectDamageCollision(std::deque<Entity*>
+ * Function Interface: const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*>
  *      returnObjects, const Entity *entity) {
  * Description:
  * Check for projectile collisions, return hitbox it hits
  */
-const HitBox *CollisionHandler::detectDamageCollision(std::deque<Entity*> returnObjects, const Entity *entity) {
+const HitBox *CollisionHandler::detectDamageCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj && entity != obj
             && SDL_HasIntersection(&entity->getDamHitBox().getRect(), &obj->getDamHitBox().getRect())
@@ -66,12 +66,12 @@ const HitBox *CollisionHandler::detectDamageCollision(std::deque<Entity*> return
  * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
- * Function Interface: const HitBox *CollisionHandler::detectProjectileCollision(std::deque<Entity*>
+ * Function Interface: const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*>
  *      returnObjects, const Entity *entity) {
  * Description:
  * Check for projectile collisions, return object it hits
  */
-const HitBox *CollisionHandler::detectProjectileCollision(std::deque<Entity*> returnObjects, const Entity *entity) {
+const HitBox *CollisionHandler::detectProjectileCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj && entity != obj
             && SDL_HasIntersection(&entity->getProHitBox().getRect(), &obj->getProHitBox().getRect())
@@ -86,12 +86,12 @@ const HitBox *CollisionHandler::detectProjectileCollision(std::deque<Entity*> re
  * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
- * Function Interface: bool CollisionHandler::detectMovementCollision(std::deque<Entity*> returnObjects,
+ * Function Interface: bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects,
  *       const Entity *entity)
  * Description:
  * Check for collisions during movement
  */
-bool CollisionHandler::detectMovementCollision(std::deque<Entity*> returnObjects, const Entity *entity) {
+bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getMoveHitBox().getRect())
@@ -106,12 +106,12 @@ bool CollisionHandler::detectMovementCollision(std::deque<Entity*> returnObjects
  * Date: Mar. 1, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Maitiu Morton.
- * Function Interface: Entity *CollisionHandler::detectPickUpCollision(std::deque<Entity*> returnObjects,
+ * Function Interface: Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects,
  *       const Entity *entity)
  * Description:
  * Check for pickup collision
  */
-Entity *CollisionHandler::detectPickUpCollision(std::deque<Entity*> returnObjects, const Entity *entity) {
+Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
     for (const auto& obj: returnObjects) {
         if (obj && entity != obj
             && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getPickUpHitBox().getRect())
@@ -177,14 +177,14 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
 /**
  * Date: Mar. 28, 2017
  * Author: Mark Tattrie
- * Function Interface: std::deque<Entity *> CollisionHandler::detectMeleeCollision(
- *      std::deque<Entity*> returnObjects, const Entity *entity, const HitBox hb)
+ * Function Interface: std::vector<Entity *> CollisionHandler::detectMeleeCollision(
+ *      std::vector<Entity*> returnObjects, const Entity *entity, const HitBox hb)
  * Description:
- * returns a deque of entities that have a damage hitbox collision between the deque of entities
+ * returns a vector of entities that have a damage hitbox collision between the vector of entities
  * and the entity you pass in
  */
-std::deque<Entity *> CollisionHandler::detectMeleeCollision(const std::deque<Entity*>& returnObjects, const Entity *entity, const HitBox hb) {
-    std::deque<Entity *> allEntities;
+std::vector<Entity *> CollisionHandler::detectMeleeCollision(const std::vector<Entity*>& returnObjects, const Entity *entity, const HitBox hb) {
+    std::vector<Entity *> allEntities;
     for (const auto& obj : returnObjects) {
         if (obj && entity != obj && SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())) {
             allEntities.push_back(obj);
@@ -197,7 +197,7 @@ std::deque<Entity *> CollisionHandler::detectMeleeCollision(const std::deque<Ent
     checkTargets
 
     DISCRIPTION:
-        This checks a single deque of *hitboxes for targets that are in the weapons sights,
+        This checks a single vector of *hitboxes for targets that are in the weapons sights,
         and adds them to a priority queue that is sorted by distance from the player.
 
     AUTHOR: Deric Mccadden 3/16/2017
@@ -214,7 +214,7 @@ std::deque<Entity *> CollisionHandler::detectMeleeCollision(const std::deque<Ent
         TargetList &targetList,
             This is the priority queue wrapper that will hold the targets that will be determined.
 
-        std::deque<Entity*> allEntities,
+        std::vector<Entity*> allEntities,
             The entities that will need to be searched for valid targets.
 
         int type
@@ -222,7 +222,7 @@ std::deque<Entity *> CollisionHandler::detectMeleeCollision(const std::deque<Ent
             This is needed for identification purposes in InstantWeapon.fire()
 */
 void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
-        TargetList& targetList, const std::deque<Entity *>& allEntities, const int type) const {
+        TargetList& targetList, const std::vector<Entity *>& allEntities, const int type) const {
 
     for(const auto& possibleTarget : allEntities) {
 
@@ -261,12 +261,12 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
 /**
  * Date: Mar. 15, 2017
  * Author: Mark Tattrie
- * Function Interface: std::deque<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q,
+ * Function Interface: std::vector<Entity *> CollisionHandler::getQuadTreeEntities(Quadtree& q,
  *      const Entity *entity)
  * Description:
- * Wrapper to grab a deque of entities from the specified quadtree
+ * Wrapper to grab a vector of entities from the specified quadtree
  */
-std::deque<Entity *> CollisionHandler::getQuadTreeEntities(const Quadtree& q, const Entity *entity) const {
+std::vector<Entity *> CollisionHandler::getQuadTreeEntities(const Quadtree& q, const Entity *entity) const {
     return q.retrieve(entity);
 }
 
