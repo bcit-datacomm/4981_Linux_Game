@@ -74,7 +74,8 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : marineManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MARINE,
+            Renderer::instance().render(o.second.getRelativeDestRect(cam),
+                o.second.getId() % 2 ? TEXTURES::MARINE : TEXTURES::COWBOY,
                 o.second.getSrcRect());
         }
     }
