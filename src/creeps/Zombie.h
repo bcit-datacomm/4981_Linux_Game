@@ -46,7 +46,7 @@ static constexpr int FRAME_COUNT_ZOMBIE = 10; // speed of walking animation
 static constexpr int CHECK_RATE = 15; // 60 / 4 times 
 static constexpr int ANGLE_UPDATE_RATE = 5;
 static constexpr int ATTACK_DURATION = 10;
-static constexpr int HIT_DURATION = 10;
+static constexpr int HIT_DURATION = 15;
 
 static constexpr int ZOMBIE_RIGHT = ZOMBIE_HEIGHT * 2;
 static constexpr int ZOMBIE_BACK_RIGHT = ZOMBIE_HEIGHT * 3;
