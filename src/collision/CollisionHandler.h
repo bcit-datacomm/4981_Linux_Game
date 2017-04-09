@@ -51,8 +51,6 @@ public:
 
     std::vector<Entity *>getQuadTreeEntities(const Quadtree& q, const Entity *entity) const; // General Collision handler, pass in quadtree check
 
-    CollisionHandler& operator=(const CollisionHandler& handle);
-
     void clear();
     void insertMarine(Entity *e);
     void insertZombie(Entity *e);

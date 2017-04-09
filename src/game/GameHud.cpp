@@ -452,6 +452,24 @@ void GameHud::renderInventoryWeapons(SDL_Rect& position, const Player& p, int in
         } else if (weaponType.compare("Shotgun") == 0){
             Renderer::instance().setAlpha(TEXTURES::SHOTGUN_INVENTORY, inventorySlotOpacity);
             Renderer::instance().render(position, TEXTURES::SHOTGUN_INVENTORY);
+        } else if (weaponType.compare("Plasma Deagle") == 0){
+            Renderer::instance().setAlpha(TEXTURES::PLASMA_DEAGLE_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::PLASMA_DEAGLE_INVENTORY);
+        } else if (weaponType.compare("Railgun") == 0){
+            Renderer::instance().setAlpha(TEXTURES::RAILGUN_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::RAILGUN_INVENTORY);
+        } else if (weaponType.compare("RPG") == 0){
+            Renderer::instance().setAlpha(TEXTURES::RPG_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::RPG_INVENTORY);
+        } else if (weaponType.compare("Type75") == 0){
+            Renderer::instance().setAlpha(TEXTURES::TYPE_75K_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::TYPE_75K_INVENTORY);
+        } else if (weaponType.compare("Katana") == 0){
+            Renderer::instance().setAlpha(TEXTURES::KATANA_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::KATANA_INVENTORY);
+        } else if (weaponType.compare("Phase Repeater") == 0){
+            Renderer::instance().setAlpha(TEXTURES::PHASE_REPEATER_INVENTORY, inventorySlotOpacity);
+            Renderer::instance().render(position, TEXTURES::PHASE_REPEATER_INVENTORY);
         }
     }
 }
@@ -487,6 +505,18 @@ void GameHud::renderEquippedWeapon(SDL_Rect& position, const Player& p) {
             Renderer::instance().render(position, TEXTURES::RIFLE);
         } else if (weaponType.compare("Shotgun") == 0){
             Renderer::instance().render(position, TEXTURES::SHOTGUN);
+        } else if (weaponType.compare("Plasma Deagle") == 0){
+            Renderer::instance().render(position, TEXTURES::PLASMA_DEAGLE);
+        } else if (weaponType.compare("Railgun") == 0){
+            Renderer::instance().render(position, TEXTURES::RAILGUN);
+        } else if (weaponType.compare("RPG") == 0){
+            Renderer::instance().render(position, TEXTURES::RPG);
+        } else if (weaponType.compare("Type75") == 0){
+            Renderer::instance().render(position, TEXTURES::TYPE_75K);
+        } else if (weaponType.compare("Katana") == 0){
+            Renderer::instance().render(position, TEXTURES::KATANA);
+        } else if (weaponType.compare("Phase Repeater") == 0){
+            Renderer::instance().render(position, TEXTURES::PHASE_REPEATER);
         }
     }
 }
