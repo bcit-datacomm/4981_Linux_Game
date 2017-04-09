@@ -32,10 +32,8 @@ static constexpr unsigned int MAX_LEVELS = 50;
 
 class Quadtree {
 public:
-    Quadtree(int pLevel, SDL_Rect pBounds);
+    Quadtree(unsigned int pLevel, SDL_Rect pBounds);
     ~Quadtree() = default;
-
-    Quadtree& operator=(const Quadtree& quad);
 
     void clear();
     void split();
@@ -49,7 +47,7 @@ private:
     unsigned int objectCounter;
     unsigned int level;
     SDL_Rect bounds;
-    std::array<std::shared_ptr<Quadtree>, BRANCHSIZE> nodes;
+    std::array<std::unique_ptr<Quadtree>, BRANCHSIZE> nodes;
     std::vector<Entity *> objects;
 };
 
