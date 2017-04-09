@@ -75,6 +75,7 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);
 
     //-------- zombie textures --------
+    createTexture(TEXTURES::BLOOD, BLOOD_TEXTURE);
     //baby
     //createTexture(ZOMBIE_BABYZ);
     createTexture(TEXTURES::BABY_ZOMBIE, ZOMBIE_BABYZ);

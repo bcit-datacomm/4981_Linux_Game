@@ -160,9 +160,11 @@ const std::string LASER = SPRITE_PATH  + "laser.png";
 const std::string REPLACE_ME = "assets/texture/replace_me.png"; //temporary sprite, will be removed later
 const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be removed later
 
+const std::string BLOOD_TEXTURE = "assets/texture/blood.png";
+
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 31; //number of total sprites
+static constexpr int TOTAL_SPRITES = 32; //number of total sprites
 
 
 class Renderer {

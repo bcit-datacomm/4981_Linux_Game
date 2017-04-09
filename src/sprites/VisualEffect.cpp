@@ -71,9 +71,9 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
     {
         std::lock_guard<std::mutex> lock(preTexMut);
         for (auto p = preTex.begin(); p != preTex.end();) {
-            if (--p->second.dur > 0) {
+            if (--p->second.dur > 0 && SDL_HasIntersection(&p->second.dest, &camera)) {
                 const SDL_Rect temp = relative(p->second.dest, camera);
-                renderer.render(temp, p->second.tex, p->second.src);
+                renderer.render(temp, p->second.tex, p->second.src, p->second.angle);
                 ++p;
             } else {
                 p = preTex.erase(p);
@@ -121,9 +121,9 @@ void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
     {
         std::lock_guard<std::mutex> lock(postTexMut);
         for (auto p = postTex.begin(); p != postTex.end();) {
-            if (--p->second.dur > 0) {
+            if (--p->second.dur > 0 && SDL_HasIntersection(&p->second.dest, &camera)) {
                 const SDL_Rect temp = relative(p->second.dest, camera);
-                renderer.render(temp, p->second.tex, p->second.src);
+                renderer.render(temp, p->second.tex, p->second.src, p->second.angle);
                 ++p;
             } else {
                 p = postTex.erase(p);
@@ -196,9 +196,10 @@ int VisualEffect::addPostRect(const int dur, const SDL_Rect &dest, const Uint8 r
  * Notes:
  * add a texture effect
  */
-int VisualEffect::addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex) {
+int VisualEffect::addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest,
+        const TEXTURES tex, const double angle) {
     std::lock_guard<std::mutex> lock(preTexMut);
-    preTex[++preTexId] = {dur, tex, src, dest};
+    preTex[++preTexId] = {dur, tex, src, dest, angle};
     return preTexId;
 }
 
@@ -209,9 +210,10 @@ int VisualEffect::addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &
  * Notes:
  * add a texture effect
  */
-int VisualEffect::addPostTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex) {
+int VisualEffect::addPostTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest,
+        const TEXTURES tex, const double angle) {
     std::lock_guard<std::mutex> lock(postTexMut);
-    postTex[++postTexId] = {dur, tex, src, dest};
+    postTex[++postTexId] = {dur, tex, src, dest, angle};
     return postTexId;
 }
 
@@ -285,4 +287,21 @@ void VisualEffect::removePostRect(const int id) {
 void VisualEffect::removePostTex(const int id) {
     std::lock_guard<std::mutex> lock(postTexMut);
     postTex.erase(id);
+}
+
+
+/**
+ * Developer: Isaac Morneau
+ * Designer: Isaac Morneau
+ * Date: April 8, 2017
+ * Notes:
+ * add some gore
+ */
+void VisualEffect::addBlood(const SDL_Rect &dest) {
+    std::lock_guard<std::mutex> lock(preTexMut);
+    //20 seconds at 60 fps
+    static constexpr int BLOOD_LENGTH = 1200;
+    static constexpr int BLOOD_IMAGE = 300;
+    preTex[++preTexId] = {BLOOD_LENGTH, TEXTURES::BLOOD, {0, 0, BLOOD_IMAGE, BLOOD_IMAGE},
+        dest, M_PI * rand()};
 }
