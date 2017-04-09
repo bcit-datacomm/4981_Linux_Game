@@ -82,6 +82,6 @@ void MatchManager::setSpawnPoints(std::vector<MapPoint> points) {
  */
 void MatchManager::newRound() {
     //this needs to be set based on testing to provide good round scaling
-    static constexpr int scaleFactor = 128;
+    static constexpr int scaleFactor = 16;
     zombiesToSpawn = (spawnPoints.size() * ++round) * scaleFactor;
 }
