@@ -90,11 +90,12 @@ public:
 
 private:
     int health;// health points of zombie
-    int frameCount;
-    int ignore;
-    int flipper;
+    int frameCount;//counts frames for animation
+    int ignore;//how long to not track for
+    int flipper;//do we need to go the other way?
+    int actionTick;//when the action started
     Inventory inventory;//inventory holds a weapon used to attack
-    void zAttack();
+    void zAttack();//ATTACK!
 };
 
 #endif

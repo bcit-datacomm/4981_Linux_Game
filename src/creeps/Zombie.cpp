@@ -35,7 +35,7 @@ using namespace std;
 Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const int health) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health),
-        frameCount(0), ignore(0), flipper(1) {
+        frameCount(0), ignore(0), flipper(1), actionTick(0) {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -49,7 +49,7 @@ Zombie::~Zombie() {
     logv("Destroy Zombie\n");
 }
 /**
- * Author: Robert Arendac
+ * Author: Isaac Morneau
  *
  * Date: April 6, 2017
  */
@@ -133,7 +133,7 @@ void Zombie::update(){
 }
 
 /**
- * Author: Jamie Lee
+ * Author: Isaac Morneau
  *
  * Date: April 6, 2017
  */
@@ -176,7 +176,7 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
 }
 
 /**
- * Author: Jamie Lee
+ * Author: Mark Tattrie
  *
  * Date: April 6, 2017
  */
@@ -274,7 +274,7 @@ void Zombie::updateImageWalk() {
 *
 * Designer: Trista Huang
 *
-* Programmer: Fred Yang
+* Programmer: Isaac Morneau
 *
 * Interface: void Marine::updateImageDirection()
 *
