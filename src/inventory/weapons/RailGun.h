@@ -13,7 +13,7 @@
 using std::string;
 
 namespace RailGunVars {
-    const string TYPE = "RailGun";
+    const string TYPE = "Railgun";
 
     const string FIRESOUND = EFX_WLRIFLE;
     const string HITSOUND = "";
