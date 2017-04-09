@@ -18,7 +18,7 @@
  */
 
 Rifle::Rifle(const int32_t id) : InstantWeapon(RifleVars::TYPE, TEXTURES::RIFLE, RifleVars::FIRESOUND, RifleVars::HITSOUND, RifleVars::RELOADSOUND,
-        RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE, RifleVars::PENETRATION,
+        RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE, RifleVars::PENETRATION, RifleVars::ACCURACY,
         RifleVars::CLIP, RifleVars::CLIPMAX, RifleVars::AMMO, RifleVars::RELOADDELAY, RifleVars::FIREDELAY, id) {
 
 }

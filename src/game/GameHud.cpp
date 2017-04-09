@@ -461,7 +461,7 @@ void GameHud::renderInventoryWeapons(SDL_Rect& position, const Player& p, int in
         } else if (weaponType.compare("RPG") == 0){
             Renderer::instance().setAlpha(TEXTURES::RPG_INVENTORY, inventorySlotOpacity);
             Renderer::instance().render(position, TEXTURES::RPG_INVENTORY);
-        } else if (weaponType.compare("Type 75K") == 0){
+        } else if (weaponType.compare("Type75") == 0){
             Renderer::instance().setAlpha(TEXTURES::TYPE_75K_INVENTORY, inventorySlotOpacity);
             Renderer::instance().render(position, TEXTURES::TYPE_75K_INVENTORY);
         } else if (weaponType.compare("Katana") == 0){
@@ -511,7 +511,7 @@ void GameHud::renderEquippedWeapon(SDL_Rect& position, const Player& p) {
             Renderer::instance().render(position, TEXTURES::RAILGUN);
         } else if (weaponType.compare("RPG") == 0){
             Renderer::instance().render(position, TEXTURES::RPG);
-        } else if (weaponType.compare("Type 75K") == 0){
+        } else if (weaponType.compare("Type75") == 0){
             Renderer::instance().render(position, TEXTURES::TYPE_75K);
         } else if (weaponType.compare("Katana") == 0){
             Renderer::instance().render(position, TEXTURES::KATANA);
