@@ -56,7 +56,7 @@ void MatchManager::spawnZombies() {
             --zombiesToSpawn; 
         }
     }
-    logv(7, "Zombies Spawned:%ld Still Pending:%d\n", GameManager::instance()->getZombieManager().size(), zombiesToSpawn);
+    logv("Zombies Spawned:%ld Still Pending:%d\n", GameManager::instance()->getZombieManager().size(), zombiesToSpawn);
     GameManager::instance()->deleteZombie(id);
 }
 

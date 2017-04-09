@@ -25,6 +25,7 @@ namespace ZombieHandVars {
     constexpr int DAMAGE = 20;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 1;
+    constexpr int ACCURACY = 4;
 
     constexpr int CLIP = 10000;
     constexpr int CLIPMAX = 10000;
