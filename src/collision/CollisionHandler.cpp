@@ -43,27 +43,6 @@ CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), m
 }
 
 /**
- * Date: Mar. 1, 2017
- * Modified: Mar. 15 2017 - Mark Tattrie
- * Author: Jacob McPhail.
- * Function Interface: CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle)
- * Description:
- * Comparison operator for = to set each Quadtree
- */
-CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
-    zombieMovementTree = handle.zombieMovementTree;
-    marineTree = handle.marineTree;
-    zombieTree = handle.zombieTree;
-    barricadeTree = handle.barricadeTree;
-    turretTree = handle.turretTree;
-    wallTree = handle.wallTree;
-    pickUpTree = handle.pickUpTree;
-    objTree = handle.objTree;
-    storeTree = handle.storeTree;
-    return *this;
-}
-
-/**
  * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.

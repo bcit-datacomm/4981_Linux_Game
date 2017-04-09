@@ -36,8 +36,6 @@ public:
     Quadtree(int pLevel, SDL_Rect pBounds);
     ~Quadtree() = default;
 
-    Quadtree& operator=(const Quadtree& quad);
-
     void clear();
     void split();
     unsigned int getTreeSize() const;
@@ -50,7 +48,7 @@ private:
     unsigned int objectCounter;
     unsigned int level;
     SDL_Rect bounds;
-    std::array<std::shared_ptr<Quadtree>, BRANCHSIZE> nodes;
+    std::array<std::unique_ptr<Quadtree>, BRANCHSIZE> nodes;
     std::deque<Entity *> objects;
 };
 

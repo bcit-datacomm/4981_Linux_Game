@@ -35,15 +35,6 @@
  */
 Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) : objectCounter(0), level(pLevel), bounds(pBounds) {}
 
-Quadtree& Quadtree::operator=(const Quadtree& quad) {
-    objects = quad.objects;
-    objectCounter = quad.objectCounter;
-    level = quad.level;
-    bounds = quad.bounds;
-    nodes = quad.nodes;
-    return *this;
-}
-
 /**
  * Date: Feb. 8, 2017
  * Modified: -----
@@ -67,7 +58,9 @@ unsigned int Quadtree::getTreeSize() const {
 void Quadtree::clear() {
     objects.clear();
     objectCounter = 0;
-    nodes.fill(nullptr);
+    for (auto& elem : nodes) {
+        elem = nullptr;
+    }
 }
 
 /**
@@ -84,10 +77,10 @@ void Quadtree::split() {
     const int x = static_cast<int>(bounds.x);
     const int y = static_cast<int>(bounds.y);
 
-    nodes[0] = std::make_shared<Quadtree>(level + 1, SDL_Rect{x + subWidth, y, subWidth, subHeight});
-    nodes[1] = std::make_shared<Quadtree>(level + 1, SDL_Rect{x, y, subWidth, subHeight});
-    nodes[2] = std::make_shared<Quadtree>(level + 1, SDL_Rect{x, y + subHeight, subWidth, subHeight});
-    nodes[3] = std::make_shared<Quadtree>(level + 1, SDL_Rect{x + subWidth, y + subHeight, subWidth, subHeight});
+    nodes[0] = std::make_unique<Quadtree>(level + 1, SDL_Rect{x + subWidth, y, subWidth, subHeight});
+    nodes[1] = std::make_unique<Quadtree>(level + 1, SDL_Rect{x, y, subWidth, subHeight});
+    nodes[2] = std::make_unique<Quadtree>(level + 1, SDL_Rect{x, y + subHeight, subWidth, subHeight});
+    nodes[3] = std::make_unique<Quadtree>(level + 1, SDL_Rect{x + subWidth, y + subHeight, subWidth, subHeight});
 }
 
 /**
