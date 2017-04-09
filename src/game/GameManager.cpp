@@ -86,8 +86,9 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : zombieManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE,
-                o.second.getSrcRect());
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), 
+                    o.second.getId() % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE,
+                    o.second.getSrcRect());
         }
     }
 

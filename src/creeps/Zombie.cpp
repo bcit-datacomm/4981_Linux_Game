@@ -24,6 +24,7 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "../inventory/weapons/ZombieHand.h"
 #include <cstdlib>
 using namespace std;
 
@@ -118,6 +119,11 @@ void Zombie::update(){
             }
             //-1 converts from cartisian to screen coords
             setRadianAngle(fmod(atan2(movX, movY) + 2 * M_PI, 2 * M_PI));
+            
+            //we only attack if we are actually in range
+            if (hyp <= ZombieHandVars::RANGE) {
+                zAttack();
+            }
         } else if (ignore > 0){
             --ignore;
         }
@@ -125,11 +131,6 @@ void Zombie::update(){
     //get the distance of 
     setDX(ZOMBIE_VELOCITY * sin(getRadianAngle()));
     setDY(ZOMBIE_VELOCITY * cos(getRadianAngle()));
-
-    //Attack updates
-    if (!(frameCount % CHECK_RATE)){
-        zAttack();
-    }
 }
 
 /**
@@ -199,6 +200,10 @@ void Zombie::zAttack(){
     Weapon* w = inventory.getCurrent();
     if (w){
         w->fire(*this);
+        //should only add a new animation if a different one isnt playing
+        if (actionTick < frameCount) {
+            actionTick = frameCount + ANIMATION_DURATION;
+        }
     } else {
         logv("Zombie Slot Empty\n");
     }
@@ -266,6 +271,14 @@ void Zombie::updateImageWalk() {
         }
     } else {
         setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    }
+    if (getSrcRect().x != ZOMBIE_ATTACK_X && actionTick > frameCount) {
+        const auto& sr = getSrcRect();
+        setSrcRect(ZOMBIE_ATTACK_X, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+        --actionTick;
+    } else if (actionTick == frameCount) {
+        const auto& sr = getSrcRect();
+        setSrcRect(ZOMBIE_FRONT, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     }
 }
 
