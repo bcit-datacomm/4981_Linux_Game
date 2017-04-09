@@ -36,7 +36,7 @@ using namespace std;
 Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const int health) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health),
-        frameCount(0), ignore(0), flipper(1), actionTick(0) {
+        frameCount(0), ignore(0), flipper(1), actionTick(0), action('\0') {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -184,6 +184,10 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
     VisualEffect::instance().addBlood(getDestRect());
+    if (actionTick < frameCount) {
+        action = 'd';
+        actionTick = frameCount + HIT_DURATION;
+    }
     if (health <= 0) {
         GameManager::instance()->deleteZombie(getId());
     }
@@ -202,7 +206,8 @@ void Zombie::zAttack(){
         w->fire(*this);
         //should only add a new animation if a different one isnt playing
         if (actionTick < frameCount) {
-            actionTick = frameCount + ANIMATION_DURATION;
+            action = 'a';
+            actionTick = frameCount + ATTACK_DURATION;
         }
     } else {
         logv("Zombie Slot Empty\n");
@@ -272,10 +277,9 @@ void Zombie::updateImageWalk() {
     } else {
         setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     }
-    if (getSrcRect().x != ZOMBIE_ATTACK_X && actionTick > frameCount) {
+    if (actionTick > frameCount) {
         const auto& sr = getSrcRect();
-        setSrcRect(ZOMBIE_ATTACK_X, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
-        --actionTick;
+        setSrcRect(action == 'a' ? ZOMBIE_ATTACK_X : ZOMBIE_HIT_X, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     } else if (actionTick == frameCount) {
         const auto& sr = getSrcRect();
         setSrcRect(ZOMBIE_FRONT, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
