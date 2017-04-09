@@ -19,7 +19,7 @@
  */
 HandGun::HandGun(const int32_t id) : InstantWeapon(HandgunVars::TYPE, TEXTURES::SHOTGUN, HandgunVars::FIRESOUND,
         HandgunVars::HITSOUND, HandgunVars::RELOADSOUND, HandgunVars::EMPTYSOUND, HandgunVars::RANGE,
-        HandgunVars::DAMAGE, HandgunVars::AOE, HandgunVars::PENETRATION, HandgunVars::CLIP,
+        HandgunVars::DAMAGE, HandgunVars::AOE, HandgunVars::PENETRATION, HandgunVars::ACCURACY, HandgunVars::CLIP,
         HandgunVars::CLIPMAX, HandgunVars::AMMO, HandgunVars::RELOADDELAY, HandgunVars::FIREDELAY, id) {
 
 }
