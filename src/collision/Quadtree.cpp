@@ -32,7 +32,7 @@
  * Description:
  *      ctor for a quadtree.
  */
-Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) : objectCounter(0), level(pLevel), bounds(pBounds) {}
+Quadtree::Quadtree(unsigned int pLevel, SDL_Rect pBounds) : objectCounter(0), level(pLevel), bounds(pBounds) {}
 
 /**
  * Date: Feb. 8, 2017

@@ -32,7 +32,7 @@ static constexpr unsigned int MAX_LEVELS = 50;
 
 class Quadtree {
 public:
-    Quadtree(int pLevel, SDL_Rect pBounds);
+    Quadtree(unsigned int pLevel, SDL_Rect pBounds);
     ~Quadtree() = default;
 
     void clear();
