@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: InstantWeapon.cpp        
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /**
     InstantWeapon.cpp
 

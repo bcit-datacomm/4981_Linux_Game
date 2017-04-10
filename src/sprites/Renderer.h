@@ -135,6 +135,9 @@ const std::string TYPE_75K_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItem
 const std::string KATANA_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/katana.png";
 const std::string PHASE_REPEATER_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/phaseRepeater.png";
 
+//------------- Turret Textures ------------------
+const std::string TURRET_TEXTURE = "assets/texture/Building/turret.png";
+
 //------------- Equipped Weapon Textures ------------------
 const std::string SHOTGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/shotgunEquipped.png";
 const std::string RIFLE_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifleEquipped.png";

@@ -37,8 +37,6 @@ enum class TEXTURES : int {
     JOIN_FONT,
     JOIN_FONT_ACTIVE,
 
-    //LOBBY,
-
     //--------------------- Hud textures ---------------------
     WEAPON_CLIP_FULL,
     WEAPON_CLIP_EMPTY,
@@ -59,6 +57,7 @@ enum class TEXTURES : int {
     MAP_OBJECTS,
     BASE,
     //---------- Nature ----------
+    TURRET,
     HEALTHPACK,
 
     //--------------------- Weapons ---------------------

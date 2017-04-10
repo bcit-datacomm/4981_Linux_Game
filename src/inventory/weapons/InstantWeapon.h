@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: InstantWeapon.h        
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created  by Deric M       01/03/17
     Edited by Mark T 3/13/2017

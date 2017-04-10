@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: MeleeWeapon.h        
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 #ifndef MELEEWEAPON_H
 #define MELEEWEAPON_H
 #include "Weapon.h"

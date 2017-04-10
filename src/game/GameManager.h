@@ -46,6 +46,10 @@ static constexpr int WEAPON_STORE_SRC_Y = 582;
 static constexpr int WEAPON_STORE_SRC_W = 158;
 static constexpr int WEAPON_STORE_SRC_H = 254;
 
+static constexpr int TURRET_SIZE_H = 150; //Turret height
+static constexpr int TURRET_PUSIZE_W = 125; // Turret pickup-hitbox width
+static constexpr int TURRET_PUSIZE_H = 170; // Turret pickup-hitbox height
+
 static constexpr int WALL_SRC_X = 15;
 static constexpr int WALL_SRC_Y = 478;
 static constexpr int WALL_SRC_W = 122;

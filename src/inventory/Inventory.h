@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------------
+* Source: Inventory.h         
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
 #ifndef INVENTORY_H
 #define INVENTORY_H
 #include <SDL2/SDL.h>
@@ -25,7 +41,7 @@ public:
     bool pickUp(int32_t weaponId, const float x, const float y);//picks up weapon in to current slot
     Weapon *getCurrent() const;//Returns current weapon
     void scrollCurrent(int direction);//switches current slot based on wheel scroll
-    void useItem(); //uses current inventory item
+    void useItem(Marine& marine); //uses current inventory item
     void dropWeapon(float x, float y);//creates WeaponDrop for Current Weapon before Dropping it
     //Used to get the inventory's medkit. should be made general for all consumables later
     std::shared_ptr<BasicMedkit> getMedkit() {return medkit;};
