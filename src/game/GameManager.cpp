@@ -58,9 +58,9 @@ GameManager::~GameManager() {
  *  Set alpha to the sprite of Brricade if it is not placeable
  * Modified: Apr. 07, 2017 - Isaac Morneau
  *      cleaned up the inersection calls, removed object rendering entirely
- * 
+ *
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
- * 
+ *
  * Description:
  *     Render all objects in level
  */
@@ -86,7 +86,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : zombieManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), 
+            Renderer::instance().render(o.second.getRelativeDestRect(cam),
                     o.second.getId() % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE,
                     o.second.getSrcRect());
         }
@@ -212,6 +212,7 @@ bool GameManager::hasMarine(const int32_t id) const {
  * Revisions:
  * Mar. 30, 2017, Mark Chen : turrets now fire when they detect an enemy
  * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
+ * Apr. 10, 2017, Mark Chen : turrets now do not track targets while it's being held.
  */
 
 void GameManager::updateTurrets() {
@@ -228,8 +229,10 @@ void GameManager::updateTurrets() {
         for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
 #pragma omp task firstprivate(it)
             {
-                if (it->second.targetScanTurret() && it->second.isActivated()) {
-                    it->second.shootTurret();
+                if (it->second.isActivated()) {
+                    if (it->second.targetScanTurret()) {
+                        it->second.shootTurret();
+                    }
                 }
             }
         }
