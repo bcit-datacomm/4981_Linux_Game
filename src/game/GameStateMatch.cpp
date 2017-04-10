@@ -214,7 +214,7 @@ void GameStateMatch::handle() {
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
                         if (GameManager::instance()->getPlayer().getMarine()) {
-                            GameManager::instance()->getPlayer().getMarine()->setHealth(50);
+                            GameManager::instance()->getPlayer().getMarine()->setHealth(0);
                         }
                         break;
                     default:
