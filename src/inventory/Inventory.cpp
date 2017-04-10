@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: Inventory.cpp         
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 //created 2/5/17 Maitiu
 #include <memory>
 

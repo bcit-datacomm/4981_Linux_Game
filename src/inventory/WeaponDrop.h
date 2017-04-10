@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------------
+* Source: WeaponDrop.h         
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
 #ifndef WEAPONDROP_H
 #define WEAPONDROP_H
 
