@@ -96,6 +96,16 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
             Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
                 o.second.getAngle());
+
+            /*
+            if (!o.second.collisionCheckTurret()) {
+                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
+                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
+            } else {
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+            }
+            */
         }
     }
 
