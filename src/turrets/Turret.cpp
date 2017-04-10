@@ -191,7 +191,7 @@ void Turret::collidingProjectile(const int damage) {
  *
  * Designer: Mark Chen
  *
- * Programmer: Mark Chen
+ * Programmer: Mark Chen, Alex Zielinski
  *
  * Function Interface: void shootTurret()
  *
@@ -201,6 +201,7 @@ void Turret::collidingProjectile(const int damage) {
  * Revisions:
  * Mar. 30, 2017, Mark Chen : Made the function actually fire the turrets weapon.
  * Apr. 04, 2017, Mark Chen : Altered the funuction to check for null weapon.
+ * Apr. 10, 2017, Alex Zielinski: Implemented turret fire sound effect
  */
 void Turret::shootTurret() {
 
@@ -208,6 +209,8 @@ void Turret::shootTurret() {
     if (w) {
         w->fire(*this);
     }
+    // play turrent fire effect
+	//AudioManager::instance().playEffect(EFX_WLPISTOL);
 }
 
 /**

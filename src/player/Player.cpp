@@ -143,11 +143,14 @@ void Player::sendServAttackAction() {
 /**
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
-* Modified: ---
+* Programmers: Jacob McPhail, Alex Zielinski
+* Modified:
+* Apr. 10, 2017 Alex Zielinski
 * Function Interface: handleMouseUpdate(const int winWidth, const int winHeight,
 *                const float camX, const float camY)
 *       winWidth : Window width
-*       winHeight : Window height
+*       winHeight : Window height// play menu click sound effect
+	AudioManager::instance().playEffect(MENU_CLICK02);
 *       camX : Camera x position
 *       camY : Camera y position
 *
@@ -158,6 +161,8 @@ void Player::sendServAttackAction() {
 * Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
 * Apr. 07, 2017, Mark Chen - Can no longer shoot while holding a turret.
 * Apr. 10, 2017, Mark Chen, Mark Tattrie - Added a delay to firing right after placing a turret.
+* Apr. 10, 2017 Alex Zielinski - implemented turrent install effect
+* 							   - implemented sound effects that occur with menu interactions by mouse
 */
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
@@ -184,6 +189,8 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
+				// play turret install effect
+				AudioManager::instance().playEffect(EFX_BINSTALL);
                 tempTurret.placeTurret();
                 holdingTurret = false;
                 tempTurretID = -1;
@@ -201,6 +208,8 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e) {
+	// play menu click sound effect
+	AudioManager::instance().playEffect(MENU_CLICK01);
     marine->inventory.scrollCurrent(e->wheel.y);
 }
 
@@ -219,12 +228,16 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 /**
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
-* Modified: ---
+* Modified:
+* Apr. 10, 2017, Alex Zielinski
 * Function Interface: handleKeyboardInput(const Uint8 *state)
 *         state : Keyboard state
 *
 * Description:
 *   Handle user key input.
+*
+* Revisions:
+* Apr. 10, 2017, Alex Zielinski - implemented sound effects that occur with menu interactions by keyboard
 */
 void Player::handleKeyboardInput(const int winWidth, const int winHeight, const Uint8 *state) {
     float x = 0;

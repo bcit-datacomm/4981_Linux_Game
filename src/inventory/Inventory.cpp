@@ -17,12 +17,19 @@ Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
 
 void Inventory::switchCurrent(const int slot) {
     if (current != slot) {
+		// play menu click sound effect
+		AudioManager::instance().playEffect(MENU_CLICK01);
         logv(3, "Switched to slot: %d\n", slot);
         current = slot;
     }
 }
 
-//Created By Maitiu
+/**
+ * Programmers, Maitiu, Alex Zielinski
+ * 
+ * Revisions: 
+ * Apr. 10, 2017, Alex Zielinski - Implemented pick up sound
+ **/
 bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
     if (current == 0) {
         logv(3, "Can't Swap default gun \n");
@@ -30,8 +37,10 @@ bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
     }
 
     //drop Current Weapon
-
     dropWeapon(x, y);
+
+	// play medkit effect
+	AudioManager::instance().playEffect(EFX_PPICK02);
 
     logv(3, "Picked up weapon\n");
     logv(3, "Swapped from %d ", weaponIds[current]);
@@ -61,7 +70,10 @@ Weapon* Inventory::getCurrent() const {
  * Jacob Frank
  *
  * Programmer:
- * Jacob Frank
+ * Jacob Frank, Alex Zielinski
+ * 
+ * Modified:
+ * Apr. 10, 2017 Alex Zielinski
  *
  * Interface: getWeaponFromInventory(int inventorySlot)
  *                  int inventorySlot: The inventory slot to retrieve the weapon from
@@ -70,6 +82,9 @@ Weapon* Inventory::getCurrent() const {
  *
  * Notes:
  * Function, when called, retrieves the weapon from the inventory slot requested
+ * 
+ * Revisions:
+ * Apr. 10, 2017 Alex Zielinski: implemented medkit sound effect
  */
 Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
     if (weaponIds[inventorySlot] >= 0) {
@@ -80,6 +95,8 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
 
 void Inventory::useItem() {
     if (medkit != nullptr) {
+		// play medkit effect
+		AudioManager::instance().playEffect(EFX_MEDKIT);
         medkit->OnConsume();
         medkit = nullptr;
     }
@@ -106,16 +123,21 @@ void Inventory::scrollCurrent(int direction) {
 }
 
 /**
- * DEVELOPER: Maitiu
+ * DEVELOPER: Maitiu, Alex Zielinski
  * DESIGNER: Maitiu
  * DATE:      March 29 2017
  * Checks is current CSLot has Weapon then Checks its ammo and creates a weaponDrop and renders it.
+ * 
+ * Revisions:
+ * Apr. 10, 2017 Alex Zielinski: implemented drop sound effect
  */
  void Inventory::dropWeapon(const float x, const float y) {
      if(current){
          Weapon *w = getCurrent();
          if (w) {
              if (w->getAmmo() > 0) {
+				 // play drop sound effect
+				 AudioManager::instance().playEffect(EFX_PDROP01);
                  GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
 
              } else {
