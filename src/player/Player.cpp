@@ -178,9 +178,13 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
+                int currentTime = SDL_GetTicks();
+                int delayShoot = 5000;
+
                 tempTurret.placeTurret();
                 tempTurretID = -1;
                 holdingTurret = false;
+
             }
         }
     } else if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {

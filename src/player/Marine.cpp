@@ -9,7 +9,7 @@
  * Author: Jacob McPhail
  * Function Interface: Marine(const int32_t id, const SDL_Rect& dest,
  *              const SDL_Rect& movementSize, const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
- *              
+ *
  *              id : Marine id
  *              dest : Destination rect
  *              movmentSize : Move hitbox size
@@ -32,7 +32,7 @@ Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
  * Author: Jacob McPhail
  * Function Interface: ~Marine()
  * Description:
- *   dctor for a marine.  
+ *   dctor for a marine.
  */
 Marine::~Marine() {
     logv("Destroy Marine\n");
@@ -79,6 +79,9 @@ bool Marine::fireWeapon() {
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
  * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
+ *
+ * Modified:
+ * Apr. 10, 2017, Mark Chen - Adjusted to check for turrets with new Tree-Entity system
  */
 int32_t Marine::checkForPickUp() {
     int32_t pickId = -1;
@@ -90,16 +93,21 @@ int32_t Marine::checkForPickUp() {
         activateStore(ep);
         return -1;
     }
+
+    // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
+    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this),this);
+    if(ep) {
+        pickId = ep->getId();
+        if (gm->getTurretManager().count(pickId)) {
+            return pickId;
+        }
+    }
+
     ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this),this);
     if(ep) {
         //get Entity drop Id
         pickId = ep->getId();
         logv("Searching for id:%d in weaponDropManager\n", pickId);
-        // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
-        if (gm->getTurretManager().count(pickId)) {
-            return pickId;
-        }
-        //Checks if WeaponDrop exists
         if(gm->weaponDropExists(pickId)) {
             const WeaponDrop& wd = gm->getWeaponDrop(pickId);
             //Get Weaopn id from weapon drop
@@ -233,4 +241,3 @@ void Marine::activateStore(const Entity *ep){
         gm->getStore(ep->getId())->purchase(r);
     }
 }
-
