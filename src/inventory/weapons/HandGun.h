@@ -33,6 +33,8 @@ namespace HandgunVars {
 
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 500;
+
+    constexpr int PRICE = 0;
 }
 
 

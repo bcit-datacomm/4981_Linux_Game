@@ -12,7 +12,7 @@ int32_t id of the Store
 SDL_Rect dest the Rect of the store
 maitiu March 30*/
 WeaponStore::WeaponStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
-        const GameHashMap<TEXTURES, int> i): Store(id, dest, pickupSize, screen, i), price(0){
+        const GameHashMap<TEXTURES, int> i): Store(id, dest, pickupSize, screen, i){
 
 }
 
@@ -50,7 +50,7 @@ int32_t WeaponStore::purchase(const int num, const int credits){
         return weaponId;
     }
     logv("NO OPEN DROP POINTS!!!\n");
-    return 0;
+    return -1;
 }
 /*
  *Created by maitiu March 30
@@ -61,19 +61,23 @@ int32_t WeaponStore::createWeapon(const int num, const int credits){
     int32_t id = gm->generateID();
     switch(num){
         case 0:
-            if(credits >= 50){
-                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
-                price = 50;
+        {
+            Rifle r(id);
+            if(credits >= r.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(r)));
                 return id;
             }
             break;
+        }
         case 1:
-            if(credits >= 50){
-                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
-                price = 50;
+        {
+            ShotGun s(id);
+            if(credits >= s.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(s)));
                 return id;
             }
             break;
+        }
         default:
             return -1;//does not exist
     }

@@ -198,11 +198,13 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                         SDL_GetMouseState(&x, &y);
                         clicked = s.second->getStoreMenu().getClicked(x, y);
                         if(clicked >= 0){
-                            int price = s.second->purchase(clicked, credits);
-                            if(price > 0){
-                                credits -= price;
+                            int32_t wid = s.second->purchase(clicked, credits);
+                            if(wid >= 0){
+                                int cost = GameManager::instance()->getWeapon(wid)->getPrice();
+                                credits = credits - cost;
+                                logv("Purchased\n");
                             } else {
-                                printf("Not Enough Credits\n");
+                                logv("Not Enough Credits\n");
                             }
                         }
                     }

@@ -17,11 +17,8 @@ public:
 
     int32_t purchase(const int num, const int credits);//creates item and item drop for user
     int32_t createWeapon(const int num, const int credits);
-    int getPrice()const {return price;};
 
 private:
-
-    int price;
 
 };
 

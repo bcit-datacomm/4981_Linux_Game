@@ -70,8 +70,8 @@ void StoreMenu::renderSlots(const int num){
 int StoreMenu::getClicked(const float x, const float y){
     for(int i = 0; i < sizeof(slot); i++){
         if(checkSlot(slot[i], x, y)){
-            printf("slot x:%d y:%d  maxX:%d maxY:%d\n", slot[i].x, slot[i].y, slot[i].x + slot[i].w, slot[i].y + slot[i].h);
-            printf("mouse X:%f y:%f\n", x, y);
+            //printf("slot x:%d y:%d  maxX:%d maxY:%d\n", slot[i].x, slot[i].y, slot[i].x + slot[i].w, slot[i].y + slot[i].h);
+            //printf("mouse X:%f y:%f\n", x, y);
             return i;
         }
     }

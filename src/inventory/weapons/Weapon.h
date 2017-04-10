@@ -20,7 +20,7 @@ public:
     Weapon(const string& type = "no type", TEXTURES sprite = TEXTURES::CONCRETE, const string& fireSound = "", const string& hitSound = "",
         const string& reloadSound = "", const string& emptySound = "", const int range = 0,
         const int damage = 0, const int AOE = 0, const int penetration = 0, const int clip = 0,
-        const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0, int32_t id = -1);
+        const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0, const int32_t id = -1, const int p = 0);
 
     Weapon(const Weapon& w);
     ~Weapon() = default;
@@ -48,6 +48,8 @@ public:
 
     virtual bool fire(Movable& movable);
 
+    int getPrice() const {return price;};
+
 protected:
 
     string type;
@@ -73,6 +75,9 @@ protected:
     int fireTick;
 
     int32_t wID;
+
+
+    int price;
 
 };
 
