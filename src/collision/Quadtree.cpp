@@ -67,7 +67,6 @@ unsigned int Quadtree::getTreeSize() const {
  *      Clears all objects in the tree.
  */
 void Quadtree::clear() {
-//#pragma omp flush(level)
     if (level == MAX_LEVELS) { 
         objects.clear();
         return;
