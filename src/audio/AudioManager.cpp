@@ -185,16 +185,29 @@ void AudioManager::loadFiles(){
     loadEffect(EFX_PPICK01);
     loadEffect(EFX_PPICK02);
     loadEffect(EFX_MEDKIT);
+    loadEffect(EFX_PURCHASE);
 
     // weapon
     loadEffect(EFX_WLPISTOL);
     loadEffect(EFX_WLRIFLE);
     loadEffect(EFX_WSHOTGUN);
-    loadEffect(EFX_WTURRET01);
+    loadEffect(EFX_WTURRET);
+    loadEffect(EFX_WDEAGLE);
+    loadEffect(EFX_WREPEATER);
+    loadEffect(EFX_WRAIL01);
+    loadEffect(EFX_WRAIL02);
+    loadEffect(EFX_WTYPE75K);
 
     // weapon reload
     loadEffect(EFX_WRELOAD01);
     loadEffect(EFX_WRELOAD02);
+    loadEffect(EFX_WRELOAD03);
+	loadEffect(EFX_WRELOAD04);
+	loadEffect(EFX_WRELOAD05);
+	loadEffect(EFX_WRELOAD06);
+	loadEffect(EFX_WRELOAD07);
+	loadEffect(EFX_WRELOAD08);
+
 
     // baracade
     loadEffect(EFX_BINSTALL);
