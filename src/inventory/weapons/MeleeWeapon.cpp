@@ -1,4 +1,22 @@
-/**
+/*------------------------------------------------------------------------------
+* Source: MeleeWeapon.cpp        
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
+
+/*
     Created  by Mark Tattrie    March 28, 2017
 */
 #include "MeleeWeapon.h"

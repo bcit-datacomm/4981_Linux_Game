@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------------
+* Source: Drop.h         
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
 #ifndef DROP_H
 #define DROP_H
 #include "../collision/HitBox.h"

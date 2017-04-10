@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: Weapon.h       
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/1/2017
         Edited by DericM 3/8/2017
