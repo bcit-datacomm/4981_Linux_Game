@@ -32,6 +32,9 @@ namespace Type75Vars {
 
     constexpr int RELOADDELAY = 3000;
     constexpr int FIREDELAY = 1000;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 1314;
 }
 
 class Type75: public InstantWeapon {

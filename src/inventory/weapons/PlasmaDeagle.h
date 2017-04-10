@@ -32,6 +32,9 @@ namespace PlasmaDeagleVars {
 
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 200;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 564;
 }
 
 class PlasmaDeagle: public InstantWeapon {

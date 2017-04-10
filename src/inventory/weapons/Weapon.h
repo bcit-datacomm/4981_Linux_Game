@@ -13,8 +13,7 @@
 
 //taken from the spritesheet
 static constexpr int WEAPON_WIDTH = 256;
-static constexpr int WEAPON_HEIGHT = 186;
-static constexpr int WEAPON_START = 891;
+static constexpr int WEAPON_HEIGHT = 180;
 
 
 using std::string;
@@ -27,7 +26,8 @@ public:
     Weapon(const string& type = "no type", TEXTURES sprite = TEXTURES::CONCRETE, const string& fireSound = "", const string& hitSound = "",
         const string& reloadSound = "", const string& emptySound = "", const int range = 0,
         const int damage = 0, const int AOE = 0, const int penetration = 0, const int accuracy = 0, const int clip = 0,
-        const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0, int32_t id = -1);
+        const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0, const int texX = 0, 
+        const int texY = 0, int32_t id = -1);
 
     Weapon(const Weapon& w);
     ~Weapon() = default;

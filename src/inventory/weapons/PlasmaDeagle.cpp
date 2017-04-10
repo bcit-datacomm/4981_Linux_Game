@@ -18,6 +18,7 @@ PlasmaDeagle::PlasmaDeagle(const int32_t id) : InstantWeapon(PlasmaDeagleVars::T
 		PlasmaDeagleVars::FIRESOUND, PlasmaDeagleVars::HITSOUND, PlasmaDeagleVars::RELOADSOUND,
         PlasmaDeagleVars::EMPTYSOUND, PlasmaDeagleVars::RANGE, PlasmaDeagleVars::DAMAGE, PlasmaDeagleVars::AOE, 
         PlasmaDeagleVars::PENETRATION, PlasmaDeagleVars::ACCURACY, PlasmaDeagleVars::CLIP, PlasmaDeagleVars::CLIPMAX, 
-        PlasmaDeagleVars::AMMO, PlasmaDeagleVars::RELOADDELAY, PlasmaDeagleVars::FIREDELAY, id) {
+        PlasmaDeagleVars::AMMO, PlasmaDeagleVars::RELOADDELAY, PlasmaDeagleVars::FIREDELAY, PlasmaDeagleVars::START_X,
+        PlasmaDeagleVars::START_Y, id) {
 
 }

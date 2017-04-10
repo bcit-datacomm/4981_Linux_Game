@@ -16,6 +16,6 @@
 RailGun::RailGun(const int32_t id) : InstantWeapon(RailGunVars::TYPE, TEXTURES::RIFLE, RailGunVars::FIRESOUND, 
 		RailGunVars::HITSOUND, RailGunVars::RELOADSOUND, RailGunVars::EMPTYSOUND, RailGunVars::RANGE, RailGunVars::DAMAGE, 
 		RailGunVars::AOE, RailGunVars::PENETRATION, RailGunVars::ACCURACY, RailGunVars::CLIP, RailGunVars::CLIPMAX, 
-		RailGunVars::AMMO, RailGunVars::RELOADDELAY, RailGunVars::FIREDELAY, id) {
+		RailGunVars::AMMO, RailGunVars::RELOADDELAY, RailGunVars::FIREDELAY, RailGunVars::START_X, RailGunVars::START_Y, id) {
 
 }

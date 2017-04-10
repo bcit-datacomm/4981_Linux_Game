@@ -35,6 +35,9 @@ namespace KatanaVars {
 
     constexpr int RELOADDELAY = 0;
     constexpr int FIREDELAY = 400;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 1502;
 }
 
 

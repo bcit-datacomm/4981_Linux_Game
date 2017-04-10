@@ -32,6 +32,9 @@ namespace PhaseRepeaterVars {
 
     constexpr int RELOADDELAY = 1500;
     constexpr int FIREDELAY = 100;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 1689;
 }
 
 class PhaseRepeater: public InstantWeapon {

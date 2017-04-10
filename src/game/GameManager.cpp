@@ -77,7 +77,6 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
             const auto& dest = o.second.getRelativeDestRect(cam);
             const auto angle = o.second.getAngle() - 90;
 
-            printf("%f\n",angle);
             if (-180 < angle && 0 > angle) {
                 Weapon* weapon = o.second.inventory.getCurrent();
                 if (weapon) {

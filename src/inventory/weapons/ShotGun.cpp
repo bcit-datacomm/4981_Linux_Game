@@ -23,7 +23,8 @@
 ShotGun::ShotGun(const int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::SHOTGUN, ShotgunVars::FIRESOUND,
         ShotgunVars::HITSOUND, ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, ShotgunVars::RANGE,
         ShotgunVars::DAMAGE, ShotgunVars::AOE, ShotgunVars::PENETRATION, ShotgunVars::ACCURACY, ShotgunVars::CLIP,
-        ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY, id) {
+        ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY, ShotgunVars::START_X,
+        ShotgunVars::START_Y, id) {
 
 }
 

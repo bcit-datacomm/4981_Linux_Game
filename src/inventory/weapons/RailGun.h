@@ -32,6 +32,9 @@ namespace RailGunVars {
 
     constexpr int RELOADDELAY = 1500;
     constexpr int FIREDELAY = 1500;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 752;
 }
 
 class RailGun: public InstantWeapon {
