@@ -94,18 +94,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : turretManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
-                o.second.getAngle());
 
-            /*
-            if (!o.second.collisionCheckTurret()) {
-                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
-                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
+            if (!o.second.isPlaceable()) {
+                Renderer::instance().setAlpha(TEXTURES::TURRET, 150);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::TURRET);
+                Renderer::instance().setAlpha(TEXTURES::TURRET, 255);
             } else {
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::TURRET);
             }
-            */
+
         }
     }
 
@@ -446,13 +443,13 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
  */
 int32_t GameManager::createTurret(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, TURRET_SIZE_H};
 
     SDL_Rect turretRect = temp;
     SDL_Rect moveRect = temp;
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
-    SDL_Rect pickRect = {INITVAL, INITVAL, PUSIZE, PUSIZE};
+    SDL_Rect pickRect = {INITVAL, INITVAL, TURRET_PUSIZE_W, TURRET_PUSIZE_H};
 
     const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect,
         pickRect));

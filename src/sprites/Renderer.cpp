@@ -80,8 +80,10 @@ void Renderer::loadSprites() {
     //nature
     //comsumables
     //shops
+    // turrets
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
     createTexture(TEXTURES::BASE, MAP_OBJECT_BASE);
+    createTexture(TEXTURES::TURRET, TURRET_TEXTURE);
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);
