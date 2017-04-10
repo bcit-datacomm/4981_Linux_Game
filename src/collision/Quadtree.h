@@ -27,8 +27,7 @@
 #include "../basic/Entity.h"
 
 static constexpr unsigned int BRANCHSIZE = 4;
-static constexpr unsigned int MAX_OBJECTS = 1000;
-static constexpr unsigned int MAX_LEVELS = 50;
+static constexpr unsigned int MAX_LEVELS = 3;
 
 class Quadtree {
 public:
@@ -36,15 +35,14 @@ public:
     ~Quadtree() = default;
 
     void clear();
-    void split();
     unsigned int getTreeSize() const;
-    int getIndex(const HitBox *pRect) const;
     void insert(Entity *entity);
     std::vector<Entity *> retrieve(const Entity *entity) const;
-    auto& getObjects() const {return objects;}
+    std::vector<Entity *> retrieve(const SDL_Rect& rect) const;
 
 private:
-    unsigned int objectCounter;
+    bool contains(const Quadtree& q, const Entity *entity) const;
+
     unsigned int level;
     SDL_Rect bounds;
     std::array<std::unique_ptr<Quadtree>, BRANCHSIZE> nodes;
