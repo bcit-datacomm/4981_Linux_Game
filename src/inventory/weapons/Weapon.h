@@ -2,6 +2,7 @@
     Created by Maitiu Morton 2/1/2017
         Edited by DericM 3/8/2017
         Edited by MarkT 3/13/2017
+        Edited by Isaac Morneau 4/10/2017
 */
 #ifndef WEAPON_H
 #define WEAPON_H
@@ -9,6 +10,12 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include "../../sprites/SpriteTypes.h"
+
+//taken from the spritesheet
+static constexpr int WEAPON_WIDTH = 256;
+static constexpr int WEAPON_HEIGHT = 186;
+static constexpr int WEAPON_START = 891;
+
 
 using std::string;
 
@@ -48,7 +55,13 @@ public:
 
     virtual bool fire(Movable& movable);
 
+    virtual void updateGunRender(const Movable& mov, const SDL_Rect& camera);
+
 protected:
+
+    SDL_Rect weaponSrc;
+    SDL_Rect weaponDest;
+    SDL_Point rotate;
 
     string type;
 
