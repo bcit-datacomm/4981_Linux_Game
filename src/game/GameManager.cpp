@@ -236,10 +236,8 @@ void GameManager::updateTurrets() {
         for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
 #pragma omp task firstprivate(it)
             {
-                if (it->second.isActivated()) {
-                    if (it->second.targetScanTurret()) {
-                        it->second.shootTurret();
-                    }
+                if (it->second.isActivated() && it->second.targetScanTurret()) {
+                    it->second.shootTurret();
                 }
             }
         }
