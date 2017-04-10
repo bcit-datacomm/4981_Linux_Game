@@ -19,6 +19,7 @@
 #include <SDL2/SDL.h>
 #include <array>
 #include <memory>
+#include <algorithm>
 #include "Quadtree.h"
 #include "../basic/Entity.h"
 
@@ -174,6 +175,8 @@ std::vector<Entity *> Quadtree::retrieve(const SDL_Rect& rect) const {
         const auto& childrtn = nodes[3]->retrieve(rect);
         rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
     }
+    std::sort(rtn.begin(), rtn.end());
+    rtn.erase(std::unique(rtn.begin(), rtn.end()), rtn.end());
     return rtn;
 }
 
