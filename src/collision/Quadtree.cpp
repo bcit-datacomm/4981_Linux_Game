@@ -39,9 +39,12 @@ Quadtree::Quadtree(unsigned int pLevel, SDL_Rect pBounds) : level(pLevel), bound
         return;
     }
     nodes[0] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x, bounds.y, bounds.w / 2, bounds.h / 2});
-    nodes[1] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x + bounds.w / 2, bounds.y, bounds.w / 2, bounds.h / 2});
-    nodes[2] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x, bounds.y + bounds.h / 2, bounds.w / 2, bounds.h / 2});
-    nodes[3] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x + bounds.w / 2, bounds.y + bounds.h / 2, bounds.w / 2, bounds.h / 2});
+    nodes[1] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x + bounds.w / 2, bounds.y, bounds.w / 2, 
+            bounds.h / 2});
+    nodes[2] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x, bounds.y + bounds.h / 2, bounds.w / 2, 
+            bounds.h / 2});
+    nodes[3] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x + bounds.w / 2, bounds.y + bounds.h / 2, 
+            bounds.w / 2, bounds.h / 2});
 }
 
 /**
@@ -100,7 +103,7 @@ bool Quadtree::contains(const Quadtree& q, const Entity *entity) const {
             || (q.nodes[0] && contains(*q.nodes[0], entity)) 
             || (q.nodes[3] && contains(*q.nodes[3], entity))
             || (q.nodes[1] && contains(*q.nodes[1], entity))
-                || (q.nodes[2] && contains(*q.nodes[2], entity)));
+            || (q.nodes[2] && contains(*q.nodes[2], entity)));
 }
 
 /**
