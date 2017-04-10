@@ -151,7 +151,10 @@ std::vector<Entity *> Quadtree::retrieve(const Entity *entity) const {
     if (!entity) {
         return {};
     }
-    return retrieve(entity->getSrcRect());
+    auto retrieved = retrieve(entity->getSrcRect());
+    std::sort(retrieved.begin(), retrieved.end());
+    retrieved.erase(std::unique(retrieved.begin(), retrieved.end()), retrieved.end());
+    return retrieved;
 }
 
 std::vector<Entity *> Quadtree::retrieve(const SDL_Rect& rect) const {
@@ -178,8 +181,6 @@ std::vector<Entity *> Quadtree::retrieve(const SDL_Rect& rect) const {
         const auto& childrtn = nodes[3]->retrieve(rect);
         rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
     }
-    std::sort(rtn.begin(), rtn.end());
-    rtn.erase(std::unique(rtn.begin(), rtn.end()), rtn.end());
     return rtn;
 }
 

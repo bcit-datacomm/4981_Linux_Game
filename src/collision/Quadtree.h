@@ -38,10 +38,10 @@ public:
     unsigned int getTreeSize() const;
     void insert(Entity *entity);
     std::vector<Entity *> retrieve(const Entity *entity) const;
-    std::vector<Entity *> retrieve(const SDL_Rect& rect) const;
 
 private:
     bool contains(const Quadtree& q, const Entity *entity) const;
+    std::vector<Entity *> retrieve(const SDL_Rect& rect) const;
 
     unsigned int level;
     SDL_Rect bounds;
