@@ -85,12 +85,12 @@ int32_t Marine::checkForPickUp() {
     GameManager *gm = GameManager::instance();
     CollisionHandler& ch = gm->getCollisionHandler();
 
-    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this);
+    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getStoreTree(),this),this);
     if(ep){
         activateStore(ep);
         return -1;
     }
-    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this),this);
+    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this),this);
     if(ep) {
         //get Entity drop Id
         pickId = ep->getId();
@@ -134,7 +134,7 @@ int32_t Marine::checkForPickUp() {
 *       mouse from the center of the screen.
 */
 void Marine::updateImageDirection() {
-    const double radians = (getAngle() -90) * M_PI/180;
+    const double radians = getRadianAngle() - M_PI / 2;
 
     //order: start from ~0 rad, counter clockwise
     if (radians > SPRITE_ANGLE2 && radians < SPRITE_ANGLE1) {

@@ -58,6 +58,23 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::RIFLE_INVENTORY, RIFLE_INVENTORY_TEXTURE);
     createTexture(TEXTURES::SHOTGUN_INVENTORY, SHOTGUN_INVENTORY_TEXTURE);
     createTexture(TEXTURES::HANDGUN_INVENTORY, HANDGUN_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::PLASMA_DEAGLE_INVENTORY, PLASMA_DEAGLE_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::RAILGUN_INVENTORY, RAILGUN_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::RPG_INVENTORY, RPG_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::TYPE_75K_INVENTORY, TYPE_75K_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::KATANA_INVENTORY, KATANA_INVENTORY_TEXTURE);
+    createTexture(TEXTURES::PHASE_REPEATER_INVENTORY, PHASE_REPEATER_INVENTORY_TEXTURE);
+
+    //-------- weapon textures --------
+    createTexture(TEXTURES::RIFLE, RIFLE_EQUIPPED_TEXTURE);
+    createTexture(TEXTURES::SHOTGUN, SHOTGUN_EQUIPPED_TEXTURE);
+    createTexture(TEXTURES::HANDGUN, HANDGUN_EQUIPPED_TEXTURE);
+    createTexture(TEXTURES::PLASMA_DEAGLE, PLASMA_DEAGLE_TEXTURE);
+    createTexture(TEXTURES::RAILGUN, RAILGUN_TEXTURE);
+    createTexture(TEXTURES::RPG, RPG_TEXTURE);
+    createTexture(TEXTURES::TYPE_75K, TYPE_75K_TEXTURE);
+    createTexture(TEXTURES::KATANA, KATANA_TEXTURE);
+    createTexture(TEXTURES::PHASE_REPEATER, PHASE_REPEATER_TEXTURE);
 
     //-------- map object textures --------
     //nature
@@ -66,15 +83,11 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::MAP_OBJECTS, MAP_OBJECTS);
     createTexture(TEXTURES::BASE, MAP_OBJECT_BASE);
 
-    //-------- weapon textures --------
-    createTexture(TEXTURES::RIFLE, RIFLE_EQUIPPED_TEXTURE); //temporary, will be replaced later
-    createTexture(TEXTURES::SHOTGUN, SHOTGUN_EQUIPPED_TEXTURE); //temporary, will be replaced later
-    createTexture(TEXTURES::HANDGUN, HANDGUN_EQUIPPED_TEXTURE); //temporary, will be replaced later
-
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);
 
     //-------- zombie textures --------
+    createTexture(TEXTURES::BLOOD, BLOOD_TEXTURE);
     //baby
     //createTexture(ZOMBIE_BABYZ);
     createTexture(TEXTURES::BABY_ZOMBIE, ZOMBIE_BABYZ);

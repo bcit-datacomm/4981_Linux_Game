@@ -39,10 +39,10 @@ using std::string;
  * Ctor for Instant Weapon
  */
 InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound,
-        string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
+        string reloadSound, string emptySound, int range, int damage, int AOE, int penetration, int accuracy,
         int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
-        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
+        penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 
 }
 
@@ -66,9 +66,12 @@ bool InstantWeapon::fire(Movable& movable) {
     }
     logv(3, "InstantWeapon::fire()\n");
 
+
+    const double deviation = rand() % accuracy - (accuracy / 2);
+
     const int gunX = movable.getX() + (MARINE_WIDTH / 2);
     const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
-    const double angle = movable.getAngle();
+    const double angle = movable.getAngle() + deviation;
 
     fireSingleProjectile(gunX, gunY, angle);
 
@@ -138,6 +141,28 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
         GameManager::instance()->getZombie(id).collidingProjectile(damage);
         targetList.removeTop();
     }
+    fireAnimation(targetList.getOriginX(), targetList.getOriginY(), finalX, finalY);
+    
+}
 
-    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 25, 70, 193);
+
+
+/**
+    InstantWeapon::fireAnimation
+
+    DISCRIPTION:
+        Calls the appropriate draw methods to paint the shooting animation on the screen.
+
+        int gunX, int gunY
+            The x and y coordinates of the guns muzzle.
+
+        int endX, endY
+            The x and y coordinates of the bullets stopping point.
+
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+void InstantWeapon::fireAnimation(const int gunX, const int gunY, const int endX, const int endY){
+    VisualEffect::instance().addPreLine(2, gunX, gunY, endX, endY, 25, 70, 193);
 }

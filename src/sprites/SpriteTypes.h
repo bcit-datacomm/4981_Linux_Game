@@ -79,12 +79,26 @@ enum class TEXTURES : int {
     //--------------------- Weapons ---------------------
 
     WEAPONS,
+
     RIFLE,
     SHOTGUN,
     HANDGUN,
+    PLASMA_DEAGLE,
+    RAILGUN,
+    RPG,
+    TYPE_75K,
+    KATANA,
+    PHASE_REPEATER,
+
     RIFLE_INVENTORY,
     SHOTGUN_INVENTORY,
     HANDGUN_INVENTORY,
+    PLASMA_DEAGLE_INVENTORY,
+    RAILGUN_INVENTORY,
+    RPG_INVENTORY,
+    TYPE_75K_INVENTORY,
+    KATANA_INVENTORY,
+    PHASE_REPEATER_INVENTORY,
     //Pistol
     // PISTOL_FRONT,
     // PISTOL_FRONT_LEFT,
@@ -208,6 +222,7 @@ enum class TEXTURES : int {
 
     //--------------------- Zombie textures ---------------------
 
+    BLOOD,
     //---------- Baby Zombie ----------
     BABY_ZOMBIE, //Sprite sheet, not split
     //Baby Zombie Front

@@ -128,11 +128,23 @@ const std::string TEXTURE_MIDDLE = MAP_TEXTURE_PATH + "middle_dirt.png"; //dead 
 const std::string SHOTGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/shotgun.png";
 const std::string RIFLE_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifle.png";
 const std::string HANDGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/pistol.png";
+const std::string PLASMA_DEAGLE_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/plasmeDeagle.png";
+const std::string RAILGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/railgun.png";
+const std::string RPG_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/rpg.png";
+const std::string TYPE_75K_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/type75K.png";
+const std::string KATANA_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/katana.png";
+const std::string PHASE_REPEATER_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/phaseRepeater.png";
 
 //------------- Equipped Weapon Textures ------------------
 const std::string SHOTGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/shotgunEquipped.png";
 const std::string RIFLE_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifleEquipped.png";
 const std::string HANDGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/pistolEquipped.png";
+const std::string PLASMA_DEAGLE_TEXTURE = "assets/texture/hud/inventoryItems/plasmeDeagleEquipped.png";
+const std::string RAILGUN_TEXTURE = "assets/texture/hud/inventoryItems/railgunEquipped.png";
+const std::string RPG_TEXTURE = "assets/texture/hud/inventoryItems/rpgEquipped.png";
+const std::string TYPE_75K_TEXTURE = "assets/texture/hud/inventoryItems/type75KEquipped.png";
+const std::string KATANA_TEXTURE = "assets/texture/hud/inventoryItems/katanaEquipped.png";
+const std::string PHASE_REPEATER_TEXTURE = "assets/texture/hud/inventoryItems/phaseRepeaterEquipped.png";
 
 //TODO: remove these textures, temporary for now
 const std::string TEMP_MARINE_TEXTURE = "assets/texture/arrow.png";
@@ -160,9 +172,11 @@ const std::string LASER = SPRITE_PATH  + "laser.png";
 const std::string REPLACE_ME = "assets/texture/replace_me.png"; //temporary sprite, will be removed later
 const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be removed later
 
+const std::string BLOOD_TEXTURE = "assets/texture/blood.png";
+
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 31; //number of total sprites
+static constexpr int TOTAL_SPRITES = 44; //number of total sprites
 
 
 class Renderer {

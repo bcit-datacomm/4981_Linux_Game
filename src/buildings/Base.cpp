@@ -24,6 +24,45 @@ void Base::collidingProjectile(int damage) {
     health -= damage;
 }
 
+/**
+* Date: April 6, 2017
+*
+* Designer: Trista Huang
+*
+* Programmer: Trista Huang
+*
+* Function Interface: void Base::updateBaseImage()
+*
+* Description:
+*       This function checks for base health everytime an update happens,
+*       and changes base image accordingly.
+*       It is called from GameManager::updateBase every frame.
+*/
+void Base::updateBaseImage() {
+    const int healthNow = getHealth();
+    int baseStartX;
+
+    if (healthNow >= BASE_75_HP) {
+        baseStartX = BASE_100;
+    } else if (healthNow >= BASE_50_HP) {
+        baseStartX = BASE_75;
+    } else if (healthNow >= BASE_25_HP) {
+        baseStartX = BASE_50;
+    } else {
+        // Expand rect to render this bigger image correctly
+        Entity::setW(BASE_WIDTH_WIDE);
+        Entity::setX(BASE_25_WIDE);
+        Entity::updateRectHitBoxes();
+        setSrcRect(BASE_25, 0, BASE_SRC_W_WIDE, BASE_SRC_H);
+        return;
+    }
+    // Reset rect back to original size
+    Entity::setX((MAP_WIDTH / 2) - BASE_WIDTH / 2);
+    Entity::setW(BASE_WIDTH);
+    Entity::updateRectHitBoxes();
+    setSrcRect(baseStartX, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
+}
+
 Point Base::getSpawnPoint() {
 
     //random number generator

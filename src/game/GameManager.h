@@ -1,4 +1,3 @@
-
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
@@ -7,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <iostream>
 #include <cassert>
 
@@ -74,6 +74,8 @@ public:
     bool addMarine(const int32_t id, const Marine& newMarine);
     auto getMarine(const int32_t id) {return marineManager[id];};
 
+    Base& getBase() {return base;}
+
     // Methods for creating, getting, and deleting towers from the level.
     int32_t createTurret();
     void deleteTurret(const int32_t id);
@@ -81,6 +83,7 @@ public:
     bool addTurret(const int32_t id, const Turret& newTurret);
     int32_t createTurret(const float x, const float y) ;
     Turret& getTurret(const int32_t id);
+    std::vector<int32_t> markForDeletionTurret();
 
     // Method for getting collisionHandler
     CollisionHandler& getCollisionHandler();
@@ -89,13 +92,11 @@ public:
     void updateMarines(const float delta); // Update marine actions
     void updateZombies(const float delta); // Update zombie actions
     void updateTurrets(); // Update turret actions
+    void updateBase(); // Update base images
 
     // returns the list of zombies.
     // Jamie, 2017-03-01.
     auto& getZombies() {return zombieManager;};
-
-    int32_t addObject(const Object&);
-    void deleteObject(const int32_t id);
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);
@@ -153,6 +154,8 @@ public:
         AiMap = a;
     }
 
+
+
     //getManagers
     auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
@@ -161,19 +164,21 @@ public:
     auto& getWeaponDropManager() const {return weaponDropManager;};
     auto& getWeaponManager() const {return weaponManager;};
     auto& getBarricadeManager() const {return barricadeManager;};
-    auto& getWallManager() const {return wallManager;};
+    auto& getWallManager() {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
+
 private:
     GameManager();
     ~GameManager();
     static GameManager sInstance;
     Player player;
 
+    Base base;
+
     CollisionHandler collisionHandler;
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
-    GameHashMap<int32_t, Object> objectManager;
     GameHashMap<int32_t, Zombie> zombieManager;
     GameHashMap<int32_t, Turret> turretManager;
     GameHashMap<int32_t, WeaponDrop> weaponDropManager;

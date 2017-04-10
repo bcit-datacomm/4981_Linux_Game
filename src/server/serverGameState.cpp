@@ -181,9 +181,6 @@ void deleteEntity(const DeleteAction& da) {
         case UDPHeaders::BARRICADE:
             gm->deleteBarricade(da.entityid);
             break;
-        case UDPHeaders::OBJECT:
-            gm->deleteObject(da.entityid);
-            break;
         case UDPHeaders::WEAPON:
             gm->removeWeapon(da.entityid);
             break;

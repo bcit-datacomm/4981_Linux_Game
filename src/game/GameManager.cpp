@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <memory>
 #include <utility>
 #include <atomic>
@@ -49,73 +50,79 @@ GameManager::~GameManager() {
 
 /**
  * Date: Feb. 4, 2017
+ *
+ * Author: Jacob McPhail
+ *
  * Modified: Mar. 15, 2017 - Mark Tattrie
  * Modified: Apr. 02, 2017 - Terry Kang
  *  Set alpha to the sprite of Brricade if it is not placeable
- * Author: Jacob McPhail
+ * Modified: Apr. 07, 2017 - Isaac Morneau
+ *      cleaned up the inersection calls, removed object rendering entirely
+ * 
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
+ * 
  * Description:
  *     Render all objects in level
  */
 void GameManager::renderObjects(const SDL_Rect& cam) {
-    for (const auto& m : weaponDropManager) {
-        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam),
-                getWeapon(m.second.getWeaponId())->getTexture());
+    for (const auto& o : weaponDropManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam),
+                getWeapon(o.second.getWeaponId())->getTexture());
         }
     }
 
-    for (const auto& m : marineManager) {
-        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                m.second.getSrcRect());
-        }
-    }
-
-    for (const auto& o : objectManager) {
-        if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
+    for (const auto& o : marineManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MARINE,
                 o.second.getSrcRect());
         }
     }
 
-    for (const auto& z : zombieManager) {
-        if (z.second.getX() - cam.x < cam.w && z.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE,
-                z.second.getSrcRect());
+    if (SDL_HasIntersection(&cam, &base.getDestRect())) {
+        Renderer::instance().render(base.getRelativeDestRect(cam), TEXTURES::BASE,
+            base.getSrcRect());
+    }
+
+    for (const auto& o : zombieManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), 
+                    o.second.getId() % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE,
+                    o.second.getSrcRect());
         }
     }
 
-    for (const auto& m : turretManager) {
-        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
-                m.second.getAngle());
+    for (const auto& o : turretManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
+                o.second.getAngle());
         }
     }
 
-    for (const auto& b : barricadeManager) {
-        if (b.second.getX() - cam.x < cam.w && b.second.getY() - cam.y < cam.h) {
-            if(!b.second.isPlaceable()) {
+    for (const auto& o : barricadeManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            if(!o.second.isPlaceable()) {
                 Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
-                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
                 Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
             } else {
-                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
 
-    for (const auto& w : wallManager) {
-        if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
-                {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H}, WALL_WIDTH, WALL_HEIGHT);
+    for (const auto& o : wallManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            static constexpr SDL_Rect WALL_SRC_RECT = {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H};
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
+                WALL_SRC_RECT, WALL_WIDTH, WALL_HEIGHT);
         }
     }
 
-    for (const auto& s : storeManager) {
-        if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
-            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
-                s.second->getSrcRect());
+    for (const auto& o : storeManager) {
+        if (SDL_HasIntersection(&cam, &o.second->getDestRect())) {
+            Renderer::instance().render(o.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
+                o.second->getSrcRect());
         }
     }
 }
@@ -131,37 +138,126 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  *     Update marine movements. health, and actions
  */
 void GameManager::updateMarines(const float delta) {
-    for (auto& m : marineManager) {
-        if (!networked) {
-            m.second.move((m.second.getDX() * delta), (m.second.getDY() * delta), collisionHandler);
-        }
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = marineManager.begin(); it != marineManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                if (!networked) {
+                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                }
 #ifndef SERVER
-        m.second.updateImageDirection();
-        m.second.updateImageWalk();
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
 #endif
+            }
+        }
+#pragma omp taskwait
     }
 }
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-    for (auto& z : zombieManager) {
-        z.second.generateMove();
-        if (z.second.isMoving()) {
-            z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                it->second.update();
+                it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+#ifndef SERVER
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
+#endif
+            }
         }
+#pragma omp taskwait
     }
+}
+
+/**
+* Date: April 6, 2017
+* Designer: Trista Huang
+* Programmer: Trista Huang
+* Function Interface: void GameManager::updateBase()
+* Description:
+*       This function calls function to check for base health everytime an update happens,
+*       and changes base image accordingly.
+*       It is called from GameStateMatch every update.
+*/
+void GameManager::updateBase() {
+    base.updateBaseImage();
 }
 
 bool GameManager::hasMarine(const int32_t id) const {
     return marineManager.count(id);
 }
 
-// Update turret actions.
-// Jamie, 2017-03-01.
+
+/**
+ * Date: Mar. 01, 2017
+ * Modified: Mar. 30, 2017 - Mark Chen
+ *           Apr. 05, 2017 - Mark Chen
+ * Designer: Jamie Lee
+ *
+ * Programmer: Jamie Lee, Mark Chen
+ *
+ * Function Interface: void updateTurrets()
+ *
+ * Description:
+ * Updates the turrets actions.
+ *
+ * Revisions:
+ * Mar. 30, 2017, Mark Chen : turrets now fire when they detect an enemy
+ * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
+ */
+
 void GameManager::updateTurrets() {
-    for (auto& t : turretManager) {
-        t.second.targetScanTurret();
+    std::vector<int32_t> deleteVector = markForDeletionTurret();
+
+    for (auto it = deleteVector.begin() ; it != deleteVector.end(); ++it) {
+        removeWeapon(getTurret(*it).getInventory().getCurrent()->getID());
+        deleteTurret(*it);
     }
+
+#pragma omp parallel
+#pragma omp single
+    {
+        for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
+#pragma omp task firstprivate(it)
+            {
+                if (it->second.targetScanTurret() && it->second.isActivated()) {
+                    it->second.shootTurret();
+                }
+            }
+        }
+#pragma omp taskwait
+    }
+}
+
+/**
+ * Date: Apr. 05, 2017
+ *
+ * Designer: Mark Chen
+ *
+ * Programmer: Mark Chen
+ *
+ * Function Interface: vector<int32_t> GameManager::markForDeletionTurret()
+ *
+ * Description:
+ * Searches the turretManager for any turrets with 0 ammo.
+ */
+
+std::vector<int32_t> GameManager::markForDeletionTurret() {
+    std::vector<int32_t> deleteVector;
+    for (auto& t: turretManager) {
+        if (t.second.getInventory().getCurrent()->getClip() == 0) {
+            deleteVector.push_back(t.second.getId());
+        }
+    }
+    return deleteVector;
 }
 
 /**
@@ -413,8 +509,6 @@ int32_t GameManager::createZombie(const float x, const float y) {
 
     const auto& elem = zombieManager.emplace(id, Zombie(id, zombieRect, moveRect, projRect, damRect));
     elem->second.setPosition(x,y);
-    elem->second.generatePath(x, y, MAP_WIDTH / 2 - BASE_WIDTH, MAP_HEIGHT / 2 - BASE_HEIGHT);
-    elem->second.setState(ZombieState::ZOMBIE_MOVE);
     return id;
 }
 
@@ -452,39 +546,6 @@ Zombie& GameManager::getZombie(const int32_t id) {
     assert(z.second);
     return z.first;
 }
-
-/**
- * Date: Feb. 8, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: addObject(const Object& newObject)
- *      newObject : Object to add
- *
- * Description:
- *     Add object to the manager.
- */
-int32_t GameManager::addObject(const Object& newObject) {
-    objectManager.emplace(newObject.getId(), newObject);
-    return newObject.getId();
-}
-
-/**
- * Date: Feb. 4, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: deleteObject(const int32_t id)
- *      id : Object id
- *
- * Description:
- *     Deletes Object from level.
- */
-void GameManager::deleteObject(const int32_t id) {
-    objectManager.erase(id);
-#ifdef SERVER
-    saveDeletion({UDPHeaders::OBJECT, id});
-#endif
-}
-
 //Created By Maitiu
 //Adds Weapon to Weapon Manager
 void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
@@ -671,49 +732,62 @@ CollisionHandler& GameManager::getCollisionHandler() {
 /**
  * Date: Feb. 4, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Modified: Apr. 5, 2017 - John Agapeyev
+ *      added openMP
+ * Modified: Apr. 7, 2017 - Isaac Morneau
+ *      removed object manager, added base to walls
  * Author: Jacob McPhail
  * Function Interface: void GameManager::updateCollider()
  * Description:
  *     Update colliders to current state
  */
 void GameManager::updateCollider() {
-    collisionHandler = CollisionHandler();
+    collisionHandler.clear();
 
-    for (auto& m : marineManager) {
-        collisionHandler.quadtreeMarine.insert(&m.second);
-    }
+    //adding the base to the wall manager
+    //this way we dont need the object manager at all
+    collisionHandler.insertWall(&base);
 
-    for (auto& z : zombieManager) {
-        collisionHandler.quadtreeZombie.insert(&z.second);
-    }
-
-    for (auto& o : objectManager) {
-        collisionHandler.quadtreeObj.insert(&o.second);
-    }
-
-    for (auto& o : wallManager) {
-        collisionHandler.quadtreeWall.insert(&o.second);
-    }
-
-    for (auto& m : turretManager) {
-        if (m.second.isPlaced()) {
-            collisionHandler.quadtreeTurret.insert(&m.second);
-            collisionHandler.quadtreePickUp.insert(&m.second);
+#pragma omp parallel sections shared(collisionHandler)
+    {
+#pragma omp section
+        for (auto& m : marineManager) {
+            collisionHandler.insertMarine(&m.second);
         }
-    }
 
-    for (auto& b : barricadeManager) {
-        if (b.second.isPlaced()) {
-            collisionHandler.quadtreeBarricade.insert(&b.second);
+#pragma omp section
+        for (auto& z : zombieManager) {
+            collisionHandler.insertZombie(&z.second);
         }
-    }
 
-    for (auto& m : weaponDropManager) {
-        collisionHandler.quadtreePickUp.insert(&m.second);
-    }
+#pragma omp section
+        for (auto& w : wallManager) {
+            collisionHandler.insertWall(&w.second);
+        }
 
-    for (auto& s : storeManager) {
-        collisionHandler.quadtreeStore.insert(s.second.get());
+#pragma omp section
+        for (auto& m : turretManager) {
+            if (m.second.isPlaced()) {
+                collisionHandler.insertTurret(&m.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& b : barricadeManager) {
+            if (b.second.isPlaced()) {
+                collisionHandler.insertBarricade(&b.second);
+            }
+        }
+
+#pragma omp section
+        for (auto& m : weaponDropManager) {
+            collisionHandler.insertPickUp(&m.second);
+        }
+
+#pragma omp section
+        for (auto& s : storeManager) {
+            collisionHandler.insertStore(s.second.get());
+        }
     }
 }
 
@@ -729,7 +803,7 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData &playerData) {
-    if(marineManager.count(playerData.playerid) == 0) {
+    if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
     Marine& marine = marineManager[playerData.playerid].first;

@@ -16,35 +16,35 @@
 * Notes:
 *
 ------------------------------------------------------------------------------*/
+#include <SDL2/SDL.h>
 #include <array>
 #include <memory>
+#include <algorithm>
 #include "Quadtree.h"
 #include "../basic/Entity.h"
 
 /**
- * Date: Feb. 8, 2017
+ * Date: April. 9, 2017
  * Modified: -----
- * Author: Jacob McPhail
- * Function Interface: (int pLevel, SDL_Rect pBounds)
+ * Author: John Agapeyev
+ * Function Interface: (unsigned int pLevel, SDL_Rect pBounds)
  *      pLevel : Levels of the quad tree
  *      pBounds : Bounds of the quadtree area
  *
  * Description:
  *      ctor for a quadtree.
  */
-Quadtree::Quadtree(int pLevel, SDL_Rect pBounds) {
-    level = pLevel;
-    bounds = pBounds;
-    objectCounter = 0;
-}
-
-Quadtree& Quadtree::operator=(const Quadtree& quad) {
-    objects = quad.objects;
-    objectCounter = quad.objectCounter;
-    level = quad.level;
-    bounds = quad.bounds;
-    nodes = quad.nodes;
-    return *this;
+Quadtree::Quadtree(unsigned int pLevel, SDL_Rect pBounds) : level(pLevel), bounds(pBounds) {
+    if (level == MAX_LEVELS) {
+        return;
+    }
+    nodes[0] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x, bounds.y, bounds.w / 2, bounds.h / 2});
+    nodes[1] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x + bounds.w / 2, bounds.y, bounds.w / 2, 
+            bounds.h / 2});
+    nodes[2] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x, bounds.y + bounds.h / 2, bounds.w / 2, 
+            bounds.h / 2});
+    nodes[3] = std::make_unique<Quadtree>(level + 1, SDL_Rect{bounds.x + bounds.w / 2, bounds.y + bounds.h / 2, 
+            bounds.w / 2, bounds.h / 2});
 }
 
 /**
@@ -56,90 +56,58 @@ Quadtree& Quadtree::operator=(const Quadtree& quad) {
  *      Get the number of objects in the tree.
  */
 unsigned int Quadtree::getTreeSize() const {
-    return objectCounter;
+    return objects.size();
 }
 
 /**
- * Date: Feb. 8, 2017
- * Modified: -----
- * Author: Jacob McPhail
+ * Date: April. 9, 2017
+ * Author: John Agapeyev
  * Function Interface: clear()
  * Description:
  *      Clears all objects in the tree.
  */
 void Quadtree::clear() {
+    if (level == MAX_LEVELS) { 
+        objects.clear();
+        return;
+    }
+    if (nodes[0]) {
+        nodes[0]->clear();
+    }
+    if (nodes[1]) {
+        nodes[1]->clear();
+    }
+    if (nodes[2]) {
+        nodes[2]->clear();
+    }
+    if (nodes[3]) {
+        nodes[3]->clear();
+    }
     objects.clear();
-    objectCounter = 0;
-    for (unsigned int i = 0; i < BRANCHSIZE; ++i) {
-        nodes[i] = nullptr;
-    }
 }
 
 /**
- * Date: Feb. 8, 2017
- * Modified: -----
- * Author: Jacob McPhail
- * Function Interface: split()
+ * Date: April. 9, 2017
+ * Designer: Isaac Morneau
+ * Programmer: John Agapeyev
+ * Function Interface: bool contains(const Quadtree& q, const Entity *entity) const
  * Description:
- *      Splits branch into set number of branches.
+ *      Checks if a given entity exists in the given quadtree
  */
-void Quadtree::split() {
-    int subWidth = static_cast<int>(bounds.w / 2);
-    int subHeight = static_cast<int>(bounds.h / 2);
-    int x = static_cast<int>(bounds.x);
-    int y = static_cast<int>(bounds.y);
-
-    nodes[0] = std::make_shared<Quadtree>(level+1, SDL_Rect{x + subWidth, y, subWidth, subHeight});
-    nodes[1] = std::make_shared<Quadtree>(level+1, SDL_Rect{x, y, subWidth, subHeight});
-    nodes[2] = std::make_shared<Quadtree>(level+1, SDL_Rect{x, y + subHeight, subWidth, subHeight});
-    nodes[3] = std::make_shared<Quadtree>(level+1, SDL_Rect{x + subWidth, y + subHeight, subWidth, subHeight});
+bool Quadtree::contains(const Quadtree& q, const Entity *entity) const {
+    if (q.level == MAX_LEVELS) {
+        return (entity && SDL_HasIntersection(&q.bounds, &entity->getSrcRect()));
+    }
+    return ((entity && SDL_HasIntersection(&q.bounds, &entity->getSrcRect()))
+            || (q.nodes[0] && contains(*q.nodes[0], entity)) 
+            || (q.nodes[3] && contains(*q.nodes[3], entity))
+            || (q.nodes[1] && contains(*q.nodes[1], entity))
+            || (q.nodes[2] && contains(*q.nodes[2], entity)));
 }
 
 /**
- * Date: Feb. 8, 2017
- * Modified: -----
- * Author: Jacob McPhail
- * Function Interface: getIndex(const HitBox *pRect) 
- *      pRect : Hitbox to get index
- *
- * Description:
- *      Gets a tree index using a Hitbox.
- */
-int Quadtree::getIndex(const HitBox *pRect) const {
-    int index = -1;
-    double verticalMidpoint = bounds.x + (bounds.w / 2);
-    double horizontalMidpoint = bounds.y + (bounds.h / 2);
-
-    const auto& hitRect = pRect->getRect();
-
-    // Object can completely fit within the top quadrants
-    bool topQuadrant = (hitRect.y < horizontalMidpoint && hitRect.y + hitRect.h < horizontalMidpoint);
-    // Object can completely fit within the bottom quadrants
-    bool bottomQuadrant = (hitRect.y > horizontalMidpoint);
-
-    // Object can completely fit within the left quadrants
-    if (hitRect.x < verticalMidpoint && hitRect.x + hitRect.w < verticalMidpoint) {
-        if (topQuadrant) {
-            index = 1;
-        } else if (bottomQuadrant) {
-            index = 2;
-        }
-    }
-    // Object can completely fit within the right quadrants
-    else if (hitRect.x > verticalMidpoint) {
-        if (topQuadrant) {
-            index = 0;
-        } else if (bottomQuadrant) {
-            index = 3;
-        }
-    }
-    return index;
-}
-
-/**
- * Date: Feb. 8, 2017
- * Modified: -----
- * Author: Jacob McPhail.
+ * Date: April. 9, 2017
+ * Author: John Agapeyev
  * Function Interface: insert(Entity *entity)
  *      entity : Hitbox to insert
  *
@@ -147,52 +115,71 @@ int Quadtree::getIndex(const HitBox *pRect) const {
  *      Insert a hitbox into the quadtree.
  */
 void Quadtree::insert(Entity *entity) {
-    objectCounter++;
-    if (nodes[0] != nullptr) {
-        int index = getIndex(&(entity->getMoveHitBox()));
-        if (index != -1) {
-            nodes[index]->insert(entity);
-            return;
-        }
+    if (level == MAX_LEVELS) {
+        objects.push_back(entity);
+        return;
     }
-
-    objects.push_back(entity);
-
-    if (objects.size() > MAX_OBJECTS && level < MAX_LEVELS) {
-        if (nodes[0] == nullptr) {
-            split();
-        }
-
-        unsigned int i = 0;
-        while (i < objects.size()) {
-            int index = getIndex(&(objects.at(i)->getMoveHitBox()));
-            if (index != -1) {
-                nodes[index]->insert(objects.at(i));
-                objects.erase(objects.begin()+i);
-            } else {
-                i++;
-            }
-        }
+    if (nodes[0] && contains(*nodes[0], entity)) {
+        nodes[0]->insert(entity);
+    }
+    if (nodes[1] && contains(*nodes[1], entity)) {
+        nodes[1]->insert(entity);
+    }
+    if (nodes[2] && contains(*nodes[2], entity)) {
+        nodes[2]->insert(entity);
+    }
+    if (nodes[3] && contains(*nodes[3], entity)) {
+        nodes[3]->insert(entity);
+    }
+    if (contains(*this, entity)) {
+        objects.push_back(entity);
     }
 }
 
 /**
- * Date: Feb. 8, 2017
+ * Date: April. 9, 2017
  * Modified: -----
- * Author: Jacob McPhail.
+ * Author: John Agapeyev
  * Function Interface: retrieve(const Entity *entity)
  *      entity : Entity to check collisions
  *
  * Description:
  *      Retrieve a vector of hitboxes that are near the param hitbox.      
  */
-std::vector<Entity *> Quadtree::retrieve(const Entity *entity) {
-    std::vector<Entity *> returnObjects;
-    int index = getIndex(&(entity->getMoveHitBox()));
-    if (index != -1 && nodes[0] != nullptr) {
-        returnObjects = nodes[index]->retrieve(entity);
+std::vector<Entity *> Quadtree::retrieve(const Entity *entity) const {
+    if (!entity) {
+        return {};
     }
-    returnObjects.insert(std::end(returnObjects), std::begin(objects), std::end(objects));
-    return returnObjects;
+    auto retrieved = retrieve(entity->getSrcRect());
+    std::sort(retrieved.begin(), retrieved.end());
+    retrieved.erase(std::unique(retrieved.begin(), retrieved.end()), retrieved.end());
+    return retrieved;
+}
+
+std::vector<Entity *> Quadtree::retrieve(const SDL_Rect& rect) const {
+    if (level == MAX_LEVELS) {
+        return objects;
+    }
+    std::vector<Entity *> rtn;
+    if (!objects.empty()) {
+        rtn = objects;
+    }
+    if (nodes[0] && SDL_HasIntersection(&nodes[0]->bounds, &rect)) {
+        const auto& childrtn = nodes[0]->retrieve(rect);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    if (nodes[1] && SDL_HasIntersection(&nodes[1]->bounds, &rect)) {
+        const auto& childrtn = nodes[1]->retrieve(rect);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    if (nodes[2] && SDL_HasIntersection(&nodes[2]->bounds, &rect)) {
+        const auto& childrtn = nodes[2]->retrieve(rect);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    if (nodes[3] && SDL_HasIntersection(&nodes[3]->bounds, &rect)) {
+        const auto& childrtn = nodes[3]->retrieve(rect);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    return rtn;
 }
 

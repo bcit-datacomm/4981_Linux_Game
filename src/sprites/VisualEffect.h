@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <unordered_map>
+#include <mutex>
 
 #include "SpriteTypes.h"
 
@@ -36,21 +37,22 @@ public:
 
         void renderPostEntity(const SDL_Rect &camera);
 
+        //manual additions
         int addPreLine(const int dur, const int startx, const int starty, const int endx,
             const int endy, const Uint8 r = 0, const Uint8 g = 0, const Uint8 b = 0, const Uint8 a = 255);
-
         int addPostLine(const int dur, const int startx, const int starty, const int endx,
             const int endy, const Uint8 r = 0, const Uint8 g = 0, const Uint8 b = 0, const Uint8 a = 255);
 
         int addPreRect(const int dur, const SDL_Rect &dest, const Uint8 r = 0, const Uint8 g = 0,
             const Uint8 b = 0, const Uint8 a = 255);
-
         int addPostRect(const int dur, const SDL_Rect &dest, const Uint8 r = 0, const Uint8 g = 0,
             const Uint8 b = 0, const Uint8 a = 255);
 
-        int addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex);
+        int addPreTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex, const double angle = 0);
+        int addPostTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex, const double angle = 0);
 
-        int addPostTex(const int dur, const SDL_Rect &src, const SDL_Rect &dest, const TEXTURES tex);
+        //prefab additions
+        void addBlood(const SDL_Rect &dest);
 
 
         void removePreLine(const int id);
@@ -111,6 +113,8 @@ private:
             //src texture to display from
             //dest location to display to
             SDL_Rect src, dest;
+
+            double angle;
         };
 
         int preLineId;
@@ -128,6 +132,14 @@ private:
         std::unordered_map<int, Line> postLines;
         std::unordered_map<int, Rect> postRects;
         std::unordered_map<int, Tex> postTex;
+
+        std::mutex preLineMut;
+        std::mutex preRectMut;
+        std::mutex preTexMut;
+
+        std::mutex postLineMut;
+        std::mutex postRectMut;
+        std::mutex postTexMut;
 };
 
 #endif

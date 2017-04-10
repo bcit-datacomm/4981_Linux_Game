@@ -25,13 +25,14 @@ namespace RifleVars {
     constexpr int DAMAGE = 50;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 3;
+    constexpr int ACCURACY = 4;
 
-    constexpr int CLIP = 2;
-    constexpr int CLIPMAX = 2;
+    constexpr int CLIP = 50;
+    constexpr int CLIPMAX = 50;
     constexpr int AMMO = 1000;
 
-    constexpr int RELOADDELAY = 3000;
-    constexpr int FIREDELAY = 1000;
+    constexpr int RELOADDELAY = 2000;
+    constexpr int FIREDELAY = 180;
 }
 
 class Rifle: public InstantWeapon {

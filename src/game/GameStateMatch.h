@@ -28,11 +28,6 @@ static constexpr int STORE_Y = 700;
 static constexpr int DROPZONE_X = 100;
 static constexpr int DROPZONE_Y = 100;
 
-static constexpr int BASE_SRC_X = 82;
-static constexpr int BASE_SRC_Y = 44;
-static constexpr int BASE_SRC_W = 1012;
-static constexpr int BASE_SRC_H = 1050;
-
 class GameStateMatch : public GameState {
 public:
     GameStateMatch(Game& g, const int gameWidth, const int gameHeight);
@@ -43,7 +38,6 @@ public:
     virtual void loop();
 
 private:
-    Base base;
     Camera camera;
     MatchManager matchManager;
     GameHud hud;

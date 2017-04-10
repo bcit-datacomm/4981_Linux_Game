@@ -18,20 +18,23 @@
 *                            - Added comments where appropriate
 *                            -
 *
-* Designer:
+* Designer(s): DericM, Alex Zielinski
 *
-* Author: DericM
+* Author(s): DericM, Alex Zielinski
 *
 * Notes:
 * This class loads the audio files and plays them.
 ------------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <random>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <map>
+#include <stdlib.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -65,6 +68,7 @@ AudioManager::AudioManager(){
 #endif
 }
 
+
 /**
 *   Function: ~AudioManager()
 *
@@ -95,11 +99,12 @@ AudioManager::~AudioManager(){
 }
 
 
-
 /**
 *   Function: playMusic(const char *fileName)
 *               const char *fileName: file path of audio file to play
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -124,6 +129,8 @@ void AudioManager::playMusic(const char *fileName){
 *               const char *fileName: file path of audio file to play
 *   Date:
 *
+*   Returns: void
+*
 *   Programmer: DericM
 *
 *   Description:
@@ -142,61 +149,70 @@ void AudioManager::playEffect(const char *fileName){
 }
 
 
-
 /**
 *   Function:   loadFiles()
 *
 *   Date:
 *
+*   Returns: void
+*
 *   Programmer: DericM, Alex Zielinski
 *
 *   Modified: Alex Zielinski ~ April 4
 *               Added few more audio files to load
+*             Alex Zielinski ~ April 6
+*               Added new audio files
 *
 *   Description:
 *       Loads all audio asset files
 */
 void AudioManager::loadFiles(){
 #ifndef SERVER
-    ////MUSIC
+    /* MUSIC */
+    loadMusic(MUS_MENUBKG01);
+    loadMusic(MUS_MENUBKG02);
+    loadMusic(MUS_GAMEBKG);
     loadMusic(MUS_DARKNUBULA);
-    loadMusic(MUS_TESTMENU01);
-    loadMusic(MUS_MENUBKG_1);
-    loadMusic(MUS_MENUBKG_2);
 
+    /* CHUNKS */
+    // menu interactions
+    loadEffect(MENU_CLICK01);
+    loadEffect(MENU_CLICK02);
 
-    ////CHUNKS
-    //marine
+    // marine
     loadEffect(EFX_PDROP01);
     loadEffect(EFX_PDROP02);
     loadEffect(EFX_PPICK01);
     loadEffect(EFX_PPICK02);
+    loadEffect(EFX_MEDKIT);
 
-    loadEffect(EFX_PGRUNT01);
-    loadEffect(EFX_PDEATH01);
-
-    //weapon
+    // weapon
     loadEffect(EFX_WLPISTOL);
     loadEffect(EFX_WLRIFLE);
-
-    loadEffect(EFX_WRELOAD01);
+    loadEffect(EFX_WSHOTGUN);
     loadEffect(EFX_WTURRET01);
 
-    //zombie
-    loadEffect(EFX_ZGROAN01);
-    loadEffect(EFX_ZGRUNT01);
+    // weapon reload
+    loadEffect(EFX_WRELOAD01);
+    loadEffect(EFX_WRELOAD02);
 
-    //baracade
+    // baracade
     loadEffect(EFX_BINSTALL);
+
+    // zombie
+    loadEffect(EFX_ZATTACK01);
+    loadEffect(EFX_ZATTACK02);
+    loadEffect(EFX_ZGROAN01);
 #endif
 }
-
 
 
 /**
 *   Function: loadMusic(const char *fileName)
 *               const char *fileName: file path of audio file to load
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -216,10 +232,13 @@ void AudioManager::loadMusic(const char *fileName){
 #endif
 }
 
+
 /**
 *   Function: loadEffect(const char *fileName)
 *               const char *fileName: file path of audio file to load
 *   Date:
+*
+*   Returns: void
 *
 *   Programmer: DericM
 *
@@ -236,5 +255,60 @@ void AudioManager::loadEffect(const char *fileName){
     }
 
     chun[fileName] = sound;
+#endif
+}
+
+
+/**
+*   Function: fadeMusicOut(int ms)
+*               int ms: amount of milliseconds to fade out music
+*
+*   Returns: void
+*
+*   Date: April 5, 2017
+*
+*   Programmer: Alex Zielinski
+*
+*   Description:
+*       Wrapper fucntion to fade music out. The amount of time is takes to fade
+*       the music out is specified by the paramater int ms (in milliseconds)
+*/
+void AudioManager::fadeMusicOut(int ms){
+#ifndef SERVER
+    Mix_FadeOutMusic(ms);
+#endif
+}
+
+
+/**
+*   Function: playMenuMusic(const char *fileName1, const char *fileName2)
+*               const char *fileName1: first menu music audio file
+*               const char *fileName2: second menu music audio file
+*
+*   Returns: void
+*
+*   Date: April 5, 2017
+*
+*   Programmer: Alex Zielinski
+*
+*   Description:
+*       Randomly selects one of the 2 menu background music audio files
+*       to play when the menu loads
+*/
+void AudioManager::playMenuMusic(const char *fileName1, const char *fileName2){
+#ifndef SERVER
+    srand (time(nullptr)); // random seed generator
+    int random = rand() % 2; // randomly select 1 or 2
+
+    // check what number was selected
+    switch(random)
+    {
+        case 0:
+            playMusic(fileName1);
+            break;
+        case 1:
+            playMusic(fileName2);
+            break;
+    }
 #endif
 }

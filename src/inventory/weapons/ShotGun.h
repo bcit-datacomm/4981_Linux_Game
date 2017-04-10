@@ -26,6 +26,7 @@ namespace ShotgunVars {
     constexpr int DAMAGE = 50;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 0;
+    constexpr int ACCURACY = 6;
 
     constexpr int SPREAD_ANGLE = 30;
     constexpr int SPREAD_SHOTS = 5;
