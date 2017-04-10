@@ -45,6 +45,6 @@ BasicMedkit::~BasicMedkit() {
  *      using it to full health (100). 
  */
 void BasicMedkit::OnConsume(Marine& marine) {
-	marine.setHealth(100);
+	marine.setHealth(MARINE_MAX_HEALTH);
     logv("BasicMedkit Consumed\n");
 }

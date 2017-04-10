@@ -20,6 +20,8 @@ static constexpr int SPRITE_SIZE_X = 75;
 static constexpr int SPRITE_SIZE_Y = 125;
 //speed of walking animation ie frames till next animation
 static constexpr int FRAME_COUNT_WALK = 7;
+//Maximum health for a marine
+static constexpr int MARINE_MAX_HEALTH = 100;
 
 static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;
 static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y * 3;
@@ -65,7 +67,7 @@ public:
 
 private:
     std::string username;
-    int health = 100;
+    int health = MARINE_MAX_HEALTH;
     int state; //used to select sprite to display
     static int frameCount;
 };

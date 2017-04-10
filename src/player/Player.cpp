@@ -278,9 +278,12 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
     if (state[SDL_SCANCODE_F]) {
         marine->inventory.dropWeapon(marine->getX(), marine->getY());
     }
-    //use Inventory
+
+    //use Inventory consumable ~ Matt Goerwell - Mar. 5, 2017
     if(state[SDL_SCANCODE_I]) {
-        marine->inventory.useItem(*marine);
+        if (marine != nullptr) {
+            marine->inventory.useItem(*marine);
+        }
     }
 
     //added by Maitiu Debug print 5/3 / 2017
