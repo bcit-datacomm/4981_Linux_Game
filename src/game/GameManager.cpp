@@ -50,79 +50,79 @@ GameManager::~GameManager() {
 
 /**
  * Date: Feb. 4, 2017
+ *
+ * Author: Jacob McPhail
+ *
  * Modified: Mar. 15, 2017 - Mark Tattrie
  * Modified: Apr. 02, 2017 - Terry Kang
  *  Set alpha to the sprite of Brricade if it is not placeable
- * Author: Jacob McPhail
+ * Modified: Apr. 07, 2017 - Isaac Morneau
+ *      cleaned up the inersection calls, removed object rendering entirely
+ * 
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
+ * 
  * Description:
  *     Render all objects in level
  */
 void GameManager::renderObjects(const SDL_Rect& cam) {
-    for (const auto& m : weaponDropManager) {
-        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam),
-                getWeapon(m.second.getWeaponId())->getTexture());
+    for (const auto& o : weaponDropManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam),
+                getWeapon(o.second.getWeaponId())->getTexture());
         }
     }
 
-    for (const auto& m : marineManager) {
-        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                m.second.getSrcRect());
+    for (const auto& o : marineManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MARINE,
+                o.second.getSrcRect());
         }
     }
 
-    for (const auto& o : objectManager) {
-        if (o.second.getX() - cam.x < cam.w && o.second.getY() - cam.y < cam.h) {
-            // TODO: Base image rendering has been moved, clear/change this as other objects are added
-            // Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::BASE,
-            //     o.second.getSrcRect());
-        }
-    }
-
-    if (base.getX() - cam.x < cam.w && base.getY() - cam.y < cam.h) {
+    if (SDL_HasIntersection(&cam, &base.getDestRect())) {
         Renderer::instance().render(base.getRelativeDestRect(cam), TEXTURES::BASE,
             base.getSrcRect());
     }
 
-    for (const auto& z : zombieManager) {
-        if (z.second.getX() - cam.x < cam.w && z.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(z.second.getRelativeDestRect(cam), TEXTURES::BABY_ZOMBIE,
-                z.second.getSrcRect());
+    for (const auto& o : zombieManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), 
+                    o.second.getId() % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE,
+                    o.second.getSrcRect());
         }
     }
 
-    for (const auto& m : turretManager) {
-        if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
-                m.second.getAngle());
+    for (const auto& o : turretManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
+                o.second.getAngle());
         }
     }
 
-    for (const auto& b : barricadeManager) {
-        if (b.second.getX() - cam.x < cam.w && b.second.getY() - cam.y < cam.h) {
-            if(!b.second.isPlaceable()) {
+    for (const auto& o : barricadeManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            if(!o.second.isPlaceable()) {
                 Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
-                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
                 Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
             } else {
-                Renderer::instance().render(b.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
             }
         }
     }
 
-    for (const auto& w : wallManager) {
-        if (w.second.getX() - cam.x < cam.w && w.second.getY() - cam.y < cam.h) {
-            Renderer::instance().render(w.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
-                {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H}, WALL_WIDTH, WALL_HEIGHT);
+    for (const auto& o : wallManager) {
+        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
+            static constexpr SDL_Rect WALL_SRC_RECT = {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H};
+            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
+                WALL_SRC_RECT, WALL_WIDTH, WALL_HEIGHT);
         }
     }
 
-    for (const auto& s : storeManager) {
-        if (s.second->getX() - cam.x < cam.w && s.second->getY() - cam.y < cam.h) {
-            Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
-                s.second->getSrcRect());
+    for (const auto& o : storeManager) {
+        if (SDL_HasIntersection(&cam, &o.second->getDestRect())) {
+            Renderer::instance().render(o.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
+                o.second->getSrcRect());
         }
     }
 }
@@ -546,39 +546,6 @@ Zombie& GameManager::getZombie(const int32_t id) {
     assert(z.second);
     return z.first;
 }
-
-/**
- * Date: Feb. 8, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: addObject(const Object& newObject)
- *      newObject : Object to add
- *
- * Description:
- *     Add object to the manager.
- */
-int32_t GameManager::addObject(const Object& newObject) {
-    objectManager.emplace(newObject.getId(), newObject);
-    return newObject.getId();
-}
-
-/**
- * Date: Feb. 4, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: deleteObject(const int32_t id)
- *      id : Object id
- *
- * Description:
- *     Deletes Object from level.
- */
-void GameManager::deleteObject(const int32_t id) {
-    objectManager.erase(id);
-#ifdef SERVER
-    saveDeletion({UDPHeaders::OBJECT, id});
-#endif
-}
-
 //Created By Maitiu
 //Adds Weapon to Weapon Manager
 void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
@@ -765,6 +732,10 @@ CollisionHandler& GameManager::getCollisionHandler() {
 /**
  * Date: Feb. 4, 2017
  * Modified: Mar. 15, 2017 - Mark Tattrie
+ * Modified: Apr. 5, 2017 - John Agapeyev
+ *      added openMP
+ * Modified: Apr. 7, 2017 - Isaac Morneau
+ *      removed object manager, added base to walls
  * Author: Jacob McPhail
  * Function Interface: void GameManager::updateCollider()
  * Description:
@@ -772,6 +743,10 @@ CollisionHandler& GameManager::getCollisionHandler() {
  */
 void GameManager::updateCollider() {
     collisionHandler.clear();
+
+    //adding the base to the wall manager
+    //this way we dont need the object manager at all
+    collisionHandler.insertWall(&base);
 
 #pragma omp parallel sections shared(collisionHandler)
     {
@@ -783,11 +758,6 @@ void GameManager::updateCollider() {
 #pragma omp section
         for (auto& z : zombieManager) {
             collisionHandler.insertZombie(&z.second);
-        }
-
-#pragma omp section
-        for (auto& o : objectManager) {
-            collisionHandler.insertObj(&o.second);
         }
 
 #pragma omp section

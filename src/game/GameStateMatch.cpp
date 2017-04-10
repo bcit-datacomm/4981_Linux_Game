@@ -53,7 +53,6 @@ bool GameStateMatch::load() {
                 &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
-        GameManager::instance()->addObject(GameManager::instance()->getBase());
         const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
