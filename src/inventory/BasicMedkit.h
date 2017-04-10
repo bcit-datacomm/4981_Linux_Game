@@ -1,6 +1,19 @@
-/*
-    Created by Matt Goerwell 3/8/2017
-*/
+/*------------------------------------------------------------------------------
+* Source: BasicMedkit.h        
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
 /*
     Created by Matthew Goerwell 3/8/2017
 */
@@ -9,7 +22,6 @@
 #include <string>
 
 #include "Consumable.h"
-
 
 /*
     This class represents a simple consumable in order to test basic consumable functionality.

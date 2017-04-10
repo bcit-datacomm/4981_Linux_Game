@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------------
+* Source: Inventory.h         
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
 #ifndef INVENTORY_H
 #define INVENTORY_H
 #include <SDL2/SDL.h>

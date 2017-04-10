@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------------
+* Source: WeaponDrop.cpp         
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/05
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
 #include <atomic>
 
 #include "WeaponDrop.h"
