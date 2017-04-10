@@ -23,19 +23,20 @@ public:
     void renderSlots(const int num);
     void setSizes();
     int getClicked(const float x, const float y);
-    int checkSlot(SDL_Rect& s, float x, float y);
+    bool checkSlot(SDL_Rect& s, float x, float y);
     void createWeaponStoreMenu();
     void createTechStoreMenu();
     void createHealthStoreMenu();
 
 private:
     SDL_Rect screen;
-    int type;
     GameHashMap<TEXTURES, int> Items;
+    int type;
     Uint8 inventorySlotOpacity;
     SDL_Rect background;
-    SDL_Rect slot[TOTAL_SLOTS];
+    std::array<SDL_Rect, TOTAL_SLOTS> slot;
     SDL_Rect selectedSlot;
+    //Textomagic text;
 };
 
 #endif

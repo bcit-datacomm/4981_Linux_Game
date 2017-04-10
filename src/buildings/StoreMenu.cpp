@@ -7,7 +7,7 @@ StoreMenu::StoreMenu(const SDL_Rect s, GameHashMap<TEXTURES, int> i, int t): scr
 
 
 void StoreMenu::setSizes(){
-    switch(3){
+    switch(type){
         case 1:
             background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .4};
         break;
@@ -36,7 +36,7 @@ void StoreMenu::renderBackground(){
     setSizes();
 
     Renderer::instance().render(background, TEXTURES::CONSUMABLE_SLOT);
-    renderSlots(3);
+    renderSlots(type);
 }
 
 void StoreMenu::renderSlots(const int num){
@@ -54,18 +54,24 @@ void StoreMenu::renderSlots(const int num){
 }
 
 int StoreMenu::getClicked(const float x, const float y){
-    for(int i = 0; i < sizeof(slot); i++){
+    printf("size of slot:%d\n", slot.size());
+    for(int i = 0; i < slot.size(); i++){
+        printf("\nChecking: %d\n", i);
         if(checkSlot(slot[i], x, y)){
-            //printf("slot x:%d y:%d  maxX:%d maxY:%d\n", slot[i].x, slot[i].y, slot[i].x + slot[i].w, slot[i].y + slot[i].h);
-            //printf("mouse X:%f y:%f\n", x, y);
+            printf("Clicked: %d\n", i);
             return i;
         }
     }
+    printf("No item clicked\n");
     return -1;
 }
 
-int StoreMenu::checkSlot(SDL_Rect& s, float x, float y){
-    return (x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h);
+bool StoreMenu::checkSlot(SDL_Rect& s, float x, float y){
+    SDL_Point mousePoint = {static_cast<int>(x), static_cast<int>(y)};
+    printf("Mouse X:%d Y:%d\n", static_cast<int>(x), static_cast<int>(x));
+    printf("Rect X:%d Y:%d\n", s.x, s.y);
+    printf("Is it in Rect: %d\n", SDL_PointInRect(&mousePoint, &s)); // prints 1
+    return SDL_PointInRect(&mousePoint, &s);
 }
 
 void StoreMenu::createWeaponStoreMenu(){
