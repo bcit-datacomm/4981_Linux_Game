@@ -13,7 +13,7 @@
 
 class Store: public Object{
 public:
-    Store(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen, const GameHashMap<TEXTURES, int> i);
+    Store(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen, const GameHashMap<TEXTURES, int> i, int type);
 
     ~Store();
 

@@ -1,13 +1,23 @@
 #include "StoreMenu.h"
 
 
-StoreMenu::StoreMenu(const SDL_Rect s, GameHashMap<TEXTURES, int> i): screen(s), Items(i){
+StoreMenu::StoreMenu(const SDL_Rect s, GameHashMap<TEXTURES, int> i, int t): screen(s), Items(i), type(t){
 
 }
 
 
 void StoreMenu::setSizes(){
-    background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .4};
+    switch(3){
+        case 1:
+            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .4};
+        break;
+        case 2:
+            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .2};
+        break;
+        case 3:
+            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .2};
+        break;
+    }
 
     slot[0] = {background.x + (background.w/16), background.y + (background.h/16), background.w / 4 , background.w / 4};
     slot[1] = {slot[0].x + slot[0].w + background.w/16, slot[0].y, slot[0].w , slot[0].h};
@@ -26,44 +36,20 @@ void StoreMenu::renderBackground(){
     setSizes();
 
     Renderer::instance().render(background, TEXTURES::CONSUMABLE_SLOT);
-    renderSlots(1);
+    renderSlots(3);
 }
 
 void StoreMenu::renderSlots(const int num){
-    TEXTURES tex;
     switch(num){
         case 1:
-        {
-            for(int i = 0; i < 9; i++){
-                switch(i){
-                    case 0:
-                    tex = TEXTURES::RIFLE;
-                    break;
-                    case 1:
-                    tex = TEXTURES::SHOTGUN;
-                    break;
-                    case 2:
-                    tex = TEXTURES::CONCRETE;
-                    break;
-                    case 3:
-                    tex = TEXTURES::CONCRETE;
-                    break;
-                    case 4:
-                    tex = TEXTURES::CONCRETE;
-                    break;
-                    case 5:
-                    tex = TEXTURES::CONCRETE;
-                    break;
-                    case 6:
-                    tex = TEXTURES::CONCRETE;
-                    break;
-                    case 7:
-                    tex = TEXTURES::CONCRETE;
-                    break;
-                }
-                Renderer::instance().render(slot[i], tex);
-            }
-        }
+            createWeaponStoreMenu();
+            break;
+        case 2:
+            createTechStoreMenu();
+            break;
+        case 3:
+            createHealthStoreMenu();
+            break;
     }
 }
 
@@ -80,4 +66,56 @@ int StoreMenu::getClicked(const float x, const float y){
 
 int StoreMenu::checkSlot(SDL_Rect& s, float x, float y){
     return (x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h);
+}
+
+void StoreMenu::createWeaponStoreMenu(){
+    TEXTURES tex;
+    for(int i = 0; i < 9; i++){
+        switch(i){
+            case 0:
+            tex = TEXTURES::RIFLE;
+            break;
+            case 1:
+            tex = TEXTURES::SHOTGUN;
+            break;
+            case 2:
+            tex = TEXTURES::CONCRETE;
+            break;
+            case 3:
+            tex = TEXTURES::CONCRETE;
+            break;
+            case 4:
+            tex = TEXTURES::CONCRETE;
+            break;
+            case 5:
+            tex = TEXTURES::CONCRETE;
+            break;
+            case 6:
+            tex = TEXTURES::CONCRETE;
+            break;
+            case 7:
+            tex = TEXTURES::CONCRETE;
+            break;
+        }
+        Renderer::instance().render(slot[i], tex);
+    }
+}
+
+void StoreMenu::createTechStoreMenu(){
+    TEXTURES tex;
+    for(int i = 0; i < 2; i++){
+        switch(i){
+            case 0:
+            tex = TEXTURES::CONCRETE;
+            break;
+            case 1:
+            tex = TEXTURES::BASE;
+            break;
+        }
+        Renderer::instance().render(slot[i], tex);
+    }
+}
+
+void StoreMenu::createHealthStoreMenu(){
+    Renderer::instance().render(slot[1], TEXTURES::HEALTHPACK);
 }

@@ -11,7 +11,7 @@ int32_t id of the Store
 SDL_Rect dest the Rect of the store
 maitiu March 30*/
 TechStore::TechStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
-        const GameHashMap<TEXTURES, int> i): Store(id, dest, pickupSize, screen, i){
+        const GameHashMap<TEXTURES, int> i): Store(id, dest, pickupSize, screen, i, 2){
 
 }
 

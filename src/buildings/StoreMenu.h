@@ -16,7 +16,7 @@ static constexpr int TOTAL_SLOTS = 9;
 class StoreMenu {
 
 public:
-    StoreMenu(const SDL_Rect d, GameHashMap<TEXTURES, int> i);
+    StoreMenu(const SDL_Rect d, GameHashMap<TEXTURES, int> i, int t);
     virtual ~StoreMenu() = default;
 
     void renderBackground();
@@ -24,10 +24,13 @@ public:
     void setSizes();
     int getClicked(const float x, const float y);
     int checkSlot(SDL_Rect& s, float x, float y);
+    void createWeaponStoreMenu();
+    void createTechStoreMenu();
+    void createHealthStoreMenu();
 
 private:
     SDL_Rect screen;
-    int type = 1;
+    int type;
     GameHashMap<TEXTURES, int> Items;
     Uint8 inventorySlotOpacity;
     SDL_Rect background;
