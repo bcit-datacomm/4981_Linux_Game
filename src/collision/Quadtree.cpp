@@ -22,6 +22,7 @@
 #include <algorithm>
 #include "Quadtree.h"
 #include "../basic/Entity.h"
+#include "../buildings/Base.h"
 
 /**
  * Date: April. 9, 2017
@@ -183,3 +184,72 @@ std::vector<Entity *> Quadtree::retrieve(const SDL_Rect& rect) const {
     return rtn;
 }
 
+std::vector<Entity *> Quadtree::retrieve(const Point& start, const Point& end) const {
+    if (level == MAX_LEVELS) {
+        return objects;
+    }
+    std::vector<Entity *> rtn;
+    if (!objects.empty()) {
+        rtn = objects;
+    }
+    if (nodes[0] && lineRectIntersect({start, end}, nodes[0]->bounds)) {
+        const auto& childrtn = nodes[0]->retrieve(start, end);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    if (nodes[1] && lineRectIntersect({start, end}, nodes[1]->bounds)) {
+        const auto& childrtn = nodes[1]->retrieve(start, end);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    if (nodes[2] && lineRectIntersect({start, end}, nodes[2]->bounds)) {
+        const auto& childrtn = nodes[2]->retrieve(start, end);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    if (nodes[3] && lineRectIntersect({start, end}, nodes[3]->bounds)) {
+        const auto& childrtn = nodes[3]->retrieve(start, end);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
+    return rtn;
+}
+
+/**
+ * https://stackoverflow.com/questions/4977491/determining-if-two-line-segments-intersect/4977569#4977569
+ */
+inline bool constexpr Quadtree::lineIntersect(const std::pair<Point, Point>& start, const std::pair<Point, Point>& end) {
+    const float x00 = start.first.first;
+    const float y00 = start.first.second;
+    const float x10 = start.second.first;
+    const float y10 = start.second.second;
+
+    const float x01 = end.first.first;
+    const float y01 = end.first.second;
+    const float x11 = end.second.first;
+    const float y11 = end.second.second;
+
+    const float d = (x11 * y01) - (x01 * y11);
+
+    if (!d) {
+        return false;
+    }
+
+    const float s = (1 / d) *  ((x00 - x10) * y01 - (y00 - y10) * x01);
+    const float t = (1 / d) * -(-(x00 - x10) * y11 + (y00 - y10) * x11);
+
+    return (s >= 0 && s <= 1) && (t >=0 && t <= 1);
+}
+
+inline bool constexpr Quadtree::pointInRect(const Point& point, const SDL_Rect& rect) {
+    return (rect.x < point.first) && (point.first < rect.x + rect.w) 
+        && (rect.y < point.second) && (point.second < rect.y + rect.h);
+}
+
+/**
+ * Checks if the line intersects any of the 4 boundaries of the rectangle
+ * If it doesn't intersect, checks if the line lies entirely inside the rectangle
+ */
+inline bool constexpr Quadtree::lineRectIntersect(const std::pair<Point, Point>& line, const SDL_Rect& rect) {
+    return lineIntersect(line, {{rect.x, rect.y}, {rect.x + rect.w, rect.y}}) //Top
+            && lineIntersect(line, {{rect.x, rect.y}, {rect.x, rect.y + rect.h}}) //Left
+            && lineIntersect(line, {{rect.x + rect.w, rect.y}, {rect.x + rect.w, rect.y + rect.h}}) //Right
+            && lineIntersect(line, {{rect.x, rect.y + rect.h}, {rect.x + rect.w, rect.y + rect.h}}) //Bottom
+            && pointInRect(line.first, rect) && pointInRect(line.second, rect);
+}
