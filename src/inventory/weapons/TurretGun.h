@@ -16,7 +16,7 @@ using std::string;
 namespace TurretGunVars {
     const string TYPE = "TurretGun";
 
-    const string FIRESOUND = EFX_WTURRET01;
+    const string FIRESOUND = EFX_WTURRET;
     const string HITSOUND = "";
     const string RELOADSOUND = "";
     const string EMPTYSOUND = "";
