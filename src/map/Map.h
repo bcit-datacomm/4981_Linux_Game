@@ -55,7 +55,7 @@ public:
     Map(const std::string& file);
     int loadFileData();
     void genWalls(const std::vector<MapPoint>& wallStart);
-    void mapLoadToGame();
+    void mapLoadToGame(SDL_Rect screenRect);
     void printData();
 
     void setFile(const std::string& f) { fname = f; };

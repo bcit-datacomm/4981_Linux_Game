@@ -139,7 +139,7 @@ public:
     // place walls for the boundaries
     void setBoundary(const float startX, const float startY, const float endX, const float endY);
 
-    int32_t createWeaponStore(const float x, const float y);//creates a weapon store
+    int32_t createWeaponStore(const float x, const float y, SDL_Rect screenrect);//creates a weapon store
     void addStore(const int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
@@ -158,7 +158,7 @@ public:
         AiMap = a;
     }
 
-
+    void updateStores();
 
     //getManagers
     auto& getStoreManager() const {return storeManager;};

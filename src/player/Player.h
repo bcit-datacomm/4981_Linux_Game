@@ -1,4 +1,4 @@
-oc#ifndef PLAYER_H
+#ifndef PLAYER_H
 #define PLAYER_H
 
 #include <SDL2/SDL.h>
@@ -78,9 +78,16 @@ private:
     int tempBarricadeID;
     int tempTurretID;
     bool holdingTurret;
+
     int pickupTick;
     int pickupDelay;
     int respawnTick;
+
+    int purchaseTick;
+    int purchaseDelay;
+
+    int credits;
+
     int32_t id;
     ClientMessage moveAction;
     ClientMessage attackAction;

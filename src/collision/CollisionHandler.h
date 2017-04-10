@@ -49,6 +49,8 @@ public:
 
     std::vector<Entity *>getQuadTreeEntities(Quadtree& q,const Entity *entity); // General Collision handler, pass in quadtree check
 
+    bool detectStoreCollision(const Entity* player, const Entity* store);
+
     Quadtree quadtreeMarine; //can take dmg
     Quadtree quadtreeZombie; //can take dmg
     Quadtree quadtreeBarricade; //can take dmg

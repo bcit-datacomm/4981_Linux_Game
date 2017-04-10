@@ -123,9 +123,23 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
             Renderer::instance().render(s.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
                 s.second->getSrcRect());
         }
+        if(s.second->isOpen()){
+            s.second->getStoreMenu().renderBackground();
+        }
     }
 }
 
+
+void GameManager::updateStores(){
+    for(auto& s : storeManager){
+        if(s.second->isOpen()){
+            if(!collisionHandler.detectStoreCollision(static_cast<Entity*>(player.getMarine()), static_cast<Entity*>(s.second.get()))){
+                s.second->closeStore();
+                player.getMarine()->leaveStore();
+            }
+        }
+    }
+}
 /**
  * Date: Feb. 4, 2017
  * Modified: ----
@@ -632,14 +646,16 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
  * Revised By Michael Goll [April 4, 2017] - Added sprite for store.
  * Creates a Weapon store object and then calls addStore to add it to the manager.
  */
-int32_t GameManager::createWeaponStore(const float x, const float y) {
+int32_t GameManager::createWeaponStore(const float x, const float y, SDL_Rect screenRect) {
     const int32_t id = generateID();
-
+    GameHashMap<TEXTURES, int> gh;
     SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
     SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
             STORE_SIZE_W + STORE_PICKUP_SIZE, STORE_SIZE_H + STORE_PICKUP_SIZE};
 
-    std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect);
+    gh.emplace(TEXTURES::RIFLE, 0);
+
+    std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect, screenRect, gh);
     addStore(id, std::dynamic_pointer_cast<Store>(ws));
     ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
 

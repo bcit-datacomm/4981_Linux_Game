@@ -9,7 +9,7 @@
  * Author: Jacob McPhail
  * Function Interface: Marine(const int32_t id, const SDL_Rect& dest,
  *              const SDL_Rect& movementSize, const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
- *              
+ *
  *              id : Marine id
  *              dest : Destination rect
  *              movmentSize : Move hitbox size
@@ -22,7 +22,7 @@
 Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
         const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
 : Entity(id, dest, movementSize, projectileSize, damageSize),
-        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
+        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY), atStore(false){
     logv("Create Marine\n");
 }
 
@@ -32,7 +32,7 @@ Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
  * Author: Jacob McPhail
  * Function Interface: ~Marine()
  * Description:
- *   dctor for a marine.  
+ *   dctor for a marine.
  */
 Marine::~Marine() {
     logv("Destroy Marine\n");
@@ -228,9 +228,9 @@ void Marine::updateImageWalk() {
 void Marine::activateStore(const Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
-        int r = rand()% 2 + 1;//random number temp for testing
-
-        gm->getStore(ep->getId())->purchase(r);
+        //int r = rand()% 2 + 1;//random number temp for testing
+        printf("Activating Store.\n");
+        enterStore();
+        gm->getStore(ep->getId())->openStore();
     }
 }
-

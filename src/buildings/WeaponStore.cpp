@@ -9,9 +9,10 @@
 
 /*
 int32_t id of the Store
-SDL_RECT dest the rect of the store
+SDL_Rect dest the Rect of the store
 maitiu March 30*/
-WeaponStore::WeaponStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize): Store(id, dest, pickupSize){
+WeaponStore::WeaponStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
+        const GameHashMap<TEXTURES, int> i): Store(id, dest, pickupSize, screen, i), price(0){
 
 }
 
@@ -26,13 +27,15 @@ WeaponStore::~WeaponStore(){
  *Checks for available Drop Points and then creates weapon
  *int num what the player wants to purchase
  */
-int32_t WeaponStore::purchase(const int num){
+int32_t WeaponStore::purchase(const int num, const int credits){
 
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
         const int32_t dropPId = gm->getFreeDropPointId();
-        const int32_t weaponId = createWeapon(num);
-
+        const int32_t weaponId = createWeapon(num, credits);
+        if(weaponId < 0){
+            return -1;
+        }
         DropPoint dp = gm->getDropPoint(dropPId);
         const float x = dp.getCoord().first;
         const float y = dp.getCoord().second;
@@ -47,25 +50,33 @@ int32_t WeaponStore::purchase(const int num){
         return weaponId;
     }
     logv("NO OPEN DROP POINTS!!!\n");
-    return -1;
+    return 0;
 }
 /*
  *Created by maitiu March 30
  * Creates weapon
  */
-int32_t WeaponStore::createWeapon(const int num){
+int32_t WeaponStore::createWeapon(const int num, const int credits){
     GameManager *gm = GameManager::instance();
     int32_t id = gm->generateID();
     switch(num){
-        case 1:
-            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
+        case 0:
+            if(credits >= 50){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
+                price = 50;
+                return id;
+            }
             break;
-        case 2:
-            gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
+        case 1:
+            if(credits >= 50){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
+                price = 50;
+                return id;
+            }
             break;
         default:
             return -1;//does not exist
     }
 
-    return id;
+    return -1;
 }

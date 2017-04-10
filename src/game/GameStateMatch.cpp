@@ -70,7 +70,7 @@ bool GameStateMatch::load() {
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
-    m.mapLoadToGame();
+    m.mapLoadToGame(screenRect);
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
     return success;
@@ -265,13 +265,14 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
     GameManager::instance()->updateBase();
+    GameManager::instance()->updateStores();
     GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
 
 #ifndef SERVER
     // Move Camera
     if(GameManager::instance()->getPlayer().getMarine()){
-        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(), 
+        camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
                 GameManager::instance()->getPlayer().getMarine()->getY());
     }
     if (GameManager::instance()->getPlayer().checkMarineState()) {

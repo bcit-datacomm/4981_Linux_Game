@@ -17,7 +17,7 @@
 *   ctor for a player.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), respawnTick(0), marine(nullptr) {
+        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(100), marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
@@ -186,7 +186,30 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(marine->inventory.getCurrent()) {
+        if(marine->isAtStore()){
+            const int currentTime = SDL_GetTicks();
+            if (currentTime > (purchaseTick + purchaseDelay)) {
+                purchaseTick = currentTime;
+                for(auto& s : GameManager::instance()->getStoreManager()){
+                    if(s.second->isOpen()){
+                        int x;
+                        int y;
+                        int clicked;
+                        SDL_GetMouseState(&x, &y);
+                        clicked = s.second->getStoreMenu().getClicked(x, y);
+                        if(clicked >= 0){
+                            int price = s.second->purchase(clicked, credits);
+                            if(price > 0){
+                                credits -= price;
+                            } else {
+                                printf("Not Enough Credits\n");
+                            }
+                        }
+                    }
+                }
+            }
+
+        }else if(marine->inventory.getCurrent()) {
             marine->fireWeapon();
         }
     }

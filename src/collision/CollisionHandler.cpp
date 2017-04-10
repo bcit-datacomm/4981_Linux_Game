@@ -122,6 +122,14 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
     return false;
 }
 
+bool CollisionHandler::detectStoreCollision(const Entity* player, const Entity* store){
+    if(SDL_HasIntersection(&store->getPickUpHitBox().getRect(), &player->getMoveHitBox().getRect())){
+        return true;
+    }
+    return false;
+}
+
+
 /**
  * Date: Mar. 1, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
