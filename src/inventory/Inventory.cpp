@@ -136,9 +136,9 @@ void Inventory::scrollCurrent(int direction) {
          Weapon *w = getCurrent();
          if (w) {
              if (w->getAmmo() > 0) {
-				 // play drop sound effect
-				 AudioManager::instance().playEffect(EFX_PDROP01);
-                 GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
+				// play drop sound effect
+				AudioManager::instance().playEffect(EFX_PDROP01);
+				GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
 
              } else {
                  //delete weapon From Weapon Manager
