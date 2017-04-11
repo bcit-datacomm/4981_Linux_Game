@@ -97,9 +97,9 @@ void Quadtree::clear() {
  */
 bool Quadtree::contains(const Quadtree& q, const Entity *entity) const {
     if (q.level == MAX_LEVELS) {
-        return (entity && SDL_HasIntersection(&q.bounds, &entity->getSrcRect()));
+        return (entity && rectContains(q.bounds, entity->getSrcRect()));
     }
-    return ((entity && SDL_HasIntersection(&q.bounds, &entity->getSrcRect()))
+    return ((entity && rectContains(q.bounds, entity->getSrcRect()))
             || (q.nodes[0] && contains(*q.nodes[0], entity)) 
             || (q.nodes[3] && contains(*q.nodes[3], entity))
             || (q.nodes[1] && contains(*q.nodes[1], entity))
@@ -122,15 +122,19 @@ void Quadtree::insert(Entity *entity) {
     }
     if (nodes[0] && contains(*nodes[0], entity)) {
         nodes[0]->insert(entity);
-    }
-    if (nodes[1] && contains(*nodes[1], entity)) {
-        nodes[1]->insert(entity);
-    }
-    if (nodes[2] && contains(*nodes[2], entity)) {
-        nodes[2]->insert(entity);
+        return;
     }
     if (nodes[3] && contains(*nodes[3], entity)) {
         nodes[3]->insert(entity);
+        return;
+    }
+    if (nodes[1] && contains(*nodes[1], entity)) {
+        nodes[1]->insert(entity);
+        return;
+    }
+    if (nodes[2] && contains(*nodes[2], entity)) {
+        nodes[2]->insert(entity);
+        return;
     }
     if (contains(*this, entity)) {
         objects.push_back(entity);
@@ -151,9 +155,11 @@ std::vector<Entity *> Quadtree::retrieve(const Entity *entity) const {
     if (!entity) {
         return {};
     }
-    auto retrieved = retrieve(entity->getSrcRect());
-    std::sort(retrieved.begin(), retrieved.end());
-    retrieved.erase(std::unique(retrieved.begin(), retrieved.end()), retrieved.end());
+    std::vector<Entity *> retrieved;
+    retrieved.reserve(100);
+    retrieve(retrieved, entity->getSrcRect());
+    //retrieved = retrieve(entity->getDestRect());
+    //printf("Retrieved size: %lu\n", retrieved.size());
     return retrieved;
 }
 
@@ -184,6 +190,32 @@ std::vector<Entity *> Quadtree::retrieve(const SDL_Rect& rect) const {
     return rtn;
 }
 
+void Quadtree::retrieve(std::vector<Entity *>& retrieveList, const SDL_Rect& rect) const {
+    if (level == MAX_LEVELS) {
+        retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
+        return;
+    }
+    if (!objects.empty()) {
+        retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
+    }
+    if (nodes[0] && rectContains(nodes[0]->bounds, rect)) {
+        nodes[0]->retrieve(retrieveList, rect);
+        return;
+    }
+    if (nodes[3] && rectContains(nodes[3]->bounds, rect)) {
+        nodes[3]->retrieve(retrieveList, rect);
+        return;
+    }
+    if (nodes[1] && rectContains(nodes[1]->bounds, rect)) {
+        nodes[1]->retrieve(retrieveList, rect);
+        return;
+    }
+    if (nodes[2] && rectContains(nodes[2]->bounds, rect)) {
+        nodes[2]->retrieve(retrieveList, rect);
+        return;
+    }
+}
+
 std::vector<Entity *> Quadtree::retrieve(const Point& start, const Point& end) const {
     if (level == MAX_LEVELS) {
         return objects;
@@ -196,6 +228,10 @@ std::vector<Entity *> Quadtree::retrieve(const Point& start, const Point& end) c
         const auto& childrtn = nodes[0]->retrieve(start, end);
         rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
     }
+    if (nodes[3] && lineRectIntersect({start, end}, nodes[3]->bounds)) {
+        const auto& childrtn = nodes[3]->retrieve(start, end);
+        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    }
     if (nodes[1] && lineRectIntersect({start, end}, nodes[1]->bounds)) {
         const auto& childrtn = nodes[1]->retrieve(start, end);
         rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
@@ -204,9 +240,9 @@ std::vector<Entity *> Quadtree::retrieve(const Point& start, const Point& end) c
         const auto& childrtn = nodes[2]->retrieve(start, end);
         rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
     }
-    if (nodes[3] && lineRectIntersect({start, end}, nodes[3]->bounds)) {
-        const auto& childrtn = nodes[3]->retrieve(start, end);
-        rtn.insert(rtn.end(), childrtn.begin(), childrtn.end());
+    if (level == 0) {
+        std::sort(rtn.begin(), rtn.end());
+        rtn.erase(std::unique(rtn.begin(), rtn.end()), rtn.end());
     }
     return rtn;
 }
@@ -238,8 +274,20 @@ inline bool constexpr Quadtree::lineIntersect(const std::pair<Point, Point>& sta
 }
 
 inline bool constexpr Quadtree::pointInRect(const Point& point, const SDL_Rect& rect) {
-    return (rect.x < point.first) && (point.first < rect.x + rect.w) 
-        && (rect.y < point.second) && (point.second < rect.y + rect.h);
+    auto test = (rect.x <= point.first) && (point.first <= rect.x + rect.w) 
+        && (rect.y <= point.second) && (point.second <= rect.y + rect.h);
+
+    //auto test = (point.first >= rect.x) && (point.first <= rect.x + rect.w) 
+        //&& (point.second >= rect.y) && (point.second <= rect.y + rect.h);
+
+    //printf("Point in rect: %d\n", test);
+    return test;
+}
+
+inline bool constexpr Quadtree::rectContains(const SDL_Rect& outer, const SDL_Rect& inner) {
+    auto test = pointInRect({inner.x, inner.y}, outer) && pointInRect({inner.x + inner.w, inner.y + inner.h}, outer);
+    //printf("Rect contains: %d\n", test);
+    return test;
 }
 
 /**

@@ -40,6 +40,7 @@ public:
     unsigned int getTreeSize() const;
     void insert(Entity *entity);
     std::vector<Entity *> retrieve(const Entity *entity) const;
+    void retrieve(std::vector<Entity *>& retrieveList, const SDL_Rect& rect) const;
     std::vector<Entity *> retrieve(const Point& start, const Point& end) const;
 
 private:
@@ -49,6 +50,7 @@ private:
     static inline bool constexpr lineIntersect(const std::pair<Point, Point>& start, const std::pair<Point, Point>& end);
     static inline bool constexpr lineRectIntersect(const std::pair<Point, Point>& line, const SDL_Rect& rect);
     static inline bool constexpr pointInRect(const Point& point, const SDL_Rect& rect);
+    static inline bool constexpr rectContains(const SDL_Rect& outer, const SDL_Rect& inner);
 
     unsigned int level;
     SDL_Rect bounds;
