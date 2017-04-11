@@ -9,7 +9,8 @@
 #include "../sprites/Renderer.h"
 #include "../buildings/WeaponStore.h"
 #include "../server/servergamestate.h"
-
+#include "../buildings/TechStore.h"
+#include "../buildings/HealthStore.h"
 Weapon w;
 GameManager GameManager::sInstance;
 //Returns the already existing GameManager or if there isn't one, makes
@@ -658,6 +659,39 @@ int32_t GameManager::createWeaponStore(const float x, const float y, SDL_Rect sc
     std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect, screenRect, gh);
     addStore(id, std::dynamic_pointer_cast<Store>(ws));
     ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
+
+    return id;
+}
+
+int32_t GameManager::createTechStore(const float x, const float y, SDL_Rect screenRect) {
+    const int32_t id = generateID();
+    GameHashMap<TEXTURES, int> gh;
+    SDL_Rect techStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
+    SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
+            STORE_SIZE_W + STORE_PICKUP_SIZE, STORE_SIZE_H + STORE_PICKUP_SIZE};
+
+    gh.emplace(TEXTURES::RIFLE, 0);
+
+    std::shared_ptr<TechStore> ws = std::make_shared<TechStore>(id, techStoreRect, pickRect, screenRect, gh);
+    addStore(id, std::dynamic_pointer_cast<Store>(ws));
+    ws->setSrcRect(TECH_STORE_SRC_X, TECH_STORE_SRC_Y, TECH_STORE_SRC_W, TECH_STORE_SRC_H);
+
+    return id;
+}
+
+int32_t GameManager::createHealthStore(const float x, const float y, SDL_Rect screenRect) {
+    printf("Creating Health Store\n");
+    const int32_t id = generateID();
+    GameHashMap<TEXTURES, int> gh;
+    SDL_Rect healthStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
+    SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
+            STORE_SIZE_W + STORE_PICKUP_SIZE, STORE_SIZE_H + STORE_PICKUP_SIZE};
+
+    gh.emplace(TEXTURES::RIFLE, 0);
+
+    std::shared_ptr<HealthStore> ws = std::make_shared<HealthStore>(id, healthStoreRect, pickRect, screenRect, gh);
+    addStore(id, std::dynamic_pointer_cast<Store>(ws));
+    ws->setSrcRect(HEALTH_STORE_SRC_X, HEALTH_STORE_SRC_Y, HEALTH_STORE_SRC_W, HEALTH_STORE_SRC_H);
 
     return id;
 }

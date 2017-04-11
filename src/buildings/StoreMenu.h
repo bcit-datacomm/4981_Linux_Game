@@ -8,6 +8,8 @@
 #include "../game/GameHashMap.h"
 #include "../sprites/Textomagic.h"
 
+#include <SDL2/SDL_ttf.h>
+
 static constexpr int TOTAL_SLOTS = 9;
 //static constexpr int MIN_HEALTH = 0;
 
@@ -27,7 +29,11 @@ public:
     void createWeaponStoreMenu();
     void createTechStoreMenu();
     void createHealthStoreMenu();
-
+    void renderText();
+    void creatWeaponStoreText();
+    void StoreMenu::creatWeaponStoreText();
+    void StoreMenu::creatStoreText();
+    void StoreMenu::creatHealthStoreText();
 private:
     SDL_Rect screen;
     GameHashMap<TEXTURES, int> Items;
@@ -36,7 +42,7 @@ private:
     SDL_Rect background;
     std::array<SDL_Rect, TOTAL_SLOTS> slot;
     SDL_Rect selectedSlot;
-    //Textomagic text;
+    TTF_Font *font;
 };
 
 #endif

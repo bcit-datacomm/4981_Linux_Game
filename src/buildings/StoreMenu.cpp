@@ -3,19 +3,21 @@
 
 StoreMenu::StoreMenu(const SDL_Rect s, GameHashMap<TEXTURES, int> i, int t): screen(s), Items(i), type(t){
 
+    font = Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", 10);
+
 }
 
 
 void StoreMenu::setSizes(){
     switch(type){
         case 1:
-            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .4};
+            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, static_cast<int>(screen.h * .4)};
         break;
         case 2:
-            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .2};
+            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, static_cast<int>(screen.h * .2)};
         break;
         case 3:
-            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, screen.h * .2};
+            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, static_cast<int>(screen.h * .2)};
         break;
     }
 
@@ -24,11 +26,11 @@ void StoreMenu::setSizes(){
     slot[2] = {slot[1].x + slot[0].w + background.w/16, slot[0].y, slot[0].w , slot[0].h};
 
     slot[3] = {slot[0].x,                               slot[0].y + (slot[0].h * 1.2), slot[0].w , slot[0].w};
-    slot[4] = {slot[3].x + slot[0].w + background.w/16, slot[0].y + (slot[0].h * 1.2) , slot[0].w, slot[0].w};
-    slot[5] = {slot[4].x + slot[0].w + background.w/16, slot[0].y + (slot[0].h * 1.2) , slot[0].w, slot[0].w};
+    slot[4] = {slot[3].x + slot[0].w + background.w/16, slot[0].y + static_cast<int>(slot[0].h * 1.2) , slot[0].w, slot[0].w};
+    slot[5] = {slot[4].x + slot[0].w + background.w/16, slot[0].y + static_cast<int>(slot[0].h * 1.2) , slot[0].w, slot[0].w};
 
-    slot[6] = {slot[0].x,                               slot[3].y + (slot[0].h * 1.2), slot[0].w , slot[0].w};
-    slot[7] = {slot[6].x + slot[0].w + background.w/16, slot[3].y + (slot[0].h * 1.2), slot[0].w , slot[0].w};
+    slot[6] = {slot[0].x,                               slot[3].y + static_cast<int>(slot[0].h * 1.2), slot[0].w , slot[0].w};
+    slot[7] = {slot[6].x + slot[0].w + background.w/16, slot[3].y + static_cast<int>(slot[0].h * 1.2), slot[0].w , slot[0].w};
 }
 
 
@@ -37,6 +39,7 @@ void StoreMenu::renderBackground(){
 
     Renderer::instance().render(background, TEXTURES::CONSUMABLE_SLOT);
     renderSlots(type);
+    renderText();
 }
 
 void StoreMenu::renderSlots(const int num){
@@ -54,7 +57,7 @@ void StoreMenu::renderSlots(const int num){
 }
 
 int StoreMenu::getClicked(const float x, const float y){
-    printf("size of slot:%d\n", slot.size());
+    printf("size of slot:%zu\n", slot.size());
     for(int i = 0; i < slot.size(); i++){
         printf("\nChecking: %d\n", i);
         if(checkSlot(slot[i], x, y)){
@@ -65,6 +68,7 @@ int StoreMenu::getClicked(const float x, const float y){
     printf("No item clicked\n");
     return -1;
 }
+
 
 bool StoreMenu::checkSlot(SDL_Rect& s, float x, float y){
     SDL_Point mousePoint = {static_cast<int>(x), static_cast<int>(y)};
@@ -124,4 +128,38 @@ void StoreMenu::createTechStoreMenu(){
 
 void StoreMenu::createHealthStoreMenu(){
     Renderer::instance().render(slot[1], TEXTURES::HEALTHPACK);
+}
+
+void StoreMenu::renderText(){
+
+    switch(type){
+        case 1:
+            //creatWeaponStoreText();
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
+}
+
+void StoreMenu::creatWeaponStoreText(){
+    SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
+    SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
+    Textomagic title(titleRect, font, 0, "Weapon Store");
+    title.render();
+}
+
+void StoreMenu::creatTechStoreText(){
+    SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
+    SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
+    Textomagic title(titleRect, font, 0, "Weapon Store");
+    title.render();
+}
+
+void StoreMenu::creatHealthStoreText(){
+    SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
+    SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
+    Textomagic title(titleRect, font, 0, "Weapon Store");
+    title.render();
 }

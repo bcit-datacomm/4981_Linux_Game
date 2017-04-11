@@ -17,7 +17,7 @@
 *   ctor for a player.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(100), marine(nullptr) {
+        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(1000), marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }

@@ -189,8 +189,8 @@ void Map::mapLoadToGame(SDL_Rect screenRect) {
     hShopPosition = shops[4];
     logv("Shop position index: %d\n", pos);
     GameManager::instance()->createWeaponStore(wShopPosition.x, wShopPosition.y, screenRect);
-    GameManager::instance()->createWeaponStore(tShopPosition.x, tShopPosition.y, screenRect);
-    GameManager::instance()->createWeaponStore(hShopPosition.x, hShopPosition.y, screenRect);
+    GameManager::instance()->createTechStore(tShopPosition.x, tShopPosition.y, screenRect);
+    GameManager::instance()->createHealthStore(hShopPosition.x, hShopPosition.y, screenRect);
     // Only using one drop zone position.
     GameManager::instance()->createDropZone(dropPoints[0].x, dropPoints[0].y, DROPZONE_SIZE);
 }

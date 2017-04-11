@@ -47,6 +47,16 @@ static constexpr int WEAPON_STORE_SRC_Y = 582;
 static constexpr int WEAPON_STORE_SRC_W = 158;
 static constexpr int WEAPON_STORE_SRC_H = 254;
 
+static constexpr int TECH_STORE_SRC_X = 13;
+static constexpr int TECH_STORE_SRC_Y = 582;
+static constexpr int TECH_STORE_SRC_W = 158;
+static constexpr int TECH_STORE_SRC_H = 254;
+
+static constexpr int HEALTH_STORE_SRC_X = 355;
+static constexpr int HEALTH_STORE_SRC_Y = 582;
+static constexpr int HEALTH_STORE_SRC_W = 158;
+static constexpr int HEALTH_STORE_SRC_H = 254;
+
 static constexpr int WALL_SRC_X = 15;
 static constexpr int WALL_SRC_Y = 478;
 static constexpr int WALL_SRC_W = 122;
@@ -140,6 +150,8 @@ public:
     void setBoundary(const float startX, const float startY, const float endX, const float endY);
 
     int32_t createWeaponStore(const float x, const float y, SDL_Rect screenrect);//creates a weapon store
+    int32_t createTechStore(const float x, const float y, SDL_Rect screenRect);//creates tech store
+    int32_t createHealthStore(const float x, const float y, SDL_Rect screenRect); //creates Health store
     void addStore(const int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
