@@ -305,3 +305,22 @@ void VisualEffect::addBlood(const SDL_Rect &dest) {
     preTex[++preTexId] = {BLOOD_LENGTH, TEXTURES::BLOOD, {0, 0, BLOOD_IMAGE, BLOOD_IMAGE},
         dest, M_PI * rand()};
 }
+
+/**
+ * Developer: Isaac Morneau
+ * Designer: Isaac Morneau
+ * Date: April 8, 2017
+ * Notes:
+ * add some gore
+ */
+void VisualEffect::addBody(const SDL_Rect &dest, const int32_t id) {
+    std::lock_guard<std::mutex> lock(preTexMut);
+    //20 seconds at 60 fps
+    static constexpr int BODY_LENGTH = 600;
+    static constexpr int BODY_IMAGE_Y = 150;
+    static constexpr int BODY_IMAGE_X = 150;
+    static constexpr int START_Y = 1025;
+    preTex[++preTexId] = {BODY_LENGTH, id % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE, 
+        {0, START_Y, BODY_IMAGE_X, BODY_IMAGE_Y},
+        {dest.x, dest.y, dest.h, dest.h}};
+}
