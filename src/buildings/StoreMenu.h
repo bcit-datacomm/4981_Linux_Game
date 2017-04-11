@@ -31,9 +31,8 @@ public:
     void createHealthStoreMenu();
     void renderText();
     void creatWeaponStoreText();
-    void StoreMenu::creatWeaponStoreText();
-    void StoreMenu::creatStoreText();
-    void StoreMenu::creatHealthStoreText();
+    void creatTechStoreText();
+    void creatHealthStoreText();
 private:
     SDL_Rect screen;
     GameHashMap<TEXTURES, int> Items;

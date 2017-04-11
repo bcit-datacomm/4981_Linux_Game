@@ -25,13 +25,13 @@
 #include "../buildings/DropPoint.h"
 #include "../map/Map.h"
 
+#include "../inventory/BarricadeDrop.h"
 #include "../inventory/WeaponDrop.h"
 #include "../inventory/weapons/Weapon.h"
 #include "../inventory/weapons/HandGun.h"
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 #include "../inventory/WeaponDrop.h"
-#include "../buildings/DropPoint.h"
 #include "GameHashMap.h"
 
 static constexpr int INITVAL = 0;
@@ -164,6 +164,9 @@ public:
     void freeDropPoint(const int32_t id);
     bool checkFreeDropPoints();
 
+    int32_t createBarricadeDrop(const float x, const float y);
+    bool barricadeDropExists(int32_t id) const {return barricadeDropManager.count(id);};
+    void deleteBarricadeDrop(int32_t id);
     // Ai Map setters and getters
     auto& getAiMap() const { return AiMap; };
     void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
@@ -202,6 +205,7 @@ private:
     GameHashMap<int32_t, WeaponDrop> weaponDropManager;
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
     GameHashMap<int32_t, Barricade> barricadeManager;
+    GameHashMap<int32_t, BarricadeDrop> barricadeDropManager;
     GameHashMap<int32_t, Wall> wallManager;
     GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
     GameHashMap<int32_t, DropPoint> dropPointManager;

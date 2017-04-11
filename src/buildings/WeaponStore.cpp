@@ -27,7 +27,7 @@ WeaponStore::~WeaponStore(){
  *Checks for available Drop Points and then creates weapon
  *int num what the player wants to purchase
  */
-int32_t WeaponStore::purchase(const int num, const int credits){
+int WeaponStore::purchase(const int num, const int credits){
 
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
@@ -47,7 +47,7 @@ int32_t WeaponStore::purchase(const int num, const int credits){
         if(gm->weaponDropExists(wDropId)){
             gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
         }
-        return weaponId;
+        return gm->getWeapon(weaponId)->getPrice();
     }
     logv("NO OPEN DROP POINTS!!!\n");
     return -1;

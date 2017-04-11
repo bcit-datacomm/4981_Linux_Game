@@ -26,34 +26,30 @@ TechStore::~TechStore(){
  *Checks for available Drop Points and then creates Tech
  *int num what the player wants to purchase
  */
-int32_t TechStore::purchase(const int num, const int credits){
+int TechStore::purchase(const int num, const int credits){
 
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
+        const int32_t dropPId = gm->getFreeDropPointId();
+        DropPoint dp = gm->getDropPoint(dropPId);
+        switch(num){
+            case 0:
+            {
 
+                break;
+            }
+            case 1:
+            {
+                if(credits >= 100){
+                    int32_t id = GameManager::instance()->createBarricadeDrop(dp.getCoord().first, dp.getCoord().second);
+                    return 100;
+                }
+                break;
+            }
+            default:
+                return -1;//does not exist
+        }
     }
     logv("NO OPEN DROP POINTS!!!\n");
-    return -1;
-}
-/*
- *Created by maitiu March 30
- * Creates Tech
- */
-int32_t TechStore::createTech(const int num, const int credits){
-    GameManager *gm = GameManager::instance();
-    int32_t id = gm->generateID();
-    switch(num){
-        case 0:
-        {
-            break;
-        }
-        case 1:
-        {
-            break;
-        }
-        default:
-            return -1;//does not exist
-    }
-
     return -1;
 }

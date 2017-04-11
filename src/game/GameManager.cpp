@@ -66,6 +66,13 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
         }
     }
 
+    for (const auto& bd : barricadeDropManager) {
+        if (bd.second.getX() - cam.x < cam.w && bd.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(bd.second.getRelativeDestRect(cam),
+                TEXTURES::CONCRETE);
+        }
+    }
+
     for (const auto& m : marineManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
@@ -731,6 +738,23 @@ void GameManager::createDropZone(const float x, const float y, const int num) {
     }
 }
 
+int32_t GameManager::createBarricadeDrop(const float x, const float y){
+    const int32_t id = generateID();
+
+    SDL_Rect barricadeDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
+
+    barricadeDropManager.emplace(id, BarricadeDrop(id, barricadeDropRect, pickRect))->second.setPosition(x,y);
+    return id;
+}
+
+void GameManager::deleteBarricadeDrop(int32_t id){
+        barricadeDropManager.erase(id);
+    /*#ifdef SERVER
+        saveDeletion({UDPHeaders::BARRICADEDROP, id});
+    #endif*/
+}
+
  /*
   * Created by Maitiu March 30
   */
@@ -829,6 +853,10 @@ void GameManager::updateCollider() {
 
     for (auto& m : weaponDropManager) {
         collisionHandler.quadtreePickUp.insert(&m.second);
+    }
+
+    for (auto& bd : barricadeDropManager) {
+        collisionHandler.quadtreePickUp.insert(&bd.second);
     }
 
     for (auto& s : storeManager) {

@@ -198,9 +198,8 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                         SDL_GetMouseState(&x, &y);
                         clicked = s.second->getStoreMenu().getClicked(x, y);
                         if(clicked >= 0){
-                            int32_t wid = s.second->purchase(clicked, credits);
-                            if(wid >= 0){
-                                int cost = GameManager::instance()->getWeapon(wid)->getPrice();
+                            int cost = s.second->purchase(clicked, credits);
+                            if(cost >= 0){
                                 credits = credits - cost;
                                 logv("Purchased\n");
                             } else {

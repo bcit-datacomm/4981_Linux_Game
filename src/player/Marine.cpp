@@ -112,8 +112,9 @@ int32_t Marine::checkForPickUp() {
                 }
                 gm->deleteWeaponDrop(wd.getId());
             }
-        } else {
-            logv("unable to find id:%d in weaponDropManager\n", pickId);
+        } else if(gm->barricadeDropExists(pickId)) {//check if a barricade drop
+            gm->deleteBarricadeDrop(pickId);
+            gm->getPlayer().handleTempBarricade(Renderer::instance().getRenderer());
         }
     } else {
         loge("Pick id was nullptr\n");
