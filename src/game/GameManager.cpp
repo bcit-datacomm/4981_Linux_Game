@@ -813,6 +813,13 @@ int32_t GameManager::createBarricadeDrop(const float x, const float y){
     return id;
 }
 
+BarricadeDrop& GameManager::getBarricadeDrop(const int32_t id) {
+
+    const auto& bd = barricadeDropManager[id];
+    return bd.first;
+    assert(bd.second);
+}
+
 void GameManager::deleteBarricadeDrop(int32_t id){
         barricadeDropManager.erase(id);
     /*#ifdef SERVER

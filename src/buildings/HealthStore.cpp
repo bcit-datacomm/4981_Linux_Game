@@ -26,7 +26,7 @@ HealthStore::~HealthStore(){
  *Checks for available Drop Points and then creates Health
  *int num what the player wants to purchase
  */
-int32_t HealthStore::purchase(const int num, const int credits){
+int HealthStore::purchase(const int num, const int credits){
     int32_t cId = -1;
     int32_t dropId;
     GameManager *gm = GameManager::instance();
@@ -41,7 +41,9 @@ int32_t HealthStore::purchase(const int num, const int credits){
                 if(credits > 20){
                     cId = gm->generateID();
                     gm->addConsumable(std::dynamic_pointer_cast<Consumable>(std::make_shared<BasicMedkit>(gm->generateID())));
-                    gm->createConsumeDrop(x, y, cId);
+                    dropId = gm->createConsumeDrop(x, y, cId);
+                    gm->getConsumeDrop(dropId).setDropPoint(dropPId);
+                    return 20;
                 }
                 break;
         }

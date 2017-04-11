@@ -41,7 +41,8 @@ int TechStore::purchase(const int num, const int credits){
             case 1:
             {
                 if(credits >= 100){
-                    int32_t id = GameManager::instance()->createBarricadeDrop(dp.getCoord().first, dp.getCoord().second);
+                    int32_t id = gm->createBarricadeDrop(dp.getCoord().first, dp.getCoord().second);
+                    gm->getBarricadeDrop(id).setDropPoint(dropPId);
                     return 100;
                 }
                 break;

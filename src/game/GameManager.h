@@ -179,6 +179,7 @@ public:
     int32_t createBarricadeDrop(const float x, const float y);
     bool barricadeDropExists(int32_t id) const {return barricadeDropManager.count(id);};
     void deleteBarricadeDrop(int32_t id);
+    BarricadeDrop& getBarricadeDrop(int32_t id);
     // Ai Map setters and getters
     auto& getAiMap() const { return AiMap; };
     void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {

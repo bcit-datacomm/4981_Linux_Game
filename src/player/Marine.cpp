@@ -106,17 +106,25 @@ int32_t Marine::checkForPickUp() {
             pickId = wd.getWeaponId();
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
-                int32_t DropPoint = wd.getDropPoint();
-                if(DropPoint != -1){
-                    gm->freeDropPoint(DropPoint);
+                int32_t dropPoint = wd.getDropPoint();
+                if(dropPoint != -1){
+                    gm->freeDropPoint(dropPoint);
                 }
                 gm->deleteWeaponDrop(wd.getId());
             }
         } else if(gm->barricadeDropExists(pickId)) {//check if a barricade drop
+            int32_t dropPoint = gm->getBarricadeDrop(pickId).getDropPoint();
+            if(dropPoint != -1){
+                gm->freeDropPoint(dropPoint);
+            }
             gm->deleteBarricadeDrop(pickId);
             gm->getPlayer().handleTempBarricade(Renderer::instance().getRenderer());
         } else if(gm->consumeDropExists(pickId)) {
             int32_t cid = gm->getConsumeDrop(pickId).getConsumeId();
+            int32_t dropPoint = gm->getConsumeDrop(pickId).getDropPoint();
+            if(dropPoint != -1){
+                gm->freeDropPoint(dropPoint);
+            }
             gm->deleteConsumeDrop(pickId);
         }
     } else {
