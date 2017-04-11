@@ -68,7 +68,7 @@ enum class TEXTURES : int {
     // BARRICADE_NOT_QUITE_FULL,
     // BARRICADE_HALF_HEALTH,
     // BARRICADE_ALMOST_DESTROYED,
-    // TURRET,
+    TURRET,
     HEALTHPACK,
 
     //---------- Shops ----------

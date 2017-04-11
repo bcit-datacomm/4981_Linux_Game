@@ -11,13 +11,16 @@
 /**
 * Date: Jan. 28, 2017
 * Author: Jacob McPhail
-* Modified: ---
+*
 * Function Interface: Player()
 * Description:
 *   ctor for a player.
+*
+* Revisions:
+* Apr. 10, 2017, Mark Chen, Mark Tattrie - Added in a shoot delay parameter.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), respawnTick(0), marine(nullptr) {
+        pickupTick(0), pickupDelay(200), shootDelay(0), respawnTick(0), marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
@@ -157,6 +160,7 @@ void Player::sendServAttackAction() {
 * Revisions:
 * Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
 * Apr. 07, 2017, Mark Chen - Can no longer shoot while holding a turret.
+* Apr. 10, 2017, Mark Chen, Mark Tattrie - Added a delay to firing right after placing a turret.
 * Apr. 10, 2017 Alex Zielinski - implemented turrent install effect
 * 							   - implemented sound effects that occur with menu interactions by mouse
 */
@@ -166,6 +170,8 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
     SDL_GetMouseState(&mouseX, &mouseY);
     const int mouseDeltaX = winWidth / 2 - mouseX;
     const int mouseDeltaY = winHeight / 2 - mouseY;
+
+    int currentTime = SDL_GetTicks();
 
     marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* ONE_EIGHTY)/M_PI) * - 1);
 
@@ -186,23 +192,20 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 				// play turret install effect
 				AudioManager::instance().playEffect(EFX_BINSTALL);
                 tempTurret.placeTurret();
-                tempTurretID = -1;
                 holdingTurret = false;
+                tempTurretID = -1;
+                shootDelay =+ currentTime + 400;
             }
         }
     } else if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
+        if (currentTime > shootDelay) {
             if(marine->inventory.getCurrent()) {
                 marine->fireWeapon();
             }
+            shootDelay = 0;
         }
+    }
 }
-/*
-    //fire weapon on left mouse click
-    if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if(marine->inventory.getCurrent()) {
-            marine->fireWeapon();
-        }
-    }*/
 
 void Player::handleMouseWheelInput(const SDL_Event *e) {
 	// play menu click sound effect
@@ -232,7 +235,7 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 *
 * Description:
 *   Handle user key input.
-* 
+*
 * Revisions:
 * Apr. 10, 2017, Alex Zielinski - implemented sound effects that occur with menu interactions by keyboard
 */

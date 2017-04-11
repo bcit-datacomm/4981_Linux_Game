@@ -60,11 +60,12 @@
  * Apr. 07, 2017, Isaac Morneau : Turret checks more efficiently
  */
 
-Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
-        const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
-        const bool placed, const float range, const int32_t dropzone): Entity(id, dest, movementSize,
-        projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize, damageSize,
-        pickupSize, MARINE_VELOCITY), activated(activated), placed(placed), range(range) {
+Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize, const SDL_Rect& pickupSize,
+        const bool activated, const int health, const bool placed, const bool placeable, const float range,
+        const int32_t dropzone): Entity(id, dest, movementSize, projectileSize, damageSize, pickupSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, pickupSize, MARINE_VELOCITY),
+        activated(activated), placed(placed), placeable(placeable), range(range) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -143,13 +144,23 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX + distanceY));
 
-    return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getMarineTree(),this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(),this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getObjTree(),this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this), this)));
+    // if the turret is within 200 units, set placeable to true
+    placeable = (distance <= 200);
+
+    // checks for hitbox overlap if placeable was set to true
+    if (placeable) {
+        if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getMarineTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getObjTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this), this)) {
+                 placeable = false;
+         }
+    }
+
+     return placeable;
 }
 
 /**
@@ -224,15 +235,8 @@ void Turret::shootTurret() {
 void Turret::move(const float playerX, const float playerY,
         const float moveX, const float moveY, CollisionHandler& ch) {
 
+    (collisionCheckTurret(playerX, playerY, moveX, moveY, ch));
     setPosition(moveX, moveY);
-
-    if (collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
-        //change the texture rendered for the turret here
-        //left blank for now
-    } else {
-        //change the texture rendered for the turret here
-        //left blank for now
-    }
 }
 
 /**

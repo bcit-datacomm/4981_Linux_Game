@@ -80,6 +80,7 @@ private:
     bool holdingTurret;
     int pickupTick;
     int pickupDelay;
+    int shootDelay;
     int respawnTick;
     int32_t id;
     ClientMessage moveAction;

@@ -58,9 +58,9 @@ GameManager::~GameManager() {
  *  Set alpha to the sprite of Brricade if it is not placeable
  * Modified: Apr. 07, 2017 - Isaac Morneau
  *      cleaned up the inersection calls, removed object rendering entirely
- * 
+ *
  * Function Interface: void GameManager::renderObjects(const SDL_Rect& cam)
- * 
+ *
  * Description:
  *     Render all objects in level
  */
@@ -86,7 +86,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : zombieManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), 
+            Renderer::instance().render(o.second.getRelativeDestRect(cam),
                     o.second.getId() % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE,
                     o.second.getSrcRect());
         }
@@ -94,8 +94,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : turretManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE,
-                o.second.getAngle());
+
+            if (!o.second.isPlaceable()) {
+                Renderer::instance().setAlpha(TEXTURES::TURRET, 150);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::TURRET);
+                Renderer::instance().setAlpha(TEXTURES::TURRET, 255);
+            } else {
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::TURRET);
+            }
+
         }
     }
 
@@ -212,6 +219,7 @@ bool GameManager::hasMarine(const int32_t id) const {
  * Revisions:
  * Mar. 30, 2017, Mark Chen : turrets now fire when they detect an enemy
  * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
+ * Apr. 10, 2017, Mark Chen : turrets now do not track targets while it's being held.
  */
 
 void GameManager::updateTurrets() {
@@ -228,7 +236,7 @@ void GameManager::updateTurrets() {
         for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
 #pragma omp task firstprivate(it)
             {
-                if (it->second.targetScanTurret() && it->second.isActivated()) {
+                if (it->second.isActivated() && it->second.targetScanTurret()) {
                     it->second.shootTurret();
                 }
             }
@@ -433,13 +441,13 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
  */
 int32_t GameManager::createTurret(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, TURRET_SIZE_H};
 
     SDL_Rect turretRect = temp;
     SDL_Rect moveRect = temp;
     SDL_Rect projRect = temp;
     SDL_Rect damRect = temp;
-    SDL_Rect pickRect = {INITVAL, INITVAL, PUSIZE, PUSIZE};
+    SDL_Rect pickRect = {INITVAL, INITVAL, TURRET_PUSIZE_W, TURRET_PUSIZE_H};
 
     const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect,
         pickRect));
