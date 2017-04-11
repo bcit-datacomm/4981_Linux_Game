@@ -1,6 +1,6 @@
 BASEFLAGS := -Wall -pedantic -pipe -std=c++14 -fopenmp
 DEBUGFLAGS := -g -pg
-RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG -g
+RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG
 CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
