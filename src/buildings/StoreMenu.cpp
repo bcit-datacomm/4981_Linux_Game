@@ -83,28 +83,28 @@ void StoreMenu::createWeaponStoreMenu(){
     for(int i = 0; i < 9; i++){
         switch(i){
             case 0:
-            tex = RIFLE_TEX;
+            tex = TEXTURES::RIFLE;
             break;
             case 1:
-            tex = SHOTGUN_TEX;
+            tex = TEXTURES::SHOTGUN;
             break;
             case 2:
-            //tex = DEAGLE_TEX;
+            tex = TEXTURES::PLASMA_DEAGLE;
             break;
             case 3:
-            //tex = RAILGUN_TEX;
+            tex = TEXTURES::RAILGUN;
             break;
             case 4:
-            //tex = T75_TEX;
+            tex = TEXTURES::TYPE_75K;
             break;
             case 5:
-            //tex = KATANA_TEX;
+            tex = TEXTURES::KATANA;
             break;
             case 6:
-            //tex = PHASE_TEX;
+            tex = TEXTURES::PHASE_REPEATER;
             break;
             case 7:
-            //tex = AMMO_TEX;
+            tex = TEXTURES::CONCRETE;
             break;
         }
         Renderer::instance().render(slot[i], tex);

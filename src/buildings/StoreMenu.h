@@ -10,17 +10,6 @@
 
 #include <SDL2/SDL_ttf.h>
 
-static constexpr int TOTAL_SLOTS = 9;
-static constexpr TEXTURES RIFLE_TEX = TEXTURES::RIFLE;
-static constexpr TEXTURES SHOTGUN_TEX = TEXTURES::SHOTGUN;
-static constexpr TEXTURES DEAGLE_TEX = TEXTURES::PLASMA_DEAGLE;
-static constexpr TEXTURES RAILGUN_TEX = TEXTURES::RAILGUN;
-static constexpr TEXTURES T75_TEX= TEXTURES::TYPE_75K;
-static constexpr TEXTURES KATANA_TEX= TEXTURES::KATANA;
-static constexpr TEXTURES PHASE_TEX= TEXTURES::PHASE_REPEATER;
-static constexpr TEXTURES AMMO_TEX= TEXTURES::CONCRETE;
-//static constexpr int MIN_HEALTH = 0;
-
 
 
 class StoreMenu {
