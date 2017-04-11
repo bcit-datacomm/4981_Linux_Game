@@ -4,7 +4,7 @@
 #include "BasicMedkit.h"
 #include "../log/log.h"
 
-BasicMedkit::BasicMedkit() : Consumable() {
+BasicMedkit::BasicMedkit(int32_t id) : Consumable(id) {
     logv("BasicMedkit Created\n");
 }
 

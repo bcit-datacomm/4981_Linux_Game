@@ -73,6 +73,13 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
         }
     }
 
+    for (const auto& cd : consumeDropManager) {
+        if (cd.second.getX() - cam.x < cam.w && cd.second.getY() - cam.y < cam.h) {
+            Renderer::instance().render(cd.second.getRelativeDestRect(cam),
+                TEXTURES::HEALTHPACK);
+        }
+    }
+
     for (const auto& m : marineManager) {
         if (m.second.getX() - cam.x < cam.w && m.second.getY() - cam.y < cam.h) {
             Renderer::instance().render(m.second.getRelativeDestRect(cam), TEXTURES::MARINE,
@@ -649,6 +656,64 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 #endif
 }
 
+//Created By Maitiu
+//Adds Weapon to Weapon Manager
+void GameManager::addConsumable(std::shared_ptr<Consumable> consumable) {
+    consumableManager.emplace(consumable->getId(), consumable);
+}
+
+/*
+ *Created By Maitiu March 30 2017
+ */
+void GameManager::removeConsumable(const int32_t id) {
+    consumableManager.erase(id);
+/*#ifdef SERVER
+    saveDeletion({UDPHeaders::CONSUMABLE, id});
+#endif*/
+}
+
+//created by Maitiu 2017-03-12
+//returns weapon in weaponManager using id
+std::shared_ptr<Consumable> GameManager::getConsumable(const int32_t id) {
+    const auto& c = consumableManager[id];
+    assert(c.second);
+    return c.first;
+}
+
+int32_t GameManager::createConsumeDrop(const float x, const float y, const int32_t cID) {
+    const int32_t id = generateID();
+
+    SDL_Rect consumeDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
+
+    consumeDropManager.emplace(id, ConsumeDrop(id, consumeDropRect, pickRect, cID))->second.setPosition(x,y);
+    return id;
+}
+
+/*create by maitiu March 21
+ * Checks if id can be found in weaponDropManager
+ */
+bool GameManager::consumeDropExists(const int32_t id) {
+    return consumeDropManager.count(id);
+}
+
+//created by Maitiu 2017-03-12
+//returns weapon drop in  weaponDropManager
+ConsumeDrop& GameManager::getConsumeDrop(const int32_t id) {
+    logv("id: %d\n", id);
+    const auto& cd = consumeDropManager[id];
+    assert(cd.second);
+    return cd.first;
+}
+
+// Deletes weapon from level
+void GameManager::deleteConsumeDrop(const int32_t id) {
+    consumeDropManager.erase(id);
+/*#ifdef SERVER
+    saveDeletion({UDPHeaders::CONSUMEDROP, id});
+#endif*/
+}
+
 /*
  * Created By Maitiu March 30 2017
  * Revised By Michael Goll [April 4, 2017] - Added sprite for store.
@@ -857,6 +922,10 @@ void GameManager::updateCollider() {
 
     for (auto& bd : barricadeDropManager) {
         collisionHandler.quadtreePickUp.insert(&bd.second);
+    }
+
+    for (auto& cd : consumeDropManager) {
+        collisionHandler.quadtreePickUp.insert(&cd.second);
     }
 
     for (auto& s : storeManager) {

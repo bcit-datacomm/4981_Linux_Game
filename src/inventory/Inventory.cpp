@@ -79,11 +79,6 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
 }
 
 void Inventory::useItem() {
-    if (medkit != nullptr) {
-        medkit->OnConsume();
-        medkit = nullptr;
-    }
-
 }
 
 //Created By Maitiu
@@ -156,4 +151,3 @@ void Inventory::scrollCurrent(int direction) {
      weaponIds[0] = tGun.getID();
      GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
  }
- 

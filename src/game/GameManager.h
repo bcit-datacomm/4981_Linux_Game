@@ -32,6 +32,7 @@
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 #include "../inventory/WeaponDrop.h"
+#include "../inventory/ConsumeDrop.h"
 #include "GameHashMap.h"
 
 static constexpr int INITVAL = 0;
@@ -126,10 +127,21 @@ public:
     bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
 
+    int32_t createConsumeDrop(const float x, const float y, const int32_t cID);
+    bool consumeDropExists(const int32_t id);
+    ConsumeDrop& getConsumeDrop(const int32_t id);
+    void deleteConsumeDrop(const int32_t id);
+
+
     //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     void addWeapon(std::shared_ptr<Weapon> weapon);
     void removeWeapon(const int32_t id);
+
+    //consumables
+    std::shared_ptr<Consumable> getConsumable(const int32_t id);
+    void addConsumable(std::shared_ptr<Consumable> consumable);
+    void removeConsumable(const int32_t id);
 
     int32_t createBarricade(const float x, const float y);
     void deleteBarricade(const int32_t id);
@@ -209,6 +221,8 @@ private:
     GameHashMap<int32_t, Wall> wallManager;
     GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
     GameHashMap<int32_t, DropPoint> dropPointManager;
+    GameHashMap<int32_t,std::shared_ptr<Consumable>> consumableManager;
+    GameHashMap<int32_t, ConsumeDrop> consumeDropManager;
     std::vector<int32_t> openDropPoints;
 };
 

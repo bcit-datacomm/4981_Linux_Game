@@ -115,6 +115,9 @@ int32_t Marine::checkForPickUp() {
         } else if(gm->barricadeDropExists(pickId)) {//check if a barricade drop
             gm->deleteBarricadeDrop(pickId);
             gm->getPlayer().handleTempBarricade(Renderer::instance().getRenderer());
+        } else if(gm->consumeDropExists(pickId)) {
+            int32_t cid = gm->getConsumeDrop(pickId).getConsumeId();
+            gm->deleteConsumeDrop(pickId);
         }
     } else {
         loge("Pick id was nullptr\n");
