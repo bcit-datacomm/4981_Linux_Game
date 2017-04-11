@@ -7,33 +7,47 @@ StoreMenu::StoreMenu(const SDL_Rect s, GameHashMap<TEXTURES, int> i, int t): scr
 
 }
 
-
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function void StoreMenu::setSizes()
+ * Description:
+ *     Sets the size of UI based on what store type
+ */
 void StoreMenu::setSizes(){
     switch(type){
         case 1:
-            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, static_cast<int>(screen.h * .4)};
+            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING, screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * WEAPONS_HEIGHT)};
         break;
         case 2:
-            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, static_cast<int>(screen.h * .2)};
+            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING, screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * BACKGROUND_HEIGHT)};
         break;
         case 3:
-            background = {screen.w / 2 + 50, screen.h /2 - 400, screen.w / 4, static_cast<int>(screen.h * .2)};
+            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING, screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * BACKGROUND_HEIGHT)};
         break;
     }
 
-    slot[0] = {background.x + (background.w/16), background.y + (background.h/16), background.w / 4 , background.w / 4};
-    slot[1] = {slot[0].x + slot[0].w + background.w/16, slot[0].y, slot[0].w , slot[0].h};
-    slot[2] = {slot[1].x + slot[0].w + background.w/16, slot[0].y, slot[0].w , slot[0].h};
+    slot[0] = {background.x + (background.w / SLOT_X), background.y + (background.h / SLOT_X), background.w / SLOT_SIZE , background.w / SLOT_SIZE};
+    slot[1] = {slot[0].x + slot[0].w + background.w / SLOT_X, slot[0].y, slot[0].w , slot[0].h};
+    slot[2] = {slot[1].x + slot[0].w + background.w / SLOT_X, slot[0].y, slot[0].w , slot[0].h};
 
-    slot[3] = {slot[0].x,                               slot[0].y + (slot[0].h * 1.2), slot[0].w , slot[0].w};
-    slot[4] = {slot[3].x + slot[0].w + background.w/16, slot[0].y + slot[0].h * 1.2 , slot[0].w, slot[0].w};
-    slot[5] = {slot[4].x + slot[0].w + background.w/16, slot[0].y + slot[0].h * 1.2 , slot[0].w, slot[0].w};
+    slot[3] = {slot[0].x,                               slot[0].y + (slot[0].h * V_SPACE), slot[0].w , slot[0].w};
+    slot[4] = {slot[3].x + slot[0].w + background.w / SLOT_X, slot[0].y + slot[0].h * V_SPACE , slot[0].w, slot[0].w};
+    slot[5] = {slot[4].x + slot[0].w + background.w / SLOT_X, slot[0].y + slot[0].h * V_SPACE , slot[0].w, slot[0].w};
 
-    slot[6] = {slot[0].x,                               slot[3].y + slot[0].h * 1.2, slot[0].w , slot[0].w};
-    slot[7] = {slot[6].x + slot[0].w + background.w/16, slot[3].y + slot[0].h * 1.2, slot[0].w , slot[0].w};
+    slot[6] = {slot[0].x,                               slot[3].y + slot[0].h * V_SPACE, slot[0].w , slot[0].w};
+    slot[7] = {slot[6].x + slot[0].w + background.w / SLOT_X, slot[3].y + slot[0].h * V_SPACE, slot[0].w , slot[0].w};
 }
 
-
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function void StoreMenu::renderBackground()
+ * Description:
+ *     Creates Background for UI
+ */
 void StoreMenu::renderBackground(){
     setSizes();
 
@@ -42,6 +56,14 @@ void StoreMenu::renderBackground(){
     renderText();
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function void StoreMenu::renderSlots(const int num)
+ * Description:
+ *     Selects which slots to create base on store type
+ */
 void StoreMenu::renderSlots(const int num){
     switch(num){
         case 1:
@@ -56,31 +78,47 @@ void StoreMenu::renderSlots(const int num){
     }
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function int StoreMenu::getClicked(const float x, const float y)
+ * Description:
+ *    figures out which slot was clicked base on x and y coordinates
+ */
 int StoreMenu::getClicked(const float x, const float y){
-    printf("size of slot:%zu\n", slot.size());
     for(size_t i = 0; i < slot.size(); i++){
-        printf("\nChecking: %zu\n", i);
         if(checkSlot(slot[i], x, y)){
-            printf("Clicked: %zu\n", i);
             return i;
         }
     }
-    printf("No item clicked\n");
     return -1;
 }
 
-
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function bool StoreMenu::checkSlot(SDL_Rect& s, float x, float y)
+ * Description:
+ *    Checks if x and y coordinates land in slot
+ */
 bool StoreMenu::checkSlot(SDL_Rect& s, float x, float y){
     SDL_Point mousePoint = {static_cast<int>(x), static_cast<int>(y)};
-    printf("Mouse X:%d Y:%d\n", static_cast<int>(x), static_cast<int>(x));
-    printf("Rect X:%d Y:%d\n", s.x, s.y);
-    printf("Is it in Rect: %d\n", SDL_PointInRect(&mousePoint, &s)); // prints 1
     return SDL_PointInRect(&mousePoint, &s);
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function void StoreMenu::createWeaponStoreMenu()
+ * Description:
+ *    creates slots for weapon store menu
+ */
 void StoreMenu::createWeaponStoreMenu(){
     TEXTURES tex;
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i < TOTAL_SLOTS; i++){
         switch(i){
             case 0:
             tex = TEXTURES::RIFLE;
@@ -111,9 +149,17 @@ void StoreMenu::createWeaponStoreMenu(){
     }
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Functionvoid StoreMenu::createTechStoreMenu()
+ * Description:
+ *    creates slots for  tech store menu
+ */
 void StoreMenu::createTechStoreMenu(){
     TEXTURES tex;
-    for(int i = 0; i < 2; i++){
+    for(int i = 0; i < TECH_SLOTS; i++){
         switch(i){
             case 0:
             tex = TEXTURES::TURRET;
@@ -126,6 +172,14 @@ void StoreMenu::createTechStoreMenu(){
     }
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Functionvoid void StoreMenu::createHealthStoreMenu()
+ * Description:
+ *    creates slots for health store menu
+ */
 void StoreMenu::createHealthStoreMenu(){
     Renderer::instance().render(slot[1], TEXTURES::HEALTHPACK);
 }
@@ -143,6 +197,14 @@ void StoreMenu::renderText(){
     }
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Functionvoid void StoreMenu::creatWeaponStoreText()
+ * Description:
+ *    creates text for weapon store menu
+ */
 void StoreMenu::creatWeaponStoreText(){
     SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
     //SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
@@ -150,6 +212,14 @@ void StoreMenu::creatWeaponStoreText(){
     title.render();
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Functionvoid StoreMenu::creatTechStoreText()
+ * Description:
+ *    creates text for tech store menu
+ */
 void StoreMenu::creatTechStoreText(){
     SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
     //SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
@@ -157,6 +227,14 @@ void StoreMenu::creatTechStoreText(){
     title.render();
 }
 
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Functionvoid void StoreMenu::creatHealthStoreText()
+ * Description:
+ *    creates text for health store menu
+ */
 void StoreMenu::creatHealthStoreText(){
     SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
     //SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};

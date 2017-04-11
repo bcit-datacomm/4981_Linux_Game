@@ -202,7 +202,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 
     //fire weapon on left mouse click
     if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        /*if(marine->isAtStore()){
+        if(marine->isAtStore()){
             const int currentTime = SDL_GetTicks();
             if (currentTime > (purchaseTick + purchaseDelay)) {
                 purchaseTick = currentTime;
@@ -226,7 +226,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                 }
             }
 
-        }else */if (currentTime > shootDelay) {
+        }else if (currentTime > shootDelay) {
             if(marine->inventory.getCurrent()) {
                 marine->fireWeapon();
             }

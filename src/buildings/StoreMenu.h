@@ -10,8 +10,19 @@
 
 #include <SDL2/SDL_ttf.h>
 
+constexpr int TOTAL_SLOTS = 9;
+constexpr int TECH_SLOTS = 2;
+constexpr int SLOT_0_X = 16;
+constexpr int BACKGROUND_H_PADDING = 50;
+constexpr int BACKGROUND_V_PADDING = 400;
+constexpr int BACKGROUND_WIDTH = 4;
 
+constexpr double BACKGROUND_HEIGHT = .2;
+constexpr double WEAPONS_HEIGHT = .4;
 
+constexpr int SLOT_SIZE = 4;
+constexpr int SLOT_X = 16;
+constexpr int V_SPACE = 1.2;
 class StoreMenu {
 
 public:

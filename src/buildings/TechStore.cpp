@@ -38,8 +38,8 @@ int TechStore::purchase(const int num, const int credits){
                 {
                     if(credits >= 500 && !gm->getPlayer().hasTurret()){
                         int32_t id = gm->createTurret(dp.getCoord().first, dp.getCoord().second);
-                        //gm->getTurret(id).setDropZone(dropPId);
-                        //gm->getPlayer().purchasedTurret();
+                        gm->getTurret(id).setDropZone(dropPId);
+                        gm->getPlayer().purchasedTurret();
                         return 500;
                     }
                     break;

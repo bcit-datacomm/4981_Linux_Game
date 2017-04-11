@@ -40,7 +40,7 @@ public:
 
     Turret(const int32_t id, const SDL_Rect& dest,const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated = false,
-        const int health = 200, const bool placed = false, const bool placeable = false, const float range = 400.0f,
+        const int health = 200, const bool placed = true, const bool placeable = false, const float range = 400.0f,
         const int32_t dropzone = -1);
     virtual ~Turret();
 

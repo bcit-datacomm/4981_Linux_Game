@@ -119,7 +119,7 @@ int32_t WeaponStore::createWeapon(const int num, const int credits){
                 gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Katana>(k)));
                 return id;
             }
-            break; 
+            break;
         }
         case 6:
         {

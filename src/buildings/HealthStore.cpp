@@ -6,25 +6,30 @@
 #include "DropPoint.h"
 #include <memory>
 
-/*
-int32_t id of the Store
-SDL_Rect dest the Rect of the store
-maitiu March 30*/
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function Interface: HealthStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
+         const GameHashMap<TEXTURES, int> i)
+ * Description:
+ *     ctor for the Health.
+ */
 HealthStore::HealthStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
         const GameHashMap<TEXTURES, int> i): Store(id, dest, pickupSize, screen, i, 3){
 
 }
 
 
-/*maitiu March 30*/
-HealthStore::~HealthStore(){
-    logv("Destoryed Store");
-}
-
-/*
- *Created by maitiu March 30
- *Checks for available Drop Points and then creates Health
- *int num what the player wants to purchase
+/**
+ * Date: April. 8, 2017
+ * Modified: ----
+ * Author: Maitiu Morton
+ * Function Interface: HealthStore::purchase(const int num, const int credits)
+         int num what the player wants to purchase
+         int credits: how much currency player has
+ * Description:
+ *     Checks for available Drop Points and then creates Healthkit with drops
  */
 int HealthStore::purchase(const int num, const int credits){
     int32_t cId = -1;

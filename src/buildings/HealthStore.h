@@ -13,7 +13,7 @@ public:
     HealthStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
             const GameHashMap<TEXTURES, int> i);
 
-    ~HealthStore();
+    ~HealthStore() = default;
 
     int32_t purchase(const int num, const int credits);//creates item and item drop for user
     int32_t createHealth(const int num, const int credits);

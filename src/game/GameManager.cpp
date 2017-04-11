@@ -770,7 +770,7 @@ int32_t GameManager::createTechStore(const float x, const float y, SDL_Rect scre
 }
 
 int32_t GameManager::createHealthStore(const float x, const float y, SDL_Rect screenRect) {
-    printf("Creating Health Store\n");
+
     const int32_t id = generateID();
     GameHashMap<TEXTURES, int> gh;
     SDL_Rect healthStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
