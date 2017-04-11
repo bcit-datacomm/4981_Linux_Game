@@ -136,9 +136,7 @@ void Quadtree::insert(Entity *entity) {
         nodes[2]->insert(entity);
         return;
     }
-    if (contains(*this, entity)) {
-        objects.push_back(entity);
-    }
+    objects.push_back(entity);
 }
 
 /**
@@ -169,24 +167,20 @@ void Quadtree::retrieve(std::vector<Entity *>& retrieveList, const SDL_Rect& rec
     if (!objects.empty()) {
         retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
     }
-    if (nodes[0] && rectContains(nodes[0]->bounds, rect)) {
+    if (nodes[0] && SDL_HasIntersection(&nodes[0]->bounds, &rect)) {
         nodes[0]->retrieve(retrieveList, rect);
-        retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
         return;
     }
-    if (nodes[3] && rectContains(nodes[3]->bounds, rect)) {
+    if (nodes[3] && SDL_HasIntersection(&nodes[3]->bounds, &rect)) {
         nodes[3]->retrieve(retrieveList, rect);
-        retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
         return;
     }
-    if (nodes[1] && rectContains(nodes[1]->bounds, rect)) {
+    if (nodes[1] && SDL_HasIntersection(&nodes[1]->bounds, &rect)) {
         nodes[1]->retrieve(retrieveList, rect);
-        retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
         return;
     }
-    if (nodes[2] && rectContains(nodes[2]->bounds, rect)) {
+    if (nodes[2] && SDL_HasIntersection(&nodes[2]->bounds, &rect)) {
         nodes[2]->retrieve(retrieveList, rect);
-        retrieveList.insert(retrieveList.end(), objects.begin(), objects.end());
         return;
     }
 }
