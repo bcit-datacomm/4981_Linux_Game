@@ -31,25 +31,33 @@ int TechStore::purchase(const int num, const int credits){
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
         const int32_t dropPId = gm->getFreeDropPointId();
-        DropPoint dp = gm->getDropPoint(dropPId);
-        switch(num){
-            case 0:
-            {
-
-                break;
-            }
-            case 1:
-            {
-                if(credits >= 100){
-                    int32_t id = gm->createBarricadeDrop(dp.getCoord().first, dp.getCoord().second);
-                    gm->getBarricadeDrop(id).setDropPoint(dropPId);
-                    return 100;
+        if (gm->dropPointExists(dropPId)) {
+            DropPoint dp = gm->getDropPoint(dropPId);
+            switch(num){
+                case 0:
+                {
+                    if(credits >= 500 && !gm->getPlayer().hasTurret()){
+                        int32_t id = gm->createTurret(dp.getCoord().first, dp.getCoord().second);
+                        //gm->getTurret(id).setDropZone(dropPId);
+                        //gm->getPlayer().purchasedTurret();
+                        return 500;
+                    }
+                    break;
                 }
-                break;
+                case 1:
+                {
+                    if(credits >= 100){
+                        int32_t id = gm->createBarricadeDrop(dp.getCoord().first, dp.getCoord().second);
+                        gm->getBarricadeDrop(id).setDropPoint(dropPId);
+                        return 100;
+                    }
+                    break;
+                }
+                default:
+                    return -1;//does not exist
             }
-            default:
-                return -1;//does not exist
         }
+
     }
     logv("NO OPEN DROP POINTS!!!\n");
     return -1;

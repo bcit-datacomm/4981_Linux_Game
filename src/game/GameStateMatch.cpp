@@ -198,12 +198,6 @@ void GameStateMatch::handle() {
                     case SDLK_ESCAPE:
                         play = false;
                         break;
-                    case SDLK_b:
-                        if(GameManager::instance()->getPlayer().getMarine()) {
-                                GameManager::instance()->getPlayer().handleTempBarricade(
-                                Renderer::instance().getRenderer());
-                        }
-                        break;
                     case SDLK_p:
                         GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
                     case SDLK_1: //Purposeful flow through

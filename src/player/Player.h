@@ -74,6 +74,10 @@ public:
             const int winWidth, const int winHeight);
     std::pair<float, float> calculateVerticleCoords(const double angle, const int compareDegree,
             const int winWidth, const int winHeight);
+
+    bool hasTurret() const {return gotTurret;};
+    void purchasedTurret() {gotTurret = true;};
+    void lostTurret() {gotTurret = false;};
 private:
     int tempBarricadeID;
     int tempTurretID;
@@ -87,12 +91,15 @@ private:
     int purchaseTick;
     int purchaseDelay;
 
+
     int credits;
 
     int32_t id;
     ClientMessage moveAction;
     ClientMessage attackAction;
     Marine *marine;
+    bool gotTurret;
+
 };
 
 #endif

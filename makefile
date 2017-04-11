@@ -1,6 +1,6 @@
 BASEFLAGS := -Wall -pedantic -pipe -std=c++14 -fopenmp
 DEBUGFLAGS := -g -pg
-RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG
+RELEASEFLAGS := -O3 -march=native -flto -DNDEBUG -g
 CLIBS := -pthread -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf
 CXXFLAGS := $(BASEFLAGS)
 APPNAME := Linux_Game
@@ -35,7 +35,7 @@ all release debug: $(CONVERT)
 	$(if $(filter $@, debug), $(MAKE) dserver, $(MAKE) server)
 
 dserver server: $(CONVERT)
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server 
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/server
 
 $(ODIR):
 	@mkdir -p $(ODIR)
@@ -76,7 +76,7 @@ $(OBJS): $(filter .+$$@, $(SRCWILD))
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $@
 
 tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTests/*.cpp)) $(filter-out $(ODIR)/main.o, $(CONVERT))
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/tests 
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ $(CLIBS) -o $(CURDIR)/$(ODIR)/tests
 
 # Prevent clean from trying to do anything with a file called clean
 .PHONY: clean
@@ -84,4 +84,3 @@ tests: $(patsubst $(SRC)/UnitTests/$(SRCOBJS), $(OBJS), $(wildcard $(SRC)/UnitTe
 # Deletes the executable and all .o and .d files in the bin folder
 clean: | $(ODIR)
 	$(RM) $(EXEC) $(wildcard $(ODIR)/tests*) $(wildcard $(EXEC).*) $(wildcard $(ODIR)/*.d*) $(wildcard $(ODIR)/*.o)
-

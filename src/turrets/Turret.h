@@ -70,6 +70,9 @@ public:
         return range;
     }
 
+    int32_t getDropZone() const {return dropzone;};
+    void setDropZone(int32_t num) {dropzone = num;};
+
 
 private:
     bool activated; // turret activated state

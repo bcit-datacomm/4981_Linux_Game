@@ -32,22 +32,24 @@ int WeaponStore::purchase(const int num, const int credits){
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
         const int32_t dropPId = gm->getFreeDropPointId();
-        const int32_t weaponId = createWeapon(num, credits);
-        if(weaponId < 0){
-            return -1;
+        if (gm->dropPointExists(dropPId)) {
+            const int32_t weaponId = createWeapon(num, credits);
+            if(weaponId < 0){
+                return -1;
+            }
+            DropPoint dp = gm->getDropPoint(dropPId);
+            const float x = dp.getCoord().first;
+            const float y = dp.getCoord().second;
+
+            const int32_t wDropId = gm->createWeaponDrop(x, y, weaponId);
+
+            logv("Purchased From WeaponStore\n");
+
+            if(gm->weaponDropExists(wDropId)){
+                gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
+            }
+            return gm->getWeapon(weaponId)->getPrice();
         }
-        DropPoint dp = gm->getDropPoint(dropPId);
-        const float x = dp.getCoord().first;
-        const float y = dp.getCoord().second;
-
-        const int32_t wDropId = gm->createWeaponDrop(x, y, weaponId);
-
-        logv("Purchased From WeaponStore\n");
-
-        if(gm->weaponDropExists(wDropId)){
-            gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
-        }
-        return gm->getWeapon(weaponId)->getPrice();
     }
     logv("NO OPEN DROP POINTS!!!\n");
     return -1;

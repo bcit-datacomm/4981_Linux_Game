@@ -200,6 +200,8 @@ public:
     auto& getWallManager() {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
 
+    std::pair<float, float> getDropZoneCoords() const {return dropZoneCoord;};
+
 private:
     GameManager();
     ~GameManager();
@@ -207,7 +209,7 @@ private:
     Player player;
 
     Base base;
-
+    std::pair<float, float> dropZoneCoord;
     CollisionHandler collisionHandler;
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;

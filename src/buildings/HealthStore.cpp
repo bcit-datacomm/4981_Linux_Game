@@ -32,21 +32,23 @@ int HealthStore::purchase(const int num, const int credits){
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
         const int32_t dropPId = gm->getFreeDropPointId();
-
-        DropPoint dp = gm->getDropPoint(dropPId);
-        const float x = dp.getCoord().first;
-        const float y = dp.getCoord().second;
-        switch(num){
-            case 1:
-                if(credits > 20){
-                    cId = gm->generateID();
-                    gm->addConsumable(std::dynamic_pointer_cast<Consumable>(std::make_shared<BasicMedkit>(gm->generateID())));
-                    dropId = gm->createConsumeDrop(x, y, cId);
-                    gm->getConsumeDrop(dropId).setDropPoint(dropPId);
-                    return 20;
-                }
-                break;
+        if (gm->dropPointExists(dropPId)) {
+            DropPoint dp = gm->getDropPoint(dropPId);
+            const float x = dp.getCoord().first;
+            const float y = dp.getCoord().second;
+            switch(num){
+                case 1:
+                    if(credits > 20){
+                        cId = gm->generateID();
+                        gm->addConsumable(std::dynamic_pointer_cast<Consumable>(std::make_shared<BasicMedkit>(gm->generateID())));
+                        dropId = gm->createConsumeDrop(x, y, cId);
+                        gm->getConsumeDrop(dropId).setDropPoint(dropPId);
+                        return 20;
+                    }
+                    break;
+            }
         }
+
 
     }
     logv("NO OPEN DROP POINTS!!!\n");

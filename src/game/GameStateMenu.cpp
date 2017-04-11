@@ -72,6 +72,7 @@ GameStateMenu::GameStateMenu(Game& g):GameState(g),
         hostMagic(hostRect, Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE), maxLength, HOST_DEFAULT),
         userMagic(userRect, Renderer::instance().loadFont("assets/fonts/SEGOEUISL.ttf", FONT_SIZE), maxLength, USER_DEFAULT),
         joinMagic(joinRect,Renderer::instance().loadFont("assets/fonts/Overdrive Sunset.otf", FONT_SIZE), JOIN_LEN, "join") {
+    Renderer::instance().setAlpha(TEXTURES::TEXTBOX, 150);
 
 }
 

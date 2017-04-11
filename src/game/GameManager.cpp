@@ -814,6 +814,8 @@ int32_t GameManager::createHealthStore(const float x, const float y, SDL_Rect sc
  * creates a square area of DropPoints
  */
 void GameManager::createDropZone(const float x, const float y, const int num) {
+    dropZoneCoord.first = x;
+    dropZoneCoord.second = y;
     for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
             createDropPoint(x + (DROP_POINT_SPACE * i), y + (DROP_POINT_SPACE * j));
@@ -859,7 +861,7 @@ void GameManager::deleteBarricadeDrop(int32_t id){
   * Created by Maitiu March 30
   */
 bool GameManager::dropPointExists(const int32_t id) {
-    return storeManager.count(id);
+    return dropPointManager.count(id);
 }
 
 /*

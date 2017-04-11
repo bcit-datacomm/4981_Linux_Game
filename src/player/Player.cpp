@@ -20,7 +20,8 @@
 * Apr. 10, 2017, Mark Chen, Mark Tattrie - Added in a shoot delay parameter.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(1000), marine(nullptr) {
+        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(1000),
+        marine(nullptr), gotTurret(false){
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
@@ -312,6 +313,11 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
             if (checkTurret > -1 && holdingTurret == false)
             {
                 tempTurretID = checkTurret;
+                int dId = GameManager::instance()->getTurret(tempTurretID).getDropZone();
+                if(dId >= 0){
+                    GameManager::instance()->freeDropPoint(dId);
+                    GameManager::instance()->getTurret(tempTurretID).setDropZone(-1);
+                }
                 GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
                 holdingTurret = true;
             }
@@ -425,13 +431,19 @@ void Player::spawnMapGuides(const int winWidth, const int winHeight) {
     //BASE
     Base base = gm->getBase();
     std::pair<float, float> bCoord = base.getDestCoord();
+    std::pair<float, float> dCoord;
     double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, bCoord);
 
-    const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
+    std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
     //Rect for BASE guide img
     SDL_Rect baseGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
     ve.addPostTex(2, base.getSrcRect(), baseGuide, TEXTURES::BASE);
 
+    dCoord = gm->getDropZoneCoords();
+    angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, dCoord);
+    gCoord = getGuideCoord(angle, winWidth, winHeight);
+    SDL_Rect dropZoneGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
+    ve.addPostTex(2, {0,0,100,100}, dropZoneGuide, TEXTURES::CONCRETE);
 
     //STORES
     for (const auto& s : gm->getStoreManager()) {
