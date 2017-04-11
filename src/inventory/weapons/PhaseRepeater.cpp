@@ -18,6 +18,7 @@ PhaseRepeater::PhaseRepeater(const int32_t id) : InstantWeapon(PhaseRepeaterVars
 		PhaseRepeaterVars::FIRESOUND, PhaseRepeaterVars::HITSOUND, PhaseRepeaterVars::RELOADSOUND,
         PhaseRepeaterVars::EMPTYSOUND, PhaseRepeaterVars::RANGE, PhaseRepeaterVars::DAMAGE, PhaseRepeaterVars::AOE, 
         PhaseRepeaterVars::PENETRATION, PhaseRepeaterVars::ACCURACY, PhaseRepeaterVars::CLIP, PhaseRepeaterVars::CLIPMAX, 
-        PhaseRepeaterVars::AMMO, PhaseRepeaterVars::RELOADDELAY, PhaseRepeaterVars::FIREDELAY, id) {
+        PhaseRepeaterVars::AMMO, PhaseRepeaterVars::RELOADDELAY, PhaseRepeaterVars::FIREDELAY, PhaseRepeaterVars::START_X,
+        PhaseRepeaterVars::START_Y, id) {
 
 }

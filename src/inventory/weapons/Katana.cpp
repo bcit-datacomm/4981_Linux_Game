@@ -18,7 +18,8 @@
 Katana::Katana(const int32_t id) : InstantWeapon(KatanaVars::TYPE, TEXTURES::SHOTGUN, KatanaVars::FIRESOUND,
         KatanaVars::HITSOUND, KatanaVars::RELOADSOUND, KatanaVars::EMPTYSOUND, KatanaVars::RANGE,
         KatanaVars::DAMAGE, KatanaVars::AOE, KatanaVars::PENETRATION, KatanaVars::ACCURACY, KatanaVars::CLIP,
-        KatanaVars::CLIPMAX, KatanaVars::AMMO, KatanaVars::RELOADDELAY, KatanaVars::FIREDELAY, id) {
+        KatanaVars::CLIPMAX, KatanaVars::AMMO, KatanaVars::RELOADDELAY, KatanaVars::FIREDELAY, KatanaVars::START_X,
+        KatanaVars::START_Y, id) {
 
 }
 

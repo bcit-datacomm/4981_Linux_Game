@@ -74,8 +74,26 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
 
     for (const auto& o : marineManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MARINE,
-                o.second.getSrcRect());
+            const auto& dest = o.second.getRelativeDestRect(cam);
+            const auto angle = o.second.getAngle() - 90;
+
+            if (-180 < angle && 0 > angle) {
+                Weapon* weapon = o.second.inventory.getCurrent();
+                if (weapon) {
+                    weapon->updateGunRender(o.second, cam);
+                }
+                Renderer::instance().render(dest,
+                    o.second.getId() % 2 ? TEXTURES::MARINE : TEXTURES::COWBOY,
+                    o.second.getSrcRect());
+            } else {
+                Renderer::instance().render(dest,
+                    o.second.getId() % 2 ? TEXTURES::MARINE : TEXTURES::COWBOY,
+                    o.second.getSrcRect());
+                Weapon* weapon = o.second.inventory.getCurrent();
+                if (weapon) {
+                    weapon->updateGunRender(o.second, cam);
+                }
+            }
         }
     }
 

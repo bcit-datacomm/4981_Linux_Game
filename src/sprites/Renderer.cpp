@@ -87,6 +87,8 @@ void Renderer::loadSprites() {
 
     //-------- marine textures --------
     createTexture(TEXTURES::MARINE, PLAYER_MOHAWK);
+    createTexture(TEXTURES::COWBOY, PLAYER_COWBOY);
+    createTexture(TEXTURES::WEAPONS, WEAPONS);
 
     //-------- zombie textures --------
     createTexture(TEXTURES::BLOOD, BLOOD_TEXTURE);

@@ -50,6 +50,9 @@ namespace RifleVars {
 
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 180;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 379;
 }
 
 class Rifle: public InstantWeapon {

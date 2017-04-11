@@ -16,6 +16,6 @@
 Type75::Type75(const int32_t id) : InstantWeapon(Type75Vars::TYPE, TEXTURES::RIFLE, Type75Vars::FIRESOUND, 
 		Type75Vars::HITSOUND, Type75Vars::RELOADSOUND, Type75Vars::EMPTYSOUND, Type75Vars::RANGE, Type75Vars::DAMAGE, 
 		Type75Vars::AOE, Type75Vars::PENETRATION, Type75Vars::ACCURACY, Type75Vars::CLIP, Type75Vars::CLIPMAX, 
-		Type75Vars::AMMO, Type75Vars::RELOADDELAY, Type75Vars::FIREDELAY, id) {
+		Type75Vars::AMMO, Type75Vars::RELOADDELAY, Type75Vars::FIREDELAY, Type75Vars::START_X, Type75Vars::START_Y, id) {
 
 }

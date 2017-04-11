@@ -37,6 +37,18 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
     auto& renderer = Renderer::instance();
     SDL_Renderer *rend = renderer.getRenderer();
     {
+        std::lock_guard<std::mutex> lock(preTexMut);
+        for (auto p = preTex.begin(); p != preTex.end();) {
+            if (--p->second.dur > 0 && SDL_HasIntersection(&p->second.dest, &camera)) {
+                const SDL_Rect temp = relative(p->second.dest, camera);
+                renderer.render(temp, p->second.tex, p->second.src, p->second.angle);
+                ++p;
+            } else {
+                p = preTex.erase(p);
+            }
+        }
+    }
+    {
         std::lock_guard<std::mutex> lock(preLineMut);
         for (auto p = preLines.begin(); p != preLines.end();) {
             if (--p->second.dur > 0) {
@@ -68,18 +80,6 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
             }
         }
     }
-    {
-        std::lock_guard<std::mutex> lock(preTexMut);
-        for (auto p = preTex.begin(); p != preTex.end();) {
-            if (--p->second.dur > 0 && SDL_HasIntersection(&p->second.dest, &camera)) {
-                const SDL_Rect temp = relative(p->second.dest, camera);
-                renderer.render(temp, p->second.tex, p->second.src, p->second.angle);
-                ++p;
-            } else {
-                p = preTex.erase(p);
-            }
-        }
-    }
 }
 
 /**
@@ -92,6 +92,18 @@ void VisualEffect::renderPreEntity(const SDL_Rect &camera) {
 void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
     auto& renderer = Renderer::instance();
     SDL_Renderer *rend = renderer.getRenderer();
+    {
+        std::lock_guard<std::mutex> lock(postTexMut);
+        for (auto p = postTex.begin(); p != postTex.end();) {
+            if (--p->second.dur > 0 && SDL_HasIntersection(&p->second.dest, &camera)) {
+                const SDL_Rect temp = relative(p->second.dest, camera);
+                renderer.render(temp, p->second.tex, p->second.src, p->second.angle);
+                ++p;
+            } else {
+                p = postTex.erase(p);
+            }
+        }
+    }
     {
         std::lock_guard<std::mutex> lock(postLineMut);
         for (auto p = postLines.begin(); p != postLines.end();) {
@@ -115,18 +127,6 @@ void VisualEffect::renderPostEntity(const SDL_Rect &camera) {
                 ++p;
             } else {
                 p = postRects.erase(p);
-            }
-        }
-    }
-    {
-        std::lock_guard<std::mutex> lock(postTexMut);
-        for (auto p = postTex.begin(); p != postTex.end();) {
-            if (--p->second.dur > 0 && SDL_HasIntersection(&p->second.dest, &camera)) {
-                const SDL_Rect temp = relative(p->second.dest, camera);
-                renderer.render(temp, p->second.tex, p->second.src, p->second.angle);
-                ++p;
-            } else {
-                p = postTex.erase(p);
             }
         }
     }

@@ -27,6 +27,7 @@
 #include "../../log/log.h"
 #include "../../audio/AudioManager.h"
 #include "../../game/GameManager.h"
+#include "../../sprites/Renderer.h"
 
 using std::string;
 
@@ -45,18 +46,19 @@ using std::string;
  */
 Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
         const string& emptySound, const int range, const int damage, const int AOE, const int penetration, const int accuracy,
-        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
-: type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
-        range(range), damage(damage), AOE(AOE), penetration(penetration), accuracy(accuracy), clip(clip), clipMax(clipMax), ammo(ammo),
-        reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id){
-
+        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, const int texX,
+        const int texY, int32_t id) : weaponSrc({texX, texY, WEAPON_WIDTH, WEAPON_HEIGHT}),rotate{0, 0},
+        type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
+        range(range), damage(damage), AOE(AOE), penetration(penetration), accuracy(accuracy), clip(clip), clipMax(clipMax), 
+        ammo(ammo), reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id){
 }
 
 Weapon::Weapon(const Weapon& w)
-: type(w.type), spriteType(w.spriteType), fireSound(w.fireSound), hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound),
-        range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), accuracy(w.accuracy), clip(w.clip), clipMax(w.clipMax),
-        ammo(w.ammo), reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick),
-        fireTick(w.fireTick), wID(w.getID()){
+        : weaponSrc(w.weaponSrc), rotate(w.rotate), type(w.type), spriteType(w.spriteType), fireSound(w.fireSound), 
+        hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound), range(w.range), damage(w.damage), AOE(w.AOE), 
+        penetration(w.penetration), accuracy(w.accuracy), clip(w.clip), clipMax(w.clipMax), ammo(w.ammo), 
+        reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick), fireTick(w.fireTick), wID(w.getID()) {
+    
 }
 
 
@@ -126,4 +128,28 @@ bool Weapon::fire(Movable& movable){
     }
     AudioManager::instance().playEffect(fireSound.c_str());
     return true;
+}
+
+void Weapon::updateGunRender(const Movable& mov, const SDL_Rect& camera) {
+    static constexpr int WEAPON_DISP_WIDTH = 100;
+    static constexpr int WEAPON_DISP_HEIGHT = 60;
+    const auto& dest = mov.getRelativeDestRect(camera);
+
+    weaponDest.x = dest.x + dest.w / 2;
+    weaponDest.y = dest.y + dest.h / 2;
+    weaponDest.w = WEAPON_DISP_WIDTH;
+    weaponDest.h = WEAPON_DISP_HEIGHT;
+
+    const double normal = mov.getAngle() - 90;
+    //these angles are checking to make sure the angle is on the left half of the character
+    if (-90 > normal && -270 < normal) {
+        rotate.y = weaponDest.h / 2;
+        Renderer::instance().render(weaponDest, TEXTURES::WEAPONS,
+            weaponSrc, normal, &rotate, SDL_FLIP_VERTICAL);
+    //likewise this is the right half
+    } else {
+        rotate.y = weaponDest.h / 2;
+        Renderer::instance().render(weaponDest, TEXTURES::WEAPONS,
+            weaponSrc, normal, &rotate);
+    }
 }

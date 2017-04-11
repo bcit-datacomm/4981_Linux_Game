@@ -54,6 +54,9 @@ namespace ShotgunVars {
 
     constexpr int RELOADDELAY = 3000;
     constexpr int FIREDELAY = 1000;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 942;
 }
 
 class ShotGun: public InstantWeapon {
