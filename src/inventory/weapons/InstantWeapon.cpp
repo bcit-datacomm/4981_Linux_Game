@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: InstantWeapon.cpp
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /**
     InstantWeapon.cpp
 
@@ -38,11 +55,14 @@ using std::string;
  * Description:
  * Ctor for Instant Weapon
  */
-InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound,
-        string reloadSound, string emptySound, int range, int damage, int AOE, int penetration,
-        int clip, int clipMax, int ammo, int reloadDelay, int fireDelay, int32_t id, int price)
+
+InstantWeapon::InstantWeapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound,
+        const string& reloadSound, const string& emptySound, const int range, const int damage, const int AOE,
+        const int penetration, const int accuracy, const int clip, const int clipMax, const int ammo, const int reloadDelay,
+        const int fireDelay, const int texX, const int texY, const int32_t id, const int price)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
-        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id, price) {
+        penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, texX, texY, id, price) {
+
 
 }
 
@@ -66,9 +86,12 @@ bool InstantWeapon::fire(Movable& movable) {
     }
     logv(3, "InstantWeapon::fire()\n");
 
+
+    const double deviation = rand() % accuracy - (accuracy / 2);
+
     const int gunX = movable.getX() + (MARINE_WIDTH / 2);
     const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
-    const double angle = movable.getAngle();
+    const double angle = movable.getAngle() + deviation;
 
     fireSingleProjectile(gunX, gunY, angle);
 
@@ -138,6 +161,28 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
         GameManager::instance()->getZombie(id).collidingProjectile(damage);
         targetList.removeTop();
     }
+    fireAnimation(targetList.getOriginX(), targetList.getOriginY(), finalX, finalY);
 
-    VisualEffect::instance().addPreLine(2, targetList.getOriginX(), targetList.getOriginY(), finalX, finalY, 25, 70, 193);
+}
+
+
+
+/**
+    InstantWeapon::fireAnimation
+
+    DISCRIPTION:
+        Calls the appropriate draw methods to paint the shooting animation on the screen.
+
+        int gunX, int gunY
+            The x and y coordinates of the guns muzzle.
+
+        int endX, endY
+            The x and y coordinates of the bullets stopping point.
+
+
+    AUTHOR: Deric Mccadden 01/03/17
+
+*/
+void InstantWeapon::fireAnimation(const int gunX, const int gunY, const int endX, const int endY){
+    VisualEffect::instance().addPreLine(2, gunX, gunY, endX, endY, 25, 70, 193);
 }

@@ -1,4 +1,3 @@
-
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
@@ -58,6 +57,11 @@ static constexpr int HEALTH_STORE_SRC_Y = 582;
 static constexpr int HEALTH_STORE_SRC_W = 158;
 static constexpr int HEALTH_STORE_SRC_H = 254;
 
+static constexpr int TURRET_SIZE_H = 150; //Turret height
+static constexpr int TURRET_PUSIZE_W = 125; // Turret pickup-hitbox width
+static constexpr int TURRET_PUSIZE_H = 170; // Turret pickup-hitbox height
+
+
 static constexpr int WALL_SRC_X = 15;
 static constexpr int WALL_SRC_Y = 478;
 static constexpr int WALL_SRC_W = 122;
@@ -109,9 +113,6 @@ public:
     // returns the list of zombies.
     // Jamie, 2017-03-01.
     auto& getZombies() {return zombieManager;};
-
-    int32_t addObject(const Object&);
-    void deleteObject(const int32_t id);
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);
@@ -196,9 +197,8 @@ public:
     auto& getWeaponDropManager() const {return weaponDropManager;};
     auto& getWeaponManager() const {return weaponManager;};
     auto& getBarricadeManager() const {return barricadeManager;};
-    auto& getWallManager() const {return wallManager;};
+    auto& getWallManager() {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
-    auto& getObjectManager() {return objectManager;};
 
 private:
     GameManager();
@@ -212,7 +212,6 @@ private:
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
-    GameHashMap<int32_t, Object> objectManager;
     GameHashMap<int32_t, Zombie> zombieManager;
     GameHashMap<int32_t, Turret> turretManager;
     GameHashMap<int32_t, WeaponDrop> weaponDropManager;

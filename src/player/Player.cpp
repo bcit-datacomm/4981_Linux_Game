@@ -11,10 +11,13 @@
 /**
 * Date: Jan. 28, 2017
 * Author: Jacob McPhail
-* Modified: ---
+*
 * Function Interface: Player()
 * Description:
 *   ctor for a player.
+*
+* Revisions:
+* Apr. 10, 2017, Mark Chen, Mark Tattrie - Added in a shoot delay parameter.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
         pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(1000), marine(nullptr) {
@@ -140,11 +143,14 @@ void Player::sendServAttackAction() {
 /**
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
-* Modified: ---
+* Programmers: Jacob McPhail, Alex Zielinski
+* Modified:
+* Apr. 10, 2017 Alex Zielinski
 * Function Interface: handleMouseUpdate(const int winWidth, const int winHeight,
 *                const float camX, const float camY)
 *       winWidth : Window width
-*       winHeight : Window height
+*       winHeight : Window height// play menu click sound effect
+	AudioManager::instance().playEffect(MENU_CLICK02);
 *       camX : Camera x position
 *       camY : Camera y position
 *
@@ -153,6 +159,10 @@ void Player::sendServAttackAction() {
 *
 * Revisions:
 * Apr. 04, 2017, Mark Chen - Adjusted the turret placements to properly handle mouse clicks
+* Apr. 07, 2017, Mark Chen - Can no longer shoot while holding a turret.
+* Apr. 10, 2017, Mark Chen, Mark Tattrie - Added a delay to firing right after placing a turret.
+* Apr. 10, 2017 Alex Zielinski - implemented turrent install effect
+* 							   - implemented sound effects that occur with menu interactions by mouse
 */
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
@@ -160,6 +170,8 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
     SDL_GetMouseState(&mouseX, &mouseY);
     const int mouseDeltaX = winWidth / 2 - mouseX;
     const int mouseDeltaY = winHeight / 2 - mouseY;
+
+    int currentTime = SDL_GetTicks();
 
     marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* ONE_EIGHTY)/M_PI) * - 1);
 
@@ -174,12 +186,15 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
         tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
             GameManager::instance()->getCollisionHandler());
 
-        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
                     GameManager::instance()->getCollisionHandler())) {
+				// play turret install effect
+				AudioManager::instance().playEffect(EFX_BINSTALL);
                 tempTurret.placeTurret();
-                tempTurretID = -1;
                 holdingTurret = false;
+                tempTurretID = -1;
+                shootDelay =+ currentTime + 400;
             }
         }
     }
@@ -210,13 +225,18 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                 }
             }
 
-        }else if(marine->inventory.getCurrent()) {
-            marine->fireWeapon();
+        }else if (currentTime > shootDelay) {
+            if(marine->inventory.getCurrent()) {
+                marine->fireWeapon();
+            }
+            shootDelay = 0;
         }
     }
 }
 
 void Player::handleMouseWheelInput(const SDL_Event *e) {
+	// play menu click sound effect
+	AudioManager::instance().playEffect(MENU_CLICK01);
     marine->inventory.scrollCurrent(e->wheel.y);
 }
 
@@ -235,12 +255,16 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 /**
 * Date: Feb. 6, 2017
 * Author: Jacob McPhail
-* Modified: ---
+* Modified:
+* Apr. 10, 2017, Alex Zielinski
 * Function Interface: handleKeyboardInput(const Uint8 *state)
 *         state : Keyboard state
 *
 * Description:
 *   Handle user key input.
+*
+* Revisions:
+* Apr. 10, 2017, Alex Zielinski - implemented sound effects that occur with menu interactions by keyboard
 */
 void Player::handleKeyboardInput(const int winWidth, const int winHeight, const Uint8 *state) {
     float x = 0;
@@ -297,9 +321,12 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
     if (state[SDL_SCANCODE_F]) {
         marine->inventory.dropWeapon(marine->getX(), marine->getY());
     }
-    //use Inventory
-    if (state[SDL_SCANCODE_I]) {
-        marine->inventory.useItem();
+
+    //use Inventory consumable ~ Matt Goerwell - Mar. 5, 2017
+    if(state[SDL_SCANCODE_I]) {
+        if (marine != nullptr) {
+            marine->inventory.useItem(*marine);
+        }
     }
 
     //added by Maitiu Debug print 5/3 / 2017
@@ -332,15 +359,18 @@ void Player::handleTempBarricade(SDL_Renderer *renderer) {
 }
 
 void Player::handleTempTurret(SDL_Renderer *renderer) {
-   if (tempTurretID < 0) {
-       const double angle = marine->getAngle();
-       tempTurretID = GameManager::instance()->createTurret(
-           marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
-           marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
-   } else {
-       GameManager::instance()->deleteTurret(tempTurretID);
-       tempTurretID = -1;
-   }
+    if (tempTurretID < 0) {
+        if (!marine) {
+            return;
+        }
+        const double angle = marine->getAngle();
+        tempTurretID = GameManager::instance()->createTurret(
+            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
+            marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
+    } else {
+        GameManager::instance()->deleteTurret(tempTurretID);
+        tempTurretID = -1;
+    }
 }
 
 

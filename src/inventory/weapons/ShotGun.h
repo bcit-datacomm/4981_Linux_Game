@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: ShotGun.h
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by DericM 3/8/2017
@@ -26,6 +43,7 @@ namespace ShotgunVars {
     constexpr int DAMAGE = 50;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 0;
+    constexpr int ACCURACY = 6;
 
     constexpr int SPREAD_ANGLE = 30;
     constexpr int SPREAD_SHOTS = 5;
@@ -38,6 +56,9 @@ namespace ShotgunVars {
     constexpr int FIREDELAY = 1000;
 
     constexpr int PRICE = 50;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 942;
 }
 
 class ShotGun: public InstantWeapon {

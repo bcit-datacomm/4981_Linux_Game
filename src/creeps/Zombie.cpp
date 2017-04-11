@@ -24,6 +24,7 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "../inventory/weapons/ZombieHand.h"
 #include <cstdlib>
 using namespace std;
 
@@ -35,7 +36,7 @@ using namespace std;
 Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const int health) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health),
-        frameCount(0), ignore(0){
+        frameCount(0), ignore(0), flipper(1), actionTick(0), action('\0') {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -49,7 +50,7 @@ Zombie::~Zombie() {
     logv("Destroy Zombie\n");
 }
 /**
- * Author: Robert Arendac
+ * Author: Isaac Morneau
  *
  * Date: April 6, 2017
  */
@@ -58,16 +59,20 @@ void Zombie::update(){
     //middle of me
     const int midMeX = getX() + (getW() / 2);
     const int midMeY = getY() + (getH() / 2);
+    const Entity visSection(0, {midMeX - ZOMBIE_SIGHT, midMeY - ZOMBIE_SIGHT,
+        2 * ZOMBIE_SIGHT, 2 * ZOMBIE_SIGHT});
+
     if (!(frameCount % ANGLE_UPDATE_RATE)) {
         //Movement updates
         GameManager *gm = GameManager::instance();
         const auto& base = gm->getBase();
-        const auto& marines = gm->getMarineManager();
+        auto& collision = gm->getCollisionHandler();
+        const auto& marines = collision.getQuadTreeEntities(collision.getMarineTree(), &visSection);
+        const auto& turrrets = collision.getQuadTreeEntities(collision.getTurretTree(), &visSection);
 
         //the difference in zombie to target distance
         float movX;
         float movY;
-        
         
         //middle of the base
         const int midBaseX = base.getX() + (base.getW() / 2);
@@ -82,9 +87,20 @@ void Zombie::update(){
         float temp;
 
         //who is closest?
-        for (const auto& m : marines){
-            hypX = m.second.getX() + (m.second.getW() / 2);
-            hypY = m.second.getY() + (m.second.getH() / 2);
+        for (const auto m : marines){
+            hypX = m->getX() + (m->getW() / 2);
+            hypY = m->getY() + (m->getH() / 2);
+
+            //we only want the closest one
+            if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
+                hyp = temp;
+                movX = hypX - midMeX;
+                movY = hypY - midMeY;
+            }
+        }
+        for (const auto t : turrrets){
+            hypX = t->getX() + (t->getW() / 2);
+            hypY = t->getY() + (t->getH() / 2);
 
             //we only want the closest one
             if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
@@ -103,6 +119,11 @@ void Zombie::update(){
             }
             //-1 converts from cartisian to screen coords
             setRadianAngle(fmod(atan2(movX, movY) + 2 * M_PI, 2 * M_PI));
+            
+            //we only attack if we are actually in range
+            if (hyp <= ZombieHandVars::RANGE) {
+                zAttack();
+            }
         } else if (ignore > 0){
             --ignore;
         }
@@ -110,67 +131,63 @@ void Zombie::update(){
     //get the distance of 
     setDX(ZOMBIE_VELOCITY * sin(getRadianAngle()));
     setDY(ZOMBIE_VELOCITY * cos(getRadianAngle()));
-
-    //useful for figuring out where the zombies are tracking, it paints a line on where they are currently headed.
-    //for example, right at you.
-#ifndef NDEBUG
-    VisualEffect::instance().addPreLine(2, midMeX, midMeY, midMeX + ZOMBIE_SIGHT * sin(getRadianAngle()),
-        midMeY + ZOMBIE_SIGHT * cos(getRadianAngle()), 0, 0, 0);
-#endif
-
-    //Attack updates
-    if (!(frameCount % CHECK_RATE)){
-        zAttack();
-    }
 }
 
 /**
- * Author: Jamie Lee
+ * Author: Isaac Morneau
  *
  * Date: April 6, 2017
  */
 void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
-
-    static constexpr int IGNORE_TIME = 10;
-    static constexpr int RANDOM_DEGREE = 5;
+    static constexpr int IGNORE_TIME = 5;
+    static constexpr int PARTIAL_ROTATION = 63;
+    bool hasFlipped = false;
     //Move the Movable left or right
     setX(getX() + moveX);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setX(getX() - moveX);
-        setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
-        ignore = IGNORE_TIME;
+        //we are avoiding but its not working so flip
+        if(ignore == IGNORE_TIME -1){
+            hasFlipped = true;
+            flipper *= -1;
+        //we are not currently avoiding, start
+        } else if (!ignore) {
+            ignore = IGNORE_TIME;
+        }
+        setAngle(getAngle() + (flipper * PARTIAL_ROTATION));
     }
 
     //Move the Movable up or down
     setY(getY()+moveY);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this),this)
-            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeStore,this),this)) {
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setY(getY() - moveY);
-        setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
-        ignore = IGNORE_TIME;
+        //we are avoiding but its not working so flip
+        if(ignore == IGNORE_TIME -1 && !hasFlipped){
+            flipper *= -1;
+        //we are not currently avoiding, start
+        } else if (!ignore) {
+            ignore = IGNORE_TIME;
+        }
+        setAngle(getAngle() + (flipper * PARTIAL_ROTATION));
     }
 }
 
 /**
- * Author: Jamie Lee
+ * Author: Mark Tattrie
  *
  * Date: April 6, 2017
  */
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
+    VisualEffect::instance().addBlood(getDestRect());
+    if (actionTick < frameCount) {
+        action = 'd';
+        actionTick = frameCount + HIT_DURATION;
+    }
     if (health <= 0) {
         GameManager::instance()->deleteZombie(getId());
     }
@@ -187,6 +204,11 @@ void Zombie::zAttack(){
     Weapon* w = inventory.getCurrent();
     if (w){
         w->fire(*this);
+        //should only add a new animation if a different one isnt playing
+        if (actionTick < frameCount) {
+            action = 'a';
+            actionTick = frameCount + ATTACK_DURATION;
+        }
     } else {
         logv("Zombie Slot Empty\n");
     }
@@ -255,6 +277,13 @@ void Zombie::updateImageWalk() {
     } else {
         setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     }
+    if (actionTick > frameCount) {
+        const auto& sr = getSrcRect();
+        setSrcRect(action == 'a' ? ZOMBIE_ATTACK_X : ZOMBIE_HIT_X, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (actionTick == frameCount) {
+        const auto& sr = getSrcRect();
+        setSrcRect(ZOMBIE_FRONT, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    }
 }
 
 /**
@@ -262,7 +291,7 @@ void Zombie::updateImageWalk() {
 *
 * Designer: Trista Huang
 *
-* Programmer: Fred Yang
+* Programmer: Isaac Morneau
 *
 * Interface: void Marine::updateImageDirection()
 *

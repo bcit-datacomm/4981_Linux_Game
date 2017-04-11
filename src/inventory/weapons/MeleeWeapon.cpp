@@ -1,4 +1,22 @@
-/**
+/*------------------------------------------------------------------------------
+* Source: MeleeWeapon.cpp
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
+
+/*
     Created  by Mark Tattrie    March 28, 2017
 */
 #include "MeleeWeapon.h"
@@ -23,10 +41,10 @@
  */
 MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fireSound,
         const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
-        const int damage, const int AOE, const int penetration, const int clip, const int clipMax,
-        const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
+        const int damage, const int AOE, const int penetration, const int accuracy, const int clip, const int clipMax,
+        const int ammo, const int reloadDelay, const int fireDelay, const int texX, const int texY, int32_t id, const int price)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
-        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
+        penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, texX, texY, id, price) {
 
 }
 
@@ -49,8 +67,8 @@ bool MeleeWeapon::fire(Movable &mov){
 
     const int originX = mov.getX() + (Z_WIDTH / 2);
     const int originY = mov.getY() + (Z_HEIGHT / 2);
-    const int deltaX  = range/2 * cos(radians);
-    const int deltaY  = range/2 * sin(radians);
+    const int deltaX  = range / 2 * cos(radians);
+    const int deltaY  = range / 2 * sin(radians);
 
     const int endX = originX + deltaX;
     const int endY = originY + deltaY;
@@ -60,35 +78,24 @@ bool MeleeWeapon::fire(Movable &mov){
     const int hitBoxW = range;
     const int hitBoxH = range;
 
-    SDL_Rect meleeBox = {hitBoxX, hitBoxY, hitBoxW, hitBoxH};
-    HitBox hitBox(meleeBox);
+    HitBox hitBox({hitBoxX, hitBoxY, hitBoxW, hitBoxH});
+    CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
 
-    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-
-    //vector of each marine the melee attack connects with
-    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,
-            &mov),&mov, hitBox);
-    for(const auto& x: hitMarines){
+    for(const auto& x: ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.getMarineTree(), &mov),&mov, hitBox)){
         //update hit marine
         x->collidingProjectile(damage);
     }
 
-    //vector of each turret the melee attack connects with
-    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,
-            &mov),&mov, hitBox);
-    for(const auto& y: hitTurrets){
+    for(const auto& y : ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.getTurretTree(), &mov),&mov, hitBox)){
         //update hit turret
         y->collidingProjectile(damage);
     }
 
-    //vector of each barricade the melee attack connects with
-    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,
-            &mov),&mov, hitBox);
-    for(const auto& z: hitTurrets){
+    for(const auto& z : ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(), &mov),&mov, hitBox)) {
         //update hit barricade
         z->collidingProjectile(damage);
     }
-    clip++;
+    ++clip;
 
     return true;
 }

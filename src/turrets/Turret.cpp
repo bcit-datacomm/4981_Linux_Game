@@ -33,6 +33,8 @@
 #include "Turret.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
+//for the angle update rate
+#include "../creeps/Zombie.h"
 
 /**
  * Date: Feb. 02, 2017
@@ -55,13 +57,15 @@
  * Mar. 16, 2017, Mark Chen : Changed parameters that the constructor takes.
  * Mar. 30, 2017, Mark Chen : Turret now has an inventory.
  * Apr. 02, 2017, Mark Chen : Turret now has a dropzone value.
+ * Apr. 07, 2017, Isaac Morneau : Turret checks more efficiently
  */
 
-Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
-        const SDL_Rect& damageSize, const SDL_Rect& pickupSize, const bool activated, const int health,
-        const bool placed, const float range, const int32_t dropzone): Entity(id, dest, movementSize,
-        projectileSize, damageSize, pickupSize), Movable(id, dest, movementSize, projectileSize, damageSize,
-        pickupSize, MARINE_VELOCITY), activated(activated), placed(placed), range(range) {
+Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
+        const SDL_Rect& projectileSize, const SDL_Rect& damageSize, const SDL_Rect& pickupSize,
+        const bool activated, const int health, const bool placed, const bool placeable, const float range,
+        const int32_t dropzone): Entity(id, dest, movementSize, projectileSize, damageSize, pickupSize),
+        Movable(id, dest, movementSize, projectileSize, damageSize, pickupSize, MARINE_VELOCITY),
+        activated(activated), placed(placed), placeable(placeable), range(range) {
     //movementHitBox.setFriendly(true); Uncomment to allow movement through other players
     //projectileHitBox.setFriendly(true); Uncomment for no friendly fire
     //damageHitBox.setFriendly(true); Uncomment for no friendly fire
@@ -140,13 +144,23 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     const float distanceY = (playerY - moveY) * (playerY - moveY);
     const float distance = sqrt(abs(distanceX + distanceY));
 
-    return (distance <= 200 && (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeZombie,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeWall,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreeObj,this), this)
-        && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.quadtreePickUp,this), this)));
+    // if the turret is within 200 units, set placeable to true
+    placeable = (distance <= 200);
+
+    // checks for hitbox overlap if placeable was set to true
+    if (placeable) {
+        if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getMarineTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getObjTree(),this), this)
+            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this), this)) {
+                 placeable = false;
+         }
+    }
+
+     return placeable;
 }
 
 /**
@@ -177,7 +191,7 @@ void Turret::collidingProjectile(const int damage) {
  *
  * Designer: Mark Chen
  *
- * Programmer: Mark Chen
+ * Programmer: Mark Chen, Alex Zielinski
  *
  * Function Interface: void shootTurret()
  *
@@ -187,6 +201,7 @@ void Turret::collidingProjectile(const int damage) {
  * Revisions:
  * Mar. 30, 2017, Mark Chen : Made the function actually fire the turrets weapon.
  * Apr. 04, 2017, Mark Chen : Altered the funuction to check for null weapon.
+ * Apr. 10, 2017, Alex Zielinski: Implemented turret fire sound effect
  */
 void Turret::shootTurret() {
 
@@ -194,6 +209,8 @@ void Turret::shootTurret() {
     if (w) {
         w->fire(*this);
     }
+    // play turrent fire effect
+	//AudioManager::instance().playEffect(EFX_WLPISTOL);
 }
 
 /**
@@ -218,15 +235,8 @@ void Turret::shootTurret() {
 void Turret::move(const float playerX, const float playerY,
         const float moveX, const float moveY, CollisionHandler& ch) {
 
+    (collisionCheckTurret(playerX, playerY, moveX, moveY, ch));
     setPosition(moveX, moveY);
-
-    if (collisionCheckTurret(playerX, playerY, moveX, moveY, ch)) {
-        //change the texture rendered for the turret here
-        //left blank for now
-    } else {
-        //change the texture rendered for the turret here
-        //left blank for now
-    }
 }
 
 /**
@@ -288,47 +298,49 @@ void Turret::pickUpTurret() {
  * Mar. 05, 2017, Robert Arendac - General code clean up
  */
 bool Turret::targetScanTurret() {
-    //Get map of all zombies
-    const auto& mapZombies = GameManager::instance()->getZombies();
+    ++frameCount;
+    //middle of me
+    const int midMeX = getX() + (getW() / 2);
+    const int midMeY = getY() + (getH() / 2);
+    const Entity visSection(0, {midMeX - ZOMBIE_SIGHT, static_cast<int>(midMeY - getRange()),
+        static_cast<int>(2 * getRange()), static_cast<int>(2 * getRange())});
 
-    unsigned int closestZombieId = 0;
-    float closestZombieDist = std::numeric_limits<float>::max();
+    if (!(frameCount % ANGLE_UPDATE_RATE)) {
+        //Movement updates
+        GameManager *gm = GameManager::instance();
+        auto& collision = gm->getCollisionHandler();
+        const auto& zombies = collision.getQuadTreeEntities(collision.getZombieTree(), &visSection);
 
-    // Detect zombies
-    bool detect = false;
-    for (const auto& item : mapZombies) {
-        const auto& zombie = item.second;
-        const float zombieX = zombie.getX();
-        const float zombieY = zombie.getY();
+        //the difference in zombie to target distance
+        float movX;
+        float movY;
 
-        const float xDelta = abs((abs(zombieX - ZOMBIE_WIDTH / 2) - abs(getX() - TURRET_WIDTH / 2)));
-        const float yDelta = abs((abs(zombieY - ZOMBIE_HEIGHT / 2) - abs(getY() - TURRET_HEIGHT / 2)));
-        const float distance = sqrt(xDelta * xDelta + yDelta * yDelta);
+        //temp x and y for calculating the hypot
+        int hypX;
+        int hypY;
 
-        if (distance < getRange()) {
-            if (distance < closestZombieDist) {
-                closestZombieId = item.first;
-                closestZombieDist = distance;
-                detect = true;
+        //hypo variables
+        float hyp = getRange();
+        float temp;
+
+        //who is closest?
+        for (const auto t : zombies){
+            hypX = t->getX() + (t->getW() / 2);
+            hypY = t->getY() + (t->getH() / 2);
+
+            //we only want the closest one
+            if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
+                hyp = temp;
+                movX = hypX - midMeX;
+                movY = hypY - midMeY;
             }
         }
+
+        //invert the return of the arc tan
+        if (hyp < getRange()) {
+            setRadianAngle(fmod((-1 * atan2(movX, movY)) + M_PI, 2 * M_PI));
+            return true;
+        }
     }
-
-    if (!detect) {
-        return false;
-    }
-
-    const auto& target = mapZombies.find(closestZombieId);
-    if (target == mapZombies.end()) {
-        return false;
-    }
-
-    const float deltaX = getX() - target->second.getX();
-    const float deltaY = getY() - target->second.getY();
-
-    // Set angle so turret points at zombie
-    setAngle(((atan2(deltaX, deltaY) * 180.0) / M_PI) * -1);
-    //detectList[closestZombieId]->damage(this->attackDmg);
-
-    return true;
+    return false;
 }

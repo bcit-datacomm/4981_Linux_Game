@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: Weapon.h
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/1/2017
         Edited by DericM 3/8/2017
@@ -10,6 +27,7 @@
 #include "../../log/log.h"
 #include "../../audio/AudioManager.h"
 #include "../../game/GameManager.h"
+#include "../../sprites/Renderer.h"
 
 using std::string;
 
@@ -27,19 +45,19 @@ using std::string;
  * Ctor for Weapon
  */
 Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
-        const string& emptySound, const int range, const int damage, const int AOE, const int penetration,
-        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, const int32_t id, const int p)
-: type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
-        range(range), damage(damage), AOE(AOE), penetration(penetration), clip(clip), clipMax(clipMax), ammo(ammo),
-        reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id), price(p){
-
+        const string& emptySound, const int range, const int damage, const int AOE, const int penetration, const int accuracy,
+        const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, const int texX,
+        const int texY, int32_t id, const int p) : weaponSrc({texX, texY, WEAPON_WIDTH, WEAPON_HEIGHT}),rotate{0, 0},
+        type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
+        range(range), damage(damage), AOE(AOE), penetration(penetration), accuracy(accuracy), clip(clip), clipMax(clipMax),
+        ammo(ammo), reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id), price(p){
 }
 
 Weapon::Weapon(const Weapon& w)
-: type(w.type), spriteType(w.spriteType), fireSound(w.fireSound), hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound),
-        range(w.range), damage(w.damage), AOE(w.AOE), penetration(w.penetration), clip(w.clip), clipMax(w.clipMax),
-        ammo(w.ammo), reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick),
-        fireTick(w.fireTick), wID(w.getID()), price(w.getPrice()){
+        : weaponSrc(w.weaponSrc), rotate(w.rotate), type(w.type), spriteType(w.spriteType), fireSound(w.fireSound),
+        hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound), range(w.range), damage(w.damage), AOE(w.AOE),
+        penetration(w.penetration), accuracy(w.accuracy), clip(w.clip), clipMax(w.clipMax), ammo(w.ammo),
+        reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick), fireTick(w.fireTick), wID(w.getID()), price(w.getPrice()){
 }
 
 
@@ -109,4 +127,28 @@ bool Weapon::fire(Movable& movable){
     }
     AudioManager::instance().playEffect(fireSound.c_str());
     return true;
+}
+
+void Weapon::updateGunRender(const Movable& mov, const SDL_Rect& camera) {
+    static constexpr int WEAPON_DISP_WIDTH = 100;
+    static constexpr int WEAPON_DISP_HEIGHT = 60;
+    const auto& dest = mov.getRelativeDestRect(camera);
+
+    weaponDest.x = dest.x + dest.w / 2;
+    weaponDest.y = dest.y + dest.h / 2;
+    weaponDest.w = WEAPON_DISP_WIDTH;
+    weaponDest.h = WEAPON_DISP_HEIGHT;
+
+    const double normal = mov.getAngle() - 90;
+    //these angles are checking to make sure the angle is on the left half of the character
+    if (-90 > normal && -270 < normal) {
+        rotate.y = weaponDest.h / 2;
+        Renderer::instance().render(weaponDest, TEXTURES::WEAPONS,
+            weaponSrc, normal, &rotate, SDL_FLIP_VERTICAL);
+    //likewise this is the right half
+    } else {
+        rotate.y = weaponDest.h / 2;
+        Renderer::instance().render(weaponDest, TEXTURES::WEAPONS,
+            weaponSrc, normal, &rotate);
+    }
 }

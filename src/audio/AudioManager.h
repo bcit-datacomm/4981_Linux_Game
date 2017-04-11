@@ -62,17 +62,29 @@
 #define EFX_PDROP02     AUDIO_PATH "drop_effect_2.ogg"
 #define EFX_PPICK01     AUDIO_PATH "pick_up_effect_1.ogg"
 #define EFX_PPICK02     AUDIO_PATH "pick_up_effect_2.ogg"
-#define EFX_MEDKIT      AUDIO_PATH "medkit_effect"
+#define EFX_MEDKIT      AUDIO_PATH "medkit_effect.ogg"
+#define EFX_PURCHASE	AUDIO_PATH "purchase_effect.ogg"
 
 // weapon sounds
 #define EFX_WLPISTOL    AUDIO_PATH "weapon_pistol_fire_effect.ogg"
 #define EFX_WLRIFLE     AUDIO_PATH "weapon_rifle_fire_effect.ogg"
-#define EFX_WSHOTGUN    AUDIO_PATH "weapon_rifle_fire_effect.ogg"
-#define EFX_WTURRET01   AUDIO_PATH "weapon_turret_fire_effect.ogg"
+#define EFX_WSHOTGUN    AUDIO_PATH "weapon_shotgun_fire_effect.ogg"
+#define EFX_WTURRET   	AUDIO_PATH "weapon_turret_fire_effect.ogg"
+#define EFX_WDEAGLE		AUDIO_PATH "weapon_deagle_fire_effect.ogg"	
+#define EFX_WREPEATER	AUDIO_PATH "weapon_repeater_fire_effect.ogg"
+#define EFX_WRAIL01		AUDIO_PATH "weapon_rail_fire_effect_01.ogg"
+#define EFX_WRAIL02		AUDIO_PATH "weapon_rail_fire_effect_02.ogg"
+#define EFX_WTYPE75K	AUDIO_PATH "weapon_type75k_fire_effect.ogg"
 
 // weapon reload sounds
 #define EFX_WRELOAD01   AUDIO_PATH "weapon_reload_effect.ogg"
 #define EFX_WRELOAD02   AUDIO_PATH "weapon_shotgun_reload_effect.ogg"
+#define EFX_WRELOAD03	AUDIO_PATH "weapon_reload_long.ogg"
+#define EFX_WRELOAD04	AUDIO_PATH "weapon_reload_short_rail_01.ogg"
+#define EFX_WRELOAD05	AUDIO_PATH "weapon_reload_short_rail_02.ogg"
+#define EFX_WRELOAD06	AUDIO_PATH "weapon_reload_medium_01.ogg"
+#define EFX_WRELOAD07	AUDIO_PATH "weapon_reload_medium_02.ogg"
+#define EFX_WRELOAD08	AUDIO_PATH "weapon_reload_medium_03.ogg"
 
 // baracade sounds
 #define EFX_BINSTALL    AUDIO_PATH "baracade_effect.ogg"

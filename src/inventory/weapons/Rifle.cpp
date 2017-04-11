@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: Rifle.cpp
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by DericM 3/8/2017
@@ -17,8 +34,9 @@
  * Ctor for Rifle
  */
 
-Rifle::Rifle(const int32_t id) : InstantWeapon(RifleVars::TYPE, TEXTURES::RIFLE, RifleVars::FIRESOUND, RifleVars::HITSOUND, RifleVars::RELOADSOUND,
-        RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE, RifleVars::PENETRATION,
-        RifleVars::CLIP, RifleVars::CLIPMAX, RifleVars::AMMO, RifleVars::RELOADDELAY, RifleVars::FIREDELAY, id, RifleVars::PRICE) {
+Rifle::Rifle(const int32_t id) : InstantWeapon(RifleVars::TYPE, TEXTURES::RIFLE, RifleVars::FIRESOUND, RifleVars::HITSOUND,
+        RifleVars::RELOADSOUND, RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE,
+        RifleVars::PENETRATION, RifleVars::ACCURACY, RifleVars::CLIP, RifleVars::CLIPMAX, RifleVars::AMMO, RifleVars::RELOADDELAY,
+        RifleVars::FIREDELAY, RifleVars::START_X, RifleVars::START_Y, id, RifleVars::PRICE) {
 
 }

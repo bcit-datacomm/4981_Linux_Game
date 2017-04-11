@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: Rifle.h
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by MarkT 3/13/2017
@@ -25,15 +42,19 @@ namespace RifleVars {
     constexpr int DAMAGE = 50;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 3;
+    constexpr int ACCURACY = 4;
 
-    constexpr int CLIP = 2;
-    constexpr int CLIPMAX = 2;
+    constexpr int CLIP = 50;
+    constexpr int CLIPMAX = 50;
     constexpr int AMMO = 1000;
 
-    constexpr int RELOADDELAY = 3000;
-    constexpr int FIREDELAY = 1000;
-
     constexpr int PRICE = 50;
+
+    constexpr int RELOADDELAY = 2000;
+    constexpr int FIREDELAY = 180;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 379;
 }
 
 class Rifle: public InstantWeapon {

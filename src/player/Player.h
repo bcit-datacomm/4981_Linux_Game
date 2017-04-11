@@ -81,6 +81,7 @@ private:
 
     int pickupTick;
     int pickupDelay;
+    int shootDelay;
     int respawnTick;
 
     int purchaseTick;

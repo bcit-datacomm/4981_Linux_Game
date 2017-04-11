@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: InstantWeapon.h
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created  by Deric M       01/03/17
     Edited by Mark T 3/13/2017
@@ -13,13 +30,16 @@ using std::string;
 
 class InstantWeapon: public Weapon  {
 public:
-    InstantWeapon(string type, TEXTURES sprite, string fireSound, string hitSound, string reloadSound, string emptySound,
-            int range, int damage, int AOE, int penetration, int clip, int clipMax, int ammo, int reloadDelay,
-            int fireDelay, int32_t id, int price);
+    InstantWeapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
+            const string& emptySound, const int range, const int damage, const int AOE, const int penetration, const int accuracy,
+            const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, const int texX,
+            const int texY, const int32_t id, const int price);
     ~InstantWeapon() = default;
 
     virtual bool fire(Movable& movable);
-    void fireSingleProjectile(int gunX, int gunY, double angle);
+    void fireSingleProjectile(const int gunX, const int gunY, const double angle);
+
+    virtual void fireAnimation(const int gunX, const int gunY, const int endX, const int endY);
 
 };
 

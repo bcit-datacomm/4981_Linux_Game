@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: ZombieHand.h
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /**
     Created by Mark Tattrie 3/28/2017
 */
@@ -25,6 +42,7 @@ namespace ZombieHandVars {
     constexpr int DAMAGE = 20;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 1;
+    constexpr int ACCURACY = 4;
 
     constexpr int CLIP = 10000;
     constexpr int CLIPMAX = 10000;
@@ -32,6 +50,7 @@ namespace ZombieHandVars {
 
     constexpr int RELOADDELAY = 0;
     constexpr int FIREDELAY = 300;
+    constexpr int PRICE = 0;
 }
 
 class ZombieHand: public MeleeWeapon {

@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: HandGun.h
+*
+* Functions:
+*
+* Date:
+*
+* Revisions:
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer:
+*
+* Author:
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by DericM 3/8/2017
@@ -26,6 +43,7 @@ namespace HandgunVars {
     constexpr int DAMAGE = 200;
     constexpr int AOE = 1;
     constexpr int PENETRATION = 2;
+    constexpr int ACCURACY = 2;
 
     constexpr int CLIP = 5;
     constexpr int CLIPMAX = 5;
@@ -34,7 +52,11 @@ namespace HandgunVars {
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 500;
 
+
     constexpr int PRICE = 0;
+    
+    constexpr int START_X = 891;
+    constexpr int START_Y = 0;
 }
 
 

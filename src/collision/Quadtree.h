@@ -19,38 +19,43 @@
 #ifndef QUADTREE_H
 #define QUADTREE_H
 #include <SDL2/SDL.h>
-#include "HitBox.h"
-#include "../basic/Entity.h"
 #include <vector>
 #include <array>
 #include <memory>
+#include <utility>
 
-constexpr unsigned int BRANCHSIZE = 4;
+#include "HitBox.h"
+#include "../basic/Entity.h"
+#include "../buildings/Base.h"
 
-constexpr unsigned int MAX_OBJECTS = 1000;
-constexpr unsigned int MAX_LEVELS = 50;
+static constexpr unsigned int BRANCHSIZE = 4;
+static constexpr unsigned int MAX_LEVELS = 3;
 
 class Quadtree {
 public:
-    Quadtree(int pLevel, SDL_Rect pBounds);
+    Quadtree(unsigned int pLevel, SDL_Rect pBounds);
     ~Quadtree() = default;
 
-    Quadtree& operator=(const Quadtree& quad);
-
     void clear();
-    void split();
     unsigned int getTreeSize() const;
-    int getIndex(const HitBox *pRect) const;
     void insert(Entity *entity);
-    std::vector<Entity *> retrieve(const Entity *entity);
-
-    std::vector<Entity *> objects;
+    std::vector<Entity *> retrieve(const Entity *entity) const;
+    void retrieve(std::vector<Entity *>& retrieveList, const SDL_Rect& rect) const;
+    std::vector<Entity *> retrieve(const Point& start, const Point& end) const;
 
 private:
-    unsigned int objectCounter;
+    bool contains(const Quadtree& q, const Entity *entity) const;
+    std::vector<Entity *> retrieve(const SDL_Rect& rect) const;
+
+    static inline bool constexpr lineIntersect(const std::pair<Point, Point>& start, const std::pair<Point, Point>& end);
+    static inline bool constexpr lineRectIntersect(const std::pair<Point, Point>& line, const SDL_Rect& rect);
+    static inline bool constexpr pointInRect(const Point& point, const SDL_Rect& rect);
+    static inline bool constexpr rectContains(const SDL_Rect& outer, const SDL_Rect& inner);
+
     unsigned int level;
     SDL_Rect bounds;
-    std::array<std::shared_ptr<Quadtree>, BRANCHSIZE> nodes;
+    std::array<std::unique_ptr<Quadtree>, BRANCHSIZE> nodes;
+    std::vector<Entity *> objects;
 };
 
 #endif

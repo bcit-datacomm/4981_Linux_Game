@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -52,7 +53,6 @@ bool GameStateMatch::load() {
                 &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
-        GameManager::instance()->addObject(GameManager::instance()->getBase());
         const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
@@ -73,6 +73,7 @@ bool GameStateMatch::load() {
     m.mapLoadToGame(screenRect);
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
+
     return success;
 }
 
@@ -275,10 +276,11 @@ void GameStateMatch::update(const float delta) {
         camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),
                 GameManager::instance()->getPlayer().getMarine()->getY());
     }
+#endif
+
     if (GameManager::instance()->getPlayer().checkMarineState()) {
         GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
     }
-#endif
 }
 
 /**
@@ -308,12 +310,10 @@ void GameStateMatch::update(const float delta) {
 void GameStateMatch::render() {
     //Only draw when not minimized
     if (!game.getWindow().isMinimized()) {
-
         SDL_RenderClear(Renderer::instance().getRenderer());
 
         //Render textures
         for (int i = camera.getX() / TEXTURE_SIZE - 1; ; ++i) {
-
             if (i * TEXTURE_SIZE - camera.getX() >= camera.getW()) {
                 break;
             }
