@@ -110,11 +110,22 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
     return nullptr;
 }
 
-void Inventory::useItem() {
+/**
+ * Date:        March. 8, 2017
+ * Modified:    April. 5, 2017
+ * Author:      Matthew Goerwell 
+ * Function Interface: useItem(Marine& marine)
+ *      Marine &x: A reference to the marine using this consumable.
+ *
+ * Description:
+ *      This is the method that serves as an interface to the player's consumable slot.
+ *      It will call the onConsume method for the player's item, assuming they have one.
+ */
+void Inventory::useItem(Marine& marine) {
     if (medkit != nullptr) {
-		// play medkit effect
-		AudioManager::instance().playEffect(EFX_MEDKIT);
-        medkit->OnConsume();
+        // play medkit effect
+        AudioManager::instance().playEffect(EFX_MEDKIT);
+        medkit->OnConsume(marine);
         medkit = nullptr;
     }
 
