@@ -163,10 +163,8 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
-    Entity dummy(0, {(endX - gunX) / 2, (endY - gunY) / 2, 100, 100});
-
-    const auto& nearbyZombies = zombieTree.retrieve(&dummy);
-    const auto& nearbyWalls = wallTree.retrieve(&dummy);
+    const auto& nearbyZombies = zombieTree.retrieve({gunX, gunY}, {endX, endY});
+    const auto& nearbyWalls = wallTree.retrieve({gunX, gunY}, {endX, endY});
 
     checkForTargetsInVector(gunX, gunY, endX, endY, targetList, nearbyZombies, TYPE_ZOMBIE);
     checkForTargetsInVector(gunX, gunY, endX, endY, targetList, nearbyWalls, TYPE_WALL);
@@ -224,7 +222,8 @@ std::vector<Entity *> CollisionHandler::detectMeleeCollision(const std::vector<E
 void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList& targetList, const std::vector<Entity *>& allEntities, const int type) const {
 
-    for(const auto& possibleTarget : allEntities) {
+#pragma omp parallel for schedule(static) shared(targetList)
+    for(unsigned int i = 0; i < allEntities.size(); ++i) {
 
         /* These values are initialized to the end points of a line spanning from the gun muzzle
         to the point at the end of the guns range. After SDL_IntersectRectAndLine is called
@@ -237,7 +236,7 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
         int exitWoundX = endX;
         int exitWoundY = endY;
 
-        if (SDL_IntersectRectAndLine(&possibleTarget->getProHitBox().getRect(),
+        if (SDL_IntersectRectAndLine(&allEntities[i]->getProHitBox().getRect(),
                 &entranceWoundX, &entranceWoundY , &exitWoundX, &exitWoundY)) {
 
             //the change in x and y from the firing origin to the spot the bullet hits the target.
@@ -246,7 +245,8 @@ void CollisionHandler::checkForTargetsInVector(const int gunX, const int gunY, c
             //the direct distance from the firing origin to the spot the bullet hits each target.
             const int distanceToOrigin = std::hypot(localDeltaX, localDeltaY);
 
-            Target tar(possibleTarget->getId(), type, entranceWoundX, entranceWoundY, distanceToOrigin);
+            Target tar(allEntities[i]->getId(), type, entranceWoundX, entranceWoundY, distanceToOrigin);
+#pragma omp critical
             targetList.addTarget(tar);
 
             logv(3, "CollisionHandler::checkTargets() Intersect target at (%d, %d)\n",
