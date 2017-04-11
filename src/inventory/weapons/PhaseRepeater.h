@@ -36,7 +36,7 @@ namespace PhaseRepeaterVars {
     constexpr int START_X = 891;
     constexpr int START_Y = 1689;
 
-    constexpr int PRICE = 564;
+    constexpr int PRICE = 10;
 }
 
 class PhaseRepeater: public InstantWeapon {

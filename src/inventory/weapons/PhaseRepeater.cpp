@@ -14,7 +14,7 @@
  * Ctor for RailGun
  */
 
-PhaseRepeater::PhaseRepeater(const int32_t id) : InstantWeapon(PhaseRepeaterVars::TYPE, TEXTURES::RIFLE,
+PhaseRepeater::PhaseRepeater(const int32_t id) : InstantWeapon(PhaseRepeaterVars::TYPE, TEXTURES::PHASE_REPEATER,
 		PhaseRepeaterVars::FIRESOUND, PhaseRepeaterVars::HITSOUND, PhaseRepeaterVars::RELOADSOUND,
         PhaseRepeaterVars::EMPTYSOUND, PhaseRepeaterVars::RANGE, PhaseRepeaterVars::DAMAGE, PhaseRepeaterVars::AOE,
         PhaseRepeaterVars::PENETRATION, PhaseRepeaterVars::ACCURACY, PhaseRepeaterVars::CLIP, PhaseRepeaterVars::CLIPMAX,

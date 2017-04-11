@@ -36,7 +36,7 @@ namespace RailGunVars {
     constexpr int START_X = 891;
     constexpr int START_Y = 752;
 
-    constexpr int PRICE = 564;
+    constexpr int PRICE = 10;
 }
 
 class RailGun: public InstantWeapon {

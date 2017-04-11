@@ -14,7 +14,7 @@
  * Ctor for RailGun
  */
 
-PlasmaDeagle::PlasmaDeagle(const int32_t id) : InstantWeapon(PlasmaDeagleVars::TYPE, TEXTURES::RIFLE,
+PlasmaDeagle::PlasmaDeagle(const int32_t id) : InstantWeapon(PlasmaDeagleVars::TYPE, TEXTURES::PLASMA_DEAGLE,
 		PlasmaDeagleVars::FIRESOUND, PlasmaDeagleVars::HITSOUND, PlasmaDeagleVars::RELOADSOUND,
         PlasmaDeagleVars::EMPTYSOUND, PlasmaDeagleVars::RANGE, PlasmaDeagleVars::DAMAGE, PlasmaDeagleVars::AOE,
         PlasmaDeagleVars::PENETRATION, PlasmaDeagleVars::ACCURACY, PlasmaDeagleVars::CLIP, PlasmaDeagleVars::CLIPMAX,

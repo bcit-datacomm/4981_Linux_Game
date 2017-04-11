@@ -4,6 +4,11 @@
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 #include "../inventory/weapons/HandGun.h"
+#include "../inventory/weapons/PlasmaDeagle.h"
+#include "../inventory/weapons/Katana.h"
+#include "../inventory/weapons/PhaseRepeater.h"
+#include "../inventory/weapons/RailGun.h"
+#include "../inventory/weapons/Type75.h"
 #include "DropPoint.h"
 #include <memory>
 
@@ -80,6 +85,53 @@ int32_t WeaponStore::createWeapon(const int num, const int credits){
             }
             break;
         }
+        case 2:
+        {
+            PlasmaDeagle pd(id);
+            if(credits >= pd.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<PlasmaDeagle>(pd)));
+                return id;
+            }
+            break;
+        }
+        case 3:
+        {
+            RailGun ra(id);
+            if(credits >= ra.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<RailGun>(ra)));
+                return id;
+            }
+            break;
+        }
+        case 4:
+        {
+            Type75 t7(id);
+            if(credits >= t7.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Type75>(t7)));
+                return id;
+            }
+            break;
+        }
+        case 5:
+        {
+            Katana k(id);
+            if(credits >= k.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Katana>(k)));
+                return id;
+            }
+            break; 
+        }
+        case 6:
+        {
+            PhaseRepeater pr(id);
+            if(credits >= pr.getPrice()){
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<PhaseRepeater>(pr)));
+                return id;
+            }
+            break;
+        }
+        case 7:
+
         default:
             return -1;//does not exist
     }

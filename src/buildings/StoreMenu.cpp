@@ -83,28 +83,28 @@ void StoreMenu::createWeaponStoreMenu(){
     for(int i = 0; i < 9; i++){
         switch(i){
             case 0:
-            tex = TEXTURES::RIFLE;
+            tex = RIFLE_TEX;
             break;
             case 1:
-            tex = TEXTURES::SHOTGUN;
+            tex = SHOTGUN_TEX;
             break;
             case 2:
-            tex = TEXTURES::CONCRETE;
+            //tex = DEAGLE_TEX;
             break;
             case 3:
-            tex = TEXTURES::CONCRETE;
+            //tex = RAILGUN_TEX;
             break;
             case 4:
-            tex = TEXTURES::CONCRETE;
+            //tex = T75_TEX;
             break;
             case 5:
-            tex = TEXTURES::CONCRETE;
+            //tex = KATANA_TEX;
             break;
             case 6:
-            tex = TEXTURES::CONCRETE;
+            //tex = PHASE_TEX;
             break;
             case 7:
-            tex = TEXTURES::CONCRETE;
+            //tex = AMMO_TEX;
             break;
         }
         Renderer::instance().render(slot[i], tex);
@@ -116,10 +116,10 @@ void StoreMenu::createTechStoreMenu(){
     for(int i = 0; i < 2; i++){
         switch(i){
             case 0:
-            tex = TEXTURES::CONCRETE;
+            tex = TEXTURES::TURRET;
             break;
             case 1:
-            tex = TEXTURES::BASE;
+            tex = TEXTURES::CONCRETE;
             break;
         }
         Renderer::instance().render(slot[i], tex);
