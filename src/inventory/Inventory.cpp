@@ -25,10 +25,9 @@
 Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
         tempZombieHand(GameManager::instance()->generateID()) {
     weaponIds[0] = defaultGun.getID();
-    weaponIds[1] = -1;
-    weaponIds[2] = -1;
+    weaponIds[1] = defaultGun.getID();
+    weaponIds[2] = defaultGun.getID();
     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
-
 }
 
 

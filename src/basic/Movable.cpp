@@ -34,7 +34,7 @@ void Movable::move(const float moveX, const float moveY, CollisionHandler& ch){
     setX(getX() + moveX);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this),this)) {
         setX(getX() - moveX);
     }
@@ -43,7 +43,7 @@ void Movable::move(const float moveX, const float moveY, CollisionHandler& ch){
     setY(getY()+moveY);
 
     //if there is a collision with anything with a movement hitbox, move it back
-    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)
+    if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this),this)) {
         setY(getY() - moveY);
     }
