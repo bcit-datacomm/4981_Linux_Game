@@ -113,9 +113,11 @@ void GameStateMatch::loop() {
 #endif
         std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
         auto zm = GameManager::instance()->getZombieManager();
-        for (auto it = zm.begin(); it != zm.end(); ++it) {
+        for (auto it = zm.begin(); it != zm.end();) {
             if (!it->second.isAlive) {
-                zm.erase(it);
+                it = zm.erase(it);
+            } else {
+                ++it;
             }
         }
 
