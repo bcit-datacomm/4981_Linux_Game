@@ -129,6 +129,7 @@ void GameManager::updateMarines(const float delta) {
 #pragma omp task firstprivate(it)
             {
                 if (!networked) {
+                    it->second.updateLifeState();
                     it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
                 }
 #ifndef SERVER

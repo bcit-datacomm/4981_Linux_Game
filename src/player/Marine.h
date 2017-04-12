@@ -23,6 +23,8 @@ static constexpr int FRAME_COUNT_WALK = 7;
 //Maximum health for a marine
 static constexpr int MARINE_MAX_HEALTH = 100;
 
+static constexpr int HELL_ZONE = 40000;
+
 static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;
 static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y * 3;
 static constexpr int SPRITE_BACK = SPRITE_SIZE_Y * 4;
@@ -62,12 +64,15 @@ public:
     Inventory inventory;
     void setHealth(const int hlth) {health = hlth;};
     int getCurrentHealth() {return health;}; //returns the current health of the marine
+    void updateLifeState();
 
 private:
     std::string username;
     int health = MARINE_MAX_HEALTH;
     int state; //used to select sprite to display
     static int frameCount;
+    bool lifeState = true;
+    int respawnTick;
 };
 
 #endif
