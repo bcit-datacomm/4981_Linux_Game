@@ -130,7 +130,6 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  *     Update marine movements. health, and actions
  */
 void GameManager::updateMarines(const float delta) {
-    //std::lock_guard<std::mutex> lock(marineMut);
 #pragma omp parallel
 #pragma omp single
     {
@@ -153,7 +152,6 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-    //std::lock_guard<std::mutex> lock(zombieMut);
 #pragma omp parallel
 #pragma omp single
     {
@@ -525,6 +523,7 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
             double curAngle = marine.first.getAngle();
             marine.first.setPosition(attackAction.xpos, attackAction.ypos);
             marine.first.setAngle(attackAction.direction);
+            marine.first.inventory.switchCurrent(attackAction.weaponid);
             marine.first.fireWeapon();
             marine.first.setPosition(curX, curY);
             marine.first.setAngle(curAngle);

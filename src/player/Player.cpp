@@ -130,7 +130,7 @@ Updates the player's attack action and send it to the server via UDP.
 void Player::sendServAttackAction() {
     attackAction.data.aa.playerid = id;
     attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
-    attackAction.data.aa.weaponid = marine->inventory.getCurrent()->getID();
+    attackAction.data.aa.weaponid = marine->inventory.getCurrentSlot();
     attackAction.data.aa.xpos = marine->getX();
     attackAction.data.aa.ypos = marine->getY();
     attackAction.data.aa.direction = marine->getAngle();

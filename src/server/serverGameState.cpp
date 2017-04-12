@@ -68,6 +68,8 @@ void performAttack(const AttackAction& aa) {
         marine.setPosition(aa.xpos, aa.ypos);
         marine.setAngle(aa.direction);
 
+        marine.inventory.switchCurrent(aa.weaponid);
+
         /* Using marine.fireWeapon instead because weapon ids aren't implemented and I wanted
         to get shooting working. From Brody */
         //const auto& weapon = gm->getWeapon(aa.weaponid);
