@@ -18,13 +18,16 @@ StoreMenu::StoreMenu(const SDL_Rect s, GameHashMap<TEXTURES, int> i, int t): scr
 void StoreMenu::setSizes(){
     switch(type){
         case 1:
-            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING, screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * WEAPONS_HEIGHT)};
+            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING,
+                    screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * WEAPONS_HEIGHT)};
         break;
         case 2:
-            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING, screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * BACKGROUND_HEIGHT)};
+            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING,
+                    screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * BACKGROUND_HEIGHT)};
         break;
         case 3:
-            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING, screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * BACKGROUND_HEIGHT)};
+            background = {screen.w / 2 + BACKGROUND_H_PADDING, screen.h /2 - BACKGROUND_V_PADDING,
+                    screen.w / BACKGROUND_WIDTH, static_cast<int>(screen.h * BACKGROUND_HEIGHT)};
         break;
     }
 
@@ -32,11 +35,13 @@ void StoreMenu::setSizes(){
     slot[1] = {slot[0].x + slot[0].w + background.w / SLOT_X, slot[0].y, slot[0].w , slot[0].h};
     slot[2] = {slot[1].x + slot[0].w + background.w / SLOT_X, slot[0].y, slot[0].w , slot[0].h};
 
-    slot[3] = {slot[0].x,                               slot[0].y + (slot[0].h * V_SPACE), slot[0].w , slot[0].w};
-    slot[4] = {slot[3].x + slot[0].w + background.w / SLOT_X, slot[0].y + slot[0].h * V_SPACE , slot[0].w, slot[0].w};
-    slot[5] = {slot[4].x + slot[0].w + background.w / SLOT_X, slot[0].y + slot[0].h * V_SPACE , slot[0].w, slot[0].w};
+    slot[3] = {slot[0].x, slot[0].y + (slot[0].h * V_SPACE), slot[0].w , slot[0].w};
+    slot[4] = {slot[3].x + slot[0].w + background.w / SLOT_X, slot[0].y + slot[0].h * V_SPACE ,
+            slot[0].w, slot[0].w};
+    slot[5] = {slot[4].x + slot[0].w + background.w / SLOT_X, slot[0].y + slot[0].h * V_SPACE ,
+            slot[0].w, slot[0].w};
 
-    slot[6] = {slot[0].x,                               slot[3].y + slot[0].h * V_SPACE, slot[0].w , slot[0].w};
+    slot[6] = {slot[0].x, slot[3].y + slot[0].h * V_SPACE, slot[0].w , slot[0].w};
     slot[7] = {slot[6].x + slot[0].w + background.w / SLOT_X, slot[3].y + slot[0].h * V_SPACE, slot[0].w , slot[0].w};
 }
 
@@ -103,7 +108,7 @@ int StoreMenu::getClicked(const float x, const float y){
  * Description:
  *    Checks if x and y coordinates land in slot
  */
-bool StoreMenu::checkSlot(SDL_Rect& s, float x, float y){
+bool StoreMenu::checkSlot(const SDL_Rect& s, const float x, const float y){
     SDL_Point mousePoint = {static_cast<int>(x), static_cast<int>(y)};
     return SDL_PointInRect(&mousePoint, &s);
 }

@@ -38,7 +38,7 @@ public:
     void renderSlots(const int num);
     void setSizes();
     int getClicked(const float x, const float y);
-    bool checkSlot(SDL_Rect& s, float x, float y);
+    bool checkSlot(const SDL_Rect& s, const float x, const float y);
     void createWeaponStoreMenu();
     void createTechStoreMenu();
     void createHealthStoreMenu();

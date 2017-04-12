@@ -129,6 +129,7 @@ int32_t Marine::checkForPickUp() {
             gm->getPlayer().handleTempBarricade(Renderer::instance().getRenderer());
         } else if(gm->consumeDropExists(pickId)) {
             int32_t dropPoint = gm->getConsumeDrop(pickId).getDropPoint();
+            inventory.pickUpConsumable(pickId);
             if(dropPoint != -1){
                 gm->freeDropPoint(dropPoint);
             }

@@ -123,12 +123,12 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
  *      It will call the onConsume method for the player's item, assuming they have one.
  */
 void Inventory::useItem(Marine& marine) {
-    /*if (medkit != nullptr) {
+    if (consumableId != -1) {
         // play medkit effect
         AudioManager::instance().playEffect(EFX_MEDKIT);
-        medkit->OnConsume(marine);
-        medkit = nullptr;
-    }*/
+        GameManager:instance().getConsumable(consumableId)->OnConsume(marine);
+        consumableId = -1;
+    }
 }
 
 //Created By Maitiu

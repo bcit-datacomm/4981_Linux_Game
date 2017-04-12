@@ -828,9 +828,6 @@ ConsumeDrop& GameManager::getConsumeDrop(const int32_t id) {
 */
 void GameManager::deleteConsumeDrop(const int32_t id) {
     consumeDropManager.erase(id);
-/*#ifdef SERVER
-    saveDeletion({UDPHeaders::CONSUMEDROP, id});
-#endif*/
 }
 
  /**
@@ -914,23 +911,39 @@ int32_t GameManager::createHealthStore(const float x, const float y, SDL_Rect sc
     return id;
 }
 
-/*
- * Created By Maitiu March 30 2017
- * adds Store to store manager
- */
+/**
+* Date: MArch 30, 2017
+* Author: Maitiu Morton
+* Function Interface:  void GameManager::addStore(const int32_t id ,std::shared_ptr<Store> store)
+*      id: id of store to be added
+*      store: store that is to be added
+* Description:
+*  Adds store to store manager.
+*/
  void GameManager::addStore(const int32_t id ,std::shared_ptr<Store> store) {
      storeManager.emplace(id, store);
  }
 
- /*create by maitiu March 30
-  * Checks if id can be found in storeManager
-  */
+ /**
+ * Date: MArch 30, 2017
+ * Author: Maitiu Morton
+ * Function Interface:   bool GameManager::storeExists(const int32_t id)
+ *      id: id of store
+ * Description:
+ *  Checks if store exists in store manager
+ */
  bool GameManager::storeExists(const int32_t id) {
      return storeManager.count(id);
  }
 
- //created by Maitiu 2017-03-12
- //returns store in StoreManager
+ /**
+ * Date: MArch 30, 2017
+ * Author: Maitiu Morton
+ * Function Interface:  std::shared_ptr<Store> GameManager::getStore(const int32_t id)
+ *      id: id of store
+ * Description:
+ *  Cgets a store from the store manager
+ */
  std::shared_ptr<Store> GameManager::getStore(const int32_t id) {
      const auto& s = storeManager[id];
      assert(s.second);
@@ -951,6 +964,15 @@ void GameManager::createDropZone(const float x, const float y, const int num) {
     }
 }
 
+/**
+* Date: April8, 2017
+* Author: Maitiu Morton
+* Function Interface:  int32_t GameManager::createBarricadeDrop(const float x, const float y)
+*      x: x corrdinates where entity will be rendered
+*      Y: y coordinate where entity will be rendered
+* Description:
+*  creates and puts barricade drop in barricadeDropManager
+*/
 int32_t GameManager::createBarricadeDrop(const float x, const float y){
     const int32_t id = generateID();
 
@@ -962,23 +984,41 @@ int32_t GameManager::createBarricadeDrop(const float x, const float y){
     return id;
 }
 
+/**
+* Date: April8, 2017
+* Author: Maitiu Morton
+* Function Interface:  int32_t GameManager::createBarricadeDrop(const float x, const float y)
+*      id: id of barricade Drop
+* Description:
+*  Gets a barricade Drop from the barricadDrop manager
+*/
 BarricadeDrop& GameManager::getBarricadeDrop(const int32_t id) {
-
     const auto& bd = barricadeDropManager[id];
-    return bd.first;
     assert(bd.second);
+    return bd.first;
 }
 
+/**
+* Date: April8, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::deleteBarricadeDrop(int32_t id)
+*      id: id of barricade Drop
+* Description:
+*  Deletes barricade drop from barricade manager
+*/
 void GameManager::deleteBarricadeDrop(int32_t id){
         barricadeDropManager.erase(id);
-    /*#ifdef SERVER
-        saveDeletion({UDPHeaders::BARRICADEDROP, id});
-    #endif*/
 }
 
- /*
-  * Created by Maitiu March 30
-  */
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface: int32_t GameManager::createDropPoint(const float x, const float y)
+*      x: x coordinat of drop point
+*      y: y coordinate of drop point
+* Description:
+*  creates a drop point and adds it to the drop point manager
+*/
  int32_t GameManager::createDropPoint(const float x, const float y) {
      const int32_t id = generateID();
      dropPointManager.emplace(id, DropPoint(id, x, y));
@@ -986,41 +1026,64 @@ void GameManager::deleteBarricadeDrop(int32_t id){
      return id;
  }
 
- /*
-  * Created by Maitiu March 30
-  */
+ /**
+ * Date: March 30, 2017
+ * Author: Maitiu Morton
+ * Function Interface: bool GameManager::dropPointExists(const int32_t id)
+ *      id: id of drop point
+ * Description:
+ *  Checks if drop point exists
+ */
 bool GameManager::dropPointExists(const int32_t id) {
     return dropPointManager.count(id);
 }
 
-/*
- * Created by Maitiu March 30
- */
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface: bool GameManager::checkFreeDropPoints()
+*
+* Description:
+*  Checks for free drop points
+*/
 bool GameManager::checkFreeDropPoints() {
     return !openDropPoints.empty();
 }
 
-/*
- * Created by Maitiu March 30
- * gets a free drop point but also removes it form the vector
- */
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface:int32_t GameManager::getFreeDropPointId()
+*
+* Description:
+*  Returns id of a free Drop Point
+*/
 int32_t GameManager::getFreeDropPointId() {
      const int32_t id = openDropPoints.back();
      openDropPoints.pop_back();
      return id;
 }
 
-/*
- * Created by Maitiu March 30
- * adds DropPoint id to freeDropPoints vector
- */
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::freeDropPoint(const int32_t id)
+*       id: id of drop point
+* Description:
+*  puts a drop point in the open drop point map
+*/
 void GameManager::freeDropPoint(const int32_t id) {
     openDropPoints.push_back(id);
 }
 
-/*
- * Created by Maitiu March 30
- */
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface:DropPoint& GameManager::getDropPoint(const int32_t id)
+*       id: id of drop point
+* Description:
+*  gets a drop point from the drop point manager
+*/
 DropPoint& GameManager::getDropPoint(const int32_t id) {
     const auto& s = dropPointManager[id];
     assert(s.second);
@@ -1179,7 +1242,7 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
 /**
 * Date: Mar. 1, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
-* Author: Maitiu Morton
+* Author: Terry
 * Function Interface: int32_t GameManager::createBarricade(const float x, const float y)
 * Description:
 * Create barricade add it to manager, returns success

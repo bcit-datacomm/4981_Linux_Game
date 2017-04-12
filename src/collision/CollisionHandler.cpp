@@ -35,9 +35,9 @@
  * Description:
  * Constructor for Collision Handler
  */
-CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), marineTree(0, {0,0,2000,2000}), 
-        zombieTree(0, {0,0,2000,2000}), barricadeTree(0, {0,0,2000,2000}),turretTree(0, {0,0,2000,2000}), 
-        wallTree(0, {0,0,2000,2000}), pickUpTree(0, {0,0,2000,2000}), objTree(0, {0,0,2000,2000}), 
+CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), marineTree(0, {0,0,2000,2000}),
+        zombieTree(0, {0,0,2000,2000}), barricadeTree(0, {0,0,2000,2000}),turretTree(0, {0,0,2000,2000}),
+        wallTree(0, {0,0,2000,2000}), pickUpTree(0, {0,0,2000,2000}), objTree(0, {0,0,2000,2000}),
         storeTree(0,{0,0,2000,2000}) {
 
 }
@@ -103,10 +103,7 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
 }
 
 bool CollisionHandler::detectStoreCollision(const Entity* player, const Entity* store){
-    if(SDL_HasIntersection(&store->getPickUpHitBox().getRect(), &player->getMoveHitBox().getRect())){
-        return true;
-    }
-    return false;
+    return SDL_HasIntersection(&store->getPickUpHitBox().getRect(), &player->getMoveHitBox().getRect());
 }
 
 
@@ -282,7 +279,7 @@ void CollisionHandler::clear() {
     zombieMovementTree.clear();
     marineTree.clear();
     zombieTree.clear();
-    barricadeTree.clear(); 
+    barricadeTree.clear();
     turretTree.clear();
     pickUpTree.clear();
     objTree.clear();
