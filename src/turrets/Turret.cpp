@@ -150,13 +150,14 @@ bool Turret::collisionCheckTurret(const float playerX, const float playerY, cons
     // checks for hitbox overlap if placeable was set to true
     if (placeable) {
         if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getMarineTree(),this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(),this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getObjTree(),this), this)
-            && !ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this), this)) {
-                 placeable = false;
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(),this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getObjTree(),this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this), this)
+            || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getStoreTree(),this), this)) {
+             placeable = false;
          }
     }
 
