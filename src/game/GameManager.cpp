@@ -23,6 +23,14 @@ int32_t GameManager::generateID() {
     return ++counter;
 }
 
+void GameManager::sendServDeleteAction(const UDPHeaders type, const int32_t id) const {
+    ClientMessage packet;
+    packet.id = static_cast<int32_t>(UDPHeaders::DELETE);
+    packet.data.da.entitytype = type;
+    packet.data.da.entityid = id;
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+}
+
 /**
  * Date: Feb. 4, 2017
  * Modified: ----
@@ -248,6 +256,10 @@ void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::MARINE, id});
+#else
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::MARINE, id);
+    }
 #endif
 }
 
@@ -350,6 +362,10 @@ void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
+#else
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::ZOMBIE, id);
+    }
 #endif
 }
 
