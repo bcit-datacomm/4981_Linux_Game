@@ -218,8 +218,8 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                         if(clicked >= 0){
                             int cost = s.second->purchase(clicked, credits);
 
-                            SDL_Rect markRect = {x + camX - MARK_SIZE / 2, y + camY - MARK_SIZE / 2, MARK_SIZE, MARK_SIZE};
-                            SDL_Rectr markSrcRect = {0, 0, MARK_SRC_SIZE, MARK_SRC_SIZE};
+                            SDL_Rect markRect = {static_cast<int>(x + camX - MARK_SIZE / 2), static_cast<int>(y + camY - MARK_SIZE / 2), MARK_SIZE, MARK_SIZE};
+                            SDL_Rect markSrcRect = {0, 0, MARK_SRC_SIZE, MARK_SRC_SIZE};
                             printf("x:%d y:%d\n", x, y);
                             if(cost >= 0){
                                 credits = credits - cost;
