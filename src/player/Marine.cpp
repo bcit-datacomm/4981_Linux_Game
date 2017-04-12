@@ -73,62 +73,6 @@ bool Marine::fireWeapon() {
     }
 }
 
-
-/*
- * Created By Maitiu
- * Modified: Mar. 15 2017 - Mark Tattrie
- * Description: Checks The pick up Hitboxes of the Weapon Drops and Turrets to see if the player's
- * Marine is touching them IF Touching a Weapon Drop it Calls the Inventory Pick up method.
- *
- * Modified:
- * Apr. 10, 2017, Mark Chen - Adjusted to check for turrets with new Tree-Entity system
- */
-int32_t Marine::checkForPickUp() {
-    int32_t pickId = -1;
-    GameManager *gm = GameManager::instance();
-    CollisionHandler& ch = gm->getCollisionHandler();
-
-    Entity *ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getStoreTree(),this),this);
-    if(ep){
-        activateStore(ep);
-        return -1;
-    }
-
-    // checks if Id matches any turret Ids in turretManager, if yes, then return with the Id
-    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getTurretTree(),this),this);
-    if(ep) {
-        pickId = ep->getId();
-        if (gm->getTurretManager().count(pickId)) {
-            return pickId;
-        }
-    }
-
-    ep = ch.detectPickUpCollision(ch.getQuadTreeEntities(ch.getPickUpTree(),this),this);
-    if(ep) {
-        //get Entity drop Id
-        pickId = ep->getId();
-        logv("Searching for id:%d in weaponDropManager\n", pickId);
-        if(gm->weaponDropExists(pickId)) {
-            const WeaponDrop& wd = gm->getWeaponDrop(pickId);
-            //Get Weaopn id from weapon drop
-            pickId = wd.getWeaponId();
-            //Picks up Weapon
-            if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
-                int32_t DropPoint = wd.getDropPoint();
-                if(DropPoint != -1){
-                    gm->freeDropPoint(DropPoint);
-                }
-                gm->deleteWeaponDrop(wd.getId());
-            }
-        } else {
-            logv("unable to find id:%d in weaponDropManager\n", pickId);
-        }
-    } else {
-        loge("Pick id was nullptr\n");
-    }
-    return -1;
-}
-
 /**
 * Date: Mar 27
 * Author: Aing Ragunathan
@@ -229,15 +173,3 @@ void Marine::updateImageWalk() {
     }
 }
 
-/*
- *Create by Maitiu March 30
- * Takes in an Entity that is a store and attempts a purchase
- */
-void Marine::activateStore(const Entity *ep){
-    GameManager *gm = GameManager::instance();
-    if(gm->storeExists(ep->getId())){
-        int r = rand()% 2 + 1;//random number temp for testing
-
-        gm->getStore(ep->getId())->purchase(r);
-    }
-}

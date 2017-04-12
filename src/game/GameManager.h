@@ -139,29 +139,13 @@ public:
     // place walls for the boundaries
     void setBoundary(const float startX, const float startY, const float endX, const float endY);
 
-    int32_t createWeaponStore(const float x, const float y);//creates a weapon store
-    void addStore(const int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
-    bool storeExists(const int32_t id);
-    std::shared_ptr<Store> getStore(const int32_t id);
-
-    void createDropZone(const float x, const float y, const int num);
-    int32_t createDropPoint(const float x, const float y);
-    bool dropPointExists(const int32_t id);
-    int32_t getFreeDropPointId();
-    DropPoint& getDropPoint(const int32_t id);
-    void freeDropPoint(const int32_t id);
-    bool checkFreeDropPoints();
-
     // Ai Map setters and getters
     auto& getAiMap() const { return AiMap; };
     void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
         AiMap = a;
     }
 
-
-
     //getManagers
-    auto& getStoreManager() const {return storeManager;};
     auto& getTurretManager() const {return turretManager;};
     auto& getMarineManager() const {return marineManager;};
     auto& getZombieManager() const {return zombieManager;};
@@ -169,7 +153,6 @@ public:
     auto& getWeaponManager() const {return weaponManager;};
     auto& getBarricadeManager() const {return barricadeManager;};
     auto& getWallManager() {return wallManager;};
-    auto& getDropPointManager() const {return dropPointManager;};
 
 private:
     GameManager();
@@ -189,9 +172,6 @@ private:
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
     GameHashMap<int32_t, Barricade> barricadeManager;
     GameHashMap<int32_t, Wall> wallManager;
-    GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
-    GameHashMap<int32_t, DropPoint> dropPointManager;
-    std::vector<int32_t> openDropPoints;
 };
 
 

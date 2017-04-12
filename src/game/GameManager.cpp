@@ -8,7 +8,6 @@
 #include "../log/log.h"
 #include "../game/GameManager.h"
 #include "../sprites/Renderer.h"
-#include "../buildings/WeaponStore.h"
 #include "../server/servergamestate.h"
 
 Weapon w;
@@ -141,13 +140,6 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
             static constexpr SDL_Rect WALL_SRC_RECT = {WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H};
             Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
                 WALL_SRC_RECT, WALL_WIDTH, WALL_HEIGHT);
-        }
-    }
-
-    for (const auto& o : storeManager) {
-        if (SDL_HasIntersection(&cam, &o.second->getDestRect())) {
-            Renderer::instance().render(o.second->getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS,
-                o.second->getSrcRect());
         }
     }
 }
@@ -636,111 +628,6 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
 }
 
-/*
- * Created By Maitiu March 30 2017
- * Revised By Michael Goll [April 4, 2017] - Added sprite for store.
- * Creates a Weapon store object and then calls addStore to add it to the manager.
- */
-int32_t GameManager::createWeaponStore(const float x, const float y) {
-    const int32_t id = generateID();
-
-    SDL_Rect weaponStoreRect = {static_cast<int>(x),static_cast<int>(y), STORE_SIZE_W, STORE_SIZE_H};
-    SDL_Rect pickRect = {static_cast<int>(x) - STORE_PICKUP_SIZE / 2, static_cast<int>(y) - STORE_PICKUP_SIZE / 2,
-            STORE_SIZE_W + STORE_PICKUP_SIZE, STORE_SIZE_H + STORE_PICKUP_SIZE};
-
-    std::shared_ptr<WeaponStore> ws = std::make_shared<WeaponStore>(id, weaponStoreRect, pickRect);
-    addStore(id, std::dynamic_pointer_cast<Store>(ws));
-    ws->setSrcRect(WEAPON_STORE_SRC_X, WEAPON_STORE_SRC_Y, WEAPON_STORE_SRC_W, WEAPON_STORE_SRC_H);
-
-    return id;
-}
-
-/*
- * Created By Maitiu March 30 2017
- * adds Store to store manager
- */
- void GameManager::addStore(const int32_t id ,std::shared_ptr<Store> store) {
-     storeManager.emplace(id, store);
- }
-
- /*create by maitiu March 30
-  * Checks if id can be found in storeManager
-  */
- bool GameManager::storeExists(const int32_t id) {
-     return storeManager.count(id);
- }
-
- //created by Maitiu 2017-03-12
- //returns store in StoreManager
- std::shared_ptr<Store> GameManager::getStore(const int32_t id) {
-     const auto& s = storeManager[id];
-     assert(s.second);
-     return s.first;
- }
-
-/*
- * created by Maitiu March 31
- * creates a square area of DropPoints
- */
-void GameManager::createDropZone(const float x, const float y, const int num) {
-    for (int i = 0; i < num; i++) {
-        for (int j = 0; j < num; j++) {
-            createDropPoint(x + (DROP_POINT_SPACE * i), y + (DROP_POINT_SPACE * j));
-        }
-    }
-}
-
- /*
-  * Created by Maitiu March 30
-  */
- int32_t GameManager::createDropPoint(const float x, const float y) {
-     const int32_t id = generateID();
-     dropPointManager.emplace(id, DropPoint(id, x, y));
-     openDropPoints.push_back(id);
-     return id;
- }
-
- /*
-  * Created by Maitiu March 30
-  */
-bool GameManager::dropPointExists(const int32_t id) {
-    return storeManager.count(id);
-}
-
-/*
- * Created by Maitiu March 30
- */
-bool GameManager::checkFreeDropPoints() {
-    return !openDropPoints.empty();
-}
-
-/*
- * Created by Maitiu March 30
- * gets a free drop point but also removes it form the vector
- */
-int32_t GameManager::getFreeDropPointId() {
-     const int32_t id = openDropPoints.back();
-     openDropPoints.pop_back();
-     return id;
-}
-
-/*
- * Created by Maitiu March 30
- * adds DropPoint id to freeDropPoints vector
- */
-void GameManager::freeDropPoint(const int32_t id) {
-    openDropPoints.push_back(id);
-}
-
-/*
- * Created by Maitiu March 30
- */
-DropPoint& GameManager::getDropPoint(const int32_t id) {
-    const auto& s = dropPointManager[id];
-    assert(s.second);
-    return s.first;
-}
-
 // Returns Collision Handler
 CollisionHandler& GameManager::getCollisionHandler() {
     return collisionHandler;
@@ -799,11 +686,6 @@ void GameManager::updateCollider() {
 #pragma omp section
         for (auto& m : weaponDropManager) {
             collisionHandler.insertPickUp(&m.second);
-        }
-
-#pragma omp section
-        for (auto& s : storeManager) {
-            collisionHandler.insertStore(s.second.get());
         }
     }
 }

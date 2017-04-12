@@ -166,27 +166,12 @@ void Map::genWalls(const vector<MapPoint>& wallStart) {
  * Creates and loads shop and dropzone positions.
  */
 void Map::mapLoadToGame() {
-    // Random shop position variable.
-    int pos;
     // Random number generator.
     mt19937 ran;
-    // Shop position being loaded.
-    MapPoint shopPosition;
 
     for (const auto& w : walls) {
         GameManager::instance()->createWall(w.x, w.y, w.width, w.height);
     }
-
-    // Random number generation.
-    pos = ran() % MAX_SHOPS;
-
-    // Shop position being used.
-    // Log which shop position index is loaded.
-    shopPosition = shops[1];
-    logv("Shop position index: %d\n", pos);
-    GameManager::instance()->createWeaponStore(shopPosition.x, shopPosition.y);
-    // Only using one drop zone position.
-    GameManager::instance()->createDropZone(dropPoints[0].x, dropPoints[0].y, DROPZONE_SIZE);
 }
 
 /**

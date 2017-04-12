@@ -56,11 +56,9 @@ public:
     int getHealth() const {return health;}
     void collidingProjectile(const int damage);
     bool fireWeapon();
-    int32_t checkForPickUp();
     int getHealth() {return health;};
     void updateImageDirection();
     void updateImageWalk();
-    void activateStore(const Entity *ep);
     Inventory inventory;
     void setHealth(const int hlth) {health = hlth;};
     int getCurrentHealth() {return health;}; //returns the current health of the marine

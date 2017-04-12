@@ -274,34 +274,6 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
             w->reloadClip();
         }
     }
-    //pickup button
-    if (state[SDL_SCANCODE_E]) {
-        const int currentTime = SDL_GetTicks();
-
-        if (currentTime > (pickupTick + pickupDelay)) {
-            pickupTick = currentTime;
-
-            const int checkTurret = marine->checkForPickUp();
-            if (checkTurret > -1 && holdingTurret == false)
-            {
-                tempTurretID = checkTurret;
-                GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
-                holdingTurret = true;
-            }
-        }
-    }
-    //Drop button
-    if (state[SDL_SCANCODE_F]) {
-        marine->inventory.dropWeapon(marine->getX(), marine->getY());
-    }
-
-    //use Inventory consumable ~ Matt Goerwell - Mar. 5, 2017
-    if(state[SDL_SCANCODE_I]) {
-        if (marine != nullptr) {
-            marine->inventory.useItem(*marine);
-        }
-    }
-
     //added by Maitiu Debug print 5/3 / 2017
     if (state[SDL_SCANCODE_SPACE]) {
         //render guide arrows
@@ -404,22 +376,6 @@ void Player::spawnMapGuides(const int winWidth, const int winHeight) {
     //Rect for BASE guide img
     SDL_Rect baseGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
     ve.addPostTex(2, base.getSrcRect(), baseGuide, TEXTURES::BASE);
-
-
-    //STORES
-    for (const auto& s : gm->getStoreManager()) {
-        const std::pair<float, float> destCoord = getDestCoordinates(s.second.get());
-        double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, destCoord);
-        const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
-        //RECT for Store Guide img
-        SDL_Rect StoreGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second),
-                GUIDE_SIZE / 2, GUIDE_SIZE};
-        ve.addPostTex(2, s.second->getSrcRect(), StoreGuide, TEXTURES::MAP_OBJECTS);
-    }
-
-    //DROP ZONE
-
-
 }
 
 /**
