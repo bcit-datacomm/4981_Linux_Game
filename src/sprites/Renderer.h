@@ -128,7 +128,7 @@ const std::string TEXTURE_MIDDLE = MAP_TEXTURE_PATH + "middle_dirt.png"; //dead 
 const std::string SHOTGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/shotgun.png";
 const std::string RIFLE_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifle.png";
 const std::string HANDGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/pistol.png";
-const std::string PLASMA_DEAGLE_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/plasmeDeagle.png";
+const std::string PLASMA_DEAGLE_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/plasmaDeagle.png";
 const std::string RAILGUN_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/railgun.png";
 const std::string RPG_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/rpg.png";
 const std::string TYPE_75K_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/type75K.png";
@@ -142,7 +142,7 @@ const std::string TURRET_TEXTURE = "assets/texture/Building/turret.png";
 const std::string SHOTGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/shotgunEquipped.png";
 const std::string RIFLE_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifleEquipped.png";
 const std::string HANDGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/pistolEquipped.png";
-const std::string PLASMA_DEAGLE_TEXTURE = "assets/texture/hud/inventoryItems/plasmeDeagleEquipped.png";
+const std::string PLASMA_DEAGLE_TEXTURE = "assets/texture/hud/inventoryItems/plasmaDeagleEquipped.png";
 const std::string RAILGUN_TEXTURE = "assets/texture/hud/inventoryItems/railgunEquipped.png";
 const std::string RPG_TEXTURE = "assets/texture/hud/inventoryItems/rpgEquipped.png";
 const std::string TYPE_75K_TEXTURE = "assets/texture/hud/inventoryItems/type75KEquipped.png";
@@ -177,6 +177,10 @@ const std::string REPLACE_ME = "assets/texture/replace_me.png"; //temporary spri
 const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be removed later
 
 const std::string BLOOD_TEXTURE = "assets/texture/blood.png";
+
+const std::string X_TEXTURE = "assets/texture/xmark.png";
+
+const std::string CHECK_TEXTURE = "assets/texture/checkmark.png";
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine

@@ -165,13 +165,15 @@ void Map::genWalls(const vector<MapPoint>& wallStart) {
  * Creates the wall structures using the GameManager createWall function.
  * Creates and loads shop and dropzone positions.
  */
-void Map::mapLoadToGame() {
+void Map::mapLoadToGame(SDL_Rect screenRect) {
     // Random shop position variable.
     int pos;
     // Random number generator.
     mt19937 ran;
     // Shop position being loaded.
-    MapPoint shopPosition;
+    MapPoint wShopPosition;
+    MapPoint tShopPosition;
+    MapPoint hShopPosition;
 
     for (const auto& w : walls) {
         GameManager::instance()->createWall(w.x, w.y, w.width, w.height);
@@ -182,9 +184,14 @@ void Map::mapLoadToGame() {
 
     // Shop position being used.
     // Log which shop position index is loaded.
-    shopPosition = shops[1];
+    wShopPosition = shops[1];
+    tShopPosition = shops[2];
+    hShopPosition = shops[4];
     logv("Shop position index: %d\n", pos);
-    GameManager::instance()->createWeaponStore(shopPosition.x, shopPosition.y);
+    GameManager::instance()->createWeaponStore(wShopPosition.x, wShopPosition.y, screenRect);
+    GameManager::instance()->createTechStore(tShopPosition.x, tShopPosition.y, screenRect);
+    GameManager::instance()->createHealthStore(hShopPosition.x, hShopPosition.y, screenRect);
+    GameManager::instance()->createBarricadeDrop(tShopPosition.x + 500, hShopPosition.y);
     // Only using one drop zone position.
     GameManager::instance()->createDropZone(dropPoints[0].x, dropPoints[0].y, DROPZONE_SIZE);
 }

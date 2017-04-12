@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: ShotGun.h        
+* Source: ShotGun.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -54,6 +54,8 @@ namespace ShotgunVars {
 
     constexpr int RELOADDELAY = 3000;
     constexpr int FIREDELAY = 1000;
+
+    constexpr int PRICE = 50;
 
     constexpr int START_X = 891;
     constexpr int START_Y = 942;

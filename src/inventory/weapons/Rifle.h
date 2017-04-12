@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: Rifle.h        
+* Source: Rifle.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,8 @@ namespace RifleVars {
     constexpr int CLIP = 50;
     constexpr int CLIPMAX = 50;
     constexpr int AMMO = 1000;
+
+    constexpr int PRICE = 50;
 
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 180;

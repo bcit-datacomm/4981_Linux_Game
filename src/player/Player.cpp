@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "Player.h"
+#include "../audio/AudioManager.h"
 #include "../game/GameManager.h"
 #include "../log/EntityDump.h"
 #include "../sprites/VisualEffect.h"
@@ -20,7 +21,8 @@
 * Apr. 10, 2017, Mark Chen, Mark Tattrie - Added in a shoot delay parameter.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), shootDelay(0), respawnTick(0), marine(nullptr) {
+        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(50),
+        marine(nullptr), gotTurret(false){
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
@@ -197,8 +199,41 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                 shootDelay =+ currentTime + 400;
             }
         }
-    } else if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        if (currentTime > shootDelay) {
+    }
+
+    //fire weapon on left mouse click
+    if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
+        if(marine->isAtStore()){
+            const int currentTime = SDL_GetTicks();
+            if (currentTime > (purchaseTick + purchaseDelay)) {
+                purchaseTick = currentTime;
+                for(auto& s : GameManager::instance()->getStoreManager()){
+                    if(s.second->isOpen()){
+                        VisualEffect &ve = VisualEffect::instance();
+                        int x;
+                        int y;
+                        int clicked;
+                        SDL_GetMouseState(&x, &y);
+                        clicked = s.second->getStoreMenu().getClicked(x, y);
+                        if(clicked >= 0){
+                            int cost = s.second->purchase(clicked, credits);
+
+                            SDL_Rect markRect = {static_cast<int>(x + camX - MARK_SIZE / 2), static_cast<int>(y + camY - MARK_SIZE / 2), MARK_SIZE, MARK_SIZE};
+                            SDL_Rect markSrcRect = {0, 0, MARK_SRC_SIZE, MARK_SRC_SIZE};
+                            if(cost >= 0){
+                                credits = credits - cost;
+                                ve.addPostTex(5, markSrcRect, markRect, TEXTURES::CHECK_MARK);
+                                logv("Purchased\n");
+                            } else {
+                                ve.addPostTex(5, markSrcRect, markRect, TEXTURES::X_MARK);
+                                logv("Not Enough Credits\n");
+                            }
+                        }
+                    }
+                }
+            }
+
+        }else if (currentTime > shootDelay) {
             if(marine->inventory.getCurrent()) {
                 marine->fireWeapon();
             }
@@ -285,6 +320,11 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
             if (checkTurret > -1 && holdingTurret == false)
             {
                 tempTurretID = checkTurret;
+                int dId = GameManager::instance()->getTurret(tempTurretID).getDropZone();
+                if(dId >= 0){
+                    GameManager::instance()->freeDropPoint(dId);
+                    GameManager::instance()->getTurret(tempTurretID).setDropZone(-1);
+                }
                 GameManager::instance()->getTurret(tempTurretID).pickUpTurret();
                 holdingTurret = true;
             }
@@ -398,13 +438,19 @@ void Player::spawnMapGuides(const int winWidth, const int winHeight) {
     //BASE
     Base base = gm->getBase();
     std::pair<float, float> bCoord = base.getDestCoord();
+    std::pair<float, float> dCoord;
     double angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, bCoord);
 
-    const std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
+    std::pair<float, float> gCoord = getGuideCoord(angle, winWidth, winHeight);
     //Rect for BASE guide img
     SDL_Rect baseGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
     ve.addPostTex(2, base.getSrcRect(), baseGuide, TEXTURES::BASE);
 
+    dCoord = gm->getDropZoneCoords();
+    angle = getAngleBetweenPoints({marine->getX(), marine->getY()}, dCoord);
+    gCoord = getGuideCoord(angle, winWidth, winHeight);
+    SDL_Rect dropZoneGuide = {static_cast<int>(gCoord.first), static_cast<int>(gCoord.second), GUIDE_SIZE, GUIDE_SIZE};
+    ve.addPostTex(2, {0,0,100,100}, dropZoneGuide, TEXTURES::CONCRETE);
 
     //STORES
     for (const auto& s : gm->getStoreManager()) {

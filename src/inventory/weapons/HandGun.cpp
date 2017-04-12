@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: HandGun.cpp         
+* Source: HandGun.cpp
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -38,6 +38,6 @@ HandGun::HandGun(const int32_t id) : InstantWeapon(HandgunVars::TYPE, TEXTURES::
         HandgunVars::HITSOUND, HandgunVars::RELOADSOUND, HandgunVars::EMPTYSOUND, HandgunVars::RANGE,
         HandgunVars::DAMAGE, HandgunVars::AOE, HandgunVars::PENETRATION, HandgunVars::ACCURACY, HandgunVars::CLIP,
         HandgunVars::CLIPMAX, HandgunVars::AMMO, HandgunVars::RELOADDELAY, HandgunVars::FIREDELAY, HandgunVars::START_X,
-        HandgunVars::START_Y, id) {
+        HandgunVars::START_Y, id, HandgunVars::PRICE) {
 
 }

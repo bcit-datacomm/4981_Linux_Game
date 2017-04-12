@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: ZombieHand.h       
+* Source: ZombieHand.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@ namespace ZombieHandVars {
 
     constexpr int RELOADDELAY = 0;
     constexpr int FIREDELAY = 300;
+    constexpr int PRICE = 0;
 }
 
 class ZombieHand: public MeleeWeapon {

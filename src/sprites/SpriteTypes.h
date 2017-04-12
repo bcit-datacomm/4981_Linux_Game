@@ -97,7 +97,10 @@ enum class TEXTURES : int {
     DIGGER_ZOMBIE,
 
     //---------- Boss Zombie ----------
-    BOSS_ZOMBIE //Sprite sheet, not split
+    BOSS_ZOMBIE, //Sprite sheet, not split
+
+    CHECK_MARK,
+    X_MARK
 };
 
 #endif

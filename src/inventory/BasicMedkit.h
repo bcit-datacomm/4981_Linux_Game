@@ -13,7 +13,7 @@
 class BasicMedkit: public Consumable {
 public:
     //standard ctor
-    BasicMedkit();
+    BasicMedkit(int32_t id);
     //standard dtor
     ~BasicMedkit();
     //Consumable specific OnConsume Method

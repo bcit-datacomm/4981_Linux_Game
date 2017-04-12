@@ -1,5 +1,5 @@
-#ifndef WEAPONSTORE_H
-#define WEAPONSTORE_H
+#ifndef HEALTHSTORE_H
+#define HEALTHSTORE_H
 
 #include <utility>
 #include <SDL2/SDL.h>
@@ -8,15 +8,17 @@
 #include "../game/GameHashMap.h"
 #include "../sprites/SpriteTypes.h"
 
-class WeaponStore: public Store{
+static constexpr int HEALTH_PACK_PRICE = 20;
+
+class HealthStore: public Store{
 public:
-    WeaponStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
+    HealthStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
             const GameHashMap<TEXTURES, int> i);
 
-    ~WeaponStore();
+    ~HealthStore() = default;
 
     int32_t purchase(const int num, const int credits);//creates item and item drop for user
-    int32_t createWeapon(const int num, const int credits);
+    int32_t createHealth(const int num, const int credits);
 
 private:
 

@@ -38,6 +38,7 @@ namespace KatanaVars {
 
     constexpr int START_X = 891;
     constexpr int START_Y = 1502;
+    constexpr int PRICE = 10;
 }
 
 

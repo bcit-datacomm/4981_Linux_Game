@@ -34,6 +34,10 @@ static constexpr int BOTTOM_RIGHT_ANGLE = 323;
 static constexpr int BOTTOM_LEFT_ANGLE = 216;
 static constexpr int GUIDE_SIZE = 100;
 
+static constexpr int MARK_SIZE = 50;
+static constexpr int MARK_SRC_SIZE = 300;
+static constexpr int ZOMBIE_PRICE = 10;
+
 class Player {
 public:
     Player();
@@ -74,18 +78,34 @@ public:
             const int winWidth, const int winHeight);
     std::pair<float, float> calculateVerticleCoords(const double angle, const int compareDegree,
             const int winWidth, const int winHeight);
+
+    bool hasTurret() const {return gotTurret;};
+    void purchasedTurret() {gotTurret = true;};
+    void lostTurret() {gotTurret = false;};
+
+    void addCredits() {credits += ZOMBIE_PRICE;};
 private:
     int tempBarricadeID;
     int tempTurretID;
     bool holdingTurret;
+
     int pickupTick;
     int pickupDelay;
     int shootDelay;
     int respawnTick;
+
+    int purchaseTick;
+    int purchaseDelay;
+
+
+    int credits;
+
     int32_t id;
     ClientMessage moveAction;
     ClientMessage attackAction;
     Marine *marine;
+    bool gotTurret;
+
 };
 
 #endif

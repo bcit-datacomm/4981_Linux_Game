@@ -24,13 +24,14 @@
 #include "../buildings/DropPoint.h"
 #include "../map/Map.h"
 
+#include "../inventory/BarricadeDrop.h"
 #include "../inventory/WeaponDrop.h"
 #include "../inventory/weapons/Weapon.h"
 #include "../inventory/weapons/HandGun.h"
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
 #include "../inventory/WeaponDrop.h"
-#include "../buildings/DropPoint.h"
+#include "../inventory/ConsumeDrop.h"
 #include "GameHashMap.h"
 
 static constexpr int INITVAL = 0;
@@ -46,9 +47,25 @@ static constexpr int WEAPON_STORE_SRC_Y = 582;
 static constexpr int WEAPON_STORE_SRC_W = 158;
 static constexpr int WEAPON_STORE_SRC_H = 254;
 
+static constexpr int TECH_STORE_SRC_X = 13;
+static constexpr int TECH_STORE_SRC_Y = 582;
+static constexpr int TECH_STORE_SRC_W = 158;
+static constexpr int TECH_STORE_SRC_H = 254;
+
+static constexpr int HEALTH_STORE_SRC_X = 355;
+static constexpr int HEALTH_STORE_SRC_Y = 582;
+static constexpr int HEALTH_STORE_SRC_W = 158;
+static constexpr int HEALTH_STORE_SRC_H = 254;
+
 static constexpr int TURRET_SIZE_H = 150; //Turret height
 static constexpr int TURRET_PUSIZE_W = 125; // Turret pickup-hitbox width
 static constexpr int TURRET_PUSIZE_H = 170; // Turret pickup-hitbox height
+
+static constexpr int BDROP_SRC_X = 13;
+static constexpr int BDROP_SRC_Y = 482;
+static constexpr int BDROP_SRC_W = 100;
+static constexpr int BDROP_SRC_H = 100;
+
 
 static constexpr int WALL_SRC_X = 15;
 static constexpr int WALL_SRC_Y = 478;
@@ -116,10 +133,22 @@ public:
     bool weaponDropExists(const int32_t id);
     WeaponDrop& getWeaponDrop(const int32_t id);
 
+    int32_t createConsumeDrop(const float x, const float y, const int32_t cID);
+    bool consumeDropExists(const int32_t id);
+    ConsumeDrop& getConsumeDrop(const int32_t id);
+    void deleteConsumeDrop(const int32_t id);
+
+
     //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     void addWeapon(std::shared_ptr<Weapon> weapon);
     void removeWeapon(const int32_t id);
+
+    //consumables
+    std::shared_ptr<Consumable> getConsumable(const int32_t id);
+    void addConsumable(std::shared_ptr<Consumable> consumable);
+    void removeConsumable(const int32_t id);
+    bool consumableExists(const int32_t id);
 
     int32_t createBarricade(const float x, const float y);
     void deleteBarricade(const int32_t id);
@@ -139,7 +168,9 @@ public:
     // place walls for the boundaries
     void setBoundary(const float startX, const float startY, const float endX, const float endY);
 
-    int32_t createWeaponStore(const float x, const float y);//creates a weapon store
+    int32_t createWeaponStore(const float x, const float y, SDL_Rect screenrect);//creates a weapon store
+    int32_t createTechStore(const float x, const float y, SDL_Rect screenRect);//creates tech store
+    int32_t createHealthStore(const float x, const float y, SDL_Rect screenRect); //creates Health store
     void addStore(const int32_t id, std::shared_ptr<Store> store);//adds store to sotreManager
     bool storeExists(const int32_t id);
     std::shared_ptr<Store> getStore(const int32_t id);
@@ -152,13 +183,17 @@ public:
     void freeDropPoint(const int32_t id);
     bool checkFreeDropPoints();
 
+    int32_t createBarricadeDrop(const float x, const float y);
+    bool barricadeDropExists(int32_t id) const {return barricadeDropManager.count(id);};
+    void deleteBarricadeDrop(int32_t id);
+    BarricadeDrop& getBarricadeDrop(int32_t id);
     // Ai Map setters and getters
     auto& getAiMap() const { return AiMap; };
     void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
         AiMap = a;
     }
 
-
+    void updateStores();
 
     //getManagers
     auto& getStoreManager() const {return storeManager;};
@@ -171,6 +206,8 @@ public:
     auto& getWallManager() {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
 
+    std::pair<float, float> getDropZoneCoords() const {return dropZoneCoord;};
+
 private:
     GameManager();
     ~GameManager();
@@ -178,7 +215,7 @@ private:
     Player player;
 
     Base base;
-
+    std::pair<float, float> dropZoneCoord;
     CollisionHandler collisionHandler;
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
@@ -188,9 +225,12 @@ private:
     GameHashMap<int32_t, WeaponDrop> weaponDropManager;
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
     GameHashMap<int32_t, Barricade> barricadeManager;
+    GameHashMap<int32_t, BarricadeDrop> barricadeDropManager;
     GameHashMap<int32_t, Wall> wallManager;
     GameHashMap<int32_t, std::shared_ptr<Store>> storeManager;
     GameHashMap<int32_t, DropPoint> dropPointManager;
+    GameHashMap<int32_t,std::shared_ptr<Consumable>> consumableManager;
+    GameHashMap<int32_t, ConsumeDrop> consumeDropManager;
     std::vector<int32_t> openDropPoints;
 };
 

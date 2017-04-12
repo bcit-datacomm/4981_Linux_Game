@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: ShotGun.h        
+* Source: ShotGun.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -41,8 +41,7 @@ ShotGun::ShotGun(const int32_t id) : InstantWeapon(ShotgunVars::TYPE, TEXTURES::
         ShotgunVars::HITSOUND, ShotgunVars::RELOADSOUND, ShotgunVars::EMPTYSOUND, ShotgunVars::RANGE,
         ShotgunVars::DAMAGE, ShotgunVars::AOE, ShotgunVars::PENETRATION, ShotgunVars::ACCURACY, ShotgunVars::CLIP,
         ShotgunVars::CLIPMAX, ShotgunVars::AMMO, ShotgunVars::RELOADDELAY, ShotgunVars::FIREDELAY, ShotgunVars::START_X,
-        ShotgunVars::START_Y, id) {
-
+        ShotgunVars::START_Y, id, ShotgunVars::PRICE) {
 }
 
 

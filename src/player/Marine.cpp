@@ -22,7 +22,7 @@
 Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize,
         const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
 : Entity(id, dest, movementSize, projectileSize, damageSize),
-        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY) {
+        Movable(id, dest, movementSize, projectileSize, damageSize, MARINE_VELOCITY), atStore(false){
     logv("Create Marine\n");
 }
 
@@ -114,14 +114,26 @@ int32_t Marine::checkForPickUp() {
             pickId = wd.getWeaponId();
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
-                int32_t DropPoint = wd.getDropPoint();
-                if(DropPoint != -1){
-                    gm->freeDropPoint(DropPoint);
+                int32_t dropPoint = wd.getDropPoint();
+                if(dropPoint != -1){
+                    gm->freeDropPoint(dropPoint);
                 }
                 gm->deleteWeaponDrop(wd.getId());
             }
-        } else {
-            logv("unable to find id:%d in weaponDropManager\n", pickId);
+        } else if(gm->barricadeDropExists(pickId)) {//check if a barricade drop
+            int32_t dropPoint = gm->getBarricadeDrop(pickId).getDropPoint();
+            if(dropPoint != -1){
+                gm->freeDropPoint(dropPoint);
+            }
+            gm->deleteBarricadeDrop(pickId);
+            gm->getPlayer().handleTempBarricade(Renderer::instance().getRenderer());
+        } else if(gm->consumeDropExists(pickId)) {//check if  consumdrop
+            int32_t dropPoint = gm->getConsumeDrop(pickId).getDropPoint();
+            inventory.pickUpConsumable(gm->getConsumeDrop(pickId).getConsumeId());
+            if(dropPoint != -1){
+                gm->freeDropPoint(dropPoint);
+            }
+            gm->deleteConsumeDrop(pickId);
         }
     } else {
         loge("Pick id was nullptr\n");
@@ -236,8 +248,7 @@ void Marine::updateImageWalk() {
 void Marine::activateStore(const Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
-        int r = rand()% 2 + 1;//random number temp for testing
-
-        gm->getStore(ep->getId())->purchase(r);
+        enterStore();
+        gm->getStore(ep->getId())->openStore();
     }
 }

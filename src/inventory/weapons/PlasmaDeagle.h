@@ -35,6 +35,8 @@ namespace PlasmaDeagleVars {
 
     constexpr int START_X = 891;
     constexpr int START_Y = 564;
+
+    constexpr int PRICE = 564;
 }
 
 class PlasmaDeagle: public InstantWeapon {

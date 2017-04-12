@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: Weapon.h      
+* Source: Weapon.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -43,8 +43,8 @@ public:
     Weapon(const string& type = "no type", TEXTURES sprite = TEXTURES::CONCRETE, const string& fireSound = "", const string& hitSound = "",
         const string& reloadSound = "", const string& emptySound = "", const int range = 0,
         const int damage = 0, const int AOE = 0, const int penetration = 0, const int accuracy = 0, const int clip = 0,
-        const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0, const int texX = 0, 
-        const int texY = 0, int32_t id = -1);
+        const int clipMax = 0, const int ammo = 0, const int reloadDelay = 0, const int fireDelay = 0, const int texX = 0,
+        const int texY = 0, int32_t id = -1, const int p = 0);
 
     Weapon(const Weapon& w);
     ~Weapon() = default;
@@ -71,6 +71,8 @@ public:
     int32_t getID() const {return wID;};
 
     virtual bool fire(Movable& movable);
+
+    int getPrice() const {return price;};
 
     virtual void updateGunRender(const Movable& mov, const SDL_Rect& camera);
 
@@ -104,6 +106,9 @@ protected:
     int fireTick;
 
     int32_t wID;
+
+
+    int price;
 
 };
 

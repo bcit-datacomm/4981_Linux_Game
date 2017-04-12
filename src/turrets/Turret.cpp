@@ -87,6 +87,10 @@ Turret::Turret(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
  */
 
 Turret::~Turret() {
+    if(dropzone != -1){
+        GameManager::instance()->freeDropPoint(dropzone);
+    }
+    GameManager::instance()->getPlayer().lostTurret();
     logv("Destroy Turret\n");
 }
 

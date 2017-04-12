@@ -41,7 +41,6 @@ Barricade::Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& mo
         const int health, const int state, const bool placeable, const bool placed): Object(nid, dest,
         movementSize, pickupSize, BARRICADE_HEIGHT, BARRICADE_WIDTH),health(health), state(state),
         placeable(placeable), placed(placed) {
-    logv("Create Barricade\n");
 
 }
 
@@ -55,7 +54,6 @@ Barricade::Barricade(const int32_t nid, const SDL_Rect& dest, const SDL_Rect& mo
  * Destructor for a barricade, destorys a barricade on the map.
  */
 Barricade::~Barricade() {
-    logv("Destroy Barricade\n");
 }
 
 /**

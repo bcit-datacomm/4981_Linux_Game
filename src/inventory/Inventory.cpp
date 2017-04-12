@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: Inventory.cpp         
+* Source: Inventory.cpp
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/05
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -43,8 +43,8 @@ void Inventory::switchCurrent(const int slot) {
 
 /**
  * Programmers, Maitiu, Alex Zielinski
- * 
- * Revisions: 
+ *
+ * Revisions:
  * Apr. 10, 2017, Alex Zielinski - Implemented pick up sound
  **/
 bool Inventory::pickUp(int32_t weaponId, const float x, const float y) {
@@ -88,7 +88,7 @@ Weapon* Inventory::getCurrent() const {
  *
  * Programmer:
  * Jacob Frank, Alex Zielinski
- * 
+ *
  * Modified:
  * Apr. 10, 2017 Alex Zielinski
  *
@@ -99,7 +99,7 @@ Weapon* Inventory::getCurrent() const {
  *
  * Notes:
  * Function, when called, retrieves the weapon from the inventory slot requested
- * 
+ *
  * Revisions:
  * Apr. 10, 2017 Alex Zielinski: implemented medkit sound effect
  */
@@ -110,10 +110,11 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
     return nullptr;
 }
 
+
 /**
  * Date:        March. 8, 2017
  * Modified:    April. 5, 2017
- * Author:      Matthew Goerwell 
+ * Author:      Matthew Goerwell
  * Function Interface: useItem(Marine& marine)
  *      Marine &x: A reference to the marine using this consumable.
  *
@@ -122,13 +123,14 @@ Weapon* Inventory::getWeaponFromInventory(int inventorySlot) {
  *      It will call the onConsume method for the player's item, assuming they have one.
  */
 void Inventory::useItem(Marine& marine) {
-    if (medkit != nullptr) {
+    if (consumableId != -1) {
         // play medkit effect
         AudioManager::instance().playEffect(EFX_MEDKIT);
-        medkit->OnConsume(marine);
-        medkit = nullptr;
+        if (GameManager::instance()->consumableExists(consumableId)){
+            GameManager::instance()->getConsumable(consumableId)->OnConsume(marine);
+            consumableId = -1;
+        }
     }
-
 }
 
 //Created By Maitiu
@@ -155,7 +157,7 @@ void Inventory::scrollCurrent(int direction) {
  * DESIGNER: Maitiu
  * DATE:      March 29 2017
  * Checks is current CSLot has Weapon then Checks its ammo and creates a weaponDrop and renders it.
- * 
+ *
  * Revisions:
  * Apr. 10, 2017 Alex Zielinski: implemented drop sound effect
  */
@@ -206,4 +208,3 @@ void Inventory::scrollCurrent(int direction) {
      weaponIds[0] = tGun.getID();
      GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
  }
- 

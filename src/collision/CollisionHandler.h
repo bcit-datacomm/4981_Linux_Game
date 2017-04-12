@@ -49,6 +49,8 @@ public:
 
     std::vector<Entity *> detectMeleeCollision(const std::vector<Entity*>& returnObjects, const Entity *entity, const HitBox hb);
 
+    bool detectStoreCollision(const Entity* player, const Entity* store);
+
     std::vector<Entity *>getQuadTreeEntities(const Quadtree& q, const Entity *entity) const; // General Collision handler, pass in quadtree check
 
     void clear();

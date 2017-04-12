@@ -65,11 +65,16 @@ public:
     void setHealth(const int hlth) {health = hlth;};
     int getCurrentHealth() {return health;}; //returns the current health of the marine
 
+    bool isAtStore() const {return atStore;};
+    void enterStore(){atStore = true;};
+    void leaveStore(){atStore = false;};
+
 private:
     std::string username;
     int health = MARINE_MAX_HEALTH;
     int state; //used to select sprite to display
     static int frameCount;
+    bool atStore;
 };
 
 #endif

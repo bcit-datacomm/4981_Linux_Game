@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: Rifle.cpp        
+* Source: Rifle.cpp
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,6 @@
 Rifle::Rifle(const int32_t id) : InstantWeapon(RifleVars::TYPE, TEXTURES::RIFLE, RifleVars::FIRESOUND, RifleVars::HITSOUND,
         RifleVars::RELOADSOUND, RifleVars::EMPTYSOUND, RifleVars::RANGE, RifleVars::DAMAGE, RifleVars::AOE,
         RifleVars::PENETRATION, RifleVars::ACCURACY, RifleVars::CLIP, RifleVars::CLIPMAX, RifleVars::AMMO, RifleVars::RELOADDELAY,
-        RifleVars::FIREDELAY, RifleVars::START_X, RifleVars::START_Y, id) {
+        RifleVars::FIREDELAY, RifleVars::START_X, RifleVars::START_Y, id, RifleVars::PRICE) {
 
 }

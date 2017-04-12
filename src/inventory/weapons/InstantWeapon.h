@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: InstantWeapon.h        
+* Source: InstantWeapon.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ public:
     InstantWeapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound, const string& reloadSound,
             const string& emptySound, const int range, const int damage, const int AOE, const int penetration, const int accuracy,
             const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, const int texX,
-            const int texY, const int32_t id);
+            const int texY, const int32_t id, const int price);
     ~InstantWeapon() = default;
 
     virtual bool fire(Movable& movable);

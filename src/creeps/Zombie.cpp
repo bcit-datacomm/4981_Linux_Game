@@ -37,7 +37,6 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
         const SDL_Rect& damageSize, const int health) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health),
         frameCount(0), ignore(0), flipper(1), actionTick(0), action('\0') {
-    logv("Create Zombie\n");
     inventory.initZombie();
 }
 
@@ -47,7 +46,6 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
  * Date: April 6, 2017
  */
 Zombie::~Zombie() {
-    logv("Destroy Zombie\n");
 }
 /**
  * Author: Isaac Morneau
@@ -73,7 +71,7 @@ void Zombie::update(){
         //the difference in zombie to target distance
         float movX;
         float movY;
-        
+
         //middle of the base
         const int midBaseX = base.getX() + (base.getW() / 2);
         const int midBaseY = base.getY() + (base.getH() / 2);
@@ -119,7 +117,7 @@ void Zombie::update(){
             }
             //-1 converts from cartisian to screen coords
             setRadianAngle(fmod(atan2(movX, movY) + 2 * M_PI, 2 * M_PI));
-            
+
             //we only attack if we are actually in range
             if (hyp <= ZombieHandVars::RANGE) {
                 zAttack();
@@ -128,7 +126,7 @@ void Zombie::update(){
             --ignore;
         }
     }
-    //get the distance of 
+    //get the distance of
     setDX(ZOMBIE_VELOCITY * sin(getRadianAngle()));
     setDY(ZOMBIE_VELOCITY * cos(getRadianAngle()));
 }
@@ -184,6 +182,8 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
     if (health <= 0) {
+        GameManager::instance()->getPlayer().addCredits();
+
 #ifndef SERVER
         VisualEffect::instance().addBody(getDestRect(),getId());
 #endif

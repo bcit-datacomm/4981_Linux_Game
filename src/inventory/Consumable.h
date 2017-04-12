@@ -16,21 +16,22 @@ class Marine;
  */
 class Consumable {
 public:
+
     /**
      * Date:        March. 8, 2017
      * Modified:    -
-     * Author:      Matthew Goerwell 
+     * Author:      Matthew Goerwell
      * Function Interface: Consumable()
      *
      * Description:
      *      Standard constructor for a consumable
      */
-    Consumable(){logv("Create Consumable\n");};
+    Consumable(int32_t i);
 
     /**
      * Date:        March. 8, 2017
      * Modified:    -
-     * Author:      Matthew Goerwell 
+     * Author:      Matthew Goerwell
      * Function Interface: Consumable()
      *      Consumable& c: A reference to an existing Consumable
      *
@@ -42,18 +43,18 @@ public:
     /**
      * Date:        March. 8, 2017
      * Modified:    -
-     * Author:      Matthew Goerwell 
+     * Author:      Matthew Goerwell
      * Function Interface: ~Consumable()
      *
      * Description:
      *      Standard destructor for a consumable
      */
-    virtual ~Consumable(){logv("Destroy Consumable\n");};
+    virtual ~Consumable() = default;
 
     /**
      * Date:        March. 8, 2017
      * Modified:    April. 5, 2017
-     * Author:      Matthew Goerwell 
+     * Author:      Matthew Goerwell
      * Function Interface: OnConsume(Marine& marine)
      *      Marine &x: A reference to the marine using this consumable.
      *
@@ -62,6 +63,11 @@ public:
      *      associated with each consumable type.
      */
     virtual void OnConsume(Marine& marine) = 0;
+
+
+    int32_t getId() const {return id;};
+private:
+    int32_t id;
 };
 
 #endif

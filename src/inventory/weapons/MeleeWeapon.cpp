@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: MeleeWeapon.cpp        
+* Source: MeleeWeapon.cpp
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -42,9 +42,9 @@
 MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fireSound,
         const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
         const int damage, const int AOE, const int penetration, const int accuracy, const int clip, const int clipMax,
-        const int ammo, const int reloadDelay, const int fireDelay, const int texX, const int texY, int32_t id)
+        const int ammo, const int reloadDelay, const int fireDelay, const int texX, const int texY, int32_t id, const int price)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
-        penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, texX, texY, id) {
+        penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, texX, texY, id, price) {
 
 }
 

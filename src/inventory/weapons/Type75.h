@@ -1,8 +1,8 @@
 /*
     Created by Deric Mccadden Apr/6/2017
 */
-#ifndef SHOTGUN_H
-#define SHOTGUN_H
+#ifndef TYPE_75_H
+#define TYPE_75_H
 #include <string>
 
 #include "InstantWeapon.h"
@@ -35,6 +35,8 @@ namespace Type75Vars {
 
     constexpr int START_X = 891;
     constexpr int START_Y = 1314;
+
+    constexpr int PRICE = 10;
 }
 
 class Type75: public InstantWeapon {

@@ -70,7 +70,7 @@ bool GameStateMatch::load() {
     if(m.loadFileData() == 0) {
         logv("file not found");
     }
-    m.mapLoadToGame();
+    m.mapLoadToGame(screenRect);
     GameManager::instance()->setAiMap(m.getAIMap());
     matchManager.setSpawnPoints(m.getZombieSpawn());
 
@@ -198,12 +198,6 @@ void GameStateMatch::handle() {
                     case SDLK_ESCAPE:
                         play = false;
                         break;
-                    case SDLK_b:
-                        if(GameManager::instance()->getPlayer().getMarine()) {
-                                GameManager::instance()->getPlayer().handleTempBarricade(
-                                Renderer::instance().getRenderer());
-                        }
-                        break;
                     case SDLK_p:
                         GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
                     case SDLK_1: //Purposeful flow through
@@ -266,6 +260,7 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
     GameManager::instance()->updateBase();
+    GameManager::instance()->updateStores();
     GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
 
@@ -358,9 +353,6 @@ void GameStateMatch::render() {
 
             //Render the consumable slot if the player has any available
             //Currently only a single consumable item exits (the Medkit)
-            if (GameManager::instance()->getPlayer().getMarine()->inventory.getMedkit()) {
-                hud.renderConsumable(screenRect, GameManager::instance()->getPlayer());
-            }
         }
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());

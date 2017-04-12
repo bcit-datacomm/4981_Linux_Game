@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: HandGun.h        
+* Source: HandGun.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -51,6 +51,10 @@ namespace HandgunVars {
 
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 500;
+
+
+    constexpr int PRICE = 0;
+    
     constexpr int START_X = 891;
     constexpr int START_Y = 0;
 }
