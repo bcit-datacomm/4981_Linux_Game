@@ -20,12 +20,15 @@
 #include <cmath>
 #include <cassert>
 #include <omp.h>
+#include <thread>
+#include <mutex>
 
 #include "Quadtree.h"
 #include "CollisionHandler.h"
 #include "../player/Marine.h"
 #include "../log/log.h"
 #include "../inventory/weapons/Target.h"
+#include "../game/GameManager.h"
 
 /**
  * Date: Feb. 4, 2017
@@ -140,6 +143,7 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
+    std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
     const auto& nearbyZombies = zombieTree.retrieve({gunX, gunY}, {endX, endY});
     const auto& nearbyWalls = wallTree.retrieve({gunX, gunY}, {endX, endY});
 
@@ -248,6 +252,8 @@ std::vector<Entity *> CollisionHandler::getQuadTreeEntities(const Quadtree& q, c
 }
 
 void CollisionHandler::clear() {
+    std::lock_guard<std::mutex> lock(GameManager::instance()->marineMut);
+    std::lock_guard<std::mutex> lock1(GameManager::instance()->zombieMut);
     zombieMovementTree.clear();
     marineTree.clear();
     zombieTree.clear();

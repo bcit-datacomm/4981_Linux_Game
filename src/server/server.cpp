@@ -161,6 +161,7 @@ void processPacket(const char *data) {
             {
                 const DeleteAction& da = mesg->data.da;
                 deleteEntity(da);
+                saveDeletion(da);
             }
         default:
             logv("Received packet with unknown id\n");
