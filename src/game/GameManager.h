@@ -20,7 +20,6 @@
 #include "../UDPHeaders.h"
 #include "../map/Map.h"
 
-#include "../inventory/WeaponDrop.h"
 #include "../inventory/weapons/Weapon.h"
 #include "../inventory/weapons/HandGun.h"
 #include "../inventory/weapons/Rifle.h"
@@ -134,7 +133,6 @@ private:
 
     CollisionHandler collisionHandler;
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
-    std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
     GameHashMap<int32_t, Zombie> zombieManager;
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
