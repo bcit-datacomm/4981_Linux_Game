@@ -13,8 +13,6 @@ extern std::vector<DeleteAction> deleteList;
 
 void updateMarine(const MoveAction& ma);
 void performAttack(const AttackAction& aa);
-void processBarricade(const BarricadeAction& ba);
-void processTurret(const TurretAction& ta);
 void deleteEntity(const DeleteAction& da);
 void saveDeletion(const DeleteAction& da);
 void saveAttack(const AttackAction& aa);

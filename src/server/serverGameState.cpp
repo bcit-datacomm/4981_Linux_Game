@@ -79,35 +79,6 @@ void performAttack(const AttackAction& aa) {
     }
 }
 
-void processBarricade(const BarricadeAction& ba) {
-    std::lock_guard<std::mutex> lock(mut);
-    Barricade& tempBarricade = GameManager::instance()->getBarricade(ba.barricadeid);
-    if (ba.actionid == UDPHeaders::PICKUP) {
-        //No noticeable code in game logic for picking up a barricade
-    } else if (ba.actionid == UDPHeaders::DROPOFF) {
-        if (tempBarricade.isPlaceable()) {
-            tempBarricade.placeBarricade();
-            tempBarricade.setPosition(ba.xpos, ba.ypos);
-        }
-    } else {
-        logv("Received barricade packet with unknown action id\n");
-    }
-}
-
-void processTurret(const TurretAction& ta) {
-    std::lock_guard<std::mutex> lock(mut);
-    Turret& tempTurret = GameManager::instance()->getTurret(ta.turretid);
-    if (ta.actionid == UDPHeaders::PICKUP) {
-        tempTurret.pickUpTurret();
-        tempTurret.setPosition(ta.xpos, ta.ypos);
-    } else if (ta.actionid == UDPHeaders::DROPOFF) {
-        tempTurret.placeTurret();
-        tempTurret.setPosition(ta.xpos, ta.ypos);
-    } else {
-        logv("Received turret packet with unknown action id\n");
-    }
-}
-
 /**
  * Creates a vector of PlayerData structs for use in generating outut
  * packets.
@@ -174,18 +145,6 @@ void deleteEntity(const DeleteAction& da) {
             break;
         case UDPHeaders::ZOMBIE:
             gm->deleteZombie(da.entityid);
-            break;
-        case UDPHeaders::TURRET:
-            gm->deleteTurret(da.entityid);
-            break;
-        case UDPHeaders::BARRICADE:
-            gm->deleteBarricade(da.entityid);
-            break;
-        case UDPHeaders::WEAPON:
-            gm->removeWeapon(da.entityid);
-            break;
-        case UDPHeaders::WEAPONDROP:
-            gm->deleteWeaponDrop(da.entityid);
             break;
         default:
             logv("Deletion packet with unknown type received\n");

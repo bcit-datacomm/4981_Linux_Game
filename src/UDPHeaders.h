@@ -53,113 +53,17 @@ enum class UDPHeaders : int32_t {
     PLAYERH, // players
     ZOMBIEH, // zombies
     ATTACKACTIONH, //attacks
-    SHOPPURCHASEH, // shop purchase
-    BARRICADEACTIONH, // action on barricade
-    TURRETACTIONH, // action on turret
 
     DELETE, //Delete action
     MARINE, //Used for deletion
     ZOMBIE, //Used for deletion
-    TURRET, //Used for deletion
-    BARRICADE, //Used for deletion
-    OBJECT, //Used for deletion
-    WEAPON, //Used for deletion
-    WEAPONDROP, //Used for deletion
 
     // movement headers
     WALK,
-    DROPOFF,
-    PICKUP,
     //attack Headers
     SHOOT,
     HIT,
-    //weapon headers
-    DEAGLEH,
-    RIFLEH,
-    //shop item headers
-    HEALTHPACKH,
-    AMMO,
-    TURRETPURCHASE,
-    BARRICADEPURCHASE
 };
-
-/*------------------------------------------------------------------------------
-* Struct: TurretAction
-*
-* DATE: Mar. 26, 2017
-*
-* REVISIONS:
-* V1, Mar 26 2017 - EY
-*
-* DESIGNER: Eva Yu
-*
-* PROGRAMMER: Eva Yu
-*
-* Data Members:
-* int32_t   turretid - the turret being moved
-* int32_t   actionid - PICK UP / DROP OFF
-* float     xpos - xPosition of the item
-* float     ypos - yPosition of the item
---------------------------------------------------------------------------*/
-typedef struct {
-    int32_t turretid;
-    UDPHeaders actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
-    float xpos;
-    float ypos;
-} __attribute__((packed, aligned(1))) TurretAction;
-
-/*------------------------------------------------------------------------------
-* Struct: BarricadeAction
-*
-* DATE: Mar. 26, 2017
-*
-* REVISIONS:
-* V1, Mar 26 2017 - EY
-*
-* DESIGNER: Eva Yu
-*
-* PROGRAMMER: Eva Yu
-*
-* Data Members:
-* int32_t   barricadeid - the barricade being moved
-* int32_t   actionid - PICK UP / DROP OFF
-* float     xpos - xPosition of the item
-* float     ypos - yPosition of the item
-*
-* NOTE:
-* A barricade should not be able to move after being dropped off
---------------------------------------------------------------------------*/
-typedef struct {
-    int32_t barricadeid;
-    UDPHeaders actionid; // UDPHeaders::PICKUP or UDPHeaders::DROPOFF
-    float xpos;
-    float ypos;
-} __attribute__((packed, aligned(1))) BarricadeAction;
-
-/*------------------------------------------------------------------------------
-* Struct: ShopPurchase
-*
-* DATE: Mar. 26, 2017
-*
-* REVISIONS:
-* V1, Mar 26 2017 - EY
-*
-* DESIGNER: Eva Yu
-*
-* PROGRAMMER: Eva Yu
-*
-* Data Members:
-* int32_t   shopid - shoip type specifier
-* int32_t   itemid - item bought specifier
-* int32_t   quantity - number of items bought
-* float   cost - total cost of purchase
---------------------------------------------------------------------------*/
-typedef struct {
-    int32_t shopid;
-    int32_t itemid;
-    int32_t quantity;
-    float cost;
-} __attribute__((packed, aligned(1))) ShopPurchase;
 
 /*------------------------------------------------------------------------------
 * Struct: AttackAction
@@ -372,9 +276,6 @@ typedef struct
 union PacketData {
     MoveAction ma;
     AttackAction aa;
-    ShopPurchase sp;
-    TurretAction ta;
-    BarricadeAction ba;
     DeleteAction da;
 };
 

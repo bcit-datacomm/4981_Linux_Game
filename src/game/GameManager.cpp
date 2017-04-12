@@ -425,9 +425,6 @@ int32_t GameManager::createTurret() {
  */
 void GameManager::deleteTurret(const int32_t id) {
     turretManager.erase(id);
-#ifdef SERVER
-    saveDeletion({UDPHeaders::TURRET, id});
-#endif
 }
 
 /**
@@ -583,9 +580,6 @@ void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
  */
 void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
-#ifdef SERVER
-    saveDeletion({UDPHeaders::WEAPON, id});
-#endif
 }
 
 //Created By Maitiu 2017-03-12
@@ -640,9 +634,6 @@ std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
 // Deletes weapon from level
 void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
-#ifdef SERVER
-    saveDeletion({UDPHeaders::WEAPONDROP, id});
-#endif
 }
 
 /*
@@ -913,9 +904,6 @@ int32_t GameManager::createBarricade(const float x, const float y) {
 
 void GameManager::deleteBarricade(const int32_t id) {
     barricadeManager.erase(id);
-#ifdef SERVER
-    saveDeletion({UDPHeaders::BARRICADE, id});
-#endif
 }
 
 // Get a barricade by its id

@@ -157,23 +157,6 @@ void processPacket(const char *data) {
                 saveAttack(aa);
             }
             break;
-        case UDPHeaders::BARRICADEACTIONH:
-            {
-                const BarricadeAction& ba = mesg->data.ba;
-                processBarricade(ba);
-            }
-            break;
-        case UDPHeaders::TURRETACTIONH:
-            {
-                const TurretAction& ta = mesg->data.ta;
-                processTurret(ta);
-            }
-            break;
-        case UDPHeaders::SHOPPURCHASEH:
-            {
-                //const BarricadeAction& ba = mesg->data.ba;
-            }
-            break;
         case UDPHeaders::DELETE:
             {
                 const DeleteAction& da = mesg->data.da;
