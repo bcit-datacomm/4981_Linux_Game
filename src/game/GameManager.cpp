@@ -179,26 +179,6 @@ bool GameManager::hasMarine(const int32_t id) const {
     return marineManager.count(id);
 }
 
-
-/**
- * Date: Mar. 01, 2017
- * Modified: Mar. 30, 2017 - Mark Chen
- *           Apr. 05, 2017 - Mark Chen
- * Designer: Jamie Lee
- *
- * Programmer: Jamie Lee, Mark Chen
- *
- * Function Interface: void updateTurrets()
- *
- * Description:
- * Updates the turrets actions.
- *
- * Revisions:
- * Mar. 30, 2017, Mark Chen : turrets now fire when they detect an enemy
- * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
- * Apr. 10, 2017, Mark Chen : turrets now do not track targets while it's being held.
- */
-
 /**
  * Date: Feb. 4, 2017
  * Modified: ----
