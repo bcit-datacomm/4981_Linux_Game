@@ -35,20 +35,20 @@ int TechStore::purchase(const int num, const int credits){
             switch(num){
                 case 0:
                 {
-                    if(credits >= 500 && !gm->getPlayer().hasTurret()){
+                    if(credits >= 10 && !gm->getPlayer().hasTurret()){
                         int32_t id = gm->createTurret(dp.getCoord().first, dp.getCoord().second);
                         gm->getTurret(id).setDropZone(dropPId);
                         gm->getPlayer().purchasedTurret();
-                        return 500;
+                        return 10;
                     }
                     break;
                 }
                 case 1:
                 {
-                    if(credits >= 100){
+                    if(credits >= 10){
                         int32_t id = gm->createBarricadeDrop(dp.getCoord().first, dp.getCoord().second);
                         gm->getBarricadeDrop(id).setDropPoint(dropPId);
-                        return 100;
+                        return 10;
                     }
                     break;
                 }

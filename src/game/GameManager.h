@@ -61,6 +61,11 @@ static constexpr int TURRET_SIZE_H = 150; //Turret height
 static constexpr int TURRET_PUSIZE_W = 125; // Turret pickup-hitbox width
 static constexpr int TURRET_PUSIZE_H = 170; // Turret pickup-hitbox height
 
+static constexpr int BDROP_SRC_X = 13;
+static constexpr int BDROP_SRC_Y = 482;
+static constexpr int BDROP_SRC_W = 100;
+static constexpr int BDROP_SRC_H = 100;
+
 
 static constexpr int WALL_SRC_X = 15;
 static constexpr int WALL_SRC_Y = 478;

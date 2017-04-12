@@ -163,12 +163,13 @@ void StoreMenu::createTechStoreMenu(){
         switch(i){
             case 0:
             tex = TEXTURES::TURRET;
+            Renderer::instance().render(slot[i], tex);
             break;
             case 1:
-            tex = TEXTURES::CONCRETE;
+            tex = TEXTURES::MAP_OBJECTS;
+            Renderer::instance().render(slot[i], tex, {B_SRC_X, B_SRC_Y, B_SRC_W, B_SRC_H});
             break;
         }
-        Renderer::instance().render(slot[i], tex);
     }
 }
 

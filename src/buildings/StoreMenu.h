@@ -23,6 +23,11 @@ constexpr double WEAPONS_HEIGHT = .4;
 constexpr int SLOT_SIZE = 4;
 constexpr int SLOT_X = 16;
 constexpr int V_SPACE = 1.2;
+
+static constexpr int B_SRC_X = 15;
+static constexpr int B_SRC_Y = 478;
+static constexpr int B_SRC_W = 122;
+static constexpr int B_SRC_H = 83;
 class StoreMenu {
 
 public:

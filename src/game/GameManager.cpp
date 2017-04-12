@@ -76,7 +76,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     for (const auto& o: barricadeDropManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
             Renderer::instance().render(o.second.getRelativeDestRect(cam),
-                TEXTURES::CONCRETE);
+                TEXTURES::MAP_OBJECTS, o.second.getSrcRect());
         }
     }
 
@@ -143,10 +143,10 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
             if(!o.second.isPlaceable()) {
                 Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, o.second.getSrcRect());
+                Renderer::instance().setAlpha(TEXTURES::MAP_OBJECTS, 255);
             } else {
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
+                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::MAP_OBJECTS, o.second.getSrcRect());
             }
         }
     }
@@ -830,6 +830,7 @@ int32_t GameManager::createBarricadeDrop(const float x, const float y){
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
 
     barricadeDropManager.emplace(id, BarricadeDrop(id, barricadeDropRect, pickRect))->second.setPosition(x,y);
+    getBarricadeDrop(id).setSrcRect(WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H);
     return id;
 }
 
@@ -1064,6 +1065,7 @@ int32_t GameManager::createBarricade(const float x, const float y) {
     SDL_Rect pickRect = temp;
 
     const auto& elem = barricadeManager.emplace(id, Barricade(id, barricadeRect, moveRect, pickRect));
+    getBarricade(id).setSrcRect(WALL_SRC_X, WALL_SRC_Y, WALL_SRC_W, WALL_SRC_H);
     elem->second.setPosition(x,y);
     return id;
 }
