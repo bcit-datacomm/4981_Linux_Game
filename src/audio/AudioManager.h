@@ -70,7 +70,7 @@
 #define EFX_WLRIFLE     AUDIO_PATH "weapon_rifle_fire_effect.ogg"
 #define EFX_WSHOTGUN    AUDIO_PATH "weapon_shotgun_fire_effect.ogg"
 #define EFX_WTURRET   	AUDIO_PATH "weapon_turret_fire_effect.ogg"
-#define EFX_WDEAGLE		AUDIO_PATH "weapon_deagle_fire_effect.ogg"	
+#define EFX_WDEAGLE		AUDIO_PATH "weapon_deagle_fire_effect.ogg"
 #define EFX_WREPEATER	AUDIO_PATH "weapon_repeater_fire_effect.ogg"
 #define EFX_WRAIL01		AUDIO_PATH "weapon_rail_fire_effect_01.ogg"
 #define EFX_WRAIL02		AUDIO_PATH "weapon_rail_fire_effect_02.ogg"
@@ -93,8 +93,6 @@
 #define EFX_ZATTACK01   AUDIO_PATH "zombie_hit_1.ogg"
 #define EFX_ZATTACK02   AUDIO_PATH "zombie_hit_2.ogg"
 #define EFX_ZGROAN01    AUDIO_PATH "zombie_groan_effect_1"
-
-
 //maps for storing loaded files.
 typedef std::map<std::string, Mix_Music*> musicMap;
 typedef std::map<std::string, Mix_Chunk*> chunkMap;

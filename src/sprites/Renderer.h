@@ -178,6 +178,10 @@ const std::string RIFLE = "assets/texture/wall.png"; //temporary sprite, will be
 
 const std::string BLOOD_TEXTURE = "assets/texture/blood.png";
 
+const std::string X_TEXTURE = "assets/texture/xmark.png";
+
+const std::string CHECK_TEXTURE = "assets/texture/checkmark.png";
+
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
 static constexpr int TOTAL_SPRITES = 45; //number of total sprites

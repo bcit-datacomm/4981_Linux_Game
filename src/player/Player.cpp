@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "Player.h"
+#include "../audio/AudioManager.h"
 #include "../game/GameManager.h"
 #include "../log/EntityDump.h"
 #include "../sprites/VisualEffect.h"
@@ -20,7 +21,7 @@
 * Apr. 10, 2017, Mark Chen, Mark Tattrie - Added in a shoot delay parameter.
 */
 Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(1000),
+        pickupTick(0), pickupDelay(200), respawnTick(0), purchaseTick(0), purchaseDelay(200), credits(50),
         marine(nullptr), gotTurret(false){
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
@@ -208,6 +209,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                 purchaseTick = currentTime;
                 for(auto& s : GameManager::instance()->getStoreManager()){
                     if(s.second->isOpen()){
+                        VisualEffect &ve = VisualEffect::instance();
                         int x;
                         int y;
                         int clicked;
@@ -215,10 +217,16 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
                         clicked = s.second->getStoreMenu().getClicked(x, y);
                         if(clicked >= 0){
                             int cost = s.second->purchase(clicked, credits);
+
+                            SDL_Rect markRect = {x + camX - MARK_SIZE / 2, y + camY - MARK_SIZE / 2, MARK_SIZE, MARK_SIZE};
+                            SDL_Rectr markSrcRect = {0, 0, MARK_SRC_SIZE, MARK_SRC_SIZE};
+                            printf("x:%d y:%d\n", x, y);
                             if(cost >= 0){
                                 credits = credits - cost;
+                                ve.addPostTex(5, markSrcRect, markRect, TEXTURES::CHECK_MARK);
                                 logv("Purchased\n");
                             } else {
+                                ve.addPostTex(5, markSrcRect, markRect, TEXTURES::X_MARK);
                                 logv("Not Enough Credits\n");
                             }
                         }

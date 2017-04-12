@@ -99,6 +99,10 @@ void Renderer::loadSprites() {
     createTexture(TEXTURES::DIGGER_ZOMBIE, ZOMBIE_DIGGER);
     //boss
     createTexture(TEXTURES::BOSS_ZOMBIE, ZOMBIE_BOSS);
+
+    createTexture(TEXTURES::CHECK_MARK, CHECK_TEXTURE);
+
+    createTexture(TEXTURES::X_MARK, X_TEXTURE);
 }
 
 /**

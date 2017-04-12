@@ -18,7 +18,6 @@ TechStore::TechStore(const int32_t id, const SDL_Rect dest, const SDL_Rect picku
 
 /*maitiu March 30*/
 TechStore::~TechStore(){
-    logv("Destoryed Store");
 }
 
 /*

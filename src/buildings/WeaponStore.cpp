@@ -24,7 +24,6 @@ WeaponStore::WeaponStore(const int32_t id, const SDL_Rect dest, const SDL_Rect p
 
 /*maitiu March 30*/
 WeaponStore::~WeaponStore(){
-    logv("Destoryed Store");
 }
 
 /*

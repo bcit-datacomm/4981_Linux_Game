@@ -34,6 +34,9 @@ static constexpr int BOTTOM_RIGHT_ANGLE = 323;
 static constexpr int BOTTOM_LEFT_ANGLE = 216;
 static constexpr int GUIDE_SIZE = 100;
 
+static constexpr int MARK_SIZE = 50;
+static constexpr int MARK_SRC_SIZE = 300;
+
 class Player {
 public:
     Player();

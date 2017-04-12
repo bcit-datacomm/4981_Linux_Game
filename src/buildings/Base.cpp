@@ -8,12 +8,9 @@ Base::Base(const int32_t nid, const SDL_Rect& dest, const int health): Object(ni
         health(health) {
     setX((MAP_WIDTH / 2) - BASE_WIDTH / 2);
     setY((MAP_HEIGHT / 2) - BASE_HEIGHT / 2);
-
-    logv("Create Base\n");
 }
 
 Base::~Base() {
-    logv("Destroy Base\n");
 }
 
 void Base::onCollision() {
