@@ -158,8 +158,10 @@ void GameManager::updateZombies(const float delta) {
         for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
 #pragma omp task firstprivate(it)
             {
-                it->second.update();
-                it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                if (!networked) {
+                    it->second.update();
+                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                }
 #ifndef SERVER
                 it->second.updateImageDirection();
                 it->second.updateImageWalk();

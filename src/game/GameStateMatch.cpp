@@ -250,7 +250,6 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateBase();
-    GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
 
 #ifndef SERVER
@@ -260,10 +259,6 @@ void GameStateMatch::update(const float delta) {
                 GameManager::instance()->getPlayer().getMarine()->getY());
     }
 #endif
-
-    if (GameManager::instance()->getPlayer().checkMarineState()) {
-        GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
-    }
 }
 
 /**
