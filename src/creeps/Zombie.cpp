@@ -181,7 +181,8 @@ void Zombie::collidingProjectile(int damage) {
 #ifndef SERVER
         VisualEffect::instance().addBody(getDestRect(),getId());
 #endif
-        GameManager::instance()->deleteZombie(getId());
+        isAlive = false;
+        //GameManager::instance()->deleteZombie(getId());
 #ifndef SERVER
     } else {
         VisualEffect::instance().addBlood(getDestRect());

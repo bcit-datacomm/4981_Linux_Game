@@ -122,7 +122,7 @@ public:
 
     //getManagers
     auto& getMarineManager() const {return marineManager;};
-    auto& getZombieManager() const {return zombieManager;};
+    auto& getZombieManager() {return zombieManager;};
     auto& getWeaponManager() const {return weaponManager;};
     auto& getWallManager() {return wallManager;};
 
