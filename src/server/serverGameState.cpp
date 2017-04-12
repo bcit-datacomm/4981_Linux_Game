@@ -145,13 +145,18 @@ void deleteEntity(const DeleteAction& da) {
         case UDPHeaders::MARINE:
             gm->deleteMarine(da.entityid);
             break;
-        case UDPHeaders::ZOMBIE:
 #ifdef SERVER
+        case UDPHeaders::ZOMBIE:
+            {
             std::lock_guard<std::mutex> lock(gm->zombieMut);
             gm->getZombieManager().erase(da.entityid);
-#endif
             //gm->deleteZombie(da.entityid);
+            }
             break;
+#else
+        case UDPHeaders::ZOMBIE:
+            break;
+#endif
         default:
             logv("Deletion packet with unknown type received\n");
             break;
