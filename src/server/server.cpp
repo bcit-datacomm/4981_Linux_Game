@@ -163,6 +163,17 @@ void processPacket(const char *data) {
                 deleteEntity(da);
                 saveDeletion(da);
             }
+            break;
+        case UDPHeaders::KILL:
+            {
+                const KillAction& ka = mesg->data.ka;
+                if (gm->hasMarine(ka.entityid)) {
+                    auto& p = gm->getMarine(ka.entityid).first;
+                    p.setHealth(0);
+                    p.updateLifeState();
+                }
+            }
+            break;
         default:
             logv("Received packet with unknown id\n");
             break;

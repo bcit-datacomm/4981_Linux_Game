@@ -63,6 +63,7 @@ enum class UDPHeaders : int32_t {
     //attack Headers
     SHOOT,
     HIT,
+    KILL,
 };
 
 /*------------------------------------------------------------------------------
@@ -194,6 +195,11 @@ typedef struct {
     float direction;
 }  __attribute__((packed, aligned(1))) ZombieData;
 
+typedef struct {
+    int32_t entityid;
+}  __attribute__((packed, aligned(1))) KillAction;
+
+
 /*------------------------------------------------------------------------------
 * Struct: DeleteAction
 *
@@ -277,6 +283,7 @@ union PacketData {
     MoveAction ma;
     AttackAction aa;
     DeleteAction da;
+    KillAction ka;
 };
 
 /*------------------------------------------------------------------------------
@@ -300,5 +307,6 @@ struct ClientMessage {
     int32_t id;
     PacketData data;
 };
+
 
 #endif
