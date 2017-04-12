@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: Weapon.h       
+* Source: Weapon.h
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -49,16 +49,16 @@ Weapon::Weapon(const string& type, TEXTURES sprite, const string& fireSound, con
         const int clip, const int clipMax, const int ammo, const int reloadDelay, const int fireDelay, const int texX,
         const int texY, int32_t id) : weaponSrc({texX, texY, WEAPON_WIDTH, WEAPON_HEIGHT}),rotate{0, 0},
         type(type), spriteType(sprite), fireSound(fireSound), hitSound(hitSound), reloadSound(reloadSound), emptySound(emptySound),
-        range(range), damage(damage), AOE(AOE), penetration(penetration), accuracy(accuracy), clip(clip), clipMax(clipMax), 
+        range(range), damage(damage), AOE(AOE), penetration(penetration), accuracy(accuracy), clip(clip), clipMax(clipMax),
         ammo(ammo), reloadDelay(reloadDelay), fireDelay(fireDelay), reloadTick(0), fireTick(0),  wID(id){
 }
 
 Weapon::Weapon(const Weapon& w)
-        : weaponSrc(w.weaponSrc), rotate(w.rotate), type(w.type), spriteType(w.spriteType), fireSound(w.fireSound), 
-        hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound), range(w.range), damage(w.damage), AOE(w.AOE), 
-        penetration(w.penetration), accuracy(w.accuracy), clip(w.clip), clipMax(w.clipMax), ammo(w.ammo), 
+        : weaponSrc(w.weaponSrc), rotate(w.rotate), type(w.type), spriteType(w.spriteType), fireSound(w.fireSound),
+        hitSound(w.hitSound), reloadSound(w.reloadSound), emptySound(w.emptySound), range(w.range), damage(w.damage), AOE(w.AOE),
+        penetration(w.penetration), accuracy(w.accuracy), clip(w.clip), clipMax(w.clipMax), ammo(w.ammo),
         reloadDelay(w.reloadDelay), fireDelay(w.fireDelay), reloadTick(w.reloadTick), fireTick(w.fireTick), wID(w.getID()) {
-    
+
 }
 
 
@@ -123,9 +123,11 @@ bool Weapon::fire(Movable& movable){
     if(!chamberRound()){
         return false;
     }
-    if (networked) {
+
+    if (networked && movable.getId() == GameManager::instance()->getPlayer().getId()) {
         GameManager::instance()->getPlayer().sendServAttackAction();
     }
+
     AudioManager::instance().playEffect(fireSound.c_str());
     return true;
 }

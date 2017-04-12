@@ -1,16 +1,16 @@
 /*------------------------------------------------------------------------------
-* Source: InstantWeapon.cpp        
+* Source: InstantWeapon.cpp
 *
 * Functions:
 *
-* Date: 
+* Date:
 *
-* Revisions: 
+* Revisions:
 * Edited By : Tim Makimov on 2017/APR/10
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
 ------------------------------------------------------------------------------*/
@@ -56,8 +56,8 @@ using std::string;
  * Ctor for Instant Weapon
  */
 InstantWeapon::InstantWeapon(const string& type, TEXTURES sprite, const string& fireSound, const string& hitSound,
-        const string& reloadSound, const string& emptySound, const int range, const int damage, const int AOE, 
-        const int penetration, const int accuracy, const int clip, const int clipMax, const int ammo, const int reloadDelay, 
+        const string& reloadSound, const string& emptySound, const int range, const int damage, const int AOE,
+        const int penetration, const int accuracy, const int clip, const int clipMax, const int ammo, const int reloadDelay,
         const int fireDelay, const int texX, const int texY, const int32_t id)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
         penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, texX, texY, id) {
@@ -160,7 +160,7 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
         targetList.removeTop();
     }
     fireAnimation(targetList.getOriginX(), targetList.getOriginY(), finalX, finalY);
-    
+
 }
 
 
