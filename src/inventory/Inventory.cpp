@@ -22,12 +22,14 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 
-Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
-        tempZombieHand(GameManager::instance()->generateID()) {
+Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),defaultGun2(GameManager::instance()->generateID()),
+        defaultGun3(GameManager::instance()->generateID()), tempZombieHand(GameManager::instance()->generateID()) {
     weaponIds[0] = defaultGun.getID();
-    weaponIds[1] = defaultGun.getID();
-    weaponIds[2] = defaultGun.getID();
+    weaponIds[1] = defaultGun2.getID();
+    weaponIds[2] = defaultGun3.getID();
     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(defaultGun2)));
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(defaultGun3)));
 }
 
 

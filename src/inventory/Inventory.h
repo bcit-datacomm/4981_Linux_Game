@@ -51,6 +51,9 @@ private:
     int current = 0;//current weapon
     std::array<int32_t, 3> weaponIds;//array of weapon ids
     HandGun defaultGun;
+    Rifle defaultGun2;
+    ShotGun defaultGun3;
+
     ZombieHand tempZombieHand;
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     //when this is updated, update the getMedkit function
