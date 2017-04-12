@@ -36,9 +36,7 @@
  * Constructor for Collision Handler
  */
 CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), marineTree(0, {0,0,2000,2000}), 
-        zombieTree(0, {0,0,2000,2000}), barricadeTree(0, {0,0,2000,2000}),turretTree(0, {0,0,2000,2000}), 
-        wallTree(0, {0,0,2000,2000}), pickUpTree(0, {0,0,2000,2000}), objTree(0, {0,0,2000,2000}), 
-        storeTree(0,{0,0,2000,2000}) {
+        zombieTree(0, {0,0,2000,2000}), wallTree(0, {0,0,2000,2000}) {
 
 }
 
@@ -100,27 +98,6 @@ bool CollisionHandler::detectMovementCollision(std::vector<Entity*> returnObject
         }
     }
     return false;
-}
-
-/**
- * Date: Mar. 1, 2017
- * Modified: Mar. 15 2017 - Mark Tattrie
- * Author: Maitiu Morton.
- * Function Interface: Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects,
- *       const Entity *entity)
- * Description:
- * Check for pickup collision
- */
-Entity *CollisionHandler::detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity) {
-    for (const auto& obj: returnObjects) {
-        if (obj && entity != obj
-            && SDL_HasIntersection(&entity->getMoveHitBox().getRect(), &obj->getPickUpHitBox().getRect())
-                && !(entity->getMoveHitBox().isPlayerFriendly() && obj->getPickUpHitBox().isPlayerFriendly())) {
-            return obj;
-        }
-    }
-    logv("nothing to pick up\n");
-    return nullptr;
 }
 
 /**
@@ -274,11 +251,6 @@ void CollisionHandler::clear() {
     zombieMovementTree.clear();
     marineTree.clear();
     zombieTree.clear();
-    barricadeTree.clear(); 
-    turretTree.clear();
-    pickUpTree.clear();
-    objTree.clear();
-    storeTree.clear();
 }
 
 void CollisionHandler::insertMarine(Entity *e) {
@@ -290,33 +262,9 @@ void CollisionHandler::insertZombie(Entity *e) {
     zombieTree.insert(e);
 }
 
-void CollisionHandler::insertBarricade(Entity *e) {
-    insertZombieMovementEntity(e);
-    barricadeTree.insert(e);
-}
-
-void CollisionHandler::insertTurret(Entity *e) {
-    insertZombieMovementEntity(e);
-    turretTree.insert(e);
-}
-
 void CollisionHandler::insertWall(Entity *e) {
     insertZombieMovementEntity(e);
     wallTree.insert(e);
-}
-
-void CollisionHandler::insertPickUp(Entity *e) {
-    pickUpTree.insert(e);
-}
-
-void CollisionHandler::insertObj(Entity *e) {
-    insertZombieMovementEntity(e);
-    objTree.insert(e);
-}
-
-void CollisionHandler::insertStore(Entity *e) {
-    insertZombieMovementEntity(e);
-    storeTree.insert(e);
 }
 
 void CollisionHandler::insertZombieMovementEntity(Entity *e) {

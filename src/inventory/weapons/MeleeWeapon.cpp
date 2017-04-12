@@ -85,16 +85,6 @@ bool MeleeWeapon::fire(Movable &mov){
         //update hit marine
         x->collidingProjectile(damage);
     }
-
-    for(const auto& y : ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.getTurretTree(), &mov),&mov, hitBox)){
-        //update hit turret
-        y->collidingProjectile(damage);
-    }
-
-    for(const auto& z : ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.getBarricadeTree(), &mov),&mov, hitBox)) {
-        //update hit barricade
-        z->collidingProjectile(damage);
-    }
     ++clip;
 
     return true;

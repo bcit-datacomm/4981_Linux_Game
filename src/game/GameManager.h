@@ -13,15 +13,11 @@
 #include "../creeps/Zombie.h"
 #include "../player/Marine.h"
 #include "../player/Player.h"
-#include "../turrets/Turret.h"
 #include "../collision/CollisionHandler.h"
 #include "../buildings/Object.h"
 #include "../buildings/Base.h"
 #include "../buildings/Wall.h"
-#include "../buildings/Store.h"
-#include "../buildings/Barricade.h"
 #include "../UDPHeaders.h"
-#include "../buildings/DropPoint.h"
 #include "../map/Map.h"
 
 #include "../inventory/WeaponDrop.h"
@@ -29,8 +25,6 @@
 #include "../inventory/weapons/HandGun.h"
 #include "../inventory/weapons/Rifle.h"
 #include "../inventory/weapons/ShotGun.h"
-#include "../inventory/WeaponDrop.h"
-#include "../buildings/DropPoint.h"
 #include "GameHashMap.h"
 
 static constexpr int INITVAL = 0;
@@ -80,22 +74,12 @@ public:
 
     Base& getBase() {return base;}
 
-    // Methods for creating, getting, and deleting towers from the level.
-    int32_t createTurret();
-    void deleteTurret(const int32_t id);
-
-    bool addTurret(const int32_t id, const Turret& newTurret);
-    int32_t createTurret(const float x, const float y) ;
-    Turret& getTurret(const int32_t id);
-    std::vector<int32_t> markForDeletionTurret();
-
     // Method for getting collisionHandler
     CollisionHandler& getCollisionHandler();
 
     void updateCollider(); // Updates CollisionHandler
     void updateMarines(const float delta); // Update marine actions
     void updateZombies(const float delta); // Update zombie actions
-    void updateTurrets(); // Update turret actions
     void updateBase(); // Update base images
 
     // returns the list of zombies.
@@ -109,21 +93,10 @@ public:
     bool zombieExists(const int32_t id);
     Zombie& getZombie(const int32_t id);
 
-    //Weapon Drops
-    int32_t addWeaponDrop(WeaponDrop& newWeaponDrop);
-    int32_t createWeaponDrop(const float x, const float y, const int32_t wID);
-    void deleteWeaponDrop(const int32_t id);
-    bool weaponDropExists(const int32_t id);
-    WeaponDrop& getWeaponDrop(const int32_t id);
-
     //Weapons
     std::shared_ptr<Weapon> getWeapon(const int32_t id);
     void addWeapon(std::shared_ptr<Weapon> weapon);
     void removeWeapon(const int32_t id);
-
-    int32_t createBarricade(const float x, const float y);
-    void deleteBarricade(const int32_t id);
-    Barricade& getBarricade(const int32_t id);
 
     int32_t createWall(const float x, const float y, const int h, const int w); // create Wall object
 
@@ -146,12 +119,9 @@ public:
     }
 
     //getManagers
-    auto& getTurretManager() const {return turretManager;};
     auto& getMarineManager() const {return marineManager;};
     auto& getZombieManager() const {return zombieManager;};
-    auto& getWeaponDropManager() const {return weaponDropManager;};
     auto& getWeaponManager() const {return weaponManager;};
-    auto& getBarricadeManager() const {return barricadeManager;};
     auto& getWallManager() {return wallManager;};
 
 private:
@@ -167,10 +137,7 @@ private:
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
     GameHashMap<int32_t, Zombie> zombieManager;
-    GameHashMap<int32_t, Turret> turretManager;
-    GameHashMap<int32_t, WeaponDrop> weaponDropManager;
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
-    GameHashMap<int32_t, Barricade> barricadeManager;
     GameHashMap<int32_t, Wall> wallManager;
 };
 

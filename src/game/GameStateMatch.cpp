@@ -186,26 +186,11 @@ void GameStateMatch::handle() {
                 }
                 hud.setOpacity(OPAQUE);
                 break;
-            case SDL_MOUSEBUTTONDOWN:
-                if(GameManager::instance()->getPlayer().getMarine()) {
-                     if (event.button.button == SDL_BUTTON_RIGHT) {
-                        GameManager::instance()->getPlayer().handlePlacementClick(Renderer::instance().getRenderer());
-                    }
-                }
-                break;
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym) {
                     case SDLK_ESCAPE:
                         play = false;
                         break;
-                    case SDLK_b:
-                        if(GameManager::instance()->getPlayer().getMarine()) {
-                                GameManager::instance()->getPlayer().handleTempBarricade(
-                                Renderer::instance().getRenderer());
-                        }
-                        break;
-                    case SDLK_p:
-                        GameManager::instance()->getPlayer().handleTempTurret(Renderer::instance().getRenderer());
                     case SDLK_1: //Purposeful flow through
                     case SDLK_2:
                     case SDLK_3:
@@ -264,7 +249,6 @@ void GameStateMatch::update(const float delta) {
 #endif
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
-    GameManager::instance()->updateTurrets();
     GameManager::instance()->updateBase();
     GameManager::instance()->getPlayer().checkMarineState();
     matchManager.checkMatchState();
@@ -355,12 +339,6 @@ void GameStateMatch::render() {
 
             //Reder the Weapon slots to the screen
             hud.renderWeaponSlots(screenRect, GameManager::instance()->getPlayer());
-
-            //Render the consumable slot if the player has any available
-            //Currently only a single consumable item exits (the Medkit)
-            if (GameManager::instance()->getPlayer().getMarine()->inventory.getMedkit()) {
-                hud.renderConsumable(screenRect, GameManager::instance()->getPlayer());
-            }
         }
         //Update screen
         SDL_RenderPresent(Renderer::instance().getRenderer());

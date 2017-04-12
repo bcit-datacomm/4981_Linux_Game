@@ -64,13 +64,6 @@ GameManager::~GameManager() {
  *     Render all objects in level
  */
 void GameManager::renderObjects(const SDL_Rect& cam) {
-    for (const auto& o : weaponDropManager) {
-        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            Renderer::instance().render(o.second.getRelativeDestRect(cam),
-                getWeapon(o.second.getWeaponId())->getTexture());
-        }
-    }
-
     for (const auto& o : marineManager) {
         if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
             const auto& dest = o.second.getRelativeDestRect(cam);
@@ -106,32 +99,6 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
             Renderer::instance().render(o.second.getRelativeDestRect(cam),
                     o.second.getId() % 2 ? TEXTURES::BABY_ZOMBIE : TEXTURES::DIGGER_ZOMBIE,
                     o.second.getSrcRect());
-        }
-    }
-
-    for (const auto& o : turretManager) {
-        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-
-            if (!o.second.isPlaceable()) {
-                Renderer::instance().setAlpha(TEXTURES::TURRET, 150);
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::TURRET);
-                Renderer::instance().setAlpha(TEXTURES::TURRET, 255);
-            } else {
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::TURRET);
-            }
-
-        }
-    }
-
-    for (const auto& o : barricadeManager) {
-        if (SDL_HasIntersection(&cam, &o.second.getDestRect())) {
-            if(!o.second.isPlaceable()) {
-                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 150);
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-                Renderer::instance().setAlpha(TEXTURES::CONCRETE, 255);
-            } else {
-                Renderer::instance().render(o.second.getRelativeDestRect(cam), TEXTURES::CONCRETE);
-            }
         }
     }
 
@@ -231,52 +198,6 @@ bool GameManager::hasMarine(const int32_t id) const {
  * Apr. 05, 2017, Mark Chen : turrets get deleted when their ammo reaches 0.
  * Apr. 10, 2017, Mark Chen : turrets now do not track targets while it's being held.
  */
-
-void GameManager::updateTurrets() {
-    std::vector<int32_t> deleteVector = markForDeletionTurret();
-
-    for (auto it = deleteVector.begin() ; it != deleteVector.end(); ++it) {
-        removeWeapon(getTurret(*it).getInventory().getCurrent()->getID());
-        deleteTurret(*it);
-    }
-
-#pragma omp parallel
-#pragma omp single
-    {
-        for (auto it = turretManager.begin(); it != turretManager.end(); ++it) {
-#pragma omp task firstprivate(it)
-            {
-                if (it->second.isActivated() && it->second.targetScanTurret()) {
-                    it->second.shootTurret();
-                }
-            }
-        }
-#pragma omp taskwait
-    }
-}
-
-/**
- * Date: Apr. 05, 2017
- *
- * Designer: Mark Chen
- *
- * Programmer: Mark Chen
- *
- * Function Interface: vector<int32_t> GameManager::markForDeletionTurret()
- *
- * Description:
- * Searches the turretManager for any turrets with 0 ammo.
- */
-
-std::vector<int32_t> GameManager::markForDeletionTurret() {
-    std::vector<int32_t> deleteVector;
-    for (auto& t: turretManager) {
-        if (t.second.getInventory().getCurrent()->getClip() == 0) {
-            deleteVector.push_back(t.second.getId());
-        }
-    }
-    return deleteVector;
-}
 
 /**
  * Date: Feb. 4, 2017
@@ -384,101 +305,6 @@ Marine& GameManager::getMarine(const int32_t id) {
 }*/
 
 /**
- * Date: Feb. 9, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: createTurret()
- * Description:
- *     Create Turret add it to manager, returns tower id.
- */
-int32_t GameManager::createTurret() {
-    const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
-
-    SDL_Rect turretRect = temp;
-    SDL_Rect moveRect = temp;
-    SDL_Rect projRect = temp;
-    SDL_Rect damRect = temp;
-    SDL_Rect pickRect = temp;
-
-    turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect, pickRect));
-    return id;
-}
-
-/**
- * Date: Feb. 9, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: deleteTurret(const int32_t id)
- *      id : Turret id
- *
- * Description:
- *     Deletes tower from level.
- */
-void GameManager::deleteTurret(const int32_t id) {
-    turretManager.erase(id);
-}
-
-/**
- * Date: Feb. 9, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: addTurret (const int32_t id, const Turret& newTurret)
- *      id : Turret id
- *      newTurret : Turret to add
- *
- * Description:
- *     Adds tower to level.
- */
-bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
-    if (turretManager.count(id)) {
-        return false;
-    }
-    turretManager.emplace(id, newTurret);
-    return true;
-}
-
-/**
- * Date: Mar. 1, 2017
- * Modified: Mar. 15 2017 - Mark Tattrie
- * Author:
- * Function Interface: int32_t GameManager::createTurret(const float x, const float y) {
- * Description:
- * Create turret add it to turret, returns if success
- */
-int32_t GameManager::createTurret(const float x, const float y) {
-    const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, TURRET_SIZE_H};
-
-    SDL_Rect turretRect = temp;
-    SDL_Rect moveRect = temp;
-    SDL_Rect projRect = temp;
-    SDL_Rect damRect = temp;
-    SDL_Rect pickRect = {INITVAL, INITVAL, TURRET_PUSIZE_W, TURRET_PUSIZE_H};
-
-    const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect,
-        pickRect));
-    elem->second.setPosition(x,y);
-    return id;
-}
-
-/**
- * Date: Feb. 9, 2017
- * Modified: ----
- * Author: Jacob McPhail
- * Function Interface: getTurret(const int32_t id)
- *      id : Turret id
- *
- * Description:
- *      Get a tower by its id.
- */
-Turret& GameManager::getTurret(const int32_t id) {
-    const auto& turr = turretManager[id];
-    assert(turr.second);
-    return turr.first;
-}
-
-/**
  * Date: Feb. 8, 2017
  * Modified: ----
  * Author: Jacob McPhail
@@ -574,58 +400,12 @@ void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
 }
 
-//Created By Maitiu 2017-03-12
-int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
-    const int32_t id = newWeaponDrop.getId();
-    weaponDropManager.emplace(id, newWeaponDrop);
-    return id;
-}
-
-/**
-* Date: Mar. 3, 2017
-* Modified: Mar. 15 2017 - Mark Tattrie
-* Author: Maitiu Morton 2017-03-12
-* Function Interface: bool GameManager::createWeaponDrop(const float x, const float y, const int32_t wID)
-* Description:
-* Create weapon drop add it to manager, returns success
-*/
-int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_t wID) {
-    const int32_t id = generateID();
-
-    SDL_Rect weaponDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
-    SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
-
-    weaponDropManager.emplace(id, WeaponDrop(id, weaponDropRect, pickRect, wID))->second.setPosition(x,y);
-    return id;
-}
-
-/*create by maitiu March 21
- * Checks if id can be found in weaponDropManager
- */
-bool GameManager::weaponDropExists(const int32_t id) {
-    return weaponDropManager.count(id);
-}
-
-//created by Maitiu 2017-03-12
-//returns weapon drop in  weaponDropManager
-WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
-    logv("id: %d\n", id);
-    const auto& wd = weaponDropManager[id];
-    assert(wd.second);
-    return wd.first;
-}
-
 //created by Maitiu 2017-03-12
 //returns weapon in weaponManager using id
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
     const auto& w = weaponManager[id];
     assert(w.second);
     return w.first;
-}
-
-// Deletes weapon from level
-void GameManager::deleteWeaponDrop(const int32_t id) {
-    weaponDropManager.erase(id);
 }
 
 // Returns Collision Handler
@@ -667,25 +447,6 @@ void GameManager::updateCollider() {
 #pragma omp section
         for (auto& w : wallManager) {
             collisionHandler.insertWall(&w.second);
-        }
-
-#pragma omp section
-        for (auto& m : turretManager) {
-            if (m.second.isPlaced()) {
-                collisionHandler.insertTurret(&m.second);
-            }
-        }
-
-#pragma omp section
-        for (auto& b : barricadeManager) {
-            if (b.second.isPlaced()) {
-                collisionHandler.insertBarricade(&b.second);
-            }
-        }
-
-#pragma omp section
-        for (auto& m : weaponDropManager) {
-            collisionHandler.insertPickUp(&m.second);
         }
     }
 }
@@ -763,37 +524,6 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
     }
 }
 
-/**
-* Date: Mar. 1, 2017
-* Modified: Mar. 15 2017 - Mark Tattrie
-* Author: Maitiu Morton
-* Function Interface: int32_t GameManager::createBarricade(const float x, const float y)
-* Description:
-* Create barricade add it to manager, returns success
-*/
-int32_t GameManager::createBarricade(const float x, const float y) {
-    const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
-
-    SDL_Rect barricadeRect = temp;
-    SDL_Rect moveRect = temp;
-    SDL_Rect pickRect = temp;
-
-    const auto& elem = barricadeManager.emplace(id, Barricade(id, barricadeRect, moveRect, pickRect));
-    elem->second.setPosition(x,y);
-    return id;
-}
-
-void GameManager::deleteBarricade(const int32_t id) {
-    barricadeManager.erase(id);
-}
-
-// Get a barricade by its id
-Barricade& GameManager::getBarricade(const int32_t id) {
-    const auto& bar = barricadeManager[id];
-    assert(bar.second);
-    return bar.first;
-}
 
 /**
 * Date: Mar. 14, 2017

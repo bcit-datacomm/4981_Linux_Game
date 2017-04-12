@@ -68,7 +68,6 @@ void Zombie::update(){
         const auto& base = gm->getBase();
         auto& collision = gm->getCollisionHandler();
         const auto& marines = collision.getQuadTreeEntities(collision.getMarineTree(), &visSection);
-        const auto& turrrets = collision.getQuadTreeEntities(collision.getTurretTree(), &visSection);
 
         //the difference in zombie to target distance
         float movX;
@@ -90,17 +89,6 @@ void Zombie::update(){
         for (const auto m : marines){
             hypX = m->getX() + (m->getW() / 2);
             hypY = m->getY() + (m->getH() / 2);
-
-            //we only want the closest one
-            if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){
-                hyp = temp;
-                movX = hypX - midMeX;
-                movY = hypY - midMeY;
-            }
-        }
-        for (const auto t : turrrets){
-            hypX = t->getX() + (t->getW() / 2);
-            hypY = t->getY() + (t->getH() / 2);
 
             //we only want the closest one
             if((temp = hypot(hypX - midMeX, hypY - midMeY)) < hyp){

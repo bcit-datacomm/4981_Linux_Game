@@ -54,23 +54,12 @@ public:
     void clear();
     void insertMarine(Entity *e);
     void insertZombie(Entity *e);
-    void insertBarricade(Entity *e);
-    void insertTurret(Entity *e);
     void insertWall(Entity *e);
-    void insertPickUp(Entity *e);
-    void insertObj(Entity *e);
-    void insertStore(Entity *e);
 
     auto& getZombieMovementTree() {return zombieMovementTree;}
     auto& getMarineTree() {return marineTree;}
     auto& getZombieTree() {return zombieTree;}
-    auto& getBarricadeTree() {return barricadeTree;}
-    auto& getTurretTree() {return turretTree;}
     auto& getWallTree() {return wallTree;}
-    auto& getPickUpTree() {return pickUpTree;}
-    auto& getObjTree() {return objTree;}
-    auto& getStoreTree() {return storeTree;}
-
 private:
     void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
         TargetList& targetList, const std::vector<Entity*>& allEntities, const int type) const;
@@ -80,12 +69,7 @@ private:
     Quadtree zombieMovementTree;
     Quadtree marineTree; //can take dmg
     Quadtree zombieTree; //can take dmg
-    Quadtree barricadeTree; //can take dmg
-    Quadtree turretTree;
     Quadtree wallTree;
-    Quadtree pickUpTree;
-    Quadtree objTree;
-    Quadtree storeTree;
 };
 
 

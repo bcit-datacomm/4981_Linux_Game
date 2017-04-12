@@ -7,7 +7,6 @@
 
 #include "../player/Marine.h"
 #include "../buildings/Base.h"
-#include "../turrets/Turret.h"
 #include "../inventory/Inventory.h"
 #include "../client/NetworkManager.h"
 #include "../UDPHeaders.h"
@@ -47,15 +46,8 @@ public:
 
     void handleMouseWheelInput(const SDL_Event *e);
 
-    // Added by Mark.C 02/07/2017
-    void handlePlacementClick(SDL_Renderer *renderer);
-
-    void handleTempBarricade(SDL_Renderer *renderer);
-    void handleTempTurret(SDL_Renderer *renderer);
-
     bool checkMarineState();
     void respawn(const Point& newPoint);
-
 
     void sendServMoveAction();
     void sendServAttackAction();
@@ -75,11 +67,6 @@ public:
     std::pair<float, float> calculateVerticleCoords(const double angle, const int compareDegree,
             const int winWidth, const int winHeight);
 private:
-    int tempBarricadeID;
-    int tempTurretID;
-    bool holdingTurret;
-    int pickupTick;
-    int pickupDelay;
     int shootDelay;
     int respawnTick;
     int32_t id;

@@ -19,8 +19,7 @@
 * Revisions:
 * Apr. 10, 2017, Mark Chen, Mark Tattrie - Added in a shoot delay parameter.
 */
-Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false),
-        pickupTick(0), pickupDelay(200), shootDelay(0), respawnTick(0), marine(nullptr) {
+Player::Player() : shootDelay(0), respawnTick(0), marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
 }
@@ -175,29 +174,7 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
 
     marine->setAngle(((atan2(mouseDeltaX, mouseDeltaY)* ONE_EIGHTY)/M_PI) * - 1);
 
-    if (tempBarricadeID > -1) {
-        Barricade& tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
-        tempBarricade.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
-            GameManager::instance()->getCollisionHandler());
-    }
-
-    if (tempTurretID > -1) {
-        Turret& tempTurret = GameManager::instance()->getTurret(tempTurretID);
-        tempTurret.move(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
-            GameManager::instance()->getCollisionHandler());
-
-        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-            if (tempTurret.collisionCheckTurret(marine->getX(), marine->getY(), mouseX + camX, mouseY + camY,
-                    GameManager::instance()->getCollisionHandler())) {
-				// play turret install effect
-				AudioManager::instance().playEffect(EFX_BINSTALL);
-                tempTurret.placeTurret();
-                holdingTurret = false;
-                tempTurretID = -1;
-                shootDelay =+ currentTime + 400;
-            }
-        }
-    } else if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
+    if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if (currentTime > shootDelay) {
             if(marine->inventory.getCurrent()) {
                 marine->fireWeapon();
@@ -212,18 +189,6 @@ void Player::handleMouseWheelInput(const SDL_Event *e) {
 	AudioManager::instance().playEffect(MENU_CLICK01);
     marine->inventory.scrollCurrent(e->wheel.y);
 }
-
-// function to handle mouse-click events
-void Player::handlePlacementClick(SDL_Renderer *renderer) {
-    if (tempBarricadeID > -1) {
-        Barricade& tempBarricade = GameManager::instance()->getBarricade(tempBarricadeID);
-        if (tempBarricade.isPlaceable()) {
-            tempBarricade.placeBarricade();
-            tempBarricadeID = -1;
-        }
-    }
-}
-
 
 /**
 * Date: Feb. 6, 2017
@@ -279,45 +244,9 @@ void Player::handleKeyboardInput(const int winWidth, const int winHeight, const 
         //render guide arrows
         spawnMapGuides(winWidth, winHeight);
     }
-
-    //added by Maitiu Debug print 4/3 / 2017
-    if (state[SDL_SCANCODE_PERIOD]) {
-        dumpEntityPositions(this);
-    }
     marine->setDY(y);
     marine->setDX(x);
 }
-
-void Player::handleTempBarricade(SDL_Renderer *renderer) {
-    if (tempBarricadeID < 0) {
-        if (!marine) {
-            return;
-        }
-        const double angle = marine->getAngle();
-        tempBarricadeID = GameManager::instance()->createBarricade(
-            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
-            marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
-    } else {
-        GameManager::instance()->deleteBarricade(tempBarricadeID);
-        tempBarricadeID = -1;
-    }
-}
-
-void Player::handleTempTurret(SDL_Renderer *renderer) {
-    if (tempTurretID < 0) {
-        if (!marine) {
-            return;
-        }
-        const double angle = marine->getAngle();
-        tempTurretID = GameManager::instance()->createTurret(
-            marine->getX() + PLAYER_PLACE_DISTANCE * cos(angle),
-            marine->getY() + PLAYER_PLACE_DISTANCE * sin(angle));
-    } else {
-        GameManager::instance()->deleteTurret(tempTurretID);
-        tempTurretID = -1;
-    }
-}
-
 
 /**
  * Date: Apl. 5, 2017
