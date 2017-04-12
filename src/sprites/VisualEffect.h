@@ -54,6 +54,8 @@ public:
         //prefab additions
         void addBlood(const SDL_Rect &dest);
 
+        void addBody(const SDL_Rect &dest, const int32_t id);
+
 
         void removePreLine(const int id);
 

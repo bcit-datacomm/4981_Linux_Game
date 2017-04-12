@@ -126,8 +126,10 @@ void Inventory::useItem(Marine& marine) {
     if (consumableId != -1) {
         // play medkit effect
         AudioManager::instance().playEffect(EFX_MEDKIT);
-        GameManager:instance().getConsumable(consumableId)->OnConsume(marine);
-        consumableId = -1;
+        if (GameManager::instance()->consumableExists(consumableId)){
+            GameManager::instance()->getConsumable(consumableId)->OnConsume(marine);
+            consumableId = -1;
+        }
     }
 }
 

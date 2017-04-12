@@ -148,6 +148,7 @@ public:
     std::shared_ptr<Consumable> getConsumable(const int32_t id);
     void addConsumable(std::shared_ptr<Consumable> consumable);
     void removeConsumable(const int32_t id);
+    bool consumableExists(const int32_t id);
 
     int32_t createBarricade(const float x, const float y);
     void deleteBarricade(const int32_t id);

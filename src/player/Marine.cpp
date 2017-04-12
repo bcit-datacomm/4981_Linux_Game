@@ -127,9 +127,9 @@ int32_t Marine::checkForPickUp() {
             }
             gm->deleteBarricadeDrop(pickId);
             gm->getPlayer().handleTempBarricade(Renderer::instance().getRenderer());
-        } else if(gm->consumeDropExists(pickId)) {
+        } else if(gm->consumeDropExists(pickId)) {//check if  consumdrop
             int32_t dropPoint = gm->getConsumeDrop(pickId).getDropPoint();
-            inventory.pickUpConsumable(pickId);
+            inventory.pickUpConsumable(gm->getConsumeDrop(pickId).getConsumeId());
             if(dropPoint != -1){
                 gm->freeDropPoint(dropPoint);
             }
@@ -248,8 +248,6 @@ void Marine::updateImageWalk() {
 void Marine::activateStore(const Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
-        //int r = rand()% 2 + 1;//random number temp for testing
-        printf("Activating Store.\n");
         enterStore();
         gm->getStore(ep->getId())->openStore();
     }

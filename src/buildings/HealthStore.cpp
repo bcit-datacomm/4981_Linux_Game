@@ -45,7 +45,8 @@ int HealthStore::purchase(const int num, const int credits){
                 case 1:
                     if(credits > HEALTH_PACK_PRICE){
                         cId = gm->generateID();
-                        gm->addConsumable(std::dynamic_pointer_cast<Consumable>(std::make_shared<BasicMedkit>(gm->generateID())));
+
+                        gm->addConsumable(std::dynamic_pointer_cast<Consumable>(std::make_shared<BasicMedkit>(cId)));
                         dropId = gm->createConsumeDrop(x, y, cId);
                         gm->getConsumeDrop(dropId).setDropPoint(dropPId);
                         return HEALTH_PACK_PRICE;

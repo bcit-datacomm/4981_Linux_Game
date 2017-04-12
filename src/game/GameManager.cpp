@@ -743,6 +743,18 @@ void GameManager::addConsumable(std::shared_ptr<Consumable> consumable) {
 }
 
 /**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface: bool GameManager::consumableExists(const int32_t id)
+*      id: id of consumable
+* Description:
+*  Checks if consumable exists
+*/
+bool GameManager::consumableExists(const int32_t id) {
+   return consumableManager.count(id);
+}
+
+/**
 * Date: April. 9, 2017
 * Author: Maitiu Morton
 * Function Interface: void GameManager::removeConsumable(const int32_t id)
@@ -786,7 +798,6 @@ int32_t GameManager::createConsumeDrop(const float x, const float y, const int32
 
     SDL_Rect consumeDropRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
     SDL_Rect pickRect = {static_cast<int>(x),static_cast<int>(y), DEFAULT_SIZE, DEFAULT_SIZE};
-
     consumeDropManager.emplace(id, ConsumeDrop(id, consumeDropRect, pickRect, cID))->second.setPosition(x,y);
     return id;
 }
