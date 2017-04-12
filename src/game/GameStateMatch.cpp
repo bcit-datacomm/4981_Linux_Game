@@ -111,13 +111,15 @@ void GameStateMatch::loop() {
         sendSyncPacket(sendSocketUDP);
         clearAttackActions();
 #endif
-        std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
-        auto zm = GameManager::instance()->getZombieManager();
-        for (auto it = zm.begin(); it != zm.end();) {
-            if (!it->second.isAlive) {
-                it = zm.erase(it);
-            } else {
-                ++it;
+        {
+            std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
+            auto zm = GameManager::instance()->getZombieManager();
+            for (auto it = zm.begin(); it != zm.end();) {
+                if (!it->second.isAlive) {
+                    it = zm.erase(it);
+                } else {
+                    ++it;
+                }
             }
         }
 

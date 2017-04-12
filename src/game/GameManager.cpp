@@ -361,10 +361,13 @@ int32_t GameManager::createZombie(const float x, const float y) {
  */
 void GameManager::deleteZombie(const int32_t id) {
     std::lock_guard<std::mutex> lock(zombieMut);
-    //zombieManager.erase(id);
+#ifndef SERVER
+    zombieManager.erase(id);
+#else
     if (zombieExists(id)) {
         getZombie(id).isAlive = false;
     }
+#endif
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
 #else

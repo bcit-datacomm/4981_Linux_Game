@@ -173,7 +173,6 @@ void Marine::updateImageWalk() {
     }
 }
 
-
 void Marine::updateLifeState() {
     if (!lifeState && static_cast<int>(SDL_GetTicks()) >= (respawnTick + RESPAWN_DELAY)) {
         lifeState = true;
@@ -183,6 +182,7 @@ void Marine::updateLifeState() {
     } else if (lifeState && health <= 0) {
         lifeState = false;
         respawnTick = SDL_GetTicks();
-        setPosition(HELL_ZONE, HELL_ZONE);
+        const auto rect = GameManager::instance()->getBase().getDestRect();
+        setPosition(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
     }
 }
