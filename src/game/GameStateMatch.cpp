@@ -199,6 +199,14 @@ void GameStateMatch::handle() {
                     case SDLK_k:
                         //k is for kill, sets player marine to a nullptr
                         if (GameManager::instance()->getPlayer().getMarine()) {
+#ifndef SERVER
+                            if (networked) {
+                                ClientMessage packet;
+                                packet.id = static_cast<int32_t>(UDPHeaders::KILL);
+                                packet.data.ka.entityid = GameManager::instance()->getPlayer().getMarine()->getId();
+                                NetworkManager::instance().writeUDPSocket((char *)&packet, sizeof(ClientMessage));
+                            }
+#endif
                             GameManager::instance()->getPlayer().getMarine()->setHealth(0);
                         }
                         break;
