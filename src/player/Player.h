@@ -36,6 +36,7 @@ static constexpr int GUIDE_SIZE = 100;
 
 static constexpr int MARK_SIZE = 50;
 static constexpr int MARK_SRC_SIZE = 300;
+static constexpr int ZOMBIE_PRICE = 10;
 
 class Player {
 public:
@@ -81,6 +82,8 @@ public:
     bool hasTurret() const {return gotTurret;};
     void purchasedTurret() {gotTurret = true;};
     void lostTurret() {gotTurret = false;};
+
+    void addCredits() {credits += ZOMBIE_PRICE;};
 private:
     int tempBarricadeID;
     int tempTurretID;

@@ -187,6 +187,7 @@ void Zombie::collidingProjectile(int damage) {
         actionTick = frameCount + HIT_DURATION;
     }
     if (health <= 0) {
+        GameManager::instance()->getPlayer().addCredits();
         GameManager::instance()->deleteZombie(getId());
     }
 }
