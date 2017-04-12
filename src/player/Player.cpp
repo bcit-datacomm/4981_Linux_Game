@@ -2,7 +2,6 @@
 
 #include "Player.h"
 #include "../game/GameManager.h"
-#include "../log/EntityDump.h"
 #include "../sprites/VisualEffect.h"
 #include "../sprites/SpriteTypes.h"
 #include "../game/GameHashMap.h"
