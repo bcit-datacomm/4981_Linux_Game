@@ -149,7 +149,6 @@ void GameStateMenu::loop() {
         if(networked) {
             const NetworkState netState = NetworkManager::instance().getNetworkState();
             if (netState == NetworkState::FAILED_TO_CONNECT) {
-
                 NetworkManager::instance().reset();
             } else if (netState >= NetworkState::GAME_STARTED) {
                 game.setStateID(2);
@@ -234,7 +233,9 @@ void GameStateMenu::handle() {
                 // play menu click effect
                 AudioManager::instance().playEffect(MENU_CLICK01);
                 if (networked) {
-                    NetworkManager::instance().run(hostInput, userInput);
+                    if (NetworkManager::instance().getNetworkState() < NetworkState::INITIALIZING) {
+                        NetworkManager::instance().run(hostInput, userInput);
+                    }
                 } else {
                     AudioManager::instance().fadeMusicOut(MUSICFADE); // fade background music
                     game.setStateID(2); //changes the state to tell the Game.cpp loop to start the actual game
