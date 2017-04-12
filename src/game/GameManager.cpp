@@ -170,7 +170,15 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
     }
 }
 
-
+/**
+ * Date: April. 8, 2017
+ *
+ * Author: Maitiu
+ * Function Interface: void GameManager::updateStores()
+ *
+ * Description:
+ *     Updates all the stores, Checks if player is still touching store if store is open
+ */
 void GameManager::updateStores(){
     for(auto& s : storeManager){
         if(s.second->isOpen()){
@@ -601,14 +609,29 @@ Zombie& GameManager::getZombie(const int32_t id) {
     assert(z.second);
     return z.first;
 }
-//Created By Maitiu
-//Adds Weapon to Weapon Manager
+/**
+ * Date: March. 30, 2017
+ * Modified: ----
+ * Author: MAitiu Morton
+ * Function Interface: void GameManager::addWeapon(std::shared_ptr<Weapon> weapon)
+ *      weapon: weapon to be added
+ *
+ * Description:
+ *     Adds Weapon to weaponManager
+ */
 void GameManager::addWeapon(std::shared_ptr<Weapon> weapon) {
     weaponManager.emplace(weapon->getID(), weapon);
 }
 
-/*
- *Created By Maitiu March 30 2017
+/**
+ * Date: March. 30, 2017
+ * Modified: ----
+ * Author: MAitiu Morton
+ * Function Interface: void GameManager::removeWeapon(const int32_t id)
+ *      id: id of Weapon to be removed
+ *
+ * Description:
+ *     removes Weapon from weaponManager
  */
 void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
@@ -617,7 +640,16 @@ void GameManager::removeWeapon(const int32_t id) {
 #endif
 }
 
-//Created By Maitiu 2017-03-12
+/**
+ * Date: March. 12, 2017
+ * Modified: ----
+ * Author: MAitiu Morton
+ * Function Interface: int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop)
+ *      newWeaponDrop: WeaponDrop ti be added
+ *
+ * Description:
+ *     addes WeaponDrop ro WaeponDrop manager
+ */
 int32_t GameManager::addWeaponDrop(WeaponDrop& newWeaponDrop) {
     const int32_t id = newWeaponDrop.getId();
     weaponDropManager.emplace(id, newWeaponDrop);
@@ -642,15 +674,26 @@ int32_t GameManager::createWeaponDrop(const float x, const float y, const int32_
     return id;
 }
 
-/*create by maitiu March 21
- * Checks if id can be found in weaponDropManager
- */
+/**
+* Date: Mar. 21, 2017
+* Author: Maitiu Morton
+* Function Interface: bGameManager::weaponDropExists(const int32_t id)
+*   id: id for Weapondrop
+* Description:
+* Checks if WeaponDrop Exits
+*/
 bool GameManager::weaponDropExists(const int32_t id) {
     return weaponDropManager.count(id);
 }
 
-//created by Maitiu 2017-03-12
-//returns weapon drop in  weaponDropManager
+/**
+* Date: Mar. 21, 2017
+* Author: Maitiu Morton
+* Function Interface: WeaponDrop& GameManager::getWeaponDrop(const int32_t id)
+*   id: id for Weapondrop
+* Description:
+*   Gets Weapondrop from Weapondrop Manager
+*/
 WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     logv("id: %d\n", id);
     const auto& wd = weaponDropManager[id];
@@ -658,15 +701,28 @@ WeaponDrop& GameManager::getWeaponDrop(const int32_t id) {
     return wd.first;
 }
 
-//created by Maitiu 2017-03-12
-//returns weapon in weaponManager using id
+/**
+* Date: Mar. 12, 2017
+* Author: Maitiu Morton
+* Function Interface: std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id)
+*   id: id for Weapon
+* Description:
+*   Gets Weapon from Weapon Manager
+*/
 std::shared_ptr<Weapon> GameManager::getWeapon(const int32_t id) {
     const auto& w = weaponManager[id];
     assert(w.second);
     return w.first;
 }
 
-// Deletes weapon from level
+/**
+* Date: Mar. 12, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::deleteWeaponDrop(const int32_t id)
+*   id: id for WeaponDrop
+* Description:
+*  Removes WeaponDrop From WeaponDropManager
+*/
 void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
 #ifdef SERVER
@@ -674,15 +730,26 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 #endif
 }
 
-//Created By Maitiu
-//Adds Weapon to Weapon Manager
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::addConsumable(std::shared_ptr<Consumable> consumable)
+*   Consumable: consumable to be added
+* Description:
+*  adds Consumable to ConsumeManager
+*/
 void GameManager::addConsumable(std::shared_ptr<Consumable> consumable) {
     consumableManager.emplace(consumable->getId(), consumable);
 }
 
-/*
- *Created By Maitiu March 30 2017
- */
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::removeConsumable(const int32_t id)
+*   id: of consumable to be removed
+* Description:
+*  Removes Consumable from ConsumeManager
+*/
 void GameManager::removeConsumable(const int32_t id) {
     consumableManager.erase(id);
 /*#ifdef SERVER
@@ -690,14 +757,30 @@ void GameManager::removeConsumable(const int32_t id) {
 #endif*/
 }
 
-//created by Maitiu 2017-03-12
-//returns weapon in weaponManager using id
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::removeConsumable(const int32_t id)
+*   id: of consumable to be removed
+* Description:
+*  Removes Consumable from ConsumeManager
+*/
 std::shared_ptr<Consumable> GameManager::getConsumable(const int32_t id) {
     const auto& c = consumableManager[id];
     assert(c.second);
     return c.first;
 }
 
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: int32_t GameManager::createConsumeDrop(const float x, const float y, const int32_t cID)
+*   x: x coordinate for drop to be rendered
+*   y: y coordinte for drop to be rendered
+*   cID: id for consumable that will be held in the drop
+* Description:
+*  Creates and added a cosumeDrop to consumdrop manager
+*/
 int32_t GameManager::createConsumeDrop(const float x, const float y, const int32_t cID) {
     const int32_t id = generateID();
 
@@ -708,15 +791,26 @@ int32_t GameManager::createConsumeDrop(const float x, const float y, const int32
     return id;
 }
 
-/*create by maitiu March 21
- * Checks if id can be found in weaponDropManager
- */
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: bool GameManager::consumeDropExists(const int32_t id)
+*  id:id of consumedrop
+* Description:
+*  checks if id is in the consumedrop manager
+*/
 bool GameManager::consumeDropExists(const int32_t id) {
     return consumeDropManager.count(id);
 }
 
-//created by Maitiu 2017-03-12
-//returns weapon drop in  weaponDropManager
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: ConsumeDrop& GameManager::getConsumeDrop(const int32_t id)
+*  id:id of consumedrop
+* Description:
+*  gets consumedrop from consumdrop manager
+*/
 ConsumeDrop& GameManager::getConsumeDrop(const int32_t id) {
     logv("id: %d\n", id);
     const auto& cd = consumeDropManager[id];
@@ -724,7 +818,14 @@ ConsumeDrop& GameManager::getConsumeDrop(const int32_t id) {
     return cd.first;
 }
 
-// Deletes weapon from level
+/**
+* Date: April. 9, 2017
+* Author: Maitiu Morton
+* Function Interface: void GameManager::deleteConsumeDrop(const int32_t id)
+*  id:id of consumedrop
+* Description:
+*  gdeletes consumedrop from consumdrop manager
+*/
 void GameManager::deleteConsumeDrop(const int32_t id) {
     consumeDropManager.erase(id);
 /*#ifdef SERVER
@@ -732,10 +833,16 @@ void GameManager::deleteConsumeDrop(const int32_t id) {
 #endif*/
 }
 
-/*
- * Created By Maitiu March 30 2017
+ /**
+ * Date: March 30, 2017
+ * Author: Maitiu Morton
  * Revised By Michael Goll [April 4, 2017] - Added sprite for store.
- * Creates a Weapon store object and then calls addStore to add it to the manager.
+ * Function Interface: int32_t GameManager::createWeaponStore(const float x, const float y, SDL_Rect screenRect)
+ *      x: x coordinate to render
+ *      y: y coordinate to render
+ *      screenRect: used for store menu
+ * Description:
+ *  Creates a Weapon store object and then calls addStore to add it to the manager.
  */
 int32_t GameManager::createWeaponStore(const float x, const float y, SDL_Rect screenRect) {
     const int32_t id = generateID();
@@ -753,6 +860,16 @@ int32_t GameManager::createWeaponStore(const float x, const float y, SDL_Rect sc
     return id;
 }
 
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface: int32_t GameManager::createTechStore(const float x, const float y, SDL_Rect screenRect)
+*      x: x coordinate to render
+*      y: y coordinate to render
+*      screenRect: used for store menu
+* Description:
+*  Creates a Tech store object and then calls addStore to add it to the manager.
+*/
 int32_t GameManager::createTechStore(const float x, const float y, SDL_Rect screenRect) {
     const int32_t id = generateID();
     GameHashMap<TEXTURES, int> gh;
@@ -769,6 +886,17 @@ int32_t GameManager::createTechStore(const float x, const float y, SDL_Rect scre
     return id;
 }
 
+
+/**
+* Date: March 30, 2017
+* Author: Maitiu Morton
+* Function Interface: int32_t GameManager::createTechStore(const float x, const float y, SDL_Rect screenRect)
+*      x: x coordinate to render
+*      y: y coordinate to render
+*      screenRect: used for store menu
+* Description:
+*  Creates a Health store object and then calls addStore to add it to the manager.
+*/
 int32_t GameManager::createHealthStore(const float x, const float y, SDL_Rect screenRect) {
 
     const int32_t id = generateID();
