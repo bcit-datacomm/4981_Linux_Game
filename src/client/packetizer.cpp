@@ -177,7 +177,11 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
             case UDPHeaders::DELETE:
                 for (int32_t i = 0, dCount = *pBuff++; i < dCount; ++i){
                     deletion = reinterpret_cast<DeleteAction *>(pBuff);
-                    deleteEntity(*deletion);
+                    std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
+                    if (GameManager::instance()->zombieExists(deletion->entityid)) {
+                        GameManager::instance()->getZombie(deletion->entityid).isAlive = false;
+                    }
+                    //deleteEntity(*deletion);
                     pBuff = reinterpret_cast<int32_t *>(++deletion);
                 }
                 break;

@@ -124,9 +124,11 @@ bool Weapon::fire(Movable& movable){
         return false;
     }
 
+#ifndef SERVER
     if (networked && movable.getId() == GameManager::instance()->getPlayer().getId()) {
         GameManager::instance()->getPlayer().sendServAttackAction();
     }
+#endif
 
     AudioManager::instance().playEffect(fireSound.c_str());
     return true;
