@@ -130,6 +130,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  *     Update marine movements. health, and actions
  */
 void GameManager::updateMarines(const float delta) {
+    //std::lock_guard<std::mutex> lock(marineMut);
 #pragma omp parallel
 #pragma omp single
     {
@@ -152,6 +153,7 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
+    //std::lock_guard<std::mutex> lock(zombieMut);
 #pragma omp parallel
 #pragma omp single
     {
@@ -466,6 +468,7 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData &playerData) {
+    std::lock_guard<std::mutex> lock(marineMut);
     if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
@@ -489,6 +492,7 @@ playData struct, if not it creates that zombie with that id. Whether
 it created it or not it updates it's positition angle and health.
 */
 void GameManager::updateZombie(const ZombieData &zombieData) {
+    std::lock_guard<std::mutex> lock(zombieMut);
     if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
         createZombie(zombieData.zombieid);
     }
@@ -513,6 +517,7 @@ fires current weapon.
 */
 void GameManager::handleAttackAction(const AttackAction& attackAction) {
     if (!(attackAction.playerid == player.getId())) {
+        std::lock_guard<std::mutex> lock(marineMut);
         auto marine = marineManager[attackAction.playerid];
         if (marine.second) {
             int curX = marine.first.getX();
