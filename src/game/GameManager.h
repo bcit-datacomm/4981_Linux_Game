@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include <mutex>
 
 #include "../creeps/Zombie.h"
 #include "../player/Marine.h"
@@ -125,6 +126,9 @@ public:
     auto& getWeaponManager() const {return weaponManager;};
     auto& getWallManager() {return wallManager;};
 
+    std::mutex marineMut;
+    std::mutex zombieMut;
+
 private:
     GameManager();
     ~GameManager();
@@ -139,6 +143,7 @@ private:
     GameHashMap<int32_t, Zombie> zombieManager;
     GameHashMap<int32_t, std::shared_ptr<Weapon>> weaponManager;
     GameHashMap<int32_t, Wall> wallManager;
+
 };
 
 

@@ -253,6 +253,7 @@ void GameManager::createMarine(const int32_t id) {
  * remove the marine by its id from the marineManager
  */
 void GameManager::deleteMarine(const int32_t id) {
+    std::lock_guard<std::mutex> lock(marineMut);
     marineManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::MARINE, id});
@@ -359,6 +360,7 @@ int32_t GameManager::createZombie(const float x, const float y) {
  *     Deletes zombie from level.
  */
 void GameManager::deleteZombie(const int32_t id) {
+    std::lock_guard<std::mutex> lock(zombieMut);
     zombieManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
@@ -435,11 +437,13 @@ void GameManager::updateCollider() {
     {
 #pragma omp section
         for (auto& m : marineManager) {
+            std::lock_guard<std::mutex> lock(marineMut);
             collisionHandler.insertMarine(&m.second);
         }
 
 #pragma omp section
         for (auto& z : zombieManager) {
+            std::lock_guard<std::mutex> lock(zombieMut);
             collisionHandler.insertZombie(&z.second);
         }
 

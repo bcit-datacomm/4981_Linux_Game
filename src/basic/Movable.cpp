@@ -18,7 +18,10 @@
 ------------------------------------------------------------------------------*/
 #include <cmath>
 #include "Movable.h"
+#include "../game/GameManager.h"
 #include <cmath>
+#include <thread>
+#include <mutex>
 
 // Move Movable by x and y amount
 /**
@@ -33,6 +36,7 @@ void Movable::move(const float moveX, const float moveY, CollisionHandler& ch){
     //Move the Movable left or right
     setX(getX() + moveX);
 
+    std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
     //if there is a collision with anything with a movement hitbox, move it back
     if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getWallTree(),this),this)
             || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),this),this)) {
