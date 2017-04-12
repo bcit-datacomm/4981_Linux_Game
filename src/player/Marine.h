@@ -23,7 +23,8 @@ static constexpr int FRAME_COUNT_WALK = 7;
 //Maximum health for a marine
 static constexpr int MARINE_MAX_HEALTH = 100;
 
-static constexpr int HELL_ZONE = 40000;
+//static constexpr int HELL_ZONE = 40000;
+static constexpr int HELL_ZONE = 0;
 
 static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;
 static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y * 3;

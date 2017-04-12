@@ -209,6 +209,7 @@ void GameStateMatch::handle() {
                         //k is for kill, sets player marine to a nullptr
                         if (GameManager::instance()->getPlayer().getMarine()) {
                             GameManager::instance()->getPlayer().getMarine()->setHealth(0);
+                            GameManager::instance()->getPlayer().getMarine()->updateLifeState();
                         }
                         break;
                     default:
