@@ -212,10 +212,6 @@ void StoreMenu::renderText(){
  *    creates text for weapon store menu
  */
 void StoreMenu::creatWeaponStoreText(){
-    SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
-    //SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
-    Textomagic title(titleRect, font, 0, "Weapon Store");
-    title.render();
 }
 
 /**
@@ -227,10 +223,6 @@ void StoreMenu::creatWeaponStoreText(){
  *    creates text for tech store menu
  */
 void StoreMenu::creatTechStoreText(){
-    SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
-    //SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
-    Textomagic title(titleRect, font, 0, "Weapon Store");
-    title.render();
 }
 
 /**
@@ -242,8 +234,4 @@ void StoreMenu::creatTechStoreText(){
  *    creates text for health store menu
  */
 void StoreMenu::creatHealthStoreText(){
-    SDL_Rect titleRect {background.x + background.w / 4, background.y, 500, 500};
-    //SDL_Rect price {slot[0].x, slot[0].y, slot[0].w, 50};
-    Textomagic title(titleRect, font, 0, "Weapon Store");
-    title.render();
 }
