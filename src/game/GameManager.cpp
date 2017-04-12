@@ -130,7 +130,7 @@ void GameManager::renderObjects(const SDL_Rect& cam) {
  *     Update marine movements. health, and actions
  */
 void GameManager::updateMarines(const float delta) {
-    std::lock_guard<std::mutex> lock(marineMut);
+    //std::lock_guard<std::mutex> lock(marineMut);
 #pragma omp parallel
 #pragma omp single
     {
@@ -153,7 +153,7 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-    std::lock_guard<std::mutex> lock(zombieMut);
+    //std::lock_guard<std::mutex> lock(zombieMut);
 #pragma omp parallel
 #pragma omp single
     {
