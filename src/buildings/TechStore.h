@@ -8,6 +8,9 @@
 #include "../game/GameHashMap.h"
 #include "../sprites/SpriteTypes.h"
 
+static constexpr int TURRET_PRICE = 10;
+static constexpr int BARRICADE_PRICE = 10;
+
 class TechStore: public Store{
 public:
     TechStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,

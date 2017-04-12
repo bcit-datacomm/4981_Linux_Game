@@ -43,12 +43,12 @@ int HealthStore::purchase(const int num, const int credits){
             const float y = dp.getCoord().second;
             switch(num){
                 case 1:
-                    if(credits > 20){
+                    if(credits > HEALTH_PACK_PRICE){
                         cId = gm->generateID();
                         gm->addConsumable(std::dynamic_pointer_cast<Consumable>(std::make_shared<BasicMedkit>(gm->generateID())));
                         dropId = gm->createConsumeDrop(x, y, cId);
                         gm->getConsumeDrop(dropId).setDropPoint(dropPId);
-                        return 20;
+                        return HEALTH_PACK_PRICE;
                     }
                     break;
             }

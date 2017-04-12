@@ -8,6 +8,8 @@
 #include "../game/GameHashMap.h"
 #include "../sprites/SpriteTypes.h"
 
+static constexpr int HEALTH_PACK_PRICE = 20;
+
 class HealthStore: public Store{
 public:
     HealthStore(const int32_t id, const SDL_Rect dest, const SDL_Rect pickupSize, SDL_Rect screen,
