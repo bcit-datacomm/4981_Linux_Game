@@ -302,7 +302,7 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 }
 
 void GameManager::createZombie(const int32_t id) {
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, ZOMBIE_WIDTH, ZOMBIE_HEIGHT};
 
     SDL_Rect zombieRect = temp;
     SDL_Rect moveRect = temp;
