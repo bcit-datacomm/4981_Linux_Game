@@ -50,15 +50,21 @@ void Marine::onCollision() {
 
 /**
  * Date: Feb. 4, 2017
- * Modified: ----
- * Author: Jacob McPhail
+ * Modified:
+ * Apr. 10, 2017, Alex Zielinski
+ * Author: Jacob McPhail, Alex Zielinski
  * Function Interface: collidingProjectile(const int damage)
  *      damage : damage to deal to marine
  *
  * Description:
  *     Deals damage to a marine.
+ * 
+ * Revisions:
+ * Apr.10 , 2017, Alex Zielinski - implemented zombie attack sound effect
  */
 void Marine::collidingProjectile(const int damage) {
+    // play zombie attack sound effect
+    AudioManager::instance().playEffect(EFX_ZATTACK01);
     health -= damage;
 }
 
