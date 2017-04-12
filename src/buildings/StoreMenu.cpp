@@ -142,7 +142,7 @@ void StoreMenu::createWeaponStoreMenu(){
             tex = TEXTURES::PHASE_REPEATER;
             break;
             case 7:
-            tex = TEXTURES::CONCRETE;
+            //tex = TEXTURES::CONCRETE;
             break;
         }
         Renderer::instance().render(slot[i], tex);
