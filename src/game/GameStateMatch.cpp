@@ -111,6 +111,7 @@ void GameStateMatch::loop() {
         sendSyncPacket(sendSocketUDP);
         clearAttackActions();
 #endif
+        /*
         {
             std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
             auto zm = GameManager::instance()->getZombieManager();
@@ -122,6 +123,7 @@ void GameStateMatch::loop() {
                 }
             }
         }
+        */
 
         //If frame finished early
         if ((frameTicks = SDL_GetTicks() - startTick) < SCREEN_TICK_PER_FRAME) {

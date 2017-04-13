@@ -152,24 +152,44 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
-#pragma omp parallel
-#pragma omp single
-    {
+//#pragma omp parallel
+//#pragma omp single
+    //{
         for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
-#pragma omp task firstprivate(it)
             {
-                if (!networked) {
-                    it->second.update();
-                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
-                }
+                std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
+                auto zm = GameManager::instance()->getZombieManager();
+                for (auto it = zm.begin(); it != zm.end();) {
+                    if (!it->second.isAlive) {
+                        it = zm.erase(it);
+                    } else {
+                        ++it;
+                        if (!networked) {
+                            it->second.update();
+                            it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                        }
 #ifndef SERVER
-                it->second.updateImageDirection();
-                it->second.updateImageWalk();
+                        it->second.updateImageDirection();
+                        it->second.updateImageWalk();
 #endif
+                    }
+                }
             }
         }
-#pragma omp taskwait
-    }
+//#pragma omp task firstprivate(it)
+            //{
+                //if (!networked) {
+                    //it->second.update();
+                    //it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                //}
+//#ifndef SERVER
+                //it->second.updateImageDirection();
+                //it->second.updateImageWalk();
+//#endif
+            //}
+        //}
+//#pragma omp taskwait
+    //}
 }
 
 /**
