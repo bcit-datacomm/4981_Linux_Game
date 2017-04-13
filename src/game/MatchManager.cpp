@@ -20,12 +20,13 @@ MatchManager::MatchManager() : round(0), spawnTick(0), zombiesToSpawn(0) {
  *      check state of match, if no zombies start new round, if not spawn any unspawn zombies.
  */
 void MatchManager::checkMatchState() {
-    if (GameManager::instance()->getZombieManager().size() <= 0 && zombiesToSpawn <= 0) {
-          newRound();
+    if (GameManager::instance()->getZombieManager().size() <= 50) {
+        zombiesToSpawn = 50 - spawnPoints.size();
+          //newRound();
     }
-    if (zombiesToSpawn > 0) {
-        spawnZombies();
-    }
+    //if (zombiesToSpawn > 0) {
+        //spawnZombies();
+    //}
 }
 
 /**
@@ -85,6 +86,7 @@ void MatchManager::setSpawnPoints(std::vector<MapPoint> points) {
  */
 void MatchManager::newRound() {
     //this needs to be set based on testing to provide good round scaling
-    static constexpr int scaleFactor = 16;
-    zombiesToSpawn = (spawnPoints.size() * ++round) * scaleFactor;
+    //static constexpr int scaleFactor = 16;
+    //zombiesToSpawn = (spawnPoints.size() * ++round) * scaleFactor;
+    zombiesToSpawn = 50 - spawnPoints.size();
 }
