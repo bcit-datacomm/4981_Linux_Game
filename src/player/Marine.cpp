@@ -183,6 +183,7 @@ void Marine::updateLifeState() {
     } else if (lifeState && health <= 0) {
         lifeState = false;
         respawnTick = SDL_GetTicks();
-        setPosition(HELL_ZONE, HELL_ZONE);
+        const auto tempSpawn = GameManager::instance()->getBase().getDestRect();
+        setPosition(tempSpawn.x + (tempSpawn.w / 2), tempSpawn.y + (tempSpawn.h / 2));
     }
 }
