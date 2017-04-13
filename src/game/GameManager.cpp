@@ -163,7 +163,6 @@ void GameManager::updateZombies(const float delta) {
                     if (!it->second.isAlive) {
                         it = zm.erase(it);
                     } else {
-                        ++it;
                         if (!networked) {
                             it->second.update();
                             it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
@@ -172,6 +171,7 @@ void GameManager::updateZombies(const float delta) {
                         it->second.updateImageDirection();
                         it->second.updateImageWalk();
 #endif
+                        ++it;
                     }
                 }
             }
