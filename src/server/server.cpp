@@ -250,11 +250,11 @@ std::string genOutputPacket() {
  * John Agapeyev March 19
  */
 void sendSyncPacket(const int sock) {
-    static std::atomic<int> counter{0};
-    if (++counter >= 2) {
-        clearDeleteActions();
-        counter.store(0);
-    }
+    //static std::atomic<int> counter{0};
+    //if (++counter >= 2) {
+        //clearDeleteActions();
+        //counter.store(0);
+    //}
     const auto& packet = genOutputPacket();
     sendto(sock, packet.c_str(), packet.size(), 0, reinterpret_cast<const sockaddr *>(&sendAddrUDP), sizeof(sendAddrUDP));
 }
