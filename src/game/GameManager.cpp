@@ -154,7 +154,7 @@ void GameManager::updateMarines(const float delta) {
 void GameManager::updateZombies(const float delta) {
 #ifdef SERVER
     
-        for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
+        for (auto it = zombieManager.begin(); it != zombieManager.end();) {
             if (!it->second.isAlive) {
                 it = zombieManager.erase(it);
             } else {
