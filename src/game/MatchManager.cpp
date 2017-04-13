@@ -24,9 +24,9 @@ void MatchManager::checkMatchState() {
         zombiesToSpawn = 50 - spawnPoints.size();
           //newRound();
     }
-    //if (zombiesToSpawn > 0) {
-        //spawnZombies();
-    //}
+    if (zombiesToSpawn > 0) {
+        spawnZombies();
+    }
 }
 
 /**
