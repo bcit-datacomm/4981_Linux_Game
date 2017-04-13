@@ -92,6 +92,8 @@ public:
     void updateImageWalk();
     void updateImageDirection();
 
+    bool isAlive = true;
+
 private:
     int health;// health points of zombie
     int frameCount;//counts frames for animation

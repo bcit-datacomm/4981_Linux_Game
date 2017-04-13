@@ -152,6 +152,25 @@ void GameManager::updateMarines(const float delta) {
 
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
+#ifdef SERVER
+    
+        for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
+            if (!it->second.isAlive) {
+                it = zombieManager.erase(it);
+            } else {
+                if (!networked) {
+                    it->second.update();
+                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
+                }
+#ifndef SERVER
+                it->second.updateImageDirection();
+                it->second.updateImageWalk();
+#endif
+                ++it;
+            }
+        }
+
+#else
 #pragma omp parallel
 #pragma omp single
     {
@@ -170,6 +189,7 @@ void GameManager::updateZombies(const float delta) {
         }
 #pragma omp taskwait
     }
+#endif
 }
 
 /**
@@ -361,7 +381,13 @@ int32_t GameManager::createZombie(const float x, const float y) {
  */
 void GameManager::deleteZombie(const int32_t id) {
     std::lock_guard<std::mutex> lock(zombieMut);
+#ifdef SERVER
+    if (zombieExists(id)) {
+        zombieManager[id].first.isAlive = false;
+    }
+#else
     zombieManager.erase(id);
+#endif
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
 #else
