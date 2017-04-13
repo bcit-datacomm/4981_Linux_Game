@@ -11,7 +11,8 @@
 #include "../client/NetworkManager.h"
 #include "../UDPHeaders.h"
 
-static constexpr double DOUBLE_COMPARISON_PRECISION = 0.001;
+//static constexpr double DOUBLE_COMPARISON_PRECISION = 0.001;
+static constexpr double DOUBLE_COMPARISON_PRECISION = 5;
 static constexpr int PLAYER_PLACE_DISTANCE = 100;
 static constexpr int RESPAWN_DELAY = 3000;
 static constexpr double PI = 3.14159265;
