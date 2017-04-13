@@ -161,6 +161,9 @@ void GameManager::updateZombies(const float delta) {
                 auto zm = GameManager::instance()->getZombieManager();
                 for (auto it = zm.begin(); it != zm.end();) {
                     if (!it->second.isAlive) {
+#ifdef SERVER
+                        saveDeletion({UDPHeaders::ZOMBIE, it->second.getId()});
+#endif
                         it = zm.erase(it);
                     } else {
                         if (!networked) {
