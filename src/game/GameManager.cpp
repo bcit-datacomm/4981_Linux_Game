@@ -165,6 +165,19 @@ void GameManager::updateZombies(const float delta) {
         }
 
 #else
+
+        unsigned int numToDelete = 0;
+        {
+            std::lock_guard<std::mutex> lock(deleteMut);
+            numToDelete = zombieDeleteList.size();
+        }
+
+        for (unsigned int i = 0; i < numToDelete; ++i) {
+            //std::lock_guard<std::mutex> lock(deleteMut);
+            zombieManager.erase(zombieDeleteList.front());
+            zombieDeleteList.pop_front();
+        }
+
 #pragma omp parallel
 #pragma omp single
     {

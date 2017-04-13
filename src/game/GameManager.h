@@ -57,6 +57,9 @@ public:
 
     int32_t generateID();
 
+    std::deque<int32_t> zombieDeleteList;
+    std::mutex deleteMut;
+
     void sendServDeleteAction(const UDPHeaders type, const int32_t id) const;
 
     void renderObjects(const SDL_Rect& cam); // Render all objects in level
