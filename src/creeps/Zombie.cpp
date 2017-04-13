@@ -67,7 +67,6 @@ void Zombie::update(){
         GameManager *gm = GameManager::instance();
         const auto& base = gm->getBase();
         auto& collision = gm->getCollisionHandler();
-        std::lock_guard<std::mutex> lock(GameManager::instance()->marineMut);
         const auto& marines = collision.getQuadTreeEntities(collision.getMarineTree(), &visSection);
 
         //the difference in zombie to target distance
@@ -134,9 +133,6 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
     //Move the Movable left or right
     setX(getX() + moveX);
 
-    GameManager::instance()->zombieMut.lock();
-    GameManager::instance()->marineMut.lock();
-
     //if there is a collision with anything with a movement hitbox, move it back
     if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setX(getX() - moveX);
@@ -166,8 +162,6 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
         }
         setAngle(getAngle() + (flipper * PARTIAL_ROTATION));
     }
-    GameManager::instance()->zombieMut.unlock();
-    GameManager::instance()->marineMut.unlock();
 }
 
 /**

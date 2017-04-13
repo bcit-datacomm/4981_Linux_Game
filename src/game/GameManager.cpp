@@ -157,7 +157,6 @@ void GameManager::updateZombies(const float delta) {
     //{
         for (auto it = zombieManager.begin(); it != zombieManager.end(); ++it) {
             {
-                std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
                 auto zm = GameManager::instance()->getZombieManager();
                 for (auto it = zm.begin(); it != zm.end();) {
                     if (!it->second.isAlive) {
@@ -276,7 +275,6 @@ void GameManager::createMarine(const int32_t id) {
  * remove the marine by its id from the marineManager
  */
 void GameManager::deleteMarine(const int32_t id) {
-    std::lock_guard<std::mutex> lock(marineMut);
     marineManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::MARINE, id});
@@ -383,7 +381,6 @@ int32_t GameManager::createZombie(const float x, const float y) {
  *     Deletes zombie from level.
  */
 void GameManager::deleteZombie(const int32_t id) {
-    std::lock_guard<std::mutex> lock(zombieMut);
 #ifndef SERVER
     zombieManager.erase(id);
 #else
@@ -466,13 +463,11 @@ void GameManager::updateCollider() {
     {
 #pragma omp section
         for (auto& m : marineManager) {
-            std::lock_guard<std::mutex> lock(marineMut);
             collisionHandler.insertMarine(&m.second);
         }
 
 #pragma omp section
         for (auto& z : zombieManager) {
-            std::lock_guard<std::mutex> lock(zombieMut);
             collisionHandler.insertZombie(&z.second);
         }
 
@@ -495,7 +490,6 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData &playerData) {
-    std::lock_guard<std::mutex> lock(marineMut);
     if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
@@ -519,7 +513,6 @@ playData struct, if not it creates that zombie with that id. Whether
 it created it or not it updates it's positition angle and health.
 */
 void GameManager::updateZombie(const ZombieData &zombieData) {
-    std::lock_guard<std::mutex> lock(zombieMut);
     if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
         createZombie(zombieData.zombieid);
     }
@@ -544,7 +537,6 @@ fires current weapon.
 */
 void GameManager::handleAttackAction(const AttackAction& attackAction) {
     if (!(attackAction.playerid == player.getId())) {
-        std::lock_guard<std::mutex> lock(marineMut);
         auto marine = marineManager[attackAction.playerid];
         if (marine.second) {
             int curX = marine.first.getX();

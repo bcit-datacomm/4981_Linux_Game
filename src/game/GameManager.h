@@ -126,9 +126,6 @@ public:
     auto& getWeaponManager() const {return weaponManager;};
     auto& getWallManager() {return wallManager;};
 
-    std::mutex marineMut;
-    std::mutex zombieMut;
-
 private:
     GameManager();
     ~GameManager();

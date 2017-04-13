@@ -148,7 +148,6 @@ void deleteEntity(const DeleteAction& da) {
 #ifdef SERVER
         case UDPHeaders::ZOMBIE:
             {
-            std::lock_guard<std::mutex> lock(gm->zombieMut);
             gm->getZombieManager().erase(da.entityid);
             //gm->deleteZombie(da.entityid);
             }

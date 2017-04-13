@@ -143,7 +143,6 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
-    std::lock_guard<std::mutex> lock(GameManager::instance()->zombieMut);
     const auto& nearbyZombies = zombieTree.retrieve({gunX, gunY}, {endX, endY});
     const auto& nearbyWalls = wallTree.retrieve({gunX, gunY}, {endX, endY});
 
@@ -252,8 +251,6 @@ std::vector<Entity *> CollisionHandler::getQuadTreeEntities(const Quadtree& q, c
 }
 
 void CollisionHandler::clear() {
-    std::lock_guard<std::mutex> lock(GameManager::instance()->marineMut);
-    std::lock_guard<std::mutex> lock1(GameManager::instance()->zombieMut);
     zombieMovementTree.clear();
     marineTree.clear();
     zombieTree.clear();

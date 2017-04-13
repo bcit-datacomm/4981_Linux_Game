@@ -51,8 +51,6 @@ void MatchManager::spawnZombies() {
         }
         zombie.setPosition(pos.x, pos.y);
 
-        std::lock_guard<std::mutex> lock1(GameManager::instance()->marineMut);
-        std::lock_guard<std::mutex> lock2(GameManager::instance()->zombieMut);
         if (!ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getMarineTree(),&zombie),&zombie)
                 || ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieTree(),&zombie),&zombie)) {
             GameManager::instance()->createZombie(pos.x, pos.y);
