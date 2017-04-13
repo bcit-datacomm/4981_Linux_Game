@@ -2,19 +2,31 @@
 * Header: Quadtree.h
 *
 * Functions:
+* void clear();
+* unsigned int getTreeSize() const;
+* void insert(Entity *entity);
+* std::vector<Entity *> retrieve(const Entity *entity) const;
+* void retrieve(std::vector<Entity *>& retrieveList, const SDL_Rect& rect) const;
+* std::vector<Entity *> retrieve(const Point& start, const Point& end) const;
+* bool contains(const Quadtree& q, const Entity *entity) const;
+* std::vector<Entity *> retrieve(const SDL_Rect& rect) const;
+* static inline bool constexpr lineIntersect(const std::pair<Point, Point>& start, const std::pair<Point, Point>& end);
+* static inline bool constexpr lineRectIntersect(const std::pair<Point, Point>& line, const SDL_Rect& rect);
+* static inline bool constexpr pointInRect(const Point& point, const SDL_Rect& rect);
+* static inline bool constexpr rectContains(const SDL_Rect& outer, const SDL_Rect& inner);
 *
-*
-* Date:
+* Date: April 12 2017
 *
 * Revisions:
 * Reviewed By : Justen DePourcq- Style guide
 *
-* Designer:
+* Designer: John Agapeyev
 *
-* Author:
+* Author: John Agapeyev
 *
-* Notes:
-*
+* Notes: The quadtree implementation used for all collision detection in the game.
+* It doesn't do anything different than a standard one, but it does feature some
+* hand-written code for checking simple geometry conditions such as two lines intersecting.
 ------------------------------------------------------------------------------*/
 #ifndef QUADTREE_H
 #define QUADTREE_H

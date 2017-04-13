@@ -1,3 +1,26 @@
+/*------------------------------------------------------------------------------
+* Header: server.h
+*
+* Functions:
+* void initSync(const int sock);
+* void processPacket(const char *data);
+* std::string genOutputPacket();
+* void sendSyncPacket(const int sock);
+* void listenForPackets(sockaddr_in& servaddr);
+* void listenTCP(const int socket, const unsigned long ip, const unsigned short port);
+* void listenUDP(const int socket, const unsigned long ip, const unsigned short port);
+*
+* Date: Apr 12th 2017
+*
+* Designer(s): John Agapeyev, Isaac Morneau
+*
+* Author(s): John Agapeyev Isaac Morneau
+*
+* Notes:
+* The header for the core server networking features such as client establishment
+* TCP/UDP read notification, packet processing, and generation.
+* ------------------------------------------------------------------------------*/
+
 #ifndef SERVER_H
 #define SERVER_H
 
