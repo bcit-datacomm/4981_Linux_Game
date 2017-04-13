@@ -158,14 +158,8 @@ void GameManager::updateZombies(const float delta) {
             if (!it->second.isAlive) {
                 it = zombieManager.erase(it);
             } else {
-                if (!networked) {
-                    it->second.update();
-                    it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
-                }
-#ifndef SERVER
-                it->second.updateImageDirection();
-                it->second.updateImageWalk();
-#endif
+                it->second.update();
+                it->second.move((it->second.getDX() * delta), (it->second.getDY() * delta), collisionHandler);
                 ++it;
             }
         }
